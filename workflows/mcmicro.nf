@@ -46,6 +46,12 @@ include { INPUT_CHECK } from '../subworkflows/local/input_check'
 //
 // MODULE: Installed directly from nf-core/modules
 //
+
+include { BACKSUB } from './modules/nf-core/backsub/main'
+include { CELLPOSE } from './modules/nf-core/cellpose/main'
+include { DEEPCELL_MESMER } from './modules/nf-core/deepcell/mesmer/main'
+include { MCQUANT } from './modules/nf-core/mcquant/main'
+include { SCIMAP_MCMICRO } from './modules/nf-core/scimap/mcmicro/main'
 include { MULTIQC                     } from '../modules/nf-core/multiqc/main'
 include { CUSTOM_DUMPSOFTWAREVERSIONS } from '../modules/nf-core/custom/dumpsoftwareversions/main'
 
@@ -62,9 +68,13 @@ workflow MCMICRO {
 
     ch_versions = Channel.empty()
 
+    // Manually define inputs here
+    image_tuple = tuple([ id:'image' ], '/home/florian/Documents/tmp_data_folder/cycif_tonsil_registered.ome.tif')
+    marker_tuple = tuple([ id:'marker'], '/home/florian/Documents/tmp_data_folder/markers.csv')
+
     //
     // SUBWORKFLOW: Read in samplesheet, validate and stage input files
-    //
+    /*
     INPUT_CHECK (
         file(params.input)
     )
@@ -72,10 +82,22 @@ workflow MCMICRO {
     // TODO: OPTIONAL, you can use nf-validation plugin to create an input channel from the samplesheet with Channel.fromSamplesheet("input")
     // See the documentation https://nextflow-io.github.io/nf-validation/samplesheets/fromSamplesheet/
     // ! There is currently no tooling to help you write a sample sheet schema
+    */
 
-    
+    // Run Background Correction
+    BACKSUB(image_tuple,marker_tuple)
+    ch_versions = ch_versions.mix(BACKSUB.out.versions)
 
+    CELLPOSE(BACKSUB.out.backsub_tif)
+    ch_versions = ch_versions.mix(CELLPOSE.out.versions) 
 
+    MCQUANT(BACKSUB.out.backsub_tif,
+            CELLPOSE.out.mask,
+            BACKSUB.out.markerout)
+    ch_versions = ch_versions.mix(MCQUANT.out.versions)
+
+    SCIMAP_MCMICRO(MCQUANT.out.csv)
+    ch_versions = ch_versions.mix(SCIMAP_MCMICRO.out.versions)
 
     CUSTOM_DUMPSOFTWAREVERSIONS (
         ch_versions.unique().collectFile(name: 'collated_versions.yml')
@@ -94,7 +116,6 @@ workflow MCMICRO {
     ch_multiqc_files = ch_multiqc_files.mix(ch_workflow_summary.collectFile(name: 'workflow_summary_mqc.yaml'))
     ch_multiqc_files = ch_multiqc_files.mix(ch_methods_description.collectFile(name: 'methods_description_mqc.yaml'))
     ch_multiqc_files = ch_multiqc_files.mix(CUSTOM_DUMPSOFTWAREVERSIONS.out.mqc_yml.collect())
-    ch_multiqc_files = ch_multiqc_files.mix(FASTQC.out.zip.collect{it[1]}.ifEmpty([]))
 
     MULTIQC (
         ch_multiqc_files.collect(),
