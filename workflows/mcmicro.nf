@@ -47,6 +47,10 @@ include { INPUT_CHECK } from '../subworkflows/local/input_check'
 // MODULE: Installed directly from nf-core/modules
 //
 
+//include { ILLUMINATION } from './modules/nf-core/local/illumination.nf'
+
+include { BASICPY } from './modules/nf-core/basicpy/main'
+include { ASHLAR } from './modules/nf-core/ashlar/main'
 include { BACKSUB } from './modules/nf-core/backsub/main'
 include { CELLPOSE } from './modules/nf-core/cellpose/main'
 include { DEEPCELL_MESMER } from './modules/nf-core/deepcell/mesmer/main'
@@ -61,6 +65,15 @@ include { CUSTOM_DUMPSOFTWAREVERSIONS } from '../modules/nf-core/custom/dumpsoft
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
+// Manually define inputs here
+//image_tuple = tuple([ id:'image' ], '/home/florian/Documents/tmp_data_folder/cycif_tonsil_registered.ome.tif')
+//marker_tuple = tuple([ id:'marker'], '/home/florian/Documents/tmp_data_folder/markers.csv')
+
+ch_input = file(params.input)
+
+// Identify marker information
+ch_marker = Channel.fromPath( "${params.input}/markers.csv", checkIfExists: true )
+
 // Info required for completion email and summary
 def multiqc_report = []
 
@@ -68,20 +81,32 @@ workflow MCMICRO {
 
     ch_versions = Channel.empty()
 
-    // Manually define inputs here
-    image_tuple = tuple([ id:'image' ], '/home/florian/Documents/tmp_data_folder/cycif_tonsil_registered.ome.tif')
-    marker_tuple = tuple([ id:'marker'], '/home/florian/Documents/tmp_data_folder/markers.csv')
+    //ILLUMINATION(mcp.modules['illumination'], raw)
 
-    //
-    // SUBWORKFLOW: Read in samplesheet, validate and stage input files
-    /*
-    INPUT_CHECK (
-        file(params.input)
-    )
-    ch_versions = ch_versions.mix(INPUT_CHECK.out.versions)
-    // TODO: OPTIONAL, you can use nf-validation plugin to create an input channel from the samplesheet with Channel.fromSamplesheet("input")
-    // See the documentation https://nextflow-io.github.io/nf-validation/samplesheets/fromSamplesheet/
-    // ! There is currently no tooling to help you write a sample sheet schema
+    // sample check here:
+    // ch_images = INPUT_CHECK( ch_input ).images
+    // ch_markers = INPUT_CHECK( ch_input ).markers
+
+    BASICPY(ch_input)
+    ch_tif = BASICPY.outs.tif
+    ch_versions = ch_versions.mix(BASICPY.out.versions)
+
+    ch_dfp = ch_tif.filter { file -> file.name.endsWith('.dfp.tiff') }
+    ch_ffp = ch_tif.filter { file -> file.name.endsWith('.ffp.tiff') }
+
+    ASHLAR(ch_input, ch_dfp, ch_ffp)
+
+    // Should background subtraction be applied?
+    /*img = img.
+        branch{
+            nobs: !wfp.background
+            bs: wfp.background
+        }
+    chMrk = chMrk.
+    branch{
+        nobs: !wfp.background
+        bs: wfp.background
+    }
     */
 
     // Run Background Correction
