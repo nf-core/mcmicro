@@ -81,20 +81,33 @@ workflow MCMICRO {
 
     ch_versions = Channel.empty()
 
+    //
+    // SUBWORKFLOW: Read in samplesheet, validate and stage input files
+    //
+    INPUT_CHECK (
+        file(params.input)
+    )
+    ch_versions = ch_versions.mix(INPUT_CHECK.out.versions)
+    // TODO: OPTIONAL, you can use nf-validation plugin to create an input channel from the samplesheet with Channel.fromSamplesheet("input")
+    // See the documentation https://nextflow-io.github.io/nf-validation/samplesheets/fromSamplesheet/
+    // ! There is currently no tooling to help you write a sample sheet schema
+
     //ILLUMINATION(mcp.modules['illumination'], raw)
 
     // sample check here:
-    // ch_images = INPUT_CHECK( ch_input ).images
-    // ch_markers = INPUT_CHECK( ch_input ).markers
+    ch_images = INPUT_CHECK( ch_input ).images
+    ch_markers = INPUT_CHECK( ch_input ).markers
 
-    BASICPY(ch_input)
-    ch_tif = BASICPY.outs.tif
-    ch_versions = ch_versions.mix(BASICPY.out.versions)
+    if ( params.illumination ):
+        BASICPY(ch_input)
+        ch_tif = BASICPY.outs.tif
+        ch_versions = ch_versions.mix(BASICPY.out.versions)
 
-    ch_dfp = ch_tif.filter { file -> file.name.endsWith('.dfp.tiff') }
-    ch_ffp = ch_tif.filter { file -> file.name.endsWith('.ffp.tiff') }
+        ch_dfp = ch_tif.filter { file -> file.name.endsWith('.dfp.tiff') }
+        ch_ffp = ch_tif.filter { file -> file.name.endsWith('.ffp.tiff') }
 
-    ASHLAR(ch_input, ch_dfp, ch_ffp)
+        ch_images = ASHLAR(ch_input, ch_dfp, ch_ffp).tif
+        ch_versions = ch_versions.mix(ASHLAR.out.versions)
 
     // Should background subtraction be applied?
     /*img = img.
