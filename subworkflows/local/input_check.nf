@@ -9,14 +9,26 @@ workflow INPUT_CHECK {
     samplesheet // file: /path/to/samplesheet.csv
 
     main:
+
+    /*
+    if( params.illumination){
+        SAMPLESHEET_CHECK ( samplesheet )
+            .csv
+            .splitCsv ( header:true, sep:',' )
+            .map { create_fastq_channel(it) }
+            .groupTuple(by: [0])
+            .map { meta, reads -> [ meta, reads.flatten() ] }
+            .set { images_merged }
+    }
+    */
     SAMPLESHEET_CHECK ( samplesheet )
-        .csv
-        .splitCsv ( header:true, sep:',' )
-        .map { create_fastq_channel(it) }
-        .set { images }
+            .csv
+            .splitCsv ( header:true, sep:',' )
+            .map { create_fastq_channel(it) }
+            .set { input }
 
     emit:
-    images                                     // channel: [ val(meta), [ reads ] ]
+    input                                    // channel: [ val(meta), [ image ], [ marker ] ]
     versions = SAMPLESHEET_CHECK.out.versions // channel: [ versions.yml ]
 }
 
@@ -25,13 +37,17 @@ def create_fastq_channel(LinkedHashMap row) {
     // create meta map
     def meta = [:]
     meta.id         = row.sample
-    meta.tiff = row.single_end.toBoolean()
+    // meta.tiff = row.single_end.toBoolean()
 
     // add path(s) of the fastq file(s) to the meta map
-    def fastq_meta = []
-    if (!file(row.tiff).exists()) {
-        exit 1, "ERROR: Please check input samplesheet -> tiff file does not exist!\n${row.tiff}"
+    //def fastq_meta = []
+    if (!file(row.image).exists()) {
+        exit 1, "ERROR: Please check input samplesheet -> image file does not exist!\n${row.image}"
     }
+    if (!file(row.marker).exists()) {
+        exit 1, "ERROR: Please check input samplesheet -> image file does not exist!\n${row.marker}"
+    }
+
     // if (meta.single_end) {
     //     fastq_meta = [ meta, [ file(row.fastq_1) ] ]
     // } else {
@@ -39,7 +55,7 @@ def create_fastq_channel(LinkedHashMap row) {
     //         exit 1, "ERROR: Please check input samplesheet -> Read 2 FastQ file does not exist!\n${row.fastq_2}"
     //     }
     //}
-    fastq_meta = [ meta, [ file(row.tiff) ] ]
+    image_meta = [ meta, [ file(row.image) ], [file(row.marker)] ]
 
-    return fastq_meta
+    return image_meta
 }
