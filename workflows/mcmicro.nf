@@ -13,7 +13,7 @@ def summary_params = paramsSummaryMap(workflow)
 // Print parameter summary log to screen
 log.info logo + paramsSummaryLog(workflow) + citation
 
-WorkflowMcmicro.initialise(params, log)
+//WorkflowMcmicro.initialise(params, log)
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -49,13 +49,13 @@ include { INPUT_CHECK } from '../subworkflows/local/input_check'
 
 //include { ILLUMINATION } from './modules/nf-core/local/illumination.nf'
 
-include { BASICPY } from './modules/nf-core/basicpy/main'
-include { ASHLAR } from './modules/nf-core/ashlar/main'
-include { BACKSUB } from './modules/nf-core/backsub/main'
-include { CELLPOSE } from './modules/nf-core/cellpose/main'
-include { DEEPCELL_MESMER } from './modules/nf-core/deepcell/mesmer/main'
-include { MCQUANT } from './modules/nf-core/mcquant/main'
-include { SCIMAP_MCMICRO } from './modules/nf-core/scimap/mcmicro/main'
+include { BASICPY } from '../modules/nf-core/basicpy/main'
+include { ASHLAR } from '../modules/local/ashlar/main'
+include { BACKSUB } from '../modules/nf-core/backsub/main'
+include { CELLPOSE } from '../modules/nf-core/cellpose/main'
+include { DEEPCELL_MESMER } from '../modules/nf-core/deepcell/mesmer/main'
+include { MCQUANT } from '../modules/nf-core/mcquant/main'
+include { SCIMAP_MCMICRO } from '../modules/nf-core/scimap/mcmicro/main'
 include { MULTIQC                     } from '../modules/nf-core/multiqc/main'
 include { CUSTOM_DUMPSOFTWAREVERSIONS } from '../modules/nf-core/custom/dumpsoftwareversions/main'
 
@@ -70,9 +70,6 @@ include { CUSTOM_DUMPSOFTWAREVERSIONS } from '../modules/nf-core/custom/dumpsoft
 //marker_tuple = tuple([ id:'marker'], '/home/florian/Documents/tmp_data_folder/markers.csv')
 
 ch_input = file(params.input)
-
-// Identify marker information
-ch_marker = Channel.fromPath( "${params.input}/markers.csv", checkIfExists: true )
 
 // Info required for completion email and summary
 def multiqc_report = []
@@ -95,45 +92,44 @@ workflow MCMICRO {
     //ILLUMINATION(mcp.modules['illumination'], raw)
 
     // sample check here:
-    ch_images = INPUT_CHECK( ch_input ).images
-    ch_markers = INPUT_CHECK( ch_input ).markers
+    ch_input = INPUT_CHECK.out.input
 
-    if ( params.illumination ):
-        BASICPY(ch_input)
-        ch_tif = BASICPY.outs.tif
+    // Split the original channel into two separate channels
+    ch_images = ch_input.map { item -> [item[0], item[1]]}
+    // Mapping and obtaining unique items based on item[2]
+    ch_markers = ch_input.map { item -> [item[0], item[2]] }
+                        .groupTuple(by: [0])
+                        .map { sample, markers -> [ sample, markers.flatten().unique() ] }
+
+    /*
+    if ( params.illumination ) {
+        BASICPY(ch_images)
+        ch_tif = BASICPY.out.fields
         ch_versions = ch_versions.mix(BASICPY.out.versions)
 
         ch_dfp = ch_tif.filter { file -> file.name.endsWith('.dfp.tiff') }
         ch_ffp = ch_tif.filter { file -> file.name.endsWith('.ffp.tiff') }
-
-        ch_images = ASHLAR(ch_input, ch_dfp, ch_ffp).tif
-        ch_versions = ch_versions.mix(ASHLAR.out.versions)
-
-    // Should background subtraction be applied?
-    /*img = img.
-        branch{
-            nobs: !wfp.background
-            bs: wfp.background
-        }
-    chMrk = chMrk.
-    branch{
-        nobs: !wfp.background
-        bs: wfp.background
     }
     */
 
+    ASHLAR(ch_input, [], [])
+    ch_versions = ch_versions.mix(ASHLAR.out.versions)
+
     // Run Background Correction
-    BACKSUB(image_tuple,marker_tuple)
+    BACKSUB(ASHLAR.out.tif, ch_markers)
     ch_versions = ch_versions.mix(BACKSUB.out.versions)
 
+    // Run Segmentation
     CELLPOSE(BACKSUB.out.backsub_tif)
     ch_versions = ch_versions.mix(CELLPOSE.out.versions) 
 
+    // Run Quantification
     MCQUANT(BACKSUB.out.backsub_tif,
             CELLPOSE.out.mask,
             BACKSUB.out.markerout)
     ch_versions = ch_versions.mix(MCQUANT.out.versions)
 
+    // Run Reporting
     SCIMAP_MCMICRO(MCQUANT.out.csv)
     ch_versions = ch_versions.mix(SCIMAP_MCMICRO.out.versions)
 
@@ -144,6 +140,7 @@ workflow MCMICRO {
     //
     // MODULE: MultiQC
     //
+    /*
     workflow_summary    = WorkflowMcmicro.paramsSummaryMultiqc(workflow, summary_params)
     ch_workflow_summary = Channel.value(workflow_summary)
 
@@ -162,6 +159,7 @@ workflow MCMICRO {
         ch_multiqc_logo.toList()
     )
     multiqc_report = MULTIQC.out.report.toList()
+    */
 }
 
 /*
