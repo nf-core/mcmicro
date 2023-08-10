@@ -17,7 +17,7 @@
 
 **nf-core/mcmicro** is a nextflow pipeline for processing highly-multiplexed imaging data, as produced by technologies such as Cycif, MIBI, CODEX, SeqIF among others.
 
-If you want to run the original MCMICRO pipeline outside of nf-core, please see https://mcmicro.org/.
+If you want to run the original MCMICRO pipeline outside of nf-core, please see <https://mcmicro.org/>.
 
 <!-- TODO nf-core:
    Complete this sentence with a 2-3 sentence summary of what types of data the pipeline ingests, a brief overview of the
