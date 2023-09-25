@@ -50,7 +50,7 @@ include { INPUT_CHECK } from '../subworkflows/local/input_check'
 //include { ILLUMINATION } from './modules/nf-core/local/illumination.nf'
 
 include { BASICPY } from '../modules/nf-core/basicpy/main'
-include { ASHLAR } from '../modules/local/ashlar/main'
+include { ASHLAR } from '../modules/nf-core/ashlar/main'
 include { BACKSUB } from '../modules/nf-core/backsub/main'
 include { CELLPOSE } from '../modules/nf-core/cellpose/main'
 include { DEEPCELL_MESMER } from '../modules/nf-core/deepcell/mesmer/main'
@@ -121,7 +121,7 @@ workflow MCMICRO {
 
     // Run Segmentation
     CELLPOSE(BACKSUB.out.backsub_tif)
-    ch_versions = ch_versions.mix(CELLPOSE.out.versions) 
+    ch_versions = ch_versions.mix(CELLPOSE.out.versions)
 
     // Run Quantification
     MCQUANT(BACKSUB.out.backsub_tif,

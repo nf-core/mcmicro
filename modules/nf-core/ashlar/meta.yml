@@ -18,7 +18,7 @@ input:
       description: |
         Groovy Map containing sample information
         e.g. [ id:'test' ]
-  - file_in:
+  - images:
       type: file
       description: Overlapping tile image data in formats from most commercial microscopes
       pattern: "*.{ome.tiff,ome.tif,rcpnl,btf,nd2,tiff,tif,czi}"
@@ -30,7 +30,7 @@ output:
         e.g. [ id:'test' ]
   - tif:
       type: file
-      description: pyramidal OME-TIFF
+      description: A pyramidal, tiled OME-TIFF file created from input images.
       pattern: "*.ome.tif"
   - versions:
       type: file

@@ -5,6 +5,11 @@
         "https://github.com/nf-core/modules.git": {
             "modules": {
                 "nf-core": {
+                    "ashlar": {
+                        "branch": "master",
+                        "git_sha": "97b7dc798a002688b6304a453da932b2144727b1",
+                        "installed_by": ["modules"]
+                    },
                     "backsub": {
                         "branch": "master",
                         "git_sha": "240937a2a9c30298110753292be041188891f2cb",
