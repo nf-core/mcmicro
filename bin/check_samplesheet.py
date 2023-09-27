@@ -24,21 +24,16 @@ class RowChecker:
 
     """
 
-    VALID_IMAGE_FORMATS = (
-        ".tiff",
-        ".tif"
-    )
+    VALID_IMAGE_FORMATS = (".tiff", ".tif")
 
-    VALID_MARKER_FORMATS = (
-        ".csv"
-    )
+    VALID_MARKER_FORMATS = ".csv"
 
     def __init__(
         self,
         sample_col="sample",
         first_col="image",
         second_col="marker",
-        #single_col="single_end",
+        # single_col="single_end",
         **kwargs,
     ):
         """
@@ -60,7 +55,7 @@ class RowChecker:
         self._sample_col = sample_col
         self._first_col = first_col
         self._second_col = second_col
-        #self._single_col = single_col
+        # self._single_col = single_col
         self._seen = set()
         self.modified = []
 
@@ -76,7 +71,7 @@ class RowChecker:
         self._validate_sample(row)
         self._validate_first(row)
         self._validate_second(row)
-        #self._validate_pair(row)
+        # self._validate_pair(row)
         self._seen.add((row[self._sample_col], row[self._first_col]))
         self.modified.append(row)
 
@@ -117,7 +112,7 @@ class RowChecker:
                 f"The image file has an unrecognized extension: {filename}\n"
                 f"It should be one of: {', '.join(self.VALID_IMAGE_FORMATS)}"
             )
-        
+
     def _validate_marker_format(self, filename):
         """Assert that a given filename has marker extension."""
         if not any(filename.endswith(extension) for extension in self.VALID_MARKER_FORMATS):
@@ -140,7 +135,7 @@ class RowChecker:
         for row in self.modified:
             sample = row[self._sample_col]
             seen[sample] += 1
-            #row[self._sample_col] = f"{sample}_T{seen[sample]}"
+            # row[self._sample_col] = f"{sample}_T{seen[sample]}"
 
 
 def read_head(handle, num_lines=10):
@@ -179,7 +174,7 @@ def check_samplesheet(file_in, file_out):
     """
     Check that the tabular samplesheet has the structure expected by nf-core pipelines.
 
-    Validate the general shape of the table, expected columns, and each row. 
+    Validate the general shape of the table, expected columns, and each row.
     # Also add an additional column which records whether one or two FASTQ reads were found.
 
     Args:
@@ -220,7 +215,7 @@ def check_samplesheet(file_in, file_out):
                 sys.exit(1)
         checker.validate_unique_samples()
     header = list(reader.fieldnames)
-    #header.insert(1, "single_end")
+    # header.insert(1, "single_end")
     # See https://docs.python.org/3.9/library/csv.html#id3 to read up on `newline=""`.
     with file_out.open(mode="w", newline="") as out_handle:
         writer = csv.DictWriter(out_handle, header, delimiter=",")
