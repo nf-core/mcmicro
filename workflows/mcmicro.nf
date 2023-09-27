@@ -4,7 +4,7 @@
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
-include { paramsSummaryLog; paramsSummaryMap } from 'plugin/nf-validation'
+include { validateParameters; paramsHelp; paramsSummaryLog; fromSamplesheet; paramsSummaryMap } from 'plugin/nf-validation'
 
 def logo = NfcoreTemplate.logo(workflow, params.monochrome_logs)
 def citation = '\n' + WorkflowMain.citation(workflow) + '\n'
@@ -35,7 +35,7 @@ ch_multiqc_custom_methods_description = params.multiqc_methods_description ? fil
 //
 // SUBWORKFLOW: Consisting of a mix of local and nf-core/modules
 //
-include { INPUT_CHECK } from '../subworkflows/local/input_check'
+//include { INPUT_CHECK } from '../subworkflows/local/input_check'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -46,8 +46,6 @@ include { INPUT_CHECK } from '../subworkflows/local/input_check'
 //
 // MODULE: Installed directly from nf-core/modules
 //
-
-//include { ILLUMINATION } from './modules/nf-core/local/illumination.nf'
 
 include { BASICPY } from '../modules/nf-core/basicpy/main'
 include { ASHLAR } from '../modules/nf-core/ashlar/main'
@@ -69,8 +67,6 @@ include { CUSTOM_DUMPSOFTWAREVERSIONS } from '../modules/nf-core/custom/dumpsoft
 //image_tuple = tuple([ id:'image' ], '/home/florian/Documents/tmp_data_folder/cycif_tonsil_registered.ome.tif')
 //marker_tuple = tuple([ id:'marker'], '/home/florian/Documents/tmp_data_folder/markers.csv')
 
-ch_input = file(params.input)
-
 // Info required for completion email and summary
 def multiqc_report = []
 
@@ -78,60 +74,63 @@ workflow MCMICRO {
 
     ch_versions = Channel.empty()
 
+    ch_from_samplesheet = Channel.fromSamplesheet("input")
+
+    markerFile = [[id:"test_all" ], file("/workspace/data/cycif-tonsil-channels.csv")]
+
+    raw_images = [ [ id:'test_all' ],[
+                file("/workspace/data/ashlar/cycif-tonsil-cycle1.ome.tif"),
+                file("/workspace/data/ashlar/cycif-tonsil-cycle2.ome.tif"),
+                file("/workspace/data/ashlar/cycif-tonsil-cycle3.ome.tif")]
+                ]
+
+    dfp =file("/workspace/data/cycif-tonsil-dfp.ome.tif")
+    ffp =file("/workspace/data/cycif-tonsil-ffp.ome.tif")
+
+
+    // Format input for BASICPY
+    // data_path = ch_from_samplesheet
+    //     .map(it->"${it[1]}/*.ome.tif")
+    // raw_cycles = Channel.of([[id:"exemplar-001"],"/workspace/data/exemplar-001/raw/exemplar-001-cycle-06.ome.tiff"])
+
     //
-    // SUBWORKFLOW: Read in samplesheet, validate and stage input files
+    // MODULE: BASICPY
     //
-    INPUT_CHECK (
-        file(params.input)
-    )
-    ch_versions = ch_versions.mix(INPUT_CHECK.out.versions)
-    // TODO: OPTIONAL, you can use nf-validation plugin to create an input channel from the samplesheet with Channel.fromSamplesheet("input")
-    // See the documentation https://nextflow-io.github.io/nf-validation/samplesheets/fromSamplesheet/
-    // ! There is currently no tooling to help you write a sample sheet schema
 
-    //ILLUMINATION(mcp.modules['illumination'], raw)
+    // BASICPY(raw_cycles)
+    //ch_versions = ch_versions.mix(BASICPY.out.versions)
 
-    // sample check here:
-    ch_input = INPUT_CHECK.out.input
+    // /*
+    // if ( params.illumination ) {
+    //     BASICPY(ch_images)
+    //     ch_tif = BASICPY.out.fields
+    //     ch_versions = ch_versions.mix(BASICPY.out.versions)
 
-    // Split the original channel into two separate channels
-    ch_images = ch_input.map { item -> [item[0], item[1]]}
-    // Mapping and obtaining unique items based on item[2]
-    ch_markers = ch_input.map { item -> [item[0], item[2]] }
-                        .groupTuple(by: [0])
-                        .map { sample, markers -> [ sample, markers.flatten().unique() ] }
+    //     ch_dfp = ch_tif.filter { file -> file.name.endsWith('.dfp.tiff') }
+    //     ch_ffp = ch_tif.filter { file -> file.name.endsWith('.ffp.tiff') }
+    // }
+    // */
 
-    /*
-    if ( params.illumination ) {
-        BASICPY(ch_images)
-        ch_tif = BASICPY.out.fields
-        ch_versions = ch_versions.mix(BASICPY.out.versions)
-
-        ch_dfp = ch_tif.filter { file -> file.name.endsWith('.dfp.tiff') }
-        ch_ffp = ch_tif.filter { file -> file.name.endsWith('.ffp.tiff') }
-    }
-    */
-
-    ASHLAR(ch_input, [], [])
+    ASHLAR(raw_images, dfp, ffp)
     ch_versions = ch_versions.mix(ASHLAR.out.versions)
 
-    // Run Background Correction
-    BACKSUB(ASHLAR.out.tif, ch_markers)
-    ch_versions = ch_versions.mix(BACKSUB.out.versions)
+    // // Run Background Correction
+    // BACKSUB(ASHLAR.out.tif, ch_markers)
+    // ch_versions = ch_versions.mix(BACKSUB.out.versions)
 
-    // Run Segmentation
-    CELLPOSE(BACKSUB.out.backsub_tif)
-    ch_versions = ch_versions.mix(CELLPOSE.out.versions)
+    // // Run Segmentation
+    DEEPCELL_MESMER(ASHLAR.out.tif, [[:],[]])
+    ch_versions = ch_versions.mix(DEEPCELL_MESMER.out.versions)
 
-    // Run Quantification
-    MCQUANT(BACKSUB.out.backsub_tif,
-            CELLPOSE.out.mask,
-            BACKSUB.out.markerout)
+    // // Run Quantification
+    MCQUANT(ASHLAR.out.tif,
+            DEEPCELL_MESMER.out.mask,
+            markerFile)
     ch_versions = ch_versions.mix(MCQUANT.out.versions)
 
-    // Run Reporting
-    SCIMAP_MCMICRO(MCQUANT.out.csv)
-    ch_versions = ch_versions.mix(SCIMAP_MCMICRO.out.versions)
+    // // Run Reporting
+    // SCIMAP_MCMICRO(MCQUANT.out.csv)
+    // ch_versions = ch_versions.mix(SCIMAP_MCMICRO.out.versions)
 
     CUSTOM_DUMPSOFTWAREVERSIONS (
         ch_versions.unique().collectFile(name: 'collated_versions.yml')
