@@ -13,7 +13,7 @@ def summary_params = paramsSummaryMap(workflow)
 // Print parameter summary log to screen
 log.info logo + paramsSummaryLog(workflow) + citation
 
-WorkflowMcmicro.initialise(params, log)
+//WorkflowMcmicro.initialise(params, log)
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -46,7 +46,16 @@ include { INPUT_CHECK } from '../subworkflows/local/input_check'
 //
 // MODULE: Installed directly from nf-core/modules
 //
-include { FASTQC                      } from '../modules/nf-core/fastqc/main'
+
+//include { ILLUMINATION } from './modules/nf-core/local/illumination.nf'
+
+include { BASICPY } from '../modules/nf-core/basicpy/main'
+include { ASHLAR } from '../modules/nf-core/ashlar/main'
+include { BACKSUB } from '../modules/nf-core/backsub/main'
+include { CELLPOSE } from '../modules/nf-core/cellpose/main'
+include { DEEPCELL_MESMER } from '../modules/nf-core/deepcell/mesmer/main'
+include { MCQUANT } from '../modules/nf-core/mcquant/main'
+include { SCIMAP_MCMICRO } from '../modules/nf-core/scimap/mcmicro/main'
 include { MULTIQC                     } from '../modules/nf-core/multiqc/main'
 include { CUSTOM_DUMPSOFTWAREVERSIONS } from '../modules/nf-core/custom/dumpsoftwareversions/main'
 
@@ -55,6 +64,12 @@ include { CUSTOM_DUMPSOFTWAREVERSIONS } from '../modules/nf-core/custom/dumpsoft
     RUN MAIN WORKFLOW
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
+
+// Manually define inputs here
+//image_tuple = tuple([ id:'image' ], '/home/florian/Documents/tmp_data_folder/cycif_tonsil_registered.ome.tif')
+//marker_tuple = tuple([ id:'marker'], '/home/florian/Documents/tmp_data_folder/markers.csv')
+
+ch_input = file(params.input)
 
 // Info required for completion email and summary
 def multiqc_report = []
@@ -74,13 +89,49 @@ workflow MCMICRO {
     // See the documentation https://nextflow-io.github.io/nf-validation/samplesheets/fromSamplesheet/
     // ! There is currently no tooling to help you write a sample sheet schema
 
-    //
-    // MODULE: Run FastQC
-    //
-    FASTQC (
-        INPUT_CHECK.out.reads
-    )
-    ch_versions = ch_versions.mix(FASTQC.out.versions.first())
+    //ILLUMINATION(mcp.modules['illumination'], raw)
+
+    // sample check here:
+    ch_input = INPUT_CHECK.out.input
+
+    // Split the original channel into two separate channels
+    ch_images = ch_input.map { item -> [item[0], item[1]]}
+    // Mapping and obtaining unique items based on item[2]
+    ch_markers = ch_input.map { item -> [item[0], item[2]] }
+                        .groupTuple(by: [0])
+                        .map { sample, markers -> [ sample, markers.flatten().unique() ] }
+
+    /*
+    if ( params.illumination ) {
+        BASICPY(ch_images)
+        ch_tif = BASICPY.out.fields
+        ch_versions = ch_versions.mix(BASICPY.out.versions)
+
+        ch_dfp = ch_tif.filter { file -> file.name.endsWith('.dfp.tiff') }
+        ch_ffp = ch_tif.filter { file -> file.name.endsWith('.ffp.tiff') }
+    }
+    */
+
+    ASHLAR(ch_input, [], [])
+    ch_versions = ch_versions.mix(ASHLAR.out.versions)
+
+    // Run Background Correction
+    BACKSUB(ASHLAR.out.tif, ch_markers)
+    ch_versions = ch_versions.mix(BACKSUB.out.versions)
+
+    // Run Segmentation
+    CELLPOSE(BACKSUB.out.backsub_tif)
+    ch_versions = ch_versions.mix(CELLPOSE.out.versions)
+
+    // Run Quantification
+    MCQUANT(BACKSUB.out.backsub_tif,
+            CELLPOSE.out.mask,
+            BACKSUB.out.markerout)
+    ch_versions = ch_versions.mix(MCQUANT.out.versions)
+
+    // Run Reporting
+    SCIMAP_MCMICRO(MCQUANT.out.csv)
+    ch_versions = ch_versions.mix(SCIMAP_MCMICRO.out.versions)
 
     CUSTOM_DUMPSOFTWAREVERSIONS (
         ch_versions.unique().collectFile(name: 'collated_versions.yml')
@@ -89,6 +140,7 @@ workflow MCMICRO {
     //
     // MODULE: MultiQC
     //
+    /*
     workflow_summary    = WorkflowMcmicro.paramsSummaryMultiqc(workflow, summary_params)
     ch_workflow_summary = Channel.value(workflow_summary)
 
@@ -99,7 +151,6 @@ workflow MCMICRO {
     ch_multiqc_files = ch_multiqc_files.mix(ch_workflow_summary.collectFile(name: 'workflow_summary_mqc.yaml'))
     ch_multiqc_files = ch_multiqc_files.mix(ch_methods_description.collectFile(name: 'methods_description_mqc.yaml'))
     ch_multiqc_files = ch_multiqc_files.mix(CUSTOM_DUMPSOFTWAREVERSIONS.out.mqc_yml.collect())
-    ch_multiqc_files = ch_multiqc_files.mix(FASTQC.out.zip.collect{it[1]}.ifEmpty([]))
 
     MULTIQC (
         ch_multiqc_files.collect(),
@@ -108,6 +159,7 @@ workflow MCMICRO {
         ch_multiqc_logo.toList()
     )
     multiqc_report = MULTIQC.out.report.toList()
+    */
 }
 
 /*

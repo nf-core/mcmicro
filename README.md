@@ -13,7 +13,12 @@
 
 ## Introduction
 
-**nf-core/mcmicro** is a bioinformatics pipeline that ...
+> **Warning:**
+> We are currently in the process of porting the original MCMICRO to nf-core. This pipeline is therefore in active development.
+
+**nf-core/mcmicro** is a nextflow pipeline for processing highly-multiplexed imaging data, as produced by technologies such as Cycif, MIBI, CODEX, SeqIF among others.
+
+If you want to run the original MCMICRO pipeline outside of nf-core, please see <https://mcmicro.org/>.
 
 <!-- TODO nf-core:
    Complete this sentence with a 2-3 sentence summary of what types of data the pipeline ingests, a brief overview of the
@@ -25,10 +30,7 @@
      workflows use the "tube map" design for that. See https://nf-co.re/docs/contributing/design_guidelines#examples for examples.   -->
 <!-- TODO nf-core: Fill in short bullet-pointed list of the default steps in the pipeline -->
 
-1. Read QC ([`FastQC`](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/))
-2. Present QC for raw reads ([`MultiQC`](http://multiqc.info/))
-
-## Usage
+<!-- ## Usage
 
 :::note
 If you are new to Nextflow and nf-core, please refer to [this page](https://nf-co.re/docs/usage/installation) on how
@@ -52,16 +54,16 @@ Each row represents a fastq file (single-end) or a pair of fastq files (paired e
 
 -->
 
-Now, you can run the pipeline using:
+<!-- Now, you can run the pipeline using: -->
 
 <!-- TODO nf-core: update the following command to include all required parameters for a minimal example -->
 
-```bash
+<!-- ```bash
 nextflow run nf-core/mcmicro \
    -profile <docker/singularity/.../institute> \
    --input samplesheet.csv \
    --outdir <OUTDIR>
-```
+``` -->
 
 :::warning
 Please provide pipeline parameters via the CLI or Nextflow `-params-file` option. Custom config files including those
@@ -69,19 +71,19 @@ provided by the `-c` Nextflow option can be used to provide any configuration _*
 see [docs](https://nf-co.re/usage/configuration#custom-configuration-files).
 :::
 
-For more details and further functionality, please refer to the [usage documentation](https://nf-co.re/mcmicro/usage) and the [parameter documentation](https://nf-co.re/mcmicro/parameters).
+<!-- For more details and further functionality, please refer to the [usage documentation](https://nf-co.re/mcmicro/usage) and the [parameter documentation](https://nf-co.re/mcmicro/parameters). -->
 
-## Pipeline output
+<!-- ## Pipeline output
 
 To see the results of an example test run with a full size dataset refer to the [results](https://nf-co.re/mcmicro/results) tab on the nf-core website pipeline page.
 For more details about the output files and reports, please refer to the
-[output documentation](https://nf-co.re/mcmicro/output).
+[output documentation](https://nf-co.re/mcmicro/output). -->
 
-## Credits
+<!-- ## Credits
 
 nf-core/mcmicro was originally written by TBD.
 
-We thank the following people for their extensive assistance in the development of this pipeline:
+We thank the following people for their extensive assistance in the development of this pipeline: -->
 
 <!-- TODO nf-core: If applicable, make list of people who have also contributed -->
 
@@ -97,6 +99,8 @@ For further information or help, don't hesitate to get in touch on the [Slack `#
 <!-- If you use  nf-core/mcmicro for your analysis, please cite it using the following doi: [10.5281/zenodo.XXXXXX](https://doi.org/10.5281/zenodo.XXXXXX) -->
 
 <!-- TODO nf-core: Add bibliography of tools and data used in your pipeline -->
+
+If you use nf-core/mcmicro for your analysis, please cite it using the following article: [Schapiro et al. 2022 Nat. Methods](https://www.nature.com/articles/s41592-021-01308-y)
 
 An extensive list of references for the tools used by the pipeline can be found in the [`CITATIONS.md`](CITATIONS.md) file.
 
