@@ -24,7 +24,7 @@ workflow INPUT_CHECK {
     SAMPLESHEET_CHECK ( samplesheet )
             .csv
             .splitCsv ( header:true, sep:',' )
-            .map { create_fastq_channel(it) }
+//            .map { create_fastq_channel(it) }
             .set { input }
 
     emit:
@@ -34,6 +34,7 @@ workflow INPUT_CHECK {
 
 // Function to get list of [ meta, [ fastq_1, fastq_2 ] ]
 def create_fastq_channel(LinkedHashMap row) {
+    print("*** create_fastq_channel: entering... ***")
     // create meta map
     def meta = [:]
     meta.id         = row.sample
@@ -41,15 +42,16 @@ def create_fastq_channel(LinkedHashMap row) {
 
     // add path(s) of the fastq file(s) to the meta map
     //def fastq_meta = []
-    /*
+    
+    '''
     if (!file(row.image).exists()) {
         exit 1, "ERROR: Please check input samplesheet -> image file does not exist!\n${row.image}"
     }
     if (!file(row.marker).exists()) {
         exit 1, "ERROR: Please check input samplesheet -> image file does not exist!\n${row.marker}"
     }
-    */
-    
+    '''
+
     // if (meta.single_end) {
     //     fastq_meta = [ meta, [ file(row.fastq_1) ] ]
     // } else {
@@ -57,7 +59,8 @@ def create_fastq_channel(LinkedHashMap row) {
     //         exit 1, "ERROR: Please check input samplesheet -> Read 2 FastQ file does not exist!\n${row.fastq_2}"
     //     }
     //}
-    image_meta = [ meta, [ file(row.image) ], [file(row.marker)] ]
+    //image_meta = [ meta, [ file(row.image) ], [file(row.marker)] ]
+    image_meta = [ meta, [ file(row.image_tile) ] ]
 
     return image_meta
 }

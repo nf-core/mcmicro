@@ -31,9 +31,9 @@ class RowChecker:
     def __init__(
         self,
         sample_col="sample",
-        first_col="image",
-        second_col="marker",
-        # single_col="single_end",
+        first_col="cycle_number",
+        second_col="channel_count",
+        third_col="image_tiles",
         **kwargs,
     ):
         """
@@ -42,20 +42,17 @@ class RowChecker:
         Args:
             sample_col (str): The name of the column that contains the sample name
                 (default "sample").
-            first_col (str): The name of the column that contains the channel name
-                (default "channel").
-            second_col (str): The name of the column that contains the image file
-                image file path (default "tiff").
-            #single_col (str): The name of the new column that will be inserted and
-            #    records whether the sample contains single- or paired-end sequencing
-            #    reads (default "single_end").
+            first_col (str): The name of the column that contains the cycles number.
+            second_col (str): The name of the column that contains the number of channels.
+            third_col (str): The name of the column that contains the image tiles file 
+                path (default "tiff").
 
         """
         super().__init__(**kwargs)
         self._sample_col = sample_col
         self._first_col = first_col
         self._second_col = second_col
-        # self._single_col = single_col
+        self._third_col = third_col
         self._seen = set()
         self.modified = []
 
@@ -69,9 +66,13 @@ class RowChecker:
 
         """
         self._validate_sample(row)
+        print('*** done validating sample ***')
         self._validate_first(row)
+        print('*** done validating first ***')
         self._validate_second(row)
-        # self._validate_pair(row)
+        print('*** done validating second ***')
+        self._validate_third(row)
+        print('*** done validating third ***')
         self._seen.add((row[self._sample_col], row[self._first_col]))
         self.modified.append(row)
 
@@ -83,27 +84,22 @@ class RowChecker:
         row[self._sample_col] = row[self._sample_col].replace(" ", "_")
 
     def _validate_first(self, row):
+        """Assert that the cycle entry has the right format and exists"""
+        if len(row[self._first_col]) <= 0:
+            raise AssertionError("cycle required.")
+        self._validate_cycle_format(row[self._first_col])
+
+    def _validate_second(self, row):
+        """Assert that the channel_count entry has the right format if it exists."""
+        if len(row[self._second_col]) <= 0:
+            raise AssertionError("channel_count required.")
+        self._validate_channel_count_format(row[self._second_col])
+
+    def _validate_third(self, row):
         """Assert that the image entry has the right format if it exists."""
         if len(row[self._first_col]) <= 0:
             raise AssertionError("Image required.")
-        self._validate_image_format(row[self._first_col])
-
-    def _validate_second(self, row):
-        """Assert that the image entry has the right format if it exists."""
-        if len(row[self._second_col]) <= 0:
-            raise AssertionError("Marker required.")
-        self._validate_marker_format(row[self._second_col])
-
-    # def _validate_pair(self, row):
-    #     """Assert that read pairs have the same file extension. Report pair status."""
-    #     if row[self._first_col] and row[self._second_col]:
-    #         row[self._single_col] = False
-    #         first_col_suffix = Path(row[self._first_col]).suffixes[-2:]
-    #         second_col_suffix = Path(row[self._second_col]).suffixes[-2:]
-    #         if first_col_suffix != second_col_suffix:
-    #             raise AssertionError("FASTQ pairs must have the same file extensions.")
-    #     else:
-    #         row[self._single_col] = True
+        self._validate_image_format(row[self._third_col])
 
     def _validate_image_format(self, filename):
         """Assert that a given filename has image extension."""
@@ -113,13 +109,25 @@ class RowChecker:
                 f"It should be one of: {', '.join(self.VALID_IMAGE_FORMATS)}"
             )
 
-    def _validate_marker_format(self, filename):
-        """Assert that a given filename has marker extension."""
-        if not any(filename.endswith(extension) for extension in self.VALID_MARKER_FORMATS):
-            raise AssertionError(
-                f"The marker file has an unrecognized extension: {filename}\n"
-                f"It should be one of: {', '.join(self.VALID_MARKER_FORMATS)}"
-            )
+    def _validate_cycle_format(self, cycle):
+        """Assert that the cycle is an integer."""
+        print(f'cycle is {cycle}')
+        try:
+            cycle = int(cycle)
+        except Exception as err:
+            print(err)
+            print("cycle must be an integer")
+            sys.exit(1)
+
+    def _validate_channel_count_format(self, channel_count):
+        """Assert that the channel_count is an integer."""
+        print(f'channel_count is {channel_count}')
+        try:
+            channel_count = int(channel_count)
+        except Exception as err:
+            print(err)
+            print("channel_count must be an integer")
+            sys.exit(1)
 
     def validate_unique_samples(self):
         """
@@ -197,7 +205,6 @@ def check_samplesheet(file_in, file_out):
     #    https://raw.githubusercontent.com/nf-core/test-datasets/viralrecon/samplesheet/samplesheet_test_illumina_amplicon.csv
 
     """
-    required_columns = {"sample", "image", "marker"}
     required_columns = {"sample","cycle_number","channel_count","image_tiles"}
     # See https://docs.python.org/3.9/library/csv.html#id3 to read up on `newline=""`.
     with file_in.open(newline="") as in_handle:

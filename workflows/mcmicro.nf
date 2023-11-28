@@ -35,7 +35,7 @@ ch_multiqc_custom_methods_description = params.multiqc_methods_description ? fil
 //
 // SUBWORKFLOW: Consisting of a mix of local and nf-core/modules
 //
-//include { INPUT_CHECK } from '../subworkflows/local/input_check'
+include { INPUT_CHECK } from '../subworkflows/local/input_check'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -76,6 +76,8 @@ def multiqc_report = []
 workflow MCMICRO {
 
     ch_versions = Channel.empty()
+
+    INPUT_CHECK(params.input)
 
     ch_from_samplesheet = Channel.fromSamplesheet("input")
 
