@@ -171,6 +171,7 @@ def sniff_format(handle):
 
 
 def check_samplesheet(file_in, file_out):
+    print("*** entering check_samplesheet ***")
     """
     Check that the tabular samplesheet has the structure expected by nf-core pipelines.
 
@@ -197,6 +198,7 @@ def check_samplesheet(file_in, file_out):
 
     """
     required_columns = {"sample", "image", "marker"}
+    required_columns = {"sample","cycle_number","channel_count","image_tiles"}
     # See https://docs.python.org/3.9/library/csv.html#id3 to read up on `newline=""`.
     with file_in.open(newline="") as in_handle:
         reader = csv.DictReader(in_handle, dialect=sniff_format(in_handle))
@@ -253,6 +255,7 @@ def parse_args(argv=None):
 
 
 def main(argv=None):
+    print("*** entering check_samplesheet: main ***")
     """Coordinate argument parsing and program execution."""
     args = parse_args(argv)
     logging.basicConfig(level=args.log_level, format="[%(levelname)s] %(message)s")

@@ -47,15 +47,18 @@ ch_multiqc_custom_methods_description = params.multiqc_methods_description ? fil
 // MODULE: Installed directly from nf-core/modules
 //
 
-include { BASICPY } from '../modules/nf-core/basicpy/main'
-include { ASHLAR } from '../modules/nf-core/ashlar/main'
-include { BACKSUB } from '../modules/nf-core/backsub/main'
-include { CELLPOSE } from '../modules/nf-core/cellpose/main'
-include { DEEPCELL_MESMER } from '../modules/nf-core/deepcell/mesmer/main'
-include { MCQUANT } from '../modules/nf-core/mcquant/main'
-include { SCIMAP_MCMICRO } from '../modules/nf-core/scimap/mcmicro/main'
+include { BASICPY                     } from '../modules/nf-core/basicpy/main'
+include { ASHLAR                      } from '../modules/nf-core/ashlar/main'
+include { BACKSUB                     } from '../modules/nf-core/backsub/main'
+include { CELLPOSE                    } from '../modules/nf-core/cellpose/main'
+include { DEEPCELL_MESMER             } from '../modules/nf-core/deepcell/mesmer/main'
+include { MCQUANT                     } from '../modules/nf-core/mcquant/main'
+include { SCIMAP_MCMICRO              } from '../modules/nf-core/scimap/mcmicro/main'
 include { MULTIQC                     } from '../modules/nf-core/multiqc/main'
 include { CUSTOM_DUMPSOFTWAREVERSIONS } from '../modules/nf-core/custom/dumpsoftwareversions/main'
+
+include { ILASTIK_PIXELCLASSIFICATION } from '../modules/nf-core/ilastik/pixelclassification/main'
+include { ILASTIK_MULTICUT            } from '../modules/nf-core/ilastik/multicut/main'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -76,17 +79,34 @@ workflow MCMICRO {
 
     ch_from_samplesheet = Channel.fromSamplesheet("input")
 
-    markerFile = [[id:"test_all" ], file("/workspace/data/cycif-tonsil-channels.csv")]
+    // markerFile = [[id:"test_all" ], file("/workspace/data/cycif-tonsil-channels.csv")]
+    marker_sheet = [[id:"test_all" ], file("/Users/robertyoung/DATA/exemplar/exemplar-001/markers.csv")]
+
+    //raw_images = [ [ id:'test_all' ],[
+    //            file("/workspace/data/ashlar/cycif-tonsil-cycle1.ome.tif"),
+    //            file("/workspace/data/ashlar/cycif-tonsil-cycle2.ome.tif"),
+    //            file("/workspace/data/ashlar/cycif-tonsil-cycle3.ome.tif")]
+    //            ]
+
+    //raw_images = [ [ id:'test_all' ],[
+    //            file("/Users/robertyoung/DATA/cycif/tonsil/cycif-tonsil-cycle1.ome.tif")]
+    //            ]
+
+    //raw_images = [ [ id:'test_all' ],[
+    //            file("/Users/robertyoung/DATA/exemplar/exemplar-001/raw/exemplar-001-cycle-06.ome.tiff")]
+    //            ]
 
     raw_images = [ [ id:'test_all' ],[
-                file("/workspace/data/ashlar/cycif-tonsil-cycle1.ome.tif"),
-                file("/workspace/data/ashlar/cycif-tonsil-cycle2.ome.tif"),
-                file("/workspace/data/ashlar/cycif-tonsil-cycle3.ome.tif")]
+                file("/Users/robertyoung/DATA/cycif/tonsil/cycif-tonsil-cycle1.ome.tif"),
+                file("/Users/robertyoung/DATA/cycif/tonsil/cycif-tonsil-cycle2.ome.tif"),
+                file("/Users/robertyoung/DATA/cycif/tonsil/cycif-tonsil-cycle3.ome.tif")]
                 ]
 
-    dfp =file("/workspace/data/cycif-tonsil-dfp.ome.tif")
-    ffp =file("/workspace/data/cycif-tonsil-ffp.ome.tif")
+    //dfp =file("/workspace/data/cycif-tonsil-dfp.ome.tif")
+    //ffp =file("/workspace/data/cycif-tonsil-ffp.ome.tif")
 
+    dfp =file("/Users/robertyoung/DATA/exemplar/exemplar-001/illumination/exemplar-001-cycle-06-dfp.tif")
+    ffp =file("/Users/robertyoung/DATA/exemplar/exemplar-001/illumination/exemplar-001-cycle-06-ffp.tif")
 
     // Format input for BASICPY
     // data_path = ch_from_samplesheet
@@ -111,7 +131,8 @@ workflow MCMICRO {
     // }
     // */
 
-    ASHLAR(raw_images, dfp, ffp)
+    // ASHLAR(raw_images, dfp, ffp)
+    ASHLAR(raw_images, [], [])
     ch_versions = ch_versions.mix(ASHLAR.out.versions)
 
     // // Run Background Correction
@@ -119,22 +140,30 @@ workflow MCMICRO {
     // ch_versions = ch_versions.mix(BACKSUB.out.versions)
 
     // // Run Segmentation
+    /*
     DEEPCELL_MESMER(ASHLAR.out.tif, [[:],[]])
     ch_versions = ch_versions.mix(DEEPCELL_MESMER.out.versions)
+    */
+
+    // fails
+    // ILASTIK_PIXELCLASSIFICATION(ASHLAR.out.tif, 1)
 
     // // Run Quantification
+    /*
     MCQUANT(ASHLAR.out.tif,
             DEEPCELL_MESMER.out.mask,
             markerFile)
     ch_versions = ch_versions.mix(MCQUANT.out.versions)
-
+    */
     // // Run Reporting
     // SCIMAP_MCMICRO(MCQUANT.out.csv)
     // ch_versions = ch_versions.mix(SCIMAP_MCMICRO.out.versions)
 
+    /*
     CUSTOM_DUMPSOFTWAREVERSIONS (
         ch_versions.unique().collectFile(name: 'collated_versions.yml')
     )
+    */
 
     //
     // MODULE: MultiQC

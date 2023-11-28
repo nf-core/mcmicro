@@ -41,13 +41,15 @@ def create_fastq_channel(LinkedHashMap row) {
 
     // add path(s) of the fastq file(s) to the meta map
     //def fastq_meta = []
+    /*
     if (!file(row.image).exists()) {
         exit 1, "ERROR: Please check input samplesheet -> image file does not exist!\n${row.image}"
     }
     if (!file(row.marker).exists()) {
         exit 1, "ERROR: Please check input samplesheet -> image file does not exist!\n${row.marker}"
     }
-
+    */
+    
     // if (meta.single_end) {
     //     fastq_meta = [ meta, [ file(row.fastq_1) ] ]
     // } else {

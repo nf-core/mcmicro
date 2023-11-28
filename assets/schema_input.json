@@ -12,39 +12,21 @@
                 "pattern": ".*$",
                 "errorMessage": "Sample name must be provided and cannot contain spaces"
             },
-            "data": {
+            "cycle_number": {
                 "type": "string",
                 "pattern": ".*$",
                 "errorMessage": "Need to provide a path to image files directory."
             },
-            "markerFile": {
-                "errorMessage": "Need to provide a markerfile",
-                "anyOf": [
-                    {
-                        "type": "string",
-                        "pattern": ".*$"
-                    },
-                    {
-                        "type": "string",
-                        "maxLength": 0
-                    }
-                ]
+            "channel_count": {
+                "type": "integer",
+                "errorMessage": "Need to provide the number of channels"
             },
-            "tissue": {
+            "image_tiles": {
                 "type": "string",
-                "errorMessage": "Sample name must be provided and cannot contain spaces",
-                "anyOf": [
-                    {
-                        "type": "string",
-                        "pattern": ".*$"
-                    },
-                    {
-                        "type": "string",
-                        "maxLength": 0
-                    }
-                ]
+                "pattern": ".*$",
+                "errorMessage": "Need to provide a file containing image tiles"
             }
         },
-        "required": ["sample", "data", "markerFile"]
+        "required": ["sample","cycle_number","channel_count","image_tiles"]
     }
 }
