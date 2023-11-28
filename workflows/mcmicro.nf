@@ -75,11 +75,12 @@ def multiqc_report = []
 
 workflow MCMICRO {
 
-    ch_versions = Channel.empty()
-
     INPUT_CHECK(params.input)
 
+    ch_versions = Channel.empty()
+
     ch_from_samplesheet = Channel.fromSamplesheet("input")
+                            .view()
 
     // markerFile = [[id:"test_all" ], file("/workspace/data/cycif-tonsil-channels.csv")]
     marker_sheet = [[id:"test_all" ], file("/Users/robertyoung/DATA/exemplar/exemplar-001/markers.csv")]
