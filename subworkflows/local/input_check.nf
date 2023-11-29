@@ -21,23 +21,32 @@ workflow INPUT_CHECK {
             .set { images_merged }
     }
     */
+    
     SAMPLESHEET_CHECK ( samplesheet )
             .csv
             .splitCsv ( header:true, sep:',' )
-//            .map { create_fastq_channel(it) }
+            .map { create_fastq_channel(it) }
             .set { input }
+
+    // need to emit all sample sheet contents here
+    //    you can split them up in mcmicro.nf
+
+    // input.view { "all $it" }
+    //input.ashlar.view { "ashlar $it" }
+    //input.foo.view { "foo $it" }
 
     emit:
     input                                    // channel: [ val(meta), [ image ], [ marker ] ]
     versions = SAMPLESHEET_CHECK.out.versions // channel: [ versions.yml ]
 }
 
-// Function to get list of [ meta, [ fastq_1, fastq_2 ] ]
+// Function to get list of [ meta, [ cycle_number, channel_count, image_tiles ] ]
 def create_fastq_channel(LinkedHashMap row) {
     print("*** create_fastq_channel: entering... ***")
+
     // create meta map
     def meta = [:]
-    meta.id         = row.sample
+    meta.id         = row.sample + '_cycle_' + row.cycle_number
     // meta.tiff = row.single_end.toBoolean()
 
     // add path(s) of the fastq file(s) to the meta map
@@ -60,7 +69,7 @@ def create_fastq_channel(LinkedHashMap row) {
     //     }
     //}
     //image_meta = [ meta, [ file(row.image) ], [file(row.marker)] ]
-    image_meta = [ meta, [ file(row.image_tile) ] ]
+    image_meta = [ meta, [ row.cycle_number, row.channel_count, file(row.image_tiles) ] ]
 
     return image_meta
 }
