@@ -96,11 +96,9 @@ workflow MCMICRO {
         .multiMap 
             { it ->
                 ashlar: make_ashlar_input(it)
-                foo: it[0]
             }
 
     ch_from_samplesheet.ashlar.view { "ashlar $it" }
-    //ch_from_samplesheet.foo.view { "foo $it" }
 
     ch_from_marker_sheet = Channel.fromSamplesheet("marker_sheet")
         .map { validate_marker_sheet(it) }
