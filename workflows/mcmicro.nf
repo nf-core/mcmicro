@@ -77,9 +77,6 @@ def multiqc_report = []
 
 workflow MCMICRO {
 
-    // maybe better to just use input_check for validation and then parse 
-    //   the channel created below from the sample sheet
-
     // INPUT_CHECK(params.input)
 
 //    input_check_channel
@@ -99,9 +96,6 @@ workflow MCMICRO {
         .multiMap 
             { it ->
                 ashlar: make_ashlar_input(it)
-//                ashlar: [ get_input_file_list(it) ]  
-//                ashlar: [ [id:it[0]], [get_input_file_list(it[1])] ]
-//                ashlar: [ [id:it[0]], [it[1]] ]
                 foo: it[0]
             }
 
@@ -110,26 +104,6 @@ workflow MCMICRO {
 
     // markerFile = [[id:"test_all" ], file("/workspace/data/cycif-tonsil-channels.csv")]
     marker_sheet = [[id:"test_all" ], file("/Users/robertyoung/DATA/exemplar/exemplar-001/markers.csv")]
-
-    //raw_images = [ [ id:'test_all' ],[
-    //            file("/workspace/data/ashlar/cycif-tonsil-cycle1.ome.tif"),
-    //            file("/workspace/data/ashlar/cycif-tonsil-cycle2.ome.tif"),
-    //            file("/workspace/data/ashlar/cycif-tonsil-cycle3.ome.tif")]
-    //            ]
-
-    //raw_images = [ [ id:'test_all' ],[
-    //            file("/Users/robertyoung/DATA/cycif/tonsil/cycif-tonsil-cycle1.ome.tif")]
-    //            ]
-
-    //raw_images = [ [ id:'test_all' ],[
-    //            file("/Users/robertyoung/DATA/exemplar/exemplar-001/raw/exemplar-001-cycle-06.ome.tiff")]
-    //            ]
-
-    raw_images = [ [ id:'test_all' ],[
-                file("/Users/robertyoung/DATA/cycif/tonsil/cycif-tonsil-cycle1.ome.tif"),
-                file("/Users/robertyoung/DATA/cycif/tonsil/cycif-tonsil-cycle2.ome.tif"),
-                file("/Users/robertyoung/DATA/cycif/tonsil/cycif-tonsil-cycle3.ome.tif")]
-                ]
 
     //dfp =file("/workspace/data/cycif-tonsil-dfp.ome.tif")
     //ffp =file("/workspace/data/cycif-tonsil-ffp.ome.tif")
@@ -220,67 +194,16 @@ workflow MCMICRO {
     */
 }
 
-def make_ashlar_input(ArrayList foo) {
-    print("*** entering make_ashlar_input ***")
-    print(foo)
-
-    /* works
-    file_str = [[id:"foo"], [file("/Users/robertyoung/DATA/cycif/tonsil/cycif-tonsil-cycle1.ome.tif"),file("/Users/robertyoung/DATA/cycif/tonsil/cycif-tonsil-cycle2.ome.tif"),file("/Users/robertyoung/DATA/cycif/tonsil/cycif-tonsil-cycle3.ome.tif")]]    
-    */
-
+def make_ashlar_input(ArrayList samplesheet_row) {
     files = []
-
-    def image_dir = new File(foo[1])
+    def image_dir = new File(samplesheet_row[1])
     image_dir.eachFileRecurse (FileType.FILES) {
         // need to check against allowed types 
         files << file(it)
     }
-    // file_list = files.each { it.absolutePath }.collect { file(it) }.join(',')
-    
-    ashlar_input = [[id:foo[0]], files]
-    print("ashlar_input")
-    print(ashlar_input)
+    ashlar_input = [[id:samplesheet_row[0]], files]
 
     return ashlar_input
-}
-
-def get_input_file_list( dir_path) {
-    print("*** get_input_file_list: entering... ***")
-
-    /* close, but not full path
-    def file_list = []
-
-    def image_dir = new File(dir_path)
-    image_dir.eachFileRecurse (FileType.FILES) { 
-        file -> file_list << file
-    }
-    file_list_str = file_list.join(',')
-    print(file_list_str)
-
-    return file_list_str
-    */
-
-    def files = []
-
-    def image_dir = new File(dir_path)
-    image_dir.eachFileRecurse (FileType.FILES) {
-        // need to check against allowed types 
-        files << it
-    }
-    file_str = files.each { it.absolutePath }.collect { file(it) }.join(',')
-    /* works 
-    file_str = file("/Users/robertyoung/DATA/cycif/tonsil/cycif-tonsil-cycle1.ome.tif")
-    */
-
-    // doesn't work
-    // file_str = [file("/Users/robertyoung/DATA/cycif/tonsil/cycif-tonsil-cycle1.ome.tif"),file("/Users/robertyoung/DATA/cycif/tonsil/cycif-tonsil-cycle1.ome.tif")]
-
-    file_str = '[id:foo], [file("/Users/robertyoung/DATA/cycif/tonsil/cycif-tonsil-cycle1.ome.tif"),file("/Users/robertyoung/DATA/cycif/tonsil/cycif-tonsil-cycle2.ome.tif"),file("/Users/robertyoung/DATA/cycif/tonsil/cycif-tonsil-cycle3.ome.tif")]]'
-
-    print(file_str)
-
-    return file_str
-
 }
 
 /*
