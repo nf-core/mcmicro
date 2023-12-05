@@ -77,23 +77,11 @@ def multiqc_report = []
 
 workflow MCMICRO {
 
-    // INPUT_CHECK(params.input)
-
-//    input_check_channel
-//        .multiMap 
-//            { it -> 
-//                ashlar: it[1][2]
-//                foo: it[1][0]
-//            }
-
-    //input_check_channels.ashlar.view { "ashlar $it" }
-    //input_check_channels.foo.view { "foo $it" }
-
     ch_versions = Channel.empty()
 
     ch_from_samplesheet = Channel.fromSamplesheet("input")
         .view { "all $it" }
-        .multiMap 
+        .multiMap
             { it ->
                 ashlar: make_ashlar_input(it)
             }
@@ -102,9 +90,6 @@ workflow MCMICRO {
 
     ch_from_marker_sheet = Channel.fromSamplesheet("marker_sheet")
         .map { validate_marker_sheet(it) }
-
-    // markerFile = [[id:"test_all" ], file("/workspace/data/cycif-tonsil-channels.csv")]
-    marker_sheet = [[id:"test_all" ], file("/Users/robertyoung/DATA/exemplar/exemplar-001/markers.csv")]
 
     //dfp =file("/workspace/data/cycif-tonsil-dfp.ome.tif")
     //ffp =file("/workspace/data/cycif-tonsil-ffp.ome.tif")
@@ -199,7 +184,7 @@ def make_ashlar_input(ArrayList samplesheet_row) {
     files = []
     def image_dir = new File(samplesheet_row[1])
     image_dir.eachFileRecurse (FileType.FILES) {
-        // need to check against allowed types 
+        // need to check against allowed types
         files << file(it)
     }
     ashlar_input = [[id:samplesheet_row[0]], files]
