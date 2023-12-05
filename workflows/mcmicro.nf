@@ -102,6 +102,9 @@ workflow MCMICRO {
     ch_from_samplesheet.ashlar.view { "ashlar $it" }
     //ch_from_samplesheet.foo.view { "foo $it" }
 
+    ch_from_marker_sheet = Channel.fromSamplesheet("marker_sheet")
+        .map { validate_marker_sheet(it) }
+
     // markerFile = [[id:"test_all" ], file("/workspace/data/cycif-tonsil-channels.csv")]
     marker_sheet = [[id:"test_all" ], file("/Users/robertyoung/DATA/exemplar/exemplar-001/markers.csv")]
 
@@ -204,6 +207,27 @@ def make_ashlar_input(ArrayList samplesheet_row) {
     ashlar_input = [[id:samplesheet_row[0]], files]
 
     return ashlar_input
+}
+
+marker_name_list = []
+cycle_channel_tuple_list = []
+
+def validate_marker_sheet(ArrayList sample_sheet_row) {
+    // check marker name uniqueness
+    if(marker_name_list.contains(sample_sheet_row[2])){
+        throw new Exception("Error: duplicate marker name in marker sheet! Marker names must be unique.")
+        System.exit(1)
+    } else {
+        marker_name_list.add(sample_sheet_row[2])
+    }
+
+    // check that (cycle, channel) tuple is unique
+    curr_tuple = new Tuple(sample_sheet_row[0], sample_sheet_row[1])
+    if(cycle_channel_tuple_list.contains(curr_tuple)){
+        throw new Exception("Error: duplicate cycle_number & channel_number pair! cycle_number & channel_number pairs must be unique.")
+    } else {
+        cycle_channel_tuple_list.add(curr_tuple)
+    }
 }
 
 /*
