@@ -184,9 +184,12 @@ def make_ashlar_input(ArrayList samplesheet_row) {
     files = []
     def image_dir = new File(samplesheet_row[1])
     image_dir.eachFileRecurse (FileType.FILES) {
-        // need to check against allowed types
-        files << file(it)
+        if(it.toString().endsWith(".ome.tif")){
+            files << file(it)
+        }
     }
+
+
     ashlar_input = [[id:samplesheet_row[0]], files]
 
     return ashlar_input
