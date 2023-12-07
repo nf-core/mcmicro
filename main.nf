@@ -37,9 +37,11 @@ if (params.help) {
 }
 
 // Validate input parameters
+/*
 if (params.validate_params) {
     validateParameters()
 }
+*/
 
 WorkflowMain.initialise(workflow, params, log)
 

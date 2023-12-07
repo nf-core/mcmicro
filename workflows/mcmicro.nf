@@ -79,7 +79,7 @@ workflow MCMICRO {
 
     ch_versions = Channel.empty()
 
-    ch_from_samplesheet = Channel.fromSamplesheet("input")
+    ch_from_samplesheet = Channel.fromSamplesheet("input_sample")
         .view { "all $it" }
         .multiMap
             { it ->
