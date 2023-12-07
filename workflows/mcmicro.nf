@@ -91,12 +91,6 @@ workflow MCMICRO {
     ch_from_marker_sheet = Channel.fromSamplesheet("marker_sheet")
         .map { validate_marker_sheet(it) }
 
-    //dfp =file("/workspace/data/cycif-tonsil-dfp.ome.tif")
-    //ffp =file("/workspace/data/cycif-tonsil-ffp.ome.tif")
-
-    dfp =file("/Users/robertyoung/DATA/exemplar/exemplar-001/illumination/exemplar-001-cycle-06-dfp.tif")
-    ffp =file("/Users/robertyoung/DATA/exemplar/exemplar-001/illumination/exemplar-001-cycle-06-ffp.tif")
-
     // Format input for BASICPY
     // data_path = ch_from_samplesheet
     //     .map(it->"${it[1]}/*.ome.tif")
@@ -211,6 +205,17 @@ def validate_marker_sheet(ArrayList sample_sheet_row) {
     curr_tuple = new Tuple(sample_sheet_row[0], sample_sheet_row[1])
     if(cycle_channel_tuple_list.contains(curr_tuple)){
         throw new Exception("Error: duplicate cycle_number & channel_number pair! cycle_number & channel_number pairs must be unique.")
+        System.exit(1)
+    } else if(sample_sheet_row[0] < 1 || sample_sheet_row[1] < 1) {
+        throw new Exception("Error: cycle_number and channel_number are 1-based.  Values less than 1 are not allowed.")
+        System.exit(1)
+    } else if((cycle_channel_tuple_list.size() > 0) &&
+              ( ((sample_sheet_row[0] != cycle_channel_tuple_list.last()[0]) &&
+                 (sample_sheet_row[0] != cycle_channel_tuple_list.last()[0]+1)) ||
+                ((sample_sheet_row[1] != cycle_channel_tuple_list.last()[1]) &&
+                 (sample_sheet_row[1] != cycle_channel_tuple_list.last()[1]+1)) )) {
+        throw new Exception("Error: cycle_number and channel_number must be sequential with no gaps")
+        System.exit(1)
     } else {
         cycle_channel_tuple_list.add(curr_tuple)
     }
