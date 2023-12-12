@@ -77,14 +77,31 @@ def multiqc_report = []
 
 workflow MCMICRO {
 
+    if (params.input_sample && !params.input_cycle) {
+        ch_from_samplesheet = Channel.fromSamplesheet("input_sample")
+            .view { "all $it" }
+            .multiMap
+                { it ->
+                    ashlar: make_ashlar_input_sample(it)
+                }
+    } else if(!params.input_sample && params.input_cycle) {
+        print("got input_cycle")
+        ch_from_samplesheet = Channel.fromSamplesheet("input_cycle")
+            .view { "all $it" }
+            .multiMap
+                { it ->
+                    ashlar: make_ashlar_input_cycle(it)
+                }
+    } else if(params.input_sample && params.input_cycle) {
+        print("Error: You must have EITHER an input_sample parameter OR an input_cycle parameter, but not both!")
+        System.exit(1)
+    } else if(!params.input_sample && !params.input_cycle) {
+        print("Error: You must have EITHER an input_sample parameter OR and input_cycle paramter!")
+        System.exit(1)
+    }
+
     ch_versions = Channel.empty()
 
-    ch_from_samplesheet = Channel.fromSamplesheet("input_sample")
-        .view { "all $it" }
-        .multiMap
-            { it ->
-                ashlar: make_ashlar_input(it)
-            }
 
     ch_from_samplesheet.ashlar.view { "ashlar $it" }
 
@@ -174,7 +191,7 @@ workflow MCMICRO {
     */
 }
 
-def make_ashlar_input(ArrayList samplesheet_row) {
+def make_ashlar_input_sample(ArrayList samplesheet_row) {
     files = []
     def image_dir = new File(samplesheet_row[1])
     image_dir.eachFileRecurse (FileType.FILES) {
@@ -183,8 +200,14 @@ def make_ashlar_input(ArrayList samplesheet_row) {
         }
     }
 
-
     ashlar_input = [[id:samplesheet_row[0]], files]
+
+    return ashlar_input
+}
+
+def make_ashlar_input_cycle(ArrayList samplesheet_row) {
+
+    ashlar_input = [[id:samplesheet_row[0]], samplesheet_row[3]]
 
     return ashlar_input
 }
