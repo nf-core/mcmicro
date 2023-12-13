@@ -5,6 +5,7 @@
 */
 
 import groovy.io.FileType
+import nextflow.Nextflow
 
 include { validateParameters; paramsHelp; paramsSummaryLog; fromSamplesheet; paramsSummaryMap } from 'plugin/nf-validation'
 
@@ -79,31 +80,26 @@ workflow MCMICRO {
 
     if (params.input_sample && !params.input_cycle) {
         ch_from_samplesheet = Channel.fromSamplesheet("input_sample")
-            .view { "all $it" }
             .multiMap
                 { it ->
-                    ashlar: make_ashlar_input_sample(it)
+                    ashlar: make_ashlar_input_sample(it, params.input_sample)
                 }
     } else if(!params.input_sample && params.input_cycle) {
-        print("got input_cycle")
         ch_from_samplesheet = Channel.fromSamplesheet("input_cycle")
-            .view { "all $it" }
             .multiMap
                 { it ->
-                    ashlar: make_ashlar_input_cycle(it)
+                    ashlar: make_ashlar_input_cycle(it, params.input_cycle)
                 }
     } else if(params.input_sample && params.input_cycle) {
-        print("Error: You must have EITHER an input_sample parameter OR an input_cycle parameter, but not both!")
-        System.exit(1)
+        Nextflow.error("ERROR: You must have EITHER an input_sample parameter OR an input_cycle parameter, but not both!")
     } else if(!params.input_sample && !params.input_cycle) {
-        print("Error: You must have EITHER an input_sample parameter OR and input_cycle paramter!")
-        System.exit(1)
+        Nextflow.error("ERROR: You must have EITHER an input_sample parameter OR and input_cycle paramter!")
     }
 
     ch_versions = Channel.empty()
 
 
-    ch_from_samplesheet.ashlar.view { "ashlar $it" }
+    // ch_from_samplesheet.ashlar.view { "ashlar $it" }
 
     ch_from_marker_sheet = Channel.fromSamplesheet("marker_sheet")
         .map { validate_marker_sheet(it) }
@@ -191,23 +187,31 @@ workflow MCMICRO {
     */
 }
 
-def make_ashlar_input_sample(ArrayList samplesheet_row) {
+def make_ashlar_input_sample(ArrayList samplesheet_row, String samplesheet_path) {
+    def header
+    new File(samplesheet_path).withReader { header_list = it.readLine().split(',') }
+    sample_name_index = Arrays.asList(header_list).indexOf('sample')
+    image_dir_path_index = Arrays.asList(header_list).indexOf('image_directory')
+
     files = []
-    def image_dir = new File(samplesheet_row[1])
+    def image_dir = new File(samplesheet_row[image_dir_path_index])
     image_dir.eachFileRecurse (FileType.FILES) {
         if(it.toString().endsWith(".ome.tif")){
             files << file(it)
         }
     }
 
-    ashlar_input = [[id:samplesheet_row[0]], files]
+    ashlar_input = [[id:samplesheet_row[sample_name_index]], files]
 
     return ashlar_input
 }
 
-def make_ashlar_input_cycle(ArrayList samplesheet_row) {
-
-    ashlar_input = [[id:samplesheet_row[0]], samplesheet_row[3]]
+def make_ashlar_input_cycle(ArrayList samplesheet_row, String samplesheet_path) {
+    def header
+    new File(samplesheet_path).withReader { header_list = it.readLine().split(',') }
+    image_tiles_path_index = Arrays.asList(header_list).indexOf('image_tiles')
+    sample_name_index = Arrays.asList(header_list).indexOf('sample')
+    ashlar_input = [[id:samplesheet_row[sample_name_index]], samplesheet_row[image_tiles_path_index]]
 
     return ashlar_input
 }
@@ -218,8 +222,7 @@ cycle_channel_tuple_list = []
 def validate_marker_sheet(ArrayList sample_sheet_row) {
     // check marker name uniqueness
     if(marker_name_list.contains(sample_sheet_row[2])){
-        throw new Exception("Error: duplicate marker name in marker sheet! Marker names must be unique.")
-        System.exit(1)
+        Nextflow.error("ERROR: Duplicate marker name in marker sheet! Marker names must be unique.")
     } else {
         marker_name_list.add(sample_sheet_row[2])
     }
@@ -227,18 +230,15 @@ def validate_marker_sheet(ArrayList sample_sheet_row) {
     // check that (cycle, channel) tuple is unique
     curr_tuple = new Tuple(sample_sheet_row[0], sample_sheet_row[1])
     if(cycle_channel_tuple_list.contains(curr_tuple)){
-        throw new Exception("Error: duplicate cycle_number & channel_number pair! cycle_number & channel_number pairs must be unique.")
-        System.exit(1)
+        Nextflow.error("ERROR: Duplicate cycle_number & channel_number pair! cycle_number & channel_number pairs must be unique.")
     } else if(sample_sheet_row[0] < 1 || sample_sheet_row[1] < 1) {
-        throw new Exception("Error: cycle_number and channel_number are 1-based.  Values less than 1 are not allowed.")
-        System.exit(1)
+        Nextflow.error("ERROR: cycle_number and channel_number are 1-based.  Values less than 1 are not allowed.")
     } else if((cycle_channel_tuple_list.size() > 0) &&
               ( ((sample_sheet_row[0] != cycle_channel_tuple_list.last()[0]) &&
                  (sample_sheet_row[0] != cycle_channel_tuple_list.last()[0]+1)) ||
                 ((sample_sheet_row[1] != cycle_channel_tuple_list.last()[1]) &&
                  (sample_sheet_row[1] != cycle_channel_tuple_list.last()[1]+1)) )) {
-        throw new Exception("Error: cycle_number and channel_number must be sequential with no gaps")
-        System.exit(1)
+        Nextflow.error("ERROR: cycle_number and channel_number must be sequential with no gaps")
     } else {
         cycle_channel_tuple_list.add(curr_tuple)
     }
