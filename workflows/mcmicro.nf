@@ -79,16 +79,18 @@ def multiqc_report = []
 workflow MCMICRO {
 
     if (params.input_sample && !params.input_cycle) {
+        sample_sheet_index_map = make_sample_sheet_index_map(params.input_sample)
         ch_from_samplesheet = Channel.fromSamplesheet("input_sample")
             .multiMap
                 { it ->
-                    ashlar: make_ashlar_input_sample(it, params.input_sample)
+                    ashlar: make_ashlar_input_sample(it, sample_sheet_index_map)
                 }
     } else if(!params.input_sample && params.input_cycle) {
+        sample_sheet_index_map = make_sample_sheet_index_map(params.input_cycle)
         ch_from_samplesheet = Channel.fromSamplesheet("input_cycle")
             .multiMap
                 { it ->
-                    ashlar: make_ashlar_input_cycle(it, params.input_cycle)
+                    ashlar: make_ashlar_input_cycle(it, sample_sheet_index_map)
                 }
     } else if(params.input_sample && params.input_cycle) {
         Nextflow.error("ERROR: You must have EITHER an input_sample parameter OR an input_cycle parameter, but not both!")
@@ -102,7 +104,7 @@ workflow MCMICRO {
     // ch_from_samplesheet.ashlar.view { "ashlar $it" }
 
     ch_from_marker_sheet = Channel.fromSamplesheet("marker_sheet")
-        .map { validate_marker_sheet(it) }
+        .map { validate_marker_sheet(it, params.marker_sheet) }
 
     // Format input for BASICPY
     // data_path = ch_from_samplesheet
@@ -187,11 +189,21 @@ workflow MCMICRO {
     */
 }
 
-def make_ashlar_input_sample(ArrayList samplesheet_row, String samplesheet_path) {
+def make_sample_sheet_index_map(String samplesheet_path) {
+    def sample_sheet_index_map = [:]
     def header
     new File(samplesheet_path).withReader { header_list = it.readLine().split(',') }
-    sample_name_index = Arrays.asList(header_list).indexOf('sample')
-    image_dir_path_index = Arrays.asList(header_list).indexOf('image_directory')
+    def ctr = 0
+    header_list.each { value ->
+        sample_sheet_index_map[value] = ctr
+        ctr = ctr + 1
+    }
+    return sample_sheet_index_map
+}
+
+def make_ashlar_input_sample(ArrayList samplesheet_row, Map sample_sheet_index_map) {
+    sample_name_index = sample_sheet_index_map['sample']
+    image_dir_path_index = sample_sheet_index_map['image_directory']
 
     files = []
     def image_dir = new File(samplesheet_row[image_dir_path_index])
@@ -206,11 +218,9 @@ def make_ashlar_input_sample(ArrayList samplesheet_row, String samplesheet_path)
     return ashlar_input
 }
 
-def make_ashlar_input_cycle(ArrayList samplesheet_row, String samplesheet_path) {
-    def header
-    new File(samplesheet_path).withReader { header_list = it.readLine().split(',') }
-    image_tiles_path_index = Arrays.asList(header_list).indexOf('image_tiles')
-    sample_name_index = Arrays.asList(header_list).indexOf('sample')
+def make_ashlar_input_cycle(ArrayList samplesheet_row, Map sample_sheet_index_map) {
+    sample_name_index = sample_sheet_index_map['sample']
+    image_tiles_path_index = sample_sheet_index_map['image_tiles']
     ashlar_input = [[id:samplesheet_row[sample_name_index]], samplesheet_row[image_tiles_path_index]]
 
     return ashlar_input
@@ -219,7 +229,13 @@ def make_ashlar_input_cycle(ArrayList samplesheet_row, String samplesheet_path) 
 marker_name_list = []
 cycle_channel_tuple_list = []
 
-def validate_marker_sheet(ArrayList sample_sheet_row) {
+def validate_marker_sheet(ArrayList sample_sheet_row, String marker_sheet_path) {
+    def header
+    new File(marker_sheet_path).withReader { header_list = it.readLine().split(',') }
+    channel_index = Arrays.asList(header_list).indexOf('channel_number')
+    cycle_index = Arrays.asList(header_list).indexOf('cycle_number')
+    marker_index = Arrays.asList(header_list).indexOf('marker_name')
+
     // check marker name uniqueness
     if(marker_name_list.contains(sample_sheet_row[2])){
         Nextflow.error("ERROR: Duplicate marker name in marker sheet! Marker names must be unique.")
