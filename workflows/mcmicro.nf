@@ -189,10 +189,10 @@ workflow MCMICRO {
     */
 }
 
-def make_sample_sheet_index_map(String samplesheet_path) {
+def make_sample_sheet_index_map(String sample_sheet_path) {
     def sample_sheet_index_map = [:]
     def header
-    new File(samplesheet_path).withReader { header_list = it.readLine().split(',') }
+    new File(sample_sheet_path).withReader { header_list = it.readLine().split(',') }
     def ctr = 0
     header_list.each { value ->
         sample_sheet_index_map[value] = ctr
@@ -213,27 +213,27 @@ def make_marker_sheet_index_map(String marker_sheet_path) {
     return marker_sheet_index_map
 }
 
-def make_ashlar_input_sample(ArrayList samplesheet_row, Map sample_sheet_index_map) {
+def make_ashlar_input_sample(ArrayList sample_sheet_row, Map sample_sheet_index_map) {
     sample_name_index = sample_sheet_index_map['sample']
     image_dir_path_index = sample_sheet_index_map['image_directory']
 
     files = []
-    def image_dir = new File(samplesheet_row[image_dir_path_index])
+    def image_dir = new File(sample_sheet_row[image_dir_path_index])
     image_dir.eachFileRecurse (FileType.FILES) {
         if(it.toString().endsWith(".ome.tif")){
             files << file(it)
         }
     }
 
-    ashlar_input = [[id:samplesheet_row[sample_name_index]], files]
+    ashlar_input = [[id:sample_sheet_row[sample_name_index]], files]
 
     return ashlar_input
 }
 
-def make_ashlar_input_cycle(ArrayList samplesheet_row, Map sample_sheet_index_map) {
+def make_ashlar_input_cycle(ArrayList sample_sheet_row, Map sample_sheet_index_map) {
     sample_name_index = sample_sheet_index_map['sample']
     image_tiles_path_index = sample_sheet_index_map['image_tiles']
-    ashlar_input = [[id:samplesheet_row[sample_name_index]], samplesheet_row[image_tiles_path_index]]
+    ashlar_input = [[id:sample_sheet_row[sample_name_index]], sample_sheet_row[image_tiles_path_index]]
 
     return ashlar_input
 }
