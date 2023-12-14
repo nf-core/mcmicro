@@ -102,9 +102,9 @@ workflow MCMICRO {
 
 
     // ch_from_samplesheet.ashlar.view { "ashlar $it" }
-
+    marker_sheet_index_map = make_marker_sheet_index_map(params.marker_sheet)
     ch_from_marker_sheet = Channel.fromSamplesheet("marker_sheet")
-        .map { validate_marker_sheet(it, params.marker_sheet) }
+        .map { validate_marker_sheet(it, sample_sheet_index_map, marker_sheet_index_map) }
 
     // Format input for BASICPY
     // data_path = ch_from_samplesheet
@@ -201,6 +201,18 @@ def make_sample_sheet_index_map(String samplesheet_path) {
     return sample_sheet_index_map
 }
 
+def make_marker_sheet_index_map(String marker_sheet_path) {
+    def marker_sheet_index_map = [:]
+    def header
+    new File(marker_sheet_path).withReader { header_list = it.readLine().split(',') }
+    def ctr = 0
+    header_list.each { value ->
+        marker_sheet_index_map[value] = ctr
+        ctr = ctr + 1
+    }
+    return marker_sheet_index_map
+}
+
 def make_ashlar_input_sample(ArrayList samplesheet_row, Map sample_sheet_index_map) {
     sample_name_index = sample_sheet_index_map['sample']
     image_dir_path_index = sample_sheet_index_map['image_directory']
@@ -229,31 +241,37 @@ def make_ashlar_input_cycle(ArrayList samplesheet_row, Map sample_sheet_index_ma
 marker_name_list = []
 cycle_channel_tuple_list = []
 
-def validate_marker_sheet(ArrayList sample_sheet_row, String marker_sheet_path) {
-    def header
-    new File(marker_sheet_path).withReader { header_list = it.readLine().split(',') }
-    channel_index = Arrays.asList(header_list).indexOf('channel_number')
-    cycle_index = Arrays.asList(header_list).indexOf('cycle_number')
-    marker_index = Arrays.asList(header_list).indexOf('marker_name')
+def validate_marker_sheet(ArrayList marker_sheet_row, Map sample_sheet_index_map, Map marker_sheet_index_map) {
+    channel_index = marker_sheet_index_map['channel_number']
+    cycle_index = marker_sheet_index_map['cycle_number']
+    marker_index = marker_sheet_index_map['marker_name']
+    sample_name_index = sample_sheet_index_map['sample']
+    cycle_number_index = sample_sheet_index_map['cycle_number']
+    channel_count_index = sample_sheet_index_map['channel_count']
+
+    if (!sample_sheet_index_map['cycle_number']) {
+        // we're currently only validating 1 row per sample per cycle sample sheets
+        return
+    }
 
     // check marker name uniqueness
-    if(marker_name_list.contains(sample_sheet_row[2])){
+    if(marker_name_list.contains(marker_sheet_row[marker_index])){
         Nextflow.error("ERROR: Duplicate marker name in marker sheet! Marker names must be unique.")
     } else {
-        marker_name_list.add(sample_sheet_row[2])
+        marker_name_list.add(marker_sheet_row[marker_index])
     }
 
     // check that (cycle, channel) tuple is unique
-    curr_tuple = new Tuple(sample_sheet_row[0], sample_sheet_row[1])
+    curr_tuple = new Tuple(marker_sheet_row[channel_index], marker_sheet_row[cycle_index])
     if(cycle_channel_tuple_list.contains(curr_tuple)){
         Nextflow.error("ERROR: Duplicate cycle_number & channel_number pair! cycle_number & channel_number pairs must be unique.")
-    } else if(sample_sheet_row[0] < 1 || sample_sheet_row[1] < 1) {
+    } else if(marker_sheet_row[channel_index] < 1 || marker_sheet_row[cycle_index] < 1) {
         Nextflow.error("ERROR: cycle_number and channel_number are 1-based.  Values less than 1 are not allowed.")
     } else if((cycle_channel_tuple_list.size() > 0) &&
-              ( ((sample_sheet_row[0] != cycle_channel_tuple_list.last()[0]) &&
-                 (sample_sheet_row[0] != cycle_channel_tuple_list.last()[0]+1)) ||
-                ((sample_sheet_row[1] != cycle_channel_tuple_list.last()[1]) &&
-                 (sample_sheet_row[1] != cycle_channel_tuple_list.last()[1]+1)) )) {
+              ( ((marker_sheet_row[channel_index] != cycle_channel_tuple_list.last()[channel_index]) &&
+                 (marker_sheet_row[channel_index] != cycle_channel_tuple_list.last()[channel_index]+1)) ||
+                ((marker_sheet_row[cycle_index] != cycle_channel_tuple_list.last()[cycle_index]) &&
+                 (marker_sheet_row[cycle_index] != cycle_channel_tuple_list.last()[cycle_index]+1)) )) {
         Nextflow.error("ERROR: cycle_number and channel_number must be sequential with no gaps")
     } else {
         cycle_channel_tuple_list.add(curr_tuple)
