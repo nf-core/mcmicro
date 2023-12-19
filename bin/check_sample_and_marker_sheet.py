@@ -5,11 +5,13 @@
 
 
 import argparse
+import collections
 import csv
 import logging
 import sys
 from collections import Counter
 from pathlib import Path
+
 
 logger = logging.getLogger()
 
@@ -180,9 +182,30 @@ def sniff_format(handle):
     dialect = sniffer.sniff(peek)
     return dialect
 
+def check_sample_and_marker_sheet(input_path, marker_sheet_path):
+
+    sample_dict = collections.defaultdict(list)
+    input_file = csv.DictReader(open(input_path))
+    for row in input_file:
+        for key,value in row.items():
+            sample_dict[key].append(value)
+    
+    if 'cycle_number' not in list(sample_dict.keys()):
+        # no cycle_number in sample_sheet, so no additional validation
+        return
+    
+    marker_dict = collections.defaultdict(list)
+    input_file = csv.DictReader(open(marker_sheet_path))
+    for row in input_file:
+        for key,value in row.items():
+            marker_dict[key].append(value)
+
+    if set(sample_dict['cycle_number']) != set(marker_dict['cycle_number']):
+        raise Exception('cycle_number values in sample and marker sheets must be 1:1 match.')
+
 def check_marker_sheet(file_in, file_out):
-    import csv
-    import collections
+    print('*** check_marker_sheet ***')
+    print(file_in)
 
     marker_dict = collections.defaultdict(list)
     input_file = csv.DictReader(open(file_in))
@@ -216,8 +239,11 @@ def check_marker_sheet(file_in, file_out):
         raise Exception('channel_number and cycle number in the marker sheet are 1-based, so cannot be 0 or negative!')
     
     for i in range(1, len(marker_dict[list(marker_dict.keys())[0]])):
+        print(f"i = {i}")
         if ( (marker_dict['channel_number'][i] != marker_dict['channel_number'][i-1]) and
              (int(marker_dict['channel_number'][i]) != int(marker_dict['channel_number'][i-1])+1) ):
+            print(marker_dict['channel_number'][i])
+            print(marker_dict['channel_number'][i-1])
             raise Exception('channel_number must be incresing without any gaps')
         if ( (marker_dict['cycle_number'][i] != marker_dict['cycle_number'][i-1]) and
              (int(marker_dict['cycle_number'][i]) != int(marker_dict['cycle_number'][i-1])+1) ):
@@ -233,6 +259,7 @@ def check_marker_sheet(file_in, file_out):
             curr_row_list = []
             for k in marker_dict:
                 curr_row_list.append(marker_dict[k][i])
+            print(curr_row_list)
             curr_row_str = ','.join(curr_row_list) + "\n"
             fout.write(curr_row_str)
         
@@ -348,16 +375,16 @@ def parse_args(argv=None):
         epilog="Example: python check_samplesheet.py samplesheet.csv samplesheet.valid.csv",
     )
     parser.add_argument(
-        "file_in",
-        metavar="FILE_IN",
+        "input",
+        metavar="INPUT",
         type=Path,
-        help="Tabular input samplesheet in CSV or TSV format.",
+        help="Tabular input sample sheet in CSV format.",
     )
     parser.add_argument(
-        "file_out",
-        metavar="FILE_OUT",
+        "marker_sheet",
+        metavar="MARKER_SHEET",
         type=Path,
-        help="Transformed output samplesheet in CSV format.",
+        help="Tablular input marker sheet in CSV format.",
     )
     parser.add_argument(
         "-l",
@@ -370,14 +397,17 @@ def parse_args(argv=None):
 
 
 def main(argv=None):
+    print("*** entering check_sample_and_marker_sheet: main ***")
     """Coordinate argument parsing and program execution."""
     args = parse_args(argv)
     logging.basicConfig(level=args.log_level, format="[%(levelname)s] %(message)s")
-    if not args.file_in.is_file():
-        logger.error(f"The given input file {args.file_in} was not found!")
+    if not args.input.is_file():
+        logger.error(f"The given input file {args.input} was not found!")
         sys.exit(2)
-    args.file_out.parent.mkdir(parents=True, exist_ok=True)
-    check_marker_sheet(args.file_in, args.file_out)
+    args.marker_sheet.parent.mkdir(parents=True, exist_ok=True)
+    print('*** args ***')
+    print(args)
+    check_sample_and_marker_sheet(args.input, args.marker_sheet)
 
 
 if __name__ == "__main__":

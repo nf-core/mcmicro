@@ -3,6 +3,7 @@
 //
 include { SAMPLESHEET_CHECK  } from '../../modules/local/samplesheet_check'
 include { MARKER_SHEET_CHECK  } from '../../modules/local/marker_sheet_check'
+include { SAMPLE_AND_MARKER_SHEET_CHECK } from '../../modules/local/sample_and_marker_sheet_check'
 
 workflow INPUT_CHECK {
     take:
@@ -20,8 +21,10 @@ workflow INPUT_CHECK {
 
     if ( input_type == "sample" ) {
         input = Channel.fromSamplesheet("input_sample")
+        SAMPLE_AND_MARKER_SHEET_CHECK ( params.input_sample, params.marker_sheet )
     } else if ( input_type == "cycle" ) {
         input = Channel.fromSamplesheet("input_cycle")
+        SAMPLE_AND_MARKER_SHEET_CHECK ( params.input_cycle, params.marker_sheet )
     }
     
     MARKER_SHEET_CHECK ( params.marker_sheet )

@@ -1,4 +1,4 @@
-process MARKER_SHEET_CHECK {
+process SAMPLE_AND_MARKER_SHEET_CHECK {
     tag "$marker_sheet"
     label 'process_single'
 
@@ -8,10 +8,10 @@ process MARKER_SHEET_CHECK {
         'biocontainers/python:3.8.3' }"
 
     input:
+    path input
     path marker_sheet
 
     output:
-    path '*.csv'       , emit: csv
     path "versions.yml", emit: versions
 
     when:
@@ -19,9 +19,9 @@ process MARKER_SHEET_CHECK {
 
     script: // This script is bundled with the pipeline, in nf-core/mcmicro/bin/
     """
-    check_marker_sheet.py \\
+    check_sample_and_marker_sheet.py \\
+        $input \\
         $marker_sheet \\
-        marker_sheet.valid.csv
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
