@@ -1,14 +1,31 @@
 //
 // Check input samplesheet and get read channels
 //
-
-include { SAMPLESHEET_CHECK } from '../../modules/local/samplesheet_check'
+include { SAMPLESHEET_CHECK  } from '../../modules/local/samplesheet_check'
+include { MARKER_SHEET_CHECK  } from '../../modules/local/marker_sheet_check'
 
 workflow INPUT_CHECK {
     take:
-    samplesheet // file: /path/to/samplesheet.csv
+    input_type     // either 'sample' or 'cycle'
+    samplesheet_sample  // file: /path/to/input_sample.csv
+    samplesheet_cycle  // file: /path/to/input_cycle.csv
+    marker_sheet // file: /path/to/marker_sheet.csv
 
+    // required_columns_cycle = {"sample","cycle_number","channel_count","image_tiles"}
+    // required_columns_sample = {"sample", "image_dir"}
+    
     main:
+
+    SAMPLESHEET_CHECK ( input_type )
+
+    if ( input_type == "sample" ) {
+        input = Channel.fromSamplesheet("input_sample")
+    } else if ( input_type == "cycle" ) {
+        input = Channel.fromSamplesheet("input_cycle")
+    }
+    
+    MARKER_SHEET_CHECK ( params.marker_sheet )
+    marker = Channel.fromSamplesheet("marker_sheet")
 
     /*
     if( params.illumination){
@@ -22,12 +39,15 @@ workflow INPUT_CHECK {
     }
     */
     
+    /*
     SAMPLESHEET_CHECK ( samplesheet )
             .csv
             .splitCsv ( header:true, sep:',' )
             .map { create_fastq_channel(it) }
             .set { input }
+    */
 
+    
     // need to emit all sample sheet contents here
     //    you can split them up in mcmicro.nf
 

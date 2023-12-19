@@ -38,7 +38,7 @@ ch_multiqc_custom_methods_description = params.multiqc_methods_description ? fil
 //
 // SUBWORKFLOW: Consisting of a mix of local and nf-core/modules
 //
-// include { INPUT_CHECK } from '../subworkflows/local/input_check'
+include { INPUT_CHECK } from '../subworkflows/local/input_check'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -63,6 +63,9 @@ include { CUSTOM_DUMPSOFTWAREVERSIONS } from '../modules/nf-core/custom/dumpsoft
 include { ILASTIK_PIXELCLASSIFICATION } from '../modules/nf-core/ilastik/pixelclassification/main'
 include { ILASTIK_MULTICUT            } from '../modules/nf-core/ilastik/multicut/main'
 
+include { MARKER_SHEET_CHECK          } from '../modules/local/marker_sheet_check'
+include { SAMPLESHEET_CHECK           } from '../modules/local/samplesheet_check'
+
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     RUN MAIN WORKFLOW
@@ -78,7 +81,10 @@ def multiqc_report = []
 
 workflow MCMICRO {
 
+    def input_type
+    // move this to validation??
     if (params.input_sample && !params.input_cycle) {
+        input_type = "sample"
         sample_sheet_index_map = make_sample_sheet_index_map(params.input_sample)
         ch_from_samplesheet = Channel.fromSamplesheet("input_sample")
             .multiMap
@@ -86,6 +92,7 @@ workflow MCMICRO {
                     ashlar: make_ashlar_input_sample(it, sample_sheet_index_map)
                 }
     } else if(!params.input_sample && params.input_cycle) {
+        input_type = "cycle"
         sample_sheet_index_map = make_sample_sheet_index_map(params.input_cycle)
         ch_from_samplesheet = Channel.fromSamplesheet("input_cycle")
             .multiMap
@@ -128,6 +135,12 @@ workflow MCMICRO {
     //     ch_ffp = ch_tif.filter { file -> file.name.endsWith('.ffp.tiff') }
     // }
     // */
+
+    // MARKER_SHEET_CHECK(params.marker_sheet)
+
+    // INPUT_CHECK(params.input_cycle, params.marker_sheet)
+    INPUT_CHECK( input_type, params.input_sample, params.input_cycle, params.marker_sheet )
+    // MARKER_CHECK(parmas.marker_sheet)
 
     // ASHLAR(raw_images, dfp, ffp)
     //ASHLAR(raw_images, [], [])

@@ -65,6 +65,8 @@ class RowChecker:
                 (values).
 
         """
+
+        '''
         self._validate_sample(row)
         print('*** done validating sample ***')
         self._validate_first(row)
@@ -75,6 +77,7 @@ class RowChecker:
         print('*** done validating third ***')
         self._seen.add((row[self._sample_col], row[self._first_col]))
         self.modified.append(row)
+        '''
 
     def _validate_sample(self, row):
         """Assert that the sample name exists and convert spaces to underscores."""
@@ -177,6 +180,119 @@ def sniff_format(handle):
     dialect = sniffer.sniff(peek)
     return dialect
 
+def check_marker_sheet(file_in, file_out):
+    print('*** check_marker_sheet ***')
+    print(file_in)
+
+    import csv
+    import collections
+
+    marker_dict = collections.defaultdict(list)
+    input_file = csv.DictReader(open(file_in))
+    for row in input_file:
+        for key,value in row.items():
+            marker_dict[key].append(value)
+
+    # uniqueness of marker name in marker sheet
+            
+    tmp_name_list = []
+    for name in marker_dict['marker_name']:
+        if name in tmp_name_list:
+            raise Exception('Duplicate marker_name in marker sheet!')
+        else:
+            tmp_name_list.append(name)
+
+    # uniqueness of (channel, cycle) tuple in marker sheet
+    
+    tmp_tup_list = []
+    for i in range(len(marker_dict[list(marker_dict.keys())[0]])):
+        curr_tup = (marker_dict['channel_number'][i], marker_dict['cycle_number'][i])
+        if curr_tup in tmp_tup_list:
+            raise Exception('Duplicate (channel_number, cycle_number) tuple in marker sheet!')
+        else:
+            tmp_tup_list.append(curr_tup)
+        
+    
+    # cycle and channel are 1-based so 0 should throw an exception
+    # cycle and channel cannot have skips and must be in order
+    if int(marker_dict['channel_number'][0]) <= 0 or int(marker_dict['cycle_number'][0]) <= 0:
+        raise Exception('channel_number and cycle number in the marker sheet are 1-based, so cannot be 0 or negative!')
+    
+    for i in range(1, len(marker_dict[list(marker_dict.keys())[0]])):
+        print(f"i = {i}")
+        if ( (marker_dict['channel_number'][i] != marker_dict['channel_number'][i-1]) and
+             (int(marker_dict['channel_number'][i]) != int(marker_dict['channel_number'][i-1])+1) ):
+            print(marker_dict['channel_number'][i])
+            print(marker_dict['channel_number'][i-1])
+            raise Exception('channel_number must be incresing without any gaps')
+        if ( (marker_dict['cycle_number'][i] != marker_dict['cycle_number'][i-1]) and
+             (int(marker_dict['cycle_number'][i]) != int(marker_dict['cycle_number'][i-1])+1) ):
+            raise Exception('cycle_number must be incresing without any gaps')
+        
+
+
+    # TODO: this could be simplified to just returning the file_in atm, but leaving this here
+    #   in case we want to make changes to the values in the block above
+    with open(file_out, 'w') as fout:
+        fout.write(','.join(list(marker_dict.keys())))
+        fout.write("\n")
+        # TODO: figure out a more pythonic way to get the following
+        for i in range(len(marker_dict[list(marker_dict.keys())[0]])):
+            curr_row_list = []
+            for k in marker_dict:
+                curr_row_list.append(marker_dict[k][i])
+            print(curr_row_list)
+            curr_row_str = ','.join(curr_row_list) + "\n"
+            fout.write(curr_row_str)
+        
+    '''
+    with file_out.open(mode="w", newline="") as out_handle:
+        writer = csv.DictWriter(out_handle, header, delimiter=",")
+        writer.writeheader()
+        for row in checker.modified:
+            writer.writerow(row)
+    '''
+
+    '''
+    # required_columns = {"sample","cycle_number","channel_count","image_tiles"}
+    # required_columns = {"sample","image_directory"}
+    required_columns = {"channel_number", "cycle_number", "marker_name", "excitation_wavelength", "emission_wavelength"}
+
+
+    # uniqueness of marker name in marker sheet
+    # uniqueness of (cycle, channel) tuple in marker sheet
+    # cycle and channel are 1-based so 0 should throw an exception
+    # cycle and channel cannot have skips and must be in order
+
+    # See https://docs.python.org/3.9/library/csv.html#id3 to read up on `newline=""`.
+    with file_in.open(newline="") as in_handle:
+        reader = csv.DictReader(in_handle, dialect=sniff_format(in_handle))
+        # Validate the existence of the expected header columns.
+        print('*** reader fieldnames ***')
+        print(reader.fieldnames)
+        if not required_columns.issubset(reader.fieldnames):
+            req_cols = ", ".join(required_columns)
+            logger.critical(f"The sample sheet **must** contain these column headers: {req_cols}.")
+            sys.exit(1)
+        # Validate each row.
+        checker = RowChecker()
+        for i, row in enumerate(reader):
+            try:
+                checker.validate_and_transform(row)
+            except AssertionError as error:
+                logger.critical(f"{str(error)} On line {i + 2}.")
+                sys.exit(1)
+        checker.validate_unique_samples()
+    header = list(reader.fieldnames)
+    # header.insert(1, "single_end")
+    # See https://docs.python.org/3.9/library/csv.html#id3 to read up on `newline=""`.
+    with file_out.open(mode="w", newline="") as out_handle:
+        writer = csv.DictWriter(out_handle, header, delimiter=",")
+        writer.writeheader()
+        for row in checker.modified:
+            writer.writerow(row)
+    '''
+
 
 def check_samplesheet(file_in, file_out):
     print("*** entering check_samplesheet ***")
@@ -205,8 +321,8 @@ def check_samplesheet(file_in, file_out):
     #    https://raw.githubusercontent.com/nf-core/test-datasets/viralrecon/samplesheet/samplesheet_test_illumina_amplicon.csv
 
     """
-    required_columns = {"sample","cycle_number","channel_count","image_tiles"}
-    # required_columns = {"sample","image_directory"}
+    # required_columns = {"sample","cycle_number","channel_count","image_tiles"}
+    required_columns = {"sample","image_directory"}
     # See https://docs.python.org/3.9/library/csv.html#id3 to read up on `newline=""`.
     with file_in.open(newline="") as in_handle:
         reader = csv.DictReader(in_handle, dialect=sniff_format(in_handle))
@@ -271,7 +387,7 @@ def main(argv=None):
         logger.error(f"The given input file {args.file_in} was not found!")
         sys.exit(2)
     args.file_out.parent.mkdir(parents=True, exist_ok=True)
-    check_samplesheet(args.file_in, args.file_out)
+    check_marker_sheet(args.file_in, args.file_out)
 
 
 if __name__ == "__main__":

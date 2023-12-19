@@ -1,5 +1,12 @@
-process SAMPLESHEET_CHECK {
-    tag "$input_type"
+/* 
+  uniqueness of marker name in marker sheet
+  uniqueness of (cycle, channel) tuple in marker sheet
+  cycle and channel are 1-based so 0 should throw an exception
+  cycle and channel cannot have skips and must be in order
+ */
+
+process MARKER_SHEET_CHECK {
+    tag "$marker_sheet"
     label 'process_single'
 
     conda "conda-forge::python=3.8.3"
@@ -8,24 +15,21 @@ process SAMPLESHEET_CHECK {
         'biocontainers/python:3.8.3' }"
 
     input:
-    // path samplesheet
-    val input_type
+    path marker_sheet
 
     output:
-    // path '*.csv'       , emit: csv
+    path '*.csv'       , emit: csv
     path "versions.yml", emit: versions
 
     when:
     task.ext.when == null || task.ext.when
 
     script: // This script is bundled with the pipeline, in nf-core/mcmicro/bin/
-
-    /* this was inside the script
-        check_samplesheet.py \\
-        $samplesheet \\
-        samplesheet.valid.csv
-    */ 
     """
+    check_marker_sheet.py \\
+        $marker_sheet \\
+        marker_sheet.valid.csv
+
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
         python: \$(python --version | sed 's/Python //g')
