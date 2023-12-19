@@ -19,13 +19,11 @@ process SAMPLESHEET_CHECK {
     task.ext.when == null || task.ext.when
 
     script: // This script is bundled with the pipeline, in nf-core/mcmicro/bin/
-
-    /* this was inside the script
-        check_samplesheet.py \\
-        $samplesheet \\
-        samplesheet.valid.csv
-    */ 
     """
+    check_samplesheet.py \\
+        $input_type \\
+        samplesheet.valid.csv
+
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
         python: \$(python --version | sed 's/Python //g')

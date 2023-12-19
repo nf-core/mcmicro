@@ -236,24 +236,9 @@ def check_marker_sheet(file_in, file_out):
             curr_row_str = ','.join(curr_row_list) + "\n"
             fout.write(curr_row_str)
         
-    '''
-    with file_out.open(mode="w", newline="") as out_handle:
-        writer = csv.DictWriter(out_handle, header, delimiter=",")
-        writer.writeheader()
-        for row in checker.modified:
-            writer.writerow(row)
-    '''
 
     '''
-    # required_columns = {"sample","cycle_number","channel_count","image_tiles"}
-    # required_columns = {"sample","image_directory"}
     required_columns = {"channel_number", "cycle_number", "marker_name", "excitation_wavelength", "emission_wavelength"}
-
-
-    # uniqueness of marker name in marker sheet
-    # uniqueness of (cycle, channel) tuple in marker sheet
-    # cycle and channel are 1-based so 0 should throw an exception
-    # cycle and channel cannot have skips and must be in order
 
     # See https://docs.python.org/3.9/library/csv.html#id3 to read up on `newline=""`.
     with file_in.open(newline="") as in_handle:
@@ -283,62 +268,6 @@ def check_marker_sheet(file_in, file_out):
         for row in checker.modified:
             writer.writerow(row)
     '''
-
-
-def check_samplesheet(file_in, file_out):
-    print("*** entering check_samplesheet ***")
-    """
-    Check that the tabular samplesheet has the structure expected by nf-core pipelines.
-
-    Validate the general shape of the table, expected columns, and each row.
-    # Also add an additional column which records whether one or two FASTQ reads were found.
-
-    Args:
-        file_in (pathlib.Path): The given tabular samplesheet. The format can be either
-            CSV, TSV, or any other format automatically recognized by ``csv.Sniffer``.
-        file_out (pathlib.Path): Where the validated and transformed samplesheet should
-            be created; always in CSV format.
-
-    Example:
-        This function checks that the samplesheet follows the following structure,
-        see also the `viral recon samplesheet`_::
-
-            sample,ffp,dfp
-            SAMPLE,001,exemplar-001-cycle-08.ome.tiff,markers.csv
-            SAMPLE,001,exemplar-001-cycle-07.ome.tiff,markers.csv
-            SAMPLE,001,exemplar-001-cycle-06.ome.tiff,markers.csv
-
-    #.. _viral recon samplesheet:
-    #    https://raw.githubusercontent.com/nf-core/test-datasets/viralrecon/samplesheet/samplesheet_test_illumina_amplicon.csv
-
-    """
-    # required_columns = {"sample","cycle_number","channel_count","image_tiles"}
-    required_columns = {"sample","image_directory"}
-    # See https://docs.python.org/3.9/library/csv.html#id3 to read up on `newline=""`.
-    with file_in.open(newline="") as in_handle:
-        reader = csv.DictReader(in_handle, dialect=sniff_format(in_handle))
-        # Validate the existence of the expected header columns.
-        if not required_columns.issubset(reader.fieldnames):
-            req_cols = ", ".join(required_columns)
-            logger.critical(f"The sample sheet **must** contain these column headers: {req_cols}.")
-            sys.exit(1)
-        # Validate each row.
-        checker = RowChecker()
-        for i, row in enumerate(reader):
-            try:
-                checker.validate_and_transform(row)
-            except AssertionError as error:
-                logger.critical(f"{str(error)} On line {i + 2}.")
-                sys.exit(1)
-        checker.validate_unique_samples()
-    header = list(reader.fieldnames)
-    # header.insert(1, "single_end")
-    # See https://docs.python.org/3.9/library/csv.html#id3 to read up on `newline=""`.
-    with file_out.open(mode="w", newline="") as out_handle:
-        writer = csv.DictWriter(out_handle, header, delimiter=",")
-        writer.writeheader()
-        for row in checker.modified:
-            writer.writerow(row)
 
 
 def parse_args(argv=None):

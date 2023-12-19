@@ -7,16 +7,16 @@ include { SAMPLE_AND_MARKER_SHEET_CHECK } from '../../modules/local/sample_and_m
 
 workflow INPUT_CHECK {
     take:
-    input_type     // either 'sample' or 'cycle'
+    input_type          // either 'sample' or 'cycle'
     samplesheet_sample  // file: /path/to/input_sample.csv
-    samplesheet_cycle  // file: /path/to/input_cycle.csv
-    marker_sheet // file: /path/to/marker_sheet.csv
+    samplesheet_cycle   // file: /path/to/input_cycle.csv
+    marker_sheet        // file: /path/to/marker_sheet.csv
 
-    // required_columns_cycle = {"sample","cycle_number","channel_count","image_tiles"}
-    // required_columns_sample = {"sample", "image_dir"}
-    
     main:
 
+    // not running this check because fromSamplesheet checks columns and data format
+    //   we can add it back if we'd like to do more in depth validation
+    // currently just running to output version.yml
     SAMPLESHEET_CHECK ( input_type )
 
     if ( input_type == "sample" ) {
@@ -42,24 +42,8 @@ workflow INPUT_CHECK {
     }
     */
     
-    /*
-    SAMPLESHEET_CHECK ( samplesheet )
-            .csv
-            .splitCsv ( header:true, sep:',' )
-            .map { create_fastq_channel(it) }
-            .set { input }
-    */
-
-    
-    // need to emit all sample sheet contents here
-    //    you can split them up in mcmicro.nf
-
-    // input.view { "all $it" }
-    //input.ashlar.view { "ashlar $it" }
-    //input.foo.view { "foo $it" }
-
     emit:
-    input                                    // channel: [ val(meta), [ image ], [ marker ] ]
+    input                                     // channel: [ val(meta), [ image ], [ marker ] ]
     versions = SAMPLESHEET_CHECK.out.versions // channel: [ versions.yml ]
 }
 

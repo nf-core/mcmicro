@@ -178,7 +178,7 @@ def sniff_format(handle):
     return dialect
 
 
-def check_samplesheet(file_in, file_out):
+def check_samplesheet(input_type, file_out):
     print("*** entering check_samplesheet ***")
     """
     Check that the tabular samplesheet has the structure expected by nf-core pipelines.
@@ -208,6 +208,7 @@ def check_samplesheet(file_in, file_out):
     required_columns = {"sample","cycle_number","channel_count","image_tiles"}
     # required_columns = {"sample","image_directory"}
     # See https://docs.python.org/3.9/library/csv.html#id3 to read up on `newline=""`.
+    '''
     with file_in.open(newline="") as in_handle:
         reader = csv.DictReader(in_handle, dialect=sniff_format(in_handle))
         # Validate the existence of the expected header columns.
@@ -232,7 +233,7 @@ def check_samplesheet(file_in, file_out):
         writer.writeheader()
         for row in checker.modified:
             writer.writerow(row)
-
+    '''
 
 def parse_args(argv=None):
     """Define and immediately parse command line arguments."""
@@ -241,10 +242,10 @@ def parse_args(argv=None):
         epilog="Example: python check_samplesheet.py samplesheet.csv samplesheet.valid.csv",
     )
     parser.add_argument(
-        "file_in",
-        metavar="FILE_IN",
-        type=Path,
-        help="Tabular input samplesheet in CSV or TSV format.",
+        "input_type",
+        metavar="INPUT_TYPE",
+        type=str,
+        help="String defining the type of sample sheet: 'sample' or 'cycle' for 1 row per sample or 1 row per sample per cycle, respectively",
     )
     parser.add_argument(
         "file_out",
@@ -267,11 +268,11 @@ def main(argv=None):
     """Coordinate argument parsing and program execution."""
     args = parse_args(argv)
     logging.basicConfig(level=args.log_level, format="[%(levelname)s] %(message)s")
-    if not args.file_in.is_file():
-        logger.error(f"The given input file {args.file_in} was not found!")
-        sys.exit(2)
+    # if not args.file_in.is_file():
+    #     logger.error(f"The given input file {args.file_in} was not found!")
+    #     sys.exit(2)
     args.file_out.parent.mkdir(parents=True, exist_ok=True)
-    check_samplesheet(args.file_in, args.file_out)
+    check_samplesheet(args.input_type, args.file_out)
 
 
 if __name__ == "__main__":
