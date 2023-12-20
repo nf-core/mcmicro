@@ -102,7 +102,8 @@ workflow MCMICRO {
 
     ch_versions = Channel.empty()
 
-    // ch_from_samplesheet.ashlar.view { "ashlar $it" }
+    ch_from_samplesheet.ashlar.view { "ashlar $it" }
+    
     marker_sheet_index_map = make_marker_sheet_index_map(params.marker_sheet)
     ch_from_marker_sheet = Channel.fromSamplesheet("marker_sheet")
     //    .map { validate_marker_sheet(it, sample_sheet_index_map, marker_sheet_index_map) }
@@ -151,8 +152,10 @@ workflow MCMICRO {
     ch_versions = ch_versions.mix(DEEPCELL_MESMER.out.versions)
     */
 
-    // fails
-    // ILASTIK_PIXELCLASSIFICATION(ASHLAR.out.tif, 1)
+    /* starts running, but errors out. See ticket for error message
+    def project = '/Users/robertyoung/Projects/test_mcmicro/Tonsil.ilp'
+    ILASTIK_PIXELCLASSIFICATION( ASHLAR.out.tif, [[id:'test2'], project] )
+    */
 
     // // Run Quantification
     /*
