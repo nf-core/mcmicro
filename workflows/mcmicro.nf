@@ -59,12 +59,7 @@ include { MCQUANT                     } from '../modules/nf-core/mcquant/main'
 include { SCIMAP_MCMICRO              } from '../modules/nf-core/scimap/mcmicro/main'
 include { MULTIQC                     } from '../modules/nf-core/multiqc/main'
 include { CUSTOM_DUMPSOFTWAREVERSIONS } from '../modules/nf-core/custom/dumpsoftwareversions/main'
-
 include { ILASTIK_PIXELCLASSIFICATION } from '../modules/nf-core/ilastik/pixelclassification/main'
-include { ILASTIK_MULTICUT            } from '../modules/nf-core/ilastik/multicut/main'
-
-include { MARKER_SHEET_CHECK          } from '../modules/local/marker_sheet_check'
-include { SAMPLESHEET_CHECK           } from '../modules/local/samplesheet_check'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -82,7 +77,7 @@ def multiqc_report = []
 workflow MCMICRO {
 
     def input_type
-    // move this to validation??
+
     if (params.input_sample && !params.input_cycle) {
         input_type = "sample"
         sample_sheet_index_map = make_sample_sheet_index_map(params.input_sample)
@@ -107,11 +102,10 @@ workflow MCMICRO {
 
     ch_versions = Channel.empty()
 
-
     // ch_from_samplesheet.ashlar.view { "ashlar $it" }
     marker_sheet_index_map = make_marker_sheet_index_map(params.marker_sheet)
     ch_from_marker_sheet = Channel.fromSamplesheet("marker_sheet")
-        .map { validate_marker_sheet(it, sample_sheet_index_map, marker_sheet_index_map) }
+    //    .map { validate_marker_sheet(it, sample_sheet_index_map, marker_sheet_index_map) }
 
     // Format input for BASICPY
     // data_path = ch_from_samplesheet
@@ -254,6 +248,7 @@ def make_ashlar_input_cycle(ArrayList sample_sheet_row, Map sample_sheet_index_m
 marker_name_list = []
 cycle_channel_tuple_list = []
 
+/* moved validation to subworkflow
 def validate_marker_sheet(ArrayList marker_sheet_row, Map sample_sheet_index_map, Map marker_sheet_index_map) {
     channel_index = marker_sheet_index_map['channel_number']
     cycle_index = marker_sheet_index_map['cycle_number']
@@ -290,6 +285,7 @@ def validate_marker_sheet(ArrayList marker_sheet_row, Map sample_sheet_index_map
         cycle_channel_tuple_list.add(curr_tuple)
     }
 }
+*/
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
