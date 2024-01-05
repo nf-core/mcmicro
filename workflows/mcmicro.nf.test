@@ -1,0 +1,29 @@
+nextflow_workflow {
+
+    name "test mcmicro workflow"
+    script "/Users/robertyoung/github/mcmicro-nf-core/workflows/mcmicro.nf"
+    workflow "MCMICRO"
+
+    test("test 1") {
+
+        when {
+            params {
+                input_cycle = "/Users/robertyoung/github/mcmicro-nf-core/assets/samplesheet_1_row_sample_cycle.csv",
+                outdir = "./output",
+                marker_sheet = "/Users/robertyoung/Projects/test_mcmicro/markers_1.csv"
+
+            },
+            workflow {
+                """
+                input['input_cycle'] = "/Users/robertyoung/github/mcmicro-nf-core/assets/samplesheet_1_row_sample_cycle.csv"
+                input['outdir'] = "/Users/robertyoung/Projects/test_mcmicro/output"
+                input['marker_sheet'] = "/Users/robertyoung/Projects/test_mcmicro/markers_1.csv"
+                """
+            }
+        }
+
+        then {
+            assert workflow.success
+        }
+    }
+}

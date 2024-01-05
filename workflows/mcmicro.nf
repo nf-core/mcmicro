@@ -146,17 +146,14 @@ workflow MCMICRO {
     // BACKSUB(ASHLAR.out.tif, ch_markers)
     // ch_versions = ch_versions.mix(BACKSUB.out.versions)
 
-    // // Run Segmentation
-    /*
+    /* Run Segmentation */
     DEEPCELL_MESMER(ASHLAR.out.tif, [[:],[]])
     ch_versions = ch_versions.mix(DEEPCELL_MESMER.out.versions)
-    */
 
     /* starts running, but errors out. See ticket for error message
     def project = '/Users/robertyoung/Projects/test_mcmicro/Tonsil.ilp'
     ILASTIK_PIXELCLASSIFICATION( ASHLAR.out.tif, [[id:'test2'], project] )
     */
-
     // // Run Quantification
     /*
     MCQUANT(ASHLAR.out.tif,
@@ -248,10 +245,11 @@ def make_ashlar_input_cycle(ArrayList sample_sheet_row, Map sample_sheet_index_m
     return ashlar_input
 }
 
+/* moved validation to subworkflow
+
 marker_name_list = []
 cycle_channel_tuple_list = []
 
-/* moved validation to subworkflow
 def validate_marker_sheet(ArrayList marker_sheet_row, Map sample_sheet_index_map, Map marker_sheet_index_map) {
     channel_index = marker_sheet_index_map['channel_number']
     cycle_index = marker_sheet_index_map['cycle_number']
@@ -286,6 +284,10 @@ def validate_marker_sheet(ArrayList marker_sheet_row, Map sample_sheet_index_map
         Nextflow.error("ERROR: cycle_number and channel_number must be sequential with no gaps")
     } else {
         cycle_channel_tuple_list.add(curr_tuple)
+    }
+
+    test("<TEST_NAME>") {
+
     }
 }
 */
