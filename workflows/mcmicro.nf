@@ -103,7 +103,7 @@ workflow MCMICRO {
     ch_versions = Channel.empty()
 
     ch_from_samplesheet.ashlar.view { "ashlar $it" }
-    
+
     marker_sheet_index_map = make_marker_sheet_index_map(params.marker_sheet)
     ch_from_marker_sheet = Channel.fromSamplesheet("marker_sheet")
     //    .map { validate_marker_sheet(it, sample_sheet_index_map, marker_sheet_index_map) }
@@ -155,15 +155,15 @@ workflow MCMICRO {
     ILASTIK_PIXELCLASSIFICATION( ASHLAR.out.tif, [[id:'test2'], project] )
     */
     // // Run Quantification
-    /*
+
     MCQUANT(ASHLAR.out.tif,
             DEEPCELL_MESMER.out.mask,
-            markerFile)
+            [[id: "test"], file(params.marker_sheet)])
     ch_versions = ch_versions.mix(MCQUANT.out.versions)
-    */
+
     // // Run Reporting
-    // SCIMAP_MCMICRO(MCQUANT.out.csv)
-    // ch_versions = ch_versions.mix(SCIMAP_MCMICRO.out.versions)
+    SCIMAP_MCMICRO(MCQUANT.out.csv)
+    ch_versions = ch_versions.mix(SCIMAP_MCMICRO.out.versions)
 
     /*
     CUSTOM_DUMPSOFTWAREVERSIONS (
