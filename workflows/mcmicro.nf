@@ -59,7 +59,6 @@ include { MCQUANT                     } from '../modules/nf-core/mcquant/main'
 include { SCIMAP_MCMICRO              } from '../modules/nf-core/scimap/mcmicro/main'
 include { MULTIQC                     } from '../modules/nf-core/multiqc/main'
 include { CUSTOM_DUMPSOFTWAREVERSIONS } from '../modules/nf-core/custom/dumpsoftwareversions/main'
-include { ILASTIK_PIXELCLASSIFICATION } from '../modules/nf-core/ilastik/pixelclassification/main'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -137,9 +136,8 @@ workflow MCMICRO {
     INPUT_CHECK( input_type, params.input_sample, params.input_cycle, params.marker_sheet )
     // MARKER_CHECK(parmas.marker_sheet)
 
-    // ASHLAR(raw_images, dfp, ffp)
-    //ASHLAR(raw_images, [], [])
-    ASHLAR(ch_from_samplesheet.ashlar, [], [])
+    // ASHLAR(ch_from_samplesheet.ashlar, [], [])
+    ASHLAR(ch_from_samplesheet.ashlar, params.ffp, params.dfp)
     ch_versions = ch_versions.mix(ASHLAR.out.versions)
 
     // // Run Background Correction
@@ -150,10 +148,6 @@ workflow MCMICRO {
     DEEPCELL_MESMER(ASHLAR.out.tif, [[:],[]])
     ch_versions = ch_versions.mix(DEEPCELL_MESMER.out.versions)
 
-    /* starts running, but errors out. See ticket for error message
-    def project = '/Users/robertyoung/Projects/test_mcmicro/Tonsil.ilp'
-    ILASTIK_PIXELCLASSIFICATION( ASHLAR.out.tif, [[id:'test2'], project] )
-    */
     // // Run Quantification
 
     MCQUANT(ASHLAR.out.tif,
