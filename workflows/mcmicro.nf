@@ -152,7 +152,7 @@ workflow MCMICRO {
 
     MCQUANT(ASHLAR.out.tif,
             DEEPCELL_MESMER.out.mask,
-            [[id: "test"], file(params.marker_sheet)])
+            [[:], file(params.marker_sheet)])
     ch_versions = ch_versions.mix(MCQUANT.out.versions)
 
     /*
