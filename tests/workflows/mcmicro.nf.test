@@ -1,0 +1,22 @@
+nextflow_workflow {
+
+    name "test mcmicro workflow"
+    script "workflows/mcmicro.nf"
+    workflow "MCMICRO"
+
+    test("test 1") {
+
+        when {
+            params {
+                input_cycle = "/home/pollen/github/mcmicro-nf-core/assets/samplesheet_1_row_sample_cycle.csv"
+                outdir = "./output"
+                marker_sheet = "/home/pollen/Projects/test_mcmicro/markers_1.csv"
+            }
+        }
+
+        then {
+            assert workflow.success
+        }
+
+    }
+}

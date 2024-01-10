@@ -56,7 +56,7 @@ include { BACKSUB                     } from '../modules/nf-core/backsub/main'
 include { CELLPOSE                    } from '../modules/nf-core/cellpose/main'
 include { DEEPCELL_MESMER             } from '../modules/nf-core/deepcell/mesmer/main'
 include { MCQUANT                     } from '../modules/nf-core/mcquant/main'
-include { SCIMAP_MCMICRO              } from '../modules/nf-core/scimap/mcmicro/main'
+// include { SCIMAP_MCMICRO              } from '../modules/nf-core/scimap/mcmicro/main'
 include { MULTIQC                     } from '../modules/nf-core/multiqc/main'
 include { CUSTOM_DUMPSOFTWAREVERSIONS } from '../modules/nf-core/custom/dumpsoftwareversions/main'
 
@@ -155,9 +155,11 @@ workflow MCMICRO {
             [[id: "test"], file(params.marker_sheet)])
     ch_versions = ch_versions.mix(MCQUANT.out.versions)
 
+    /*
     // // Run Reporting
     SCIMAP_MCMICRO(MCQUANT.out.csv)
     ch_versions = ch_versions.mix(SCIMAP_MCMICRO.out.versions)
+    */
 
     /*
     CUSTOM_DUMPSOFTWAREVERSIONS (
