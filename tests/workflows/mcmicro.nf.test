@@ -10,7 +10,7 @@ nextflow_workflow {
             params {
                 input_cycle = "/home/pollen/github/mcmicro-nf-core/assets/samplesheet_1_row_sample_cycle.csv"
                 outdir = "./output"
-                marker_sheet = "/home/pollen/Projects/test_mcmicro/markers_1.csv"
+                marker_sheet = "/home/pollen/HITS/nextflow/test_mcmicro-nf-core/markers_1.csv"
             }
         }
 
