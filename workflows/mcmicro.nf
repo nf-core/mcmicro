@@ -66,10 +66,6 @@ include { CUSTOM_DUMPSOFTWAREVERSIONS } from '../modules/nf-core/custom/dumpsoft
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
-// Manually define inputs here
-//image_tuple = tuple([ id:'image' ], '/home/florian/Documents/tmp_data_folder/cycif_tonsil_registered.ome.tif')
-//marker_tuple = tuple([ id:'marker'], '/home/florian/Documents/tmp_data_folder/markers.csv')
-
 // Info required for completion email and summary
 def multiqc_report = []
 
@@ -101,7 +97,7 @@ workflow MCMICRO {
 
     ch_versions = Channel.empty()
 
-    ch_from_samplesheet.ashlar.view { "ashlar $it" }
+    // ch_from_samplesheet.ashlar.view { "ashlar $it" }
 
     marker_sheet_index_map = make_marker_sheet_index_map(params.marker_sheet)
     ch_from_marker_sheet = Channel.fromSamplesheet("marker_sheet")

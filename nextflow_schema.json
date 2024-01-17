@@ -255,8 +255,20 @@
                     "hidden": true,
                     "help_text": "Allows string values that are parseable as numbers or booleans. For further information see [JSONSchema docs](https://github.com/everit-org/json-schema#lenient-mode)."
                 },
-                "illumination": {
+                "monochromeLogs": {
                     "type": "boolean",
+                    "description": "Do not use coloured log outputs.",
+                    "fa_icon": "fas fa-palette",
+                    "hidden": true
+                },
+                "validationSkipDuplicateCheck": {
+                    "type": "boolean",
+                    "description": "Skip the checking for duplicates.",
+                    "hidden": true
+                },
+                "validationS3PathCheck": {
+                    "type": "boolean",
+                    "description": "validate if parameter is an S3 URL path",
                     "hidden": true
                 }
             }
@@ -275,11 +287,5 @@
         {
             "$ref": "#/definitions/generic_options"
         }
-    ],
-    "properties": {
-        "validationSchemaIgnoreParams": {
-            "type": "string",
-            "default": "genomes"
-        }
-    }
+    ]
 }
