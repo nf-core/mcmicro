@@ -64,6 +64,10 @@ include { MCMICRO } from './workflows/mcmicro'
 //
 workflow NFCORE_MCMICRO {
     MCMICRO ()
+    emit:
+        // MCMICRO.out
+        Channel.from( 1, 3, 5, 7 )
+
 }
 
 /*

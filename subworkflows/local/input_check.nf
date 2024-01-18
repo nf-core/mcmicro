@@ -23,12 +23,19 @@ workflow INPUT_CHECK {
         input = Channel.fromSamplesheet("input_sample")
         SAMPLE_AND_MARKER_SHEET_CHECK ( params.input_sample, params.marker_sheet )
     } else if ( input_type == "cycle" ) {
-        input = Channel.fromSamplesheet("input_cycle")
+        input = Channel.fromSamplesheet(
+            "input_cycle",
+            parameters_schema: '/home/pollen/github/mcmicro-nf-core/nextflow_schema.json',
+            skip_duplicate_check: false)
         SAMPLE_AND_MARKER_SHEET_CHECK ( params.input_cycle, params.marker_sheet )
     }
-    
+
     MARKER_SHEET_CHECK ( params.marker_sheet )
-    marker = Channel.fromSamplesheet("marker_sheet")
+    marker = Channel.fromSamplesheet(
+        "marker_sheet",
+        parameters_schema: '/home/pollen/github/mcmicro-nf-core/nextflow_schema.json',
+        skip_duplicate_check: false
+        )
 
     /*
     if( params.illumination){
@@ -41,7 +48,7 @@ workflow INPUT_CHECK {
             .set { images_merged }
     }
     */
-    
+
     emit:
     input                                     // channel: [ val(meta), [ image ], [ marker ] ]
     versions = SAMPLESHEET_CHECK.out.versions // channel: [ versions.yml ]
@@ -58,7 +65,7 @@ def create_fastq_channel(LinkedHashMap row) {
 
     // add path(s) of the fastq file(s) to the meta map
     //def fastq_meta = []
-    
+
     '''
     if (!file(row.image).exists()) {
         exit 1, "ERROR: Please check input samplesheet -> image file does not exist!\n${row.image}"

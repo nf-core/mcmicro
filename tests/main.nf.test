@@ -1,0 +1,34 @@
+nextflow_workflow {
+
+    name "Test Workflow NFCORE_MCMICRO"
+    script "main.nf"
+    workflow "NFCORE_MCMICRO"
+
+    test("Should run without failures") {
+
+        when {
+            params {
+                // define parameters here. Example:
+                // outdir = "tests/results"
+                input_cycle = "/home/pollen/github/mcmicro-nf-core/assets/samplesheet_1_row_sample_cycle.csv"
+                outdir = "/home/pollen/HITS/nextflow/test_mcmicro-nf-core/output"
+                marker_sheet = "/home/pollen/HITS/nextflow/test_mcmicro-nf-core/markers_1.csv"
+                dfp = "/home/pollen/HITS/nextflow/test_mcmicro-nf-core/correction/cycif-tonsil-ffp.ome.tif"
+                ffp = "/home/pollen/HITS/nextflow/test_mcmicro-nf-core/correction/cycif-tonsil-dfp.ome.tif"
+            }
+            workflow {
+                """
+                // define inputs of the workflow here. Example:
+                // input[0] = file("test-file.txt")
+                """
+            }
+        }
+
+        then {
+            assert workflow.success
+            assert snapshot(workflow.out).match()
+        }
+
+    }
+
+}

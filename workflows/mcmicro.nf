@@ -79,15 +79,19 @@ workflow MCMICRO {
         ch_from_samplesheet = Channel.fromSamplesheet("input_sample")
             .multiMap
                 { it ->
-                    ashlar: make_ashlar_input_sample(it, sample_sheet_index_map)
+                    ashlar_input: make_ashlar_input_sample(it, sample_sheet_index_map)
                 }
     } else if(!params.input_sample && params.input_cycle) {
         input_type = "cycle"
         sample_sheet_index_map = make_sample_sheet_index_map(params.input_cycle)
-        ch_from_samplesheet = Channel.fromSamplesheet("input_cycle")
+        ch_from_samplesheet = Channel.fromSamplesheet(
+            "input_cycle",
+            parameters_schema: '/home/pollen/github/mcmicro-nf-core/nextflow_schema.json',
+            skip_duplicate_check: false
+            )
             .multiMap
                 { it ->
-                    ashlar: make_ashlar_input_cycle(it, sample_sheet_index_map)
+                    ashlar_input: make_ashlar_input_cycle(it, sample_sheet_index_map)
                 }
     } else if(params.input_sample && params.input_cycle) {
         Nextflow.error("ERROR: You must have EITHER an input_sample parameter OR an input_cycle parameter, but not both!")
@@ -97,10 +101,14 @@ workflow MCMICRO {
 
     ch_versions = Channel.empty()
 
-    // ch_from_samplesheet.ashlar.view { "ashlar $it" }
+    // ch_from_samplesheet.ashlar_input.view { "ashlar $it" }
 
     marker_sheet_index_map = make_marker_sheet_index_map(params.marker_sheet)
-    ch_from_marker_sheet = Channel.fromSamplesheet("marker_sheet")
+    ch_from_marker_sheet = Channel.fromSamplesheet(
+        "marker_sheet",
+        parameters_schema: '/home/pollen/github/mcmicro-nf-core/nextflow_schema.json',
+        skip_duplicate_check: false
+        )
     //    .map { validate_marker_sheet(it, sample_sheet_index_map, marker_sheet_index_map) }
 
     // Format input for BASICPY
@@ -132,8 +140,8 @@ workflow MCMICRO {
     INPUT_CHECK( input_type, params.input_sample, params.input_cycle, params.marker_sheet )
     // MARKER_CHECK(parmas.marker_sheet)
 
-    // ASHLAR(ch_from_samplesheet.ashlar, [], [])
-    ASHLAR(ch_from_samplesheet.ashlar, params.ffp, params.dfp)
+    // ASHLAR(ch_from_samplesheet.ashlar_input, [], [])
+    ASHLAR(ch_from_samplesheet.ashlar_input, params.ffp, params.dfp)
     ch_versions = ch_versions.mix(ASHLAR.out.versions)
 
     // // Run Background Correction
@@ -150,6 +158,9 @@ workflow MCMICRO {
             DEEPCELL_MESMER.out.mask,
             [[:], file(params.marker_sheet)])
     ch_versions = ch_versions.mix(MCQUANT.out.versions)
+
+    emit:
+    ch_from_samplesheet.ashlar_input
 
     /*
     // // Run Reporting
@@ -291,14 +302,18 @@ def validate_marker_sheet(ArrayList marker_sheet_row, Map sample_sheet_index_map
 */
 
 workflow.onComplete {
+    /*
     if (params.email || params.email_on_fail) {
         NfcoreTemplate.email(workflow, params, summary_params, projectDir, log, multiqc_report)
     }
+    */
     NfcoreTemplate.dump_parameters(workflow, params)
     NfcoreTemplate.summary(workflow, params, log)
+    /*
     if (params.hook_url) {
         NfcoreTemplate.IM_notification(workflow, params, summary_params, projectDir, log)
     }
+    */
 }
 
 /*
