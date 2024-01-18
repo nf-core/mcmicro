@@ -15,7 +15,7 @@
 
 ## Introduction
 
-> **Warning:**
+> [!WARNING]
 > We are currently in the process of porting the original MCMICRO to nf-core. This pipeline is therefore in active development.
 
 **nf-core/mcmicro** is a nextflow pipeline for processing highly-multiplexed imaging data, as produced by technologies such as Cycif, MIBI, CODEX, SeqIF among others.
