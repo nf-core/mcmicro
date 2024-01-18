@@ -162,7 +162,8 @@ workflow MCMICRO {
     emit:
     // ch_from_samplesheet.ashlar_input
     // ch_versions
-    ASHLAR.out.tif
+    // ASHLAR.out.tif
+    MCQUANT.out.csv
 
     /*
     // // Run Reporting
