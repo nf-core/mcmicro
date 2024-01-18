@@ -160,7 +160,9 @@ workflow MCMICRO {
     ch_versions = ch_versions.mix(MCQUANT.out.versions)
 
     emit:
-    ch_from_samplesheet.ashlar_input
+    // ch_from_samplesheet.ashlar_input
+    // ch_versions
+    ASHLAR.out.tif
 
     /*
     // // Run Reporting
