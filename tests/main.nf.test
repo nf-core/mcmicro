@@ -8,10 +8,8 @@ nextflow_workflow {
 
         when {
             params {
-                // define parameters here. Example:
-                // outdir = "tests/results"
                 input_cycle = "/home/pollen/github/mcmicro-nf-core/assets/samplesheet_1_row_sample_cycle.csv"
-                outdir = "/home/pollen/HITS/nextflow/test_mcmicro-nf-core/output"
+                outdir = "$outputDir"
                 marker_sheet = "/home/pollen/HITS/nextflow/test_mcmicro-nf-core/markers_1.csv"
                 dfp = "/home/pollen/HITS/nextflow/test_mcmicro-nf-core/correction/cycif-tonsil-ffp.ome.tif"
                 ffp = "/home/pollen/HITS/nextflow/test_mcmicro-nf-core/correction/cycif-tonsil-dfp.ome.tif"
@@ -25,8 +23,13 @@ nextflow_workflow {
         }
 
         then {
-            assert workflow.success
-            assert snapshot(workflow.out).match()
+            assertAll (
+                { assert workflow.success },
+                { assert snapshot(path("$outputDir/ashlar/TEST1.ome.tif")).match("TEST1.ome.tif") },
+                { assert snapshot(path("$outputDir/deepcell/mask.tif")).match("mask.tif") },
+                { assert snapshot(path("$outputDir/marker/marker_sheet.valid.csv")).match("marker_sheet.valid.csv") },
+                { assert snapshot(path("$outputDir/mcquant/TEST1_mask.csv")).match("TEST1_mask.csv") }
+            )
         }
 
     }
