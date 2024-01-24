@@ -1,0 +1,5 @@
+channel_number,cycle_number,marker_name,Filter,excitation_wavelength,emission_wavelength
+21,6,DNA_6,DAPI,395,431
+22,6,ELANE,FITC,485,525
+23,6,CD57,Sytox,555,590
+24,6,CD45,Cy5,640,690
