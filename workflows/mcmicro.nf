@@ -12,6 +12,7 @@ include { validateParameters; paramsHelp; paramsSummaryLog; fromSamplesheet; par
 def logo = NfcoreTemplate.logo(workflow, params.monochrome_logs)
 def citation = '\n' + WorkflowMain.citation(workflow) + '\n'
 def summary_params = paramsSummaryMap(workflow)
+def parameters_schema = '/home/pollen/github/mcmicro-nf-core/nextflow_schema.json'
 
 // Print parameter summary log to screen
 log.info logo + paramsSummaryLog(workflow) + citation
@@ -86,7 +87,7 @@ workflow MCMICRO {
         sample_sheet_index_map = make_sample_sheet_index_map(params.input_cycle)
         ch_from_samplesheet = Channel.fromSamplesheet(
             "input_cycle",
-            parameters_schema: '/home/pollen/github/mcmicro-nf-core/nextflow_schema.json',
+            parameters_schema: parameters_schema,
             skip_duplicate_check: false
             )
             .multiMap
@@ -106,7 +107,7 @@ workflow MCMICRO {
     marker_sheet_index_map = make_marker_sheet_index_map(params.marker_sheet)
     ch_from_marker_sheet = Channel.fromSamplesheet(
         "marker_sheet",
-        parameters_schema: '/home/pollen/github/mcmicro-nf-core/nextflow_schema.json',
+        parameters_schema: parameters_schema,
         skip_duplicate_check: false
         )
     //    .map { validate_marker_sheet(it, sample_sheet_index_map, marker_sheet_index_map) }
