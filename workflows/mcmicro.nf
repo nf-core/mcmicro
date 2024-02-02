@@ -124,6 +124,19 @@ workflow MCMICRO {
     // BASICPY(raw_cycles)
     //ch_versions = ch_versions.mix(BASICPY.out.versions)
 
+    BASICPY(ch_from_samplesheet.ashlar_input)
+    ch_tif = BASICPY.out.fields
+
+    ch_tif
+        .map { it[1] }
+        .flatten()
+        .branch {
+            dfp: it =~ /.dfp.tiff/
+            ffp: it =~ /.ffp.tiff/
+        }
+        .set { correction_files }
+    ch_versions = ch_versions.mix(BASICPY.out.versions)
+
     // /*
     // if ( params.illumination ) {
     //     BASICPY(ch_images)
@@ -142,12 +155,14 @@ workflow MCMICRO {
     // MARKER_CHECK(parmas.marker_sheet)
 
     // ASHLAR(ch_from_samplesheet.ashlar_input, [], [])
-    ASHLAR(ch_from_samplesheet.ashlar_input, params.ffp, params.dfp)
+    // ASHLAR(ch_from_samplesheet.ashlar_input, params.dfp, params.ffp)
+    ASHLAR(ch_from_samplesheet.ashlar_input, correction_files.dfp, correction_files.ffp)
     ch_versions = ch_versions.mix(ASHLAR.out.versions)
 
     // // Run Background Correction
     // BACKSUB(ASHLAR.out.tif, ch_markers)
-    // ch_versions = ch_versions.mix(BACKSUB.out.versions)
+    //BACKSUB(ASHLAR.out.tif, [[id: "backsub"], params.marker_sheet])
+    //ch_versions = ch_versions.mix(BACKSUB.out.versions)
 
     /* Run Segmentation */
     DEEPCELL_MESMER(ASHLAR.out.tif, [[:],[]])
