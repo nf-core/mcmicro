@@ -124,17 +124,32 @@ workflow MCMICRO {
     // BASICPY(raw_cycles)
     //ch_versions = ch_versions.mix(BASICPY.out.versions)
 
-    BASICPY(ch_from_samplesheet.ashlar_input)
-    ch_versions = ch_versions.mix(BASICPY.out.versions)
+    if ( params.illumination ) {
 
-    BASICPY.out.fields
-        .map { it[1] }
-        .flatten()
-        .branch {
-            dfp: it =~ /.dfp.tiff/
-            ffp: it =~ /.ffp.tiff/
+        if (params.illumination == 'basicpy') {
+
+            BASICPY(ch_from_samplesheet.ashlar_input)
+            ch_versions = ch_versions.mix(BASICPY.out.versions)
+
+            BASICPY.out.fields
+                .map { it[1] }
+                .flatten()
+                .branch {
+                    dfp: it =~ /.dfp.tiff/
+                    ffp: it =~ /.ffp.tiff/
+                }
+                .set { correction_files }
+            ch_dfp = correction_files.dfp
+            ch_ffp = correction_files.ffp
+        } else if(params.illumination == 'manual') {
+            // TODO: add check for these parameters and helpful error message if they're missing
+            ch_dfp = params.dfp
+            ch_ffp = params.ffp
         }
-        .set { correction_files }
+    } else {
+        ch_dfp = []
+        ch_ffp = []
+    }
 
     // if ( params.illumination ) {
     //     BASICPY(ch_images)
@@ -153,7 +168,8 @@ workflow MCMICRO {
 
     // ASHLAR(ch_from_samplesheet.ashlar_input, [], [])
     // ASHLAR(ch_from_samplesheet.ashlar_input, params.dfp, params.ffp)
-    ASHLAR(ch_from_samplesheet.ashlar_input, correction_files.dfp, correction_files.ffp)
+    // ASHLAR(ch_from_samplesheet.ashlar_input, correction_files.dfp, correction_files.ffp)
+    ASHLAR(ch_from_samplesheet.ashlar_input, ch_dfp, ch_ffp)
     ch_versions = ch_versions.mix(ASHLAR.out.versions)
 
     // // Run Background Correction

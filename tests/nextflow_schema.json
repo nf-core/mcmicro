@@ -60,6 +60,11 @@
                     "pattern": "^\\S+\\.csv$",
                     "description": "Path to comma-separated file containing information about the markers",
                     "schema": "/assets/schema_marker.json"
+                },
+                "illumination": {
+                    "type": "string",
+                    "pattern": "^\\S+\\.csv$",
+                    "description": "input that defines type of illumination correction to be performed"
                 }
             }
         },
