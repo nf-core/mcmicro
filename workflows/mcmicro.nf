@@ -126,9 +126,8 @@ workflow MCMICRO {
 
     BASICPY(ch_from_samplesheet.ashlar_input)
     ch_versions = ch_versions.mix(BASICPY.out.versions)
-    ch_tif = BASICPY.out.fields
 
-    ch_tif
+    BASICPY.out.fields
         .map { it[1] }
         .flatten()
         .branch {

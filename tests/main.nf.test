@@ -28,7 +28,9 @@ nextflow_workflow {
                 { assert snapshot(path("$outputDir/ashlar/TEST1.ome.tif")).match("TEST1.ome.tif") },
                 { assert snapshot(path("$outputDir/deepcell/mask.tif")).match("mask.tif") },
                 { assert snapshot(path("$outputDir/marker/marker_sheet.valid.csv")).match("marker_sheet.valid.csv") },
-                { assert snapshot(path("$outputDir/mcquant/TEST1_mask.csv")).match("TEST1_mask.csv") }
+                { assert snapshot(path("$outputDir/mcquant/TEST1_mask.csv")).match("TEST1_mask.csv") },
+                { assert snapshot(path("$outputDir/basicpy/cycif-tonsil-cycle1.ome-dfp.tiff")).match("cycif-tonsil-cycle1.ome-dfp.tiff") },
+                { assert snapshot(path("$outputDir/basicpy/cycif-tonsil-cycle1.ome-ffp.tiff")).match("cycif-tonsil-cycle1.ome-ffp.tiff") }
             )
         }
 
