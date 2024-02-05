@@ -125,6 +125,7 @@ workflow MCMICRO {
     //ch_versions = ch_versions.mix(BASICPY.out.versions)
 
     BASICPY(ch_from_samplesheet.ashlar_input)
+    ch_versions = ch_versions.mix(BASICPY.out.versions)
     ch_tif = BASICPY.out.fields
 
     ch_tif
@@ -135,9 +136,7 @@ workflow MCMICRO {
             ffp: it =~ /.ffp.tiff/
         }
         .set { correction_files }
-    ch_versions = ch_versions.mix(BASICPY.out.versions)
 
-    // /*
     // if ( params.illumination ) {
     //     BASICPY(ch_images)
     //     ch_tif = BASICPY.out.fields
@@ -146,7 +145,6 @@ workflow MCMICRO {
     //     ch_dfp = ch_tif.filter { file -> file.name.endsWith('.dfp.tiff') }
     //     ch_ffp = ch_tif.filter { file -> file.name.endsWith('.ffp.tiff') }
     // }
-    // */
 
     // MARKER_SHEET_CHECK(params.marker_sheet)
 
