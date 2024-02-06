@@ -125,7 +125,6 @@ workflow MCMICRO {
     //ch_versions = ch_versions.mix(BASICPY.out.versions)
 
     if ( params.illumination ) {
-
         if (params.illumination == 'basicpy') {
 
             BASICPY(ch_from_samplesheet.ashlar_input)
@@ -142,7 +141,8 @@ workflow MCMICRO {
             ch_dfp = correction_files.dfp
             ch_ffp = correction_files.ffp
         } else if(params.illumination == 'manual') {
-            // TODO: add check for these parameters and helpful error message if they're missing
+            print("*** params.dfp ***")
+            print(params.dfp)
             ch_dfp = params.dfp
             ch_ffp = params.ffp
         }
