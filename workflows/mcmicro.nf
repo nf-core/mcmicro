@@ -13,7 +13,6 @@ def logo = NfcoreTemplate.logo(workflow, params.monochrome_logs)
 def citation = '\n' + WorkflowMain.citation(workflow) + '\n'
 def summary_params = paramsSummaryMap(workflow)
 def parameters_schema = '/home/pollen/github/mcmicro-nf-core/nextflow_schema.json'
-
 // Print parameter summary log to screen
 log.info logo + paramsSummaryLog(workflow) + citation
 
@@ -77,7 +76,11 @@ workflow MCMICRO {
     if (params.input_sample && !params.input_cycle) {
         input_type = "sample"
         sample_sheet_index_map = make_sample_sheet_index_map(params.input_sample)
-        ch_from_samplesheet = Channel.fromSamplesheet("input_sample")
+        ch_from_samplesheet = Channel.fromSamplesheet(
+            "input_sample",
+            parameters_schema: parameters_schema,
+            skip_duplicate_check: false
+            )
             .multiMap
                 { it ->
                     ashlar_input: make_ashlar_input_sample(it, sample_sheet_index_map)
@@ -141,8 +144,6 @@ workflow MCMICRO {
             ch_dfp = correction_files.dfp
             ch_ffp = correction_files.ffp
         } else if(params.illumination == 'manual') {
-            print("*** params.dfp ***")
-            print(params.dfp)
             ch_dfp = params.dfp
             ch_ffp = params.ffp
         }

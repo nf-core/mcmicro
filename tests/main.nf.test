@@ -6,7 +6,7 @@ nextflow_workflow {
 
 
     [
-        test("no illumination correction") {
+        test("cycle: no illumination correction") {
 
             when {
                 params {
@@ -38,7 +38,7 @@ nextflow_workflow {
 
         },
 
-        test("basicpy illumination correction") {
+        test("cycle: basicpy illumination correction") {
 
             when {
                 params {
@@ -72,7 +72,7 @@ nextflow_workflow {
             }
         },
 
-        test("manual illumination correction") {
+        test("cycle: manual illumination correction") {
 
             when {
                 params {
@@ -82,6 +82,37 @@ nextflow_workflow {
                     illumination = "manual"
                     dfp = "/home/pollen/HITS/nextflow/test_mcmicro-nf-core/correction/cycif-tonsil-dfp.ome.tif"
                     ffp = "/home/pollen/HITS/nextflow/test_mcmicro-nf-core/correction/cycif-tonsil-ffp.ome.tif"
+                }
+                workflow {
+                    """
+                    // define inputs of the workflow here. Example:
+                    // input[0] = file("test-file.txt")
+                    """
+                }
+            }
+
+            then {
+                assertAll (
+                    {
+                        assert snapshot (
+                            path("$outputDir/ashlar/TEST1.ome.tif"),
+                            path("$outputDir/deepcell/mask.tif"),
+                            path("$outputDir/marker/marker_sheet.valid.csv"),
+                            path("$outputDir/mcquant/TEST1_mask.csv")
+                        ).match()
+                    },
+                    { assert workflow.success }
+                )
+            }
+        },
+
+        test("sample: no illumination correction") {
+
+            when {
+                params {
+                    input_sample = "/home/pollen/github/mcmicro-nf-core/assets/samplesheet_1_row_sample.csv"
+                    outdir = "$outputDir"
+                    marker_sheet = "/home/pollen/HITS/nextflow/test_mcmicro-nf-core/markers_1.csv"
                 }
                 workflow {
                     """

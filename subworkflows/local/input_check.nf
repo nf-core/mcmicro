@@ -5,6 +5,9 @@ include { SAMPLESHEET_CHECK  } from '../../modules/local/samplesheet_check'
 include { MARKER_SHEET_CHECK  } from '../../modules/local/marker_sheet_check'
 include { SAMPLE_AND_MARKER_SHEET_CHECK } from '../../modules/local/sample_and_marker_sheet_check'
 
+// TODO: fails nf-test with relative path
+parameters_schema = '/home/pollen/github/mcmicro-nf-core/nextflow_schema.json'
+
 workflow INPUT_CHECK {
     take:
     input_type          // either 'sample' or 'cycle'
@@ -20,12 +23,15 @@ workflow INPUT_CHECK {
     SAMPLESHEET_CHECK ( input_type )
 
     if ( input_type == "sample" ) {
-        input = Channel.fromSamplesheet("input_sample")
+        input = Channel.fromSamplesheet(
+            "input_sample",
+            parameters_schema: parameters_schema,
+            skip_duplicate_check: false)
         SAMPLE_AND_MARKER_SHEET_CHECK ( params.input_sample, params.marker_sheet )
     } else if ( input_type == "cycle" ) {
         input = Channel.fromSamplesheet(
             "input_cycle",
-            parameters_schema: '/home/pollen/github/mcmicro-nf-core/nextflow_schema.json',
+            parameters_schema: parameters_schema,
             skip_duplicate_check: false)
         SAMPLE_AND_MARKER_SHEET_CHECK ( params.input_cycle, params.marker_sheet )
     }
@@ -33,7 +39,7 @@ workflow INPUT_CHECK {
     MARKER_SHEET_CHECK ( params.marker_sheet )
     marker = Channel.fromSamplesheet(
         "marker_sheet",
-        parameters_schema: '/home/pollen/github/mcmicro-nf-core/nextflow_schema.json',
+        parameters_schema: parameters_schema,
         skip_duplicate_check: false
         )
 
