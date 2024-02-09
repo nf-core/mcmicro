@@ -5,7 +5,7 @@ include { SAMPLESHEET_CHECK  } from '../../modules/local/samplesheet_check'
 include { MARKER_SHEET_CHECK  } from '../../modules/local/marker_sheet_check'
 include { SAMPLE_AND_MARKER_SHEET_CHECK } from '../../modules/local/sample_and_marker_sheet_check'
 
-// TODO: fails nf-test with relative path
+// TODO: fails nf-test with relative path; I don't like having this full path buried in a subworkflow; can this be improved?
 parameters_schema = '/home/pollen/github/mcmicro-nf-core/nextflow_schema.json'
 
 workflow INPUT_CHECK {
