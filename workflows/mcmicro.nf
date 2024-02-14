@@ -85,6 +85,7 @@ workflow MCMICRO {
                 { it ->
                     ashlar_input: make_ashlar_input_sample(it, sample_sheet_index_map)
                 }
+        ch_from_samplesheet_3 = ch_from_samplesheet.ashlar_input
     } else if(!params.input_sample && params.input_cycle) {
         input_type = "cycle"
         sample_sheet_index_map = make_sample_sheet_index_map(params.input_cycle)
@@ -97,6 +98,29 @@ workflow MCMICRO {
                 { it ->
                     ashlar_input: make_ashlar_input_cycle(it, sample_sheet_index_map)
                 }
+        ch_from_samplesheet.ashlar_input.view { "ashlar $it" }
+
+        ch_from_samplesheet_2 = Channel.fromSamplesheet(
+            "input_cycle",
+            parameters_schema: parameters_schema,
+            skip_duplicate_check: false
+            )
+            .collate(4)
+            .multiMap
+                { it ->
+                    ashlar_input: make_ashlar_input_cycle_channel(it, sample_sheet_index_map)
+                }
+
+        ch_from_samplesheet_3 = Channel.fromSamplesheet(
+                "input_cycle",
+                parameters_schema: parameters_schema,
+                skip_duplicate_check: false
+            )
+            .map { it -> [[id:it[0]], it[3]] }
+            .groupTuple()
+            .view()
+        ch_from_samplesheet_3.view { "test $it" }
+
     } else if(params.input_sample && params.input_cycle) {
         Nextflow.error("ERROR: You must have EITHER an input_sample parameter OR an input_cycle parameter, but not both!")
     } else if(!params.input_sample && !params.input_cycle) {
@@ -105,7 +129,7 @@ workflow MCMICRO {
 
     ch_versions = Channel.empty()
 
-    // ch_from_samplesheet.ashlar_input.view { "ashlar $it" }
+    // ch_from_samplesheet_2.ashlar_input.view { "ashlar_2 $it" }
 
     marker_sheet_index_map = make_marker_sheet_index_map(params.marker_sheet)
     ch_from_marker_sheet = Channel.fromSamplesheet(
@@ -162,15 +186,17 @@ workflow MCMICRO {
     // }
 
     // MARKER_SHEET_CHECK(params.marker_sheet)
-
     // INPUT_CHECK(params.input_cycle, params.marker_sheet)
+
     INPUT_CHECK( input_type, params.input_sample, params.input_cycle, params.marker_sheet )
+
     // MARKER_CHECK(parmas.marker_sheet)
 
     // ASHLAR(ch_from_samplesheet.ashlar_input, [], [])
     // ASHLAR(ch_from_samplesheet.ashlar_input, params.dfp, params.ffp)
     // ASHLAR(ch_from_samplesheet.ashlar_input, correction_files.dfp, correction_files.ffp)
-    ASHLAR(ch_from_samplesheet.ashlar_input, ch_dfp, ch_ffp)
+    // ASHLAR(ch_from_samplesheet.ashlar_input, ch_dfp, ch_ffp)
+    ASHLAR(ch_from_samplesheet_3, ch_dfp, ch_ffp)
     ch_versions = ch_versions.mix(ASHLAR.out.versions)
 
     // // Run Background Correction
@@ -281,6 +307,73 @@ def make_ashlar_input_cycle(ArrayList sample_sheet_row, Map sample_sheet_index_m
     return ashlar_input
 }
 
+def make_ashlar_input_cycle_channel(sample_sheet_rows, sample_sheet_index_map) {
+
+    def input_map = [:].withDefault {[]}
+
+    //print('*** sample_sheet_rows ***')
+    //print(sample_sheet_rows)
+
+    sample_sheet_rows.each { row ->
+        input_map[row[0]].add(row[3])
+    }
+
+    // print('*** input_map ***')
+    // print(input_map)
+
+    input_list = []
+    input_map.each { entry ->
+        //print(entry.value)
+        def value_str = entry.value.join(' ')
+        //print(value_str)
+        // input_list.add([[id:entry.key], value_str])
+        input_list.add([[id:entry.key], entry.value])
+        // input_list.add("[[id:$entry.key] $entry.value.join(',')]")
+    }
+
+    //print('*** input_list ***')
+    //print(input_list)
+    /*
+    print('*** input_list 0 ***')
+    print(input_list[0])
+    */
+
+    return input_list[0]
+}
+
+def test_channel(sample_sheet_rows) {
+
+    def input_map = [:].withDefault {[]}
+
+    print('*** sample_sheet_rows ***')
+    print(sample_sheet_rows)
+
+    sample_sheet_rows.each { row ->
+        input_map[row[0]].add(row[3])
+    }
+
+    // print('*** input_map ***')
+    // print(input_map)
+
+    input_list = []
+    input_map.each { entry ->
+        //print(entry.value)
+        def value_str = entry.value.join(' ')
+        //print(value_str)
+        // input_list.add([[id:entry.key], value_str])
+        input_list.add([[id:entry.key], entry.value])
+        // input_list.add("[[id:$entry.key] $entry.value.join(',')]")
+    }
+
+    //print('*** input_list ***')
+    //print(input_list)
+    /*
+    print('*** input_list 0 ***')
+    print(input_list[0])
+    */
+
+    return input_list
+}
 /* moved validation to subworkflow
 
 marker_name_list = []
