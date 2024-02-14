@@ -85,10 +85,11 @@ workflow MCMICRO {
                 { it ->
                     ashlar_input: make_ashlar_input_sample(it, sample_sheet_index_map)
                 }
-        ch_from_samplesheet_3 = ch_from_samplesheet.ashlar_input
+        //ch_from_samplesheet_3 = ch_from_samplesheet.ashlar_input
     } else if(!params.input_sample && params.input_cycle) {
         input_type = "cycle"
         sample_sheet_index_map = make_sample_sheet_index_map(params.input_cycle)
+        /*
         ch_from_samplesheet = Channel.fromSamplesheet(
             "input_cycle",
             parameters_schema: parameters_schema,
@@ -110,8 +111,8 @@ workflow MCMICRO {
                 { it ->
                     ashlar_input: make_ashlar_input_cycle_channel(it, sample_sheet_index_map)
                 }
-
-        ch_from_samplesheet_3 = Channel.fromSamplesheet(
+        */
+        ch_from_samplesheet = Channel.fromSamplesheet(
                 "input_cycle",
                 parameters_schema: parameters_schema,
                 skip_duplicate_check: false
@@ -119,7 +120,11 @@ workflow MCMICRO {
             .map { it -> [[id:it[0]], it[3]] }
             .groupTuple()
             .view()
-        ch_from_samplesheet_3.view { "test $it" }
+            .multiMap
+                { it ->
+                    ashlar_input: it
+                }
+        ch_from_samplesheet.ashlar_input.view { "test $it" }
 
     } else if(params.input_sample && params.input_cycle) {
         Nextflow.error("ERROR: You must have EITHER an input_sample parameter OR an input_cycle parameter, but not both!")
@@ -196,7 +201,7 @@ workflow MCMICRO {
     // ASHLAR(ch_from_samplesheet.ashlar_input, params.dfp, params.ffp)
     // ASHLAR(ch_from_samplesheet.ashlar_input, correction_files.dfp, correction_files.ffp)
     // ASHLAR(ch_from_samplesheet.ashlar_input, ch_dfp, ch_ffp)
-    ASHLAR(ch_from_samplesheet_3, ch_dfp, ch_ffp)
+    ASHLAR(ch_from_samplesheet.ashlar_input, ch_dfp, ch_ffp)
     ch_versions = ch_versions.mix(ASHLAR.out.versions)
 
     // // Run Background Correction
