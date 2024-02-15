@@ -192,9 +192,7 @@ workflow MCMICRO {
 
     // MARKER_SHEET_CHECK(params.marker_sheet)
     // INPUT_CHECK(params.input_cycle, params.marker_sheet)
-
     INPUT_CHECK( input_type, params.input_sample, params.input_cycle, params.marker_sheet )
-
     // MARKER_CHECK(parmas.marker_sheet)
 
     // ASHLAR(ch_from_samplesheet.ashlar_input, [], [])
