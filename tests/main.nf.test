@@ -166,6 +166,37 @@ nextflow_workflow {
                     { assert workflow.success }
                 )
             }
+        },
+
+        test("cycle: multiple file ashlar input with multiple (2) samples, no correction") {
+
+            when {
+                params {
+                    input_cycle = "/home/pollen/github/mcmicro-nf-core/assets/samplesheet_1_row_sample_cycle_multi_2.csv"
+                    outdir = "$outputDir"
+                    marker_sheet = "/home/pollen/github/mcmicro-nf-core/assets/markers_multi_8.csv"
+                }
+                workflow {
+                    """
+                    // define inputs of the workflow here. Example:
+                    // input[0] = file("test-file.txt")
+                    """
+                }
+            }
+
+            then {
+                assertAll (
+                    {
+                        assert snapshot (
+                            path("$outputDir/ashlar/cycif-tonsil.ome.tif"),
+                            path("$outputDir/deepcell/mask.tif"),
+                            path("$outputDir/marker/marker_sheet.valid.csv"),
+                            path("$outputDir/mcquant/cycif-tonsil_mask.csv")
+                        ).match()
+                    },
+                    { assert workflow.success }
+                )
+            }
         }
     ]
 }
