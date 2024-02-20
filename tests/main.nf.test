@@ -12,7 +12,7 @@ nextflow_workflow {
                 params {
                     input_cycle = "/home/pollen/github/mcmicro-nf-core/assets/samplesheet_1_row_sample_cycle.csv"
                     outdir = "$outputDir"
-                    marker_sheet = "/home/pollen/HITS/nextflow/test_mcmicro-nf-core/markers_1.csv"
+                    marker_sheet = "/home/pollen/github/mcmicro-nf-core/assets/markers_1.csv"
                 }
                 workflow {
                     """
@@ -27,9 +27,9 @@ nextflow_workflow {
                     {
                         assert snapshot (
                             path("$outputDir/ashlar/TEST1.ome.tif"),
-                            path("$outputDir/deepcell/mask.tif"),
+                            path("$outputDir/deepcell/mask_TEST1.tif"),
                             path("$outputDir/marker/marker_sheet.valid.csv"),
-                            path("$outputDir/mcquant/TEST1_mask.csv")
+                            path("$outputDir/mcquant/TEST1_mask_TEST1.csv")
                         ).match()
                     },
                     { assert workflow.success }
@@ -44,7 +44,7 @@ nextflow_workflow {
                 params {
                     input_cycle = "/home/pollen/github/mcmicro-nf-core/assets/samplesheet_1_row_sample_cycle.csv"
                     outdir = "$outputDir"
-                    marker_sheet = "/home/pollen/HITS/nextflow/test_mcmicro-nf-core/markers_1.csv"
+                    marker_sheet = "/home/pollen/github/mcmicro-nf-core/assets/markers_1.csv"
                     illumination = "basicpy"
                 }
                 workflow {
@@ -60,9 +60,9 @@ nextflow_workflow {
                     {
                         assert snapshot (
                             path("$outputDir/ashlar/TEST1.ome.tif"),
-                            path("$outputDir/deepcell/mask.tif"),
+                            path("$outputDir/deepcell/mask_TEST1.tif"),
                             path("$outputDir/marker/marker_sheet.valid.csv"),
-                            path("$outputDir/mcquant/TEST1_mask.csv"),
+                            path("$outputDir/mcquant/TEST1_mask_TEST1.csv"),
                             path("$outputDir/basicpy/cycif-tonsil-cycle1.ome-dfp.tiff"),
                             path("$outputDir/basicpy/cycif-tonsil-cycle1.ome-ffp.tiff")
                         ).match()
@@ -78,7 +78,7 @@ nextflow_workflow {
                 params {
                     input_cycle = "/home/pollen/github/mcmicro-nf-core/assets/samplesheet_1_row_sample_cycle.csv"
                     outdir = "$outputDir"
-                    marker_sheet = "/home/pollen/HITS/nextflow/test_mcmicro-nf-core/markers_1.csv"
+                    marker_sheet = "/home/pollen/github/mcmicro-nf-core/assets/markers_1.csv"
                     illumination = "manual"
                     dfp = "/home/pollen/HITS/nextflow/test_mcmicro-nf-core/correction/cycif-tonsil-dfp.ome.tif"
                     ffp = "/home/pollen/HITS/nextflow/test_mcmicro-nf-core/correction/cycif-tonsil-ffp.ome.tif"
@@ -96,9 +96,9 @@ nextflow_workflow {
                     {
                         assert snapshot (
                             path("$outputDir/ashlar/TEST1.ome.tif"),
-                            path("$outputDir/deepcell/mask.tif"),
+                            path("$outputDir/deepcell/mask_TEST1.tif"),
                             path("$outputDir/marker/marker_sheet.valid.csv"),
-                            path("$outputDir/mcquant/TEST1_mask.csv")
+                            path("$outputDir/mcquant/TEST1_mask_TEST1.csv")
                         ).match()
                     },
                     { assert workflow.success }
@@ -112,7 +112,7 @@ nextflow_workflow {
                 params {
                     input_sample = "/home/pollen/github/mcmicro-nf-core/assets/samplesheet_1_row_sample.csv"
                     outdir = "$outputDir"
-                    marker_sheet = "/home/pollen/HITS/nextflow/test_mcmicro-nf-core/markers_1.csv"
+                    marker_sheet = "/home/pollen/github/mcmicro-nf-core/assets/markers_1.csv"
                 }
                 workflow {
                     """
@@ -127,9 +127,9 @@ nextflow_workflow {
                     {
                         assert snapshot (
                             path("$outputDir/ashlar/TEST1.ome.tif"),
-                            path("$outputDir/deepcell/mask.tif"),
+                            path("$outputDir/deepcell/mask_TEST1.tif"),
                             path("$outputDir/marker/marker_sheet.valid.csv"),
-                            path("$outputDir/mcquant/TEST1_mask.csv")
+                            path("$outputDir/mcquant/TEST1_mask_TEST1.csv")
                         ).match()
                     },
                     { assert workflow.success }
@@ -158,9 +158,9 @@ nextflow_workflow {
                     {
                         assert snapshot (
                             path("$outputDir/ashlar/cycif-tonsil.ome.tif"),
-                            path("$outputDir/deepcell/mask.tif"),
+                            path("$outputDir/deepcell/mask_cycif-tonsil.tif"),
                             path("$outputDir/marker/marker_sheet.valid.csv"),
-                            path("$outputDir/mcquant/cycif-tonsil_mask.csv")
+                            path("$outputDir/mcquant/cycif-tonsil_mask_cycif-tonsil.csv")
                         ).match()
                     },
                     { assert workflow.success }
@@ -168,7 +168,7 @@ nextflow_workflow {
             }
         },
 
-        test("cycle: multiple file ashlar input with multiple (2) samples, no correction") {
+        test("cycle: multiple file ashlar input with multiple samples no correction") {
 
             when {
                 params {
@@ -189,9 +189,10 @@ nextflow_workflow {
                     {
                         assert snapshot (
                             path("$outputDir/ashlar/cycif-tonsil.ome.tif"),
-                            path("$outputDir/deepcell/mask.tif"),
+                            path("$outputDir/deepcell/mask_cycif-tonsil.tif"),
+                            path("$outputDir/deepcell/mask_cycif-tonsil2.tif"),
                             path("$outputDir/marker/marker_sheet.valid.csv"),
-                            path("$outputDir/mcquant/cycif-tonsil_mask.csv")
+                            path("$outputDir/mcquant/cycif-tonsil_mask_cycif-tonsil.csv")
                         ).match()
                     },
                     { assert workflow.success }

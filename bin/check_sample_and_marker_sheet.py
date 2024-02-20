@@ -46,7 +46,7 @@ class RowChecker:
                 (default "sample").
             first_col (str): The name of the column that contains the cycles number.
             second_col (str): The name of the column that contains the number of channels.
-            third_col (str): The name of the column that contains the image tiles file 
+            third_col (str): The name of the column that contains the image tiles file
                 path (default "tiff").
 
         """
@@ -189,11 +189,11 @@ def check_sample_and_marker_sheet(input_path, marker_sheet_path):
     for row in input_file:
         for key,value in row.items():
             sample_dict[key].append(value)
-    
+
     if 'cycle_number' not in list(sample_dict.keys()):
         # no cycle_number in sample_sheet, so no additional validation
         return
-    
+
     marker_dict = collections.defaultdict(list)
     input_file = csv.DictReader(open(marker_sheet_path))
     for row in input_file:
@@ -232,7 +232,6 @@ def parse_args(argv=None):
 
 
 def main(argv=None):
-    print("*** entering check_sample_and_marker_sheet: main ***")
     """Coordinate argument parsing and program execution."""
     args = parse_args(argv)
     logging.basicConfig(level=args.log_level, format="[%(levelname)s] %(message)s")
@@ -240,8 +239,6 @@ def main(argv=None):
         logger.error(f"The given input file {args.input} was not found!")
         sys.exit(2)
     args.marker_sheet.parent.mkdir(parents=True, exist_ok=True)
-    print('*** args ***')
-    print(args)
     check_sample_and_marker_sheet(args.input, args.marker_sheet)
 
 

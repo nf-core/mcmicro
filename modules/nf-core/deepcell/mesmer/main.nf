@@ -10,8 +10,8 @@ process DEEPCELL_MESMER {
 
     // Output a .tif image, don't touch versions
     output:
-    tuple val(meta), path("mask.tif"), emit: mask
-    path "versions.yml"              , emit: versions
+    tuple val(meta), path("*.tif")  , emit: mask
+    path "versions.yml"             , emit: versions
 
     when:
     task.ext.when == null || task.ext.when
@@ -27,7 +27,7 @@ process DEEPCELL_MESMER {
         --squeeze \
         --nuclear-image $img \
         --output-directory . \
-        --output-name mask.tif \
+        --output-name mask_${meta.id}.tif \
         $membrane_command \
         $args
 

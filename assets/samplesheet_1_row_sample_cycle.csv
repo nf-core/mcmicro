@@ -1,2 +1,2 @@
 sample,cycle_number,channel_count,image_tiles
-TEST1,6,10,/home/pollen/HITS/nextflow/test_mcmicro-nf-core/input/cycif-tonsil-cycle1.ome.tif
+TEST1,1,10,/home/pollen/HITS/nextflow/test_mcmicro-nf-core/input/cycif-tonsil-cycle1.ome.tif
