@@ -62,7 +62,7 @@ workflow INPUT_CHECK {
 
 // Function to get list of [ meta, [ cycle_number, channel_count, image_tiles ] ]
 def create_fastq_channel(LinkedHashMap row) {
-    print("*** create_fastq_channel: entering... ***")
+    // print("*** create_fastq_channel: entering... ***")
 
     // create meta map
     def meta = [:]

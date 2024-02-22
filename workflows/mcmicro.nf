@@ -119,12 +119,11 @@ workflow MCMICRO {
             )
             .map { it -> [[id:it[0]], it[3]] }
             .groupTuple()
-            .view()
             .multiMap
                 { it ->
                     ashlar_input: it
                 }
-        ch_from_samplesheet.ashlar_input.view { "test $it" }
+        // ch_from_samplesheet.ashlar_input.view { "test $it" }
 
     } else if(params.input_sample && params.input_cycle) {
         Nextflow.error("ERROR: You must have EITHER an input_sample parameter OR an input_cycle parameter, but not both!")
@@ -158,10 +157,26 @@ workflow MCMICRO {
 
     if ( params.illumination ) {
         if (params.illumination == 'basicpy') {
+            // if ashlar_input is more than one file we have to handle each separately
+            ch_from_samplesheet.ashlar_input
+                .multiMap { it ->
+                    meta_id: it[0]
+                    path_list: it[1]
+                }
+                .set { ch_split_ashlar_input }
+            ch_split_ashlar_input.path_list
+                .flatten()
+                .set{ ch_ashlar_paths }
 
-            BASICPY(ch_from_samplesheet.ashlar_input)
+            ch_split_ashlar_input.meta_id
+                .combine(ch_ashlar_paths)
+                .set { ch_basicpy_input }
+
+            // BASICPY(ch_from_samplesheet.ashlar_input)
+            BASICPY(ch_basicpy_input)
             ch_versions = ch_versions.mix(BASICPY.out.versions)
 
+            /* orig */
             BASICPY.out.fields
                 .map { it[1] }
                 .flatten()
@@ -172,6 +187,34 @@ workflow MCMICRO {
                 .set { correction_files }
             ch_dfp = correction_files.dfp
             ch_ffp = correction_files.ffp
+            //ch_dfp.view { "working: $it" }
+
+            BASICPY.out.fields
+                .map { it[1] }
+                .flatten()
+                .map { [it.getBaseName()[0..-5], it] }
+                .set { correction_files_keyed }
+            //correction_files_keyed.view{ "correction_keyed: $it" }
+
+            ch_from_samplesheet
+                .map { it[1] }
+                .flatten()
+                .map { [it.split('/')[-1][0..-5], it] }
+                .set { ashlar_input_keyed }
+            //ashlar_input_keyed.view { "ashlar_keyed: $it" }
+
+            ashlar_input_keyed
+                .concat(correction_files_keyed)
+                .groupTuple()
+                .map { it[1] }
+                .multiMap { it ->
+                    dfp: it[1]
+                    ffp: it[2]
+                }
+                .set { ordered_correction_files }
+            ch_dfp = ordered_correction_files.dfp.toList()
+            ch_ffp = ordered_correction_files.ffp.toList()
+
         } else if(params.illumination == 'manual') {
             ch_dfp = params.dfp
             ch_ffp = params.ffp
@@ -348,8 +391,8 @@ def test_channel(sample_sheet_rows) {
 
     def input_map = [:].withDefault {[]}
 
-    print('*** sample_sheet_rows ***')
-    print(sample_sheet_rows)
+    // print('*** sample_sheet_rows ***')
+    // print(sample_sheet_rows)
 
     sample_sheet_rows.each { row ->
         input_map[row[0]].add(row[3])

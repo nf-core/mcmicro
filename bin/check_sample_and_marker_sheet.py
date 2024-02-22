@@ -116,7 +116,6 @@ class RowChecker:
 
     def _validate_cycle_format(self, cycle):
         """Assert that the cycle is an integer."""
-        print(f'cycle is {cycle}')
         try:
             cycle = int(cycle)
         except Exception as err:
@@ -126,7 +125,6 @@ class RowChecker:
 
     def _validate_channel_count_format(self, channel_count):
         """Assert that the channel_count is an integer."""
-        print(f'channel_count is {channel_count}')
         try:
             channel_count = int(channel_count)
         except Exception as err:

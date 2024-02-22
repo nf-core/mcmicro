@@ -44,7 +44,7 @@ class RowChecker:
                 (default "sample").
             first_col (str): The name of the column that contains the cycles number.
             second_col (str): The name of the column that contains the number of channels.
-            third_col (str): The name of the column that contains the image tiles file 
+            third_col (str): The name of the column that contains the image tiles file
                 path (default "tiff").
 
         """
@@ -66,13 +66,9 @@ class RowChecker:
 
         """
         self._validate_sample(row)
-        print('*** done validating sample ***')
         self._validate_first(row)
-        print('*** done validating first ***')
         self._validate_second(row)
-        print('*** done validating second ***')
         self._validate_third(row)
-        print('*** done validating third ***')
         self._seen.add((row[self._sample_col], row[self._first_col]))
         self.modified.append(row)
 
@@ -111,7 +107,6 @@ class RowChecker:
 
     def _validate_cycle_format(self, cycle):
         """Assert that the cycle is an integer."""
-        print(f'cycle is {cycle}')
         try:
             cycle = int(cycle)
         except Exception as err:
@@ -121,7 +116,6 @@ class RowChecker:
 
     def _validate_channel_count_format(self, channel_count):
         """Assert that the channel_count is an integer."""
-        print(f'channel_count is {channel_count}')
         try:
             channel_count = int(channel_count)
         except Exception as err:
@@ -264,7 +258,6 @@ def parse_args(argv=None):
 
 
 def main(argv=None):
-    print("*** entering check_samplesheet: main ***")
     """Coordinate argument parsing and program execution."""
     args = parse_args(argv)
     logging.basicConfig(level=args.log_level, format="[%(levelname)s] %(message)s")
