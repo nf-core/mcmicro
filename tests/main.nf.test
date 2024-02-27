@@ -198,6 +198,45 @@ nextflow_workflow {
                     { assert workflow.success }
                 )
             }
-        }
+        },
+
+        test("cycle: multiple file ashlar input with basicpy correction") {
+
+            when {
+                params {
+                    input_cycle = "/home/pollen/github/mcmicro-nf-core/assets/samplesheet_1_row_sample_cycle_multi.csv"
+                    outdir = "$outputDir"
+                    marker_sheet = "/home/pollen/github/mcmicro-nf-core/assets/markers_multi_12.csv"
+                    illumination = "basicpy"
+                }
+                workflow {
+                    """
+                    // define inputs of the workflow here. Example:
+                    // input[0] = file("test-file.txt")
+                    """
+                }
+            }
+
+            then {
+                assertAll (
+                    {
+                        assert snapshot (
+                            path("$outputDir/ashlar/cycif-tonsil.ome.tif"),
+                            path("$outputDir/deepcell/mask_cycif-tonsil.tif"),
+                            path("$outputDir/marker/marker_sheet.valid.csv"),
+                            path("$outputDir/mcquant/cycif-tonsil_mask_cycif-tonsil.csv"),
+                            path("$outputDir/basicpy/cycif-tonsil-cycle1.ome-dfp.tiff"),
+                            path("$outputDir/basicpy/cycif-tonsil-cycle1.ome-ffp.tiff"),
+                            path("$outputDir/basicpy/cycif-tonsil-cycle2.ome-dfp.tiff"),
+                            path("$outputDir/basicpy/cycif-tonsil-cycle2.ome-ffp.tiff"),
+                            path("$outputDir/basicpy/cycif-tonsil-cycle3.ome-dfp.tiff"),
+                            path("$outputDir/basicpy/cycif-tonsil-cycle3.ome-ffp.tiff")
+                        ).match()
+                    },
+                    { assert workflow.success }
+                )
+            }
+        },
+
     ]
 }
