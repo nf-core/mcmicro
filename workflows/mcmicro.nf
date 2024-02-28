@@ -158,6 +158,7 @@ workflow MCMICRO {
     if ( params.illumination ) {
         if (params.illumination == 'basicpy') {
             // if ashlar_input is more than one file we have to handle each separately
+            /*
             ch_from_samplesheet.ashlar_input
                 .multiMap { it ->
                     meta_id: it[0]
@@ -171,6 +172,12 @@ workflow MCMICRO {
             ch_split_ashlar_input.meta_id
                 .combine(ch_ashlar_paths)
                 .set { ch_basicpy_input }
+            */
+
+            ch_from_samplesheet.ashlar_input
+                .transpose()
+                .set { ch_basicpy_input }
+
 
             // BASICPY(ch_from_samplesheet.ashlar_input)
             BASICPY(ch_basicpy_input)
