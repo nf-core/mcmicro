@@ -207,9 +207,10 @@ workflow MCMICRO {
                 .concat(correction_files_keyed)
                 .groupTuple()
                 .map { it[1] }
-                .multiMap { it ->
-                    dfp: it[1]
-                    ffp: it[2]
+                .flatten()
+                .branch {
+                    dfp: it =~ /-dfp.tiff/
+                    ffp: it =~ /-ffp.tiff/
                 }
                 .set { ordered_correction_files }
             ch_dfp = ordered_correction_files.dfp.toList()
