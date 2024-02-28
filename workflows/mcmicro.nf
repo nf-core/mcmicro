@@ -157,33 +157,22 @@ workflow MCMICRO {
 
     if ( params.illumination ) {
         if (params.illumination == 'basicpy') {
-            // if ashlar_input is more than one file we have to handle each separately
-            /*
-            ch_from_samplesheet.ashlar_input
-                .multiMap { it ->
-                    meta_id: it[0]
-                    path_list: it[1]
-                }
-                .set { ch_split_ashlar_input }
-            ch_split_ashlar_input.path_list
-                .flatten()
-                .set{ ch_ashlar_paths }
-
-            ch_split_ashlar_input.meta_id
-                .combine(ch_ashlar_paths)
-                .set { ch_basicpy_input }
-            */
 
             ch_from_samplesheet.ashlar_input
                 .transpose()
                 .set { ch_basicpy_input }
-
+            //ch_basicpy_input
+            //    .view { "ch_basicpy_input: $it" }
 
             // BASICPY(ch_from_samplesheet.ashlar_input)
             BASICPY(ch_basicpy_input)
             ch_versions = ch_versions.mix(BASICPY.out.versions)
 
-            /* orig */
+            // output from BASICPY is out of order, so we need to reorder it
+            //BASICPY.out.fields
+            //    .view { "BASICPY.out.fields: $it" }
+
+            /* orig
             BASICPY.out.fields
                 .map { it[1] }
                 .flatten()
@@ -195,18 +184,74 @@ workflow MCMICRO {
             ch_dfp = correction_files.dfp
             ch_ffp = correction_files.ffp
             //ch_dfp.view { "working: $it" }
+            */
+
+            /* orig working block
+            BASICPY.out.fields
+                .transpose()
+                //.groupTuple()
+                //.map { it[1] }
+                //.branch {
+                //    dfp: it =~ /-dfp.tiff/
+                //    ffp: it =~ /-ffp.tiff/
+                //}
+                .set { test }
+            test.view { "test: $it" }
+
+            ch_from_samplesheet.ashlar_input
+                .concat(test)
+                .groupTuple()
+                .view { "test2: $it" }
+            */
+
+            /* works for single sample id
+            BASICPY.out.fields
+                .view { "BASICPY.out.fields: $it" }
 
             BASICPY.out.fields
                 .map { it[1] }
                 .flatten()
                 .map { [it.getBaseName()[0..-5], it] }
                 .set { correction_files_keyed }
-            //correction_files_keyed.view{ "correction_keyed: $it" }
+            correction_files_keyed.view{ "correction_keyed: $it" }
 
             ch_from_samplesheet
                 .map { it[1] }
                 .flatten()
                 .map { [it.split('/')[-1][0..-5], it] }
+                .set { ashlar_input_keyed }
+            ashlar_input_keyed.view { "ashlar_keyed: $it" }
+
+            ashlar_input_keyed
+                .concat(correction_files_keyed)
+                .groupTuple()
+                .map { it[1] }
+                .flatten()
+                .branch {
+                    dfp: it =~ /-dfp.tiff/
+                    ffp: it =~ /-ffp.tiff/
+                }
+                .set { ordered_correction_files }
+            ch_dfp = ordered_correction_files.dfp.toList()
+            ch_ffp = ordered_correction_files.ffp.toList()
+            ch_dfp
+                .view { "ordered_correction_files_ch_dfp: $it" }
+            */
+
+            //BASICPY.out.fields
+            //    .view { "BASICPY.out.fields: $it" }
+
+            /* new working block with sample id in keys
+            BASICPY.out.fields
+                .transpose()
+                .map { [[it[1].getBaseName()[0..-5],it[0]], it[1]]}
+                .groupTuple()
+                .set { correction_files_keyed }
+            //correction_files_keyed.view{ "correction_keyed: $it" }
+
+            ch_from_samplesheet
+                .transpose()
+                .map { [[it[1].split('/')[-1][0..-5],it[0]], it[1]] }
                 .set { ashlar_input_keyed }
             //ashlar_input_keyed.view { "ashlar_keyed: $it" }
 
@@ -222,6 +267,42 @@ workflow MCMICRO {
                 .set { ordered_correction_files }
             ch_dfp = ordered_correction_files.dfp.toList()
             ch_ffp = ordered_correction_files.ffp.toList()
+            //ch_dfp
+            //    .view { "ordered_correction_files_ch_dfp: $it" }
+            */
+
+            BASICPY.out.fields
+                .transpose()
+                .map { [[it[1].getBaseName()[0..-5],it[0]], it[1]]}
+                .groupTuple()
+                .set { correction_files_keyed }
+            //correction_files_keyed.view{ "correction_keyed: $it" }
+
+            ch_from_samplesheet
+                .transpose()
+                .map { [[it[1].split('/')[-1][0..-5],it[0]], it[1]] }
+                .set { ashlar_input_keyed }
+            //ashlar_input_keyed.view { "ashlar_keyed: $it" }
+
+            ashlar_input_keyed
+                .concat(correction_files_keyed)
+                .groupTuple()
+                .map { [it[0][1], it[1][1]] }
+                .transpose()
+                .branch {
+                    dfp: it =~ /-dfp.tiff/
+                    ffp: it =~ /-ffp.tiff/
+                }
+                .set { ordered_correction_files }
+            ch_dfp = ordered_correction_files.dfp
+                .groupTuple()
+                .map { it[1] }
+            ch_ffp = ordered_correction_files.ffp
+                .groupTuple()
+                .map { it[1] }
+            //ch_dfp
+            //    .view { "ordered_correction_files_ch_dfp: $it" }
+
 
         } else if(params.illumination == 'manual') {
             ch_dfp = params.dfp
