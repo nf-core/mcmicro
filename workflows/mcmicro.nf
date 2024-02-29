@@ -89,29 +89,6 @@ workflow MCMICRO {
     } else if(!params.input_sample && params.input_cycle) {
         input_type = "cycle"
         sample_sheet_index_map = make_sample_sheet_index_map(params.input_cycle)
-        /*
-        ch_from_samplesheet = Channel.fromSamplesheet(
-            "input_cycle",
-            parameters_schema: parameters_schema,
-            skip_duplicate_check: false
-            )
-            .multiMap
-                { it ->
-                    ashlar_input: make_ashlar_input_cycle(it, sample_sheet_index_map)
-                }
-        ch_from_samplesheet.ashlar_input.view { "ashlar $it" }
-
-        ch_from_samplesheet_2 = Channel.fromSamplesheet(
-            "input_cycle",
-            parameters_schema: parameters_schema,
-            skip_duplicate_check: false
-            )
-            .collate(4)
-            .multiMap
-                { it ->
-                    ashlar_input: make_ashlar_input_cycle_channel(it, sample_sheet_index_map)
-                }
-        */
         ch_from_samplesheet = Channel.fromSamplesheet(
                 "input_cycle",
                 parameters_schema: parameters_schema,
@@ -123,7 +100,6 @@ workflow MCMICRO {
                 { it ->
                     ashlar_input: it
                 }
-        // ch_from_samplesheet.ashlar_input.view { "test $it" }
 
     } else if(params.input_sample && params.input_cycle) {
         Nextflow.error("ERROR: You must have EITHER an input_sample parameter OR an input_cycle parameter, but not both!")
@@ -143,17 +119,9 @@ workflow MCMICRO {
         )
     //    .map { validate_marker_sheet(it, sample_sheet_index_map, marker_sheet_index_map) }
 
-    // Format input for BASICPY
-    // data_path = ch_from_samplesheet
-    //     .map(it->"${it[1]}/*.ome.tif")
-    // raw_cycles = Channel.of([[id:"exemplar-001"],"/workspace/data/exemplar-001/raw/exemplar-001-cycle-06.ome.tiff"])
-
     //
     // MODULE: BASICPY
     //
-
-    // BASICPY(raw_cycles)
-    //ch_versions = ch_versions.mix(BASICPY.out.versions)
 
     if ( params.illumination ) {
         if (params.illumination == 'basicpy') {
@@ -161,128 +129,20 @@ workflow MCMICRO {
             ch_from_samplesheet.ashlar_input
                 .transpose()
                 .set { ch_basicpy_input }
-            //ch_basicpy_input
-            //    .view { "ch_basicpy_input: $it" }
 
-            // BASICPY(ch_from_samplesheet.ashlar_input)
             BASICPY(ch_basicpy_input)
             ch_versions = ch_versions.mix(BASICPY.out.versions)
 
-            // output from BASICPY is out of order, so we need to reorder it
-            //BASICPY.out.fields
-            //    .view { "BASICPY.out.fields: $it" }
-
-            /* orig
-            BASICPY.out.fields
-                .map { it[1] }
-                .flatten()
-                .branch {
-                    dfp: it =~ /.dfp.tiff/
-                    ffp: it =~ /.ffp.tiff/
-                }
-                .set { correction_files }
-            ch_dfp = correction_files.dfp
-            ch_ffp = correction_files.ffp
-            //ch_dfp.view { "working: $it" }
-            */
-
-            /* orig working block
-            BASICPY.out.fields
-                .transpose()
-                //.groupTuple()
-                //.map { it[1] }
-                //.branch {
-                //    dfp: it =~ /-dfp.tiff/
-                //    ffp: it =~ /-ffp.tiff/
-                //}
-                .set { test }
-            test.view { "test: $it" }
-
-            ch_from_samplesheet.ashlar_input
-                .concat(test)
-                .groupTuple()
-                .view { "test2: $it" }
-            */
-
-            /* works for single sample id
-            BASICPY.out.fields
-                .view { "BASICPY.out.fields: $it" }
-
-            BASICPY.out.fields
-                .map { it[1] }
-                .flatten()
-                .map { [it.getBaseName()[0..-5], it] }
-                .set { correction_files_keyed }
-            correction_files_keyed.view{ "correction_keyed: $it" }
-
-            ch_from_samplesheet
-                .map { it[1] }
-                .flatten()
-                .map { [it.split('/')[-1][0..-5], it] }
-                .set { ashlar_input_keyed }
-            ashlar_input_keyed.view { "ashlar_keyed: $it" }
-
-            ashlar_input_keyed
-                .concat(correction_files_keyed)
-                .groupTuple()
-                .map { it[1] }
-                .flatten()
-                .branch {
-                    dfp: it =~ /-dfp.tiff/
-                    ffp: it =~ /-ffp.tiff/
-                }
-                .set { ordered_correction_files }
-            ch_dfp = ordered_correction_files.dfp.toList()
-            ch_ffp = ordered_correction_files.ffp.toList()
-            ch_dfp
-                .view { "ordered_correction_files_ch_dfp: $it" }
-            */
-
-            //BASICPY.out.fields
-            //    .view { "BASICPY.out.fields: $it" }
-
-            /* new working block with sample id in keys
             BASICPY.out.fields
                 .transpose()
                 .map { [[it[1].getBaseName()[0..-5],it[0]], it[1]]}
                 .groupTuple()
                 .set { correction_files_keyed }
-            //correction_files_keyed.view{ "correction_keyed: $it" }
 
             ch_from_samplesheet
                 .transpose()
                 .map { [[it[1].split('/')[-1][0..-5],it[0]], it[1]] }
                 .set { ashlar_input_keyed }
-            //ashlar_input_keyed.view { "ashlar_keyed: $it" }
-
-            ashlar_input_keyed
-                .concat(correction_files_keyed)
-                .groupTuple()
-                .map { it[1] }
-                .flatten()
-                .branch {
-                    dfp: it =~ /-dfp.tiff/
-                    ffp: it =~ /-ffp.tiff/
-                }
-                .set { ordered_correction_files }
-            ch_dfp = ordered_correction_files.dfp.toList()
-            ch_ffp = ordered_correction_files.ffp.toList()
-            //ch_dfp
-            //    .view { "ordered_correction_files_ch_dfp: $it" }
-            */
-
-            BASICPY.out.fields
-                .transpose()
-                .map { [[it[1].getBaseName()[0..-5],it[0]], it[1]]}
-                .groupTuple()
-                .set { correction_files_keyed }
-            //correction_files_keyed.view{ "correction_keyed: $it" }
-
-            ch_from_samplesheet
-                .transpose()
-                .map { [[it[1].split('/')[-1][0..-5],it[0]], it[1]] }
-                .set { ashlar_input_keyed }
-            //ashlar_input_keyed.view { "ashlar_keyed: $it" }
 
             ashlar_input_keyed
                 .concat(correction_files_keyed)
@@ -300,9 +160,6 @@ workflow MCMICRO {
             ch_ffp = ordered_correction_files.ffp
                 .groupTuple()
                 .map { it[1] }
-            //ch_dfp
-            //    .view { "ordered_correction_files_ch_dfp: $it" }
-
 
         } else if(params.illumination == 'manual') {
             ch_dfp = params.dfp
@@ -312,15 +169,6 @@ workflow MCMICRO {
         ch_dfp = []
         ch_ffp = []
     }
-
-    // if ( params.illumination ) {
-    //     BASICPY(ch_images)
-    //     ch_tif = BASICPY.out.fields
-    //     ch_versions = ch_versions.mix(BASICPY.out.versions)
-
-    //     ch_dfp = ch_tif.filter { file -> file.name.endsWith('.dfp.tiff') }
-    //     ch_ffp = ch_tif.filter { file -> file.name.endsWith('.ffp.tiff') }
-    // }
 
     // MARKER_SHEET_CHECK(params.marker_sheet)
     // INPUT_CHECK(params.input_cycle, params.marker_sheet)
@@ -446,32 +294,15 @@ def make_ashlar_input_cycle_channel(sample_sheet_rows, sample_sheet_index_map) {
 
     def input_map = [:].withDefault {[]}
 
-    //print('*** sample_sheet_rows ***')
-    //print(sample_sheet_rows)
-
     sample_sheet_rows.each { row ->
         input_map[row[0]].add(row[3])
     }
 
-    // print('*** input_map ***')
-    // print(input_map)
-
     input_list = []
     input_map.each { entry ->
-        //print(entry.value)
         def value_str = entry.value.join(' ')
-        //print(value_str)
-        // input_list.add([[id:entry.key], value_str])
         input_list.add([[id:entry.key], entry.value])
-        // input_list.add("[[id:$entry.key] $entry.value.join(',')]")
     }
-
-    //print('*** input_list ***')
-    //print(input_list)
-    /*
-    print('*** input_list 0 ***')
-    print(input_list[0])
-    */
 
     return input_list[0]
 }
@@ -480,82 +311,18 @@ def test_channel(sample_sheet_rows) {
 
     def input_map = [:].withDefault {[]}
 
-    // print('*** sample_sheet_rows ***')
-    // print(sample_sheet_rows)
-
     sample_sheet_rows.each { row ->
         input_map[row[0]].add(row[3])
     }
 
-    // print('*** input_map ***')
-    // print(input_map)
-
     input_list = []
     input_map.each { entry ->
-        //print(entry.value)
         def value_str = entry.value.join(' ')
-        //print(value_str)
-        // input_list.add([[id:entry.key], value_str])
         input_list.add([[id:entry.key], entry.value])
-        // input_list.add("[[id:$entry.key] $entry.value.join(',')]")
     }
-
-    //print('*** input_list ***')
-    //print(input_list)
-    /*
-    print('*** input_list 0 ***')
-    print(input_list[0])
-    */
 
     return input_list
 }
-/* moved validation to subworkflow
-
-marker_name_list = []
-cycle_channel_tuple_list = []
-
-def validate_marker_sheet(ArrayList marker_sheet_row, Map sample_sheet_index_map, Map marker_sheet_index_map) {
-    channel_index = marker_sheet_index_map['channel_number']
-    cycle_index = marker_sheet_index_map['cycle_number']
-    marker_index = marker_sheet_index_map['marker_name']
-    sample_name_index = sample_sheet_index_map['sample']
-    cycle_number_index = sample_sheet_index_map['cycle_number']
-    channel_count_index = sample_sheet_index_map['channel_count']
-
-    if (!sample_sheet_index_map['cycle_number']) {
-        // we're currently only validating 1 row per sample per cycle sample sheets
-        return
-    }
-
-    // check marker name uniqueness
-    if(marker_name_list.contains(marker_sheet_row[marker_index])){
-        Nextflow.error("ERROR: Duplicate marker name in marker sheet! Marker names must be unique.")
-    } else {
-        marker_name_list.add(marker_sheet_row[marker_index])
-    }
-
-    // check that (cycle, channel) tuple is unique
-    curr_tuple = new Tuple(marker_sheet_row[channel_index], marker_sheet_row[cycle_index])
-    if(cycle_channel_tuple_list.contains(curr_tuple)){
-        Nextflow.error("ERROR: Duplicate cycle_number & channel_number pair! cycle_number & channel_number pairs must be unique.")
-    } else if(marker_sheet_row[channel_index] < 1 || marker_sheet_row[cycle_index] < 1) {
-        Nextflow.error("ERROR: cycle_number and channel_number are 1-based.  Values less than 1 are not allowed.")
-    } else if((cycle_channel_tuple_list.size() > 0) &&
-              ( ((marker_sheet_row[channel_index] != cycle_channel_tuple_list.last()[channel_index]) &&
-                 (marker_sheet_row[channel_index] != cycle_channel_tuple_list.last()[channel_index]+1)) ||
-                ((marker_sheet_row[cycle_index] != cycle_channel_tuple_list.last()[cycle_index]) &&
-                 (marker_sheet_row[cycle_index] != cycle_channel_tuple_list.last()[cycle_index]+1)) )) {
-        Nextflow.error("ERROR: cycle_number and channel_number must be sequential with no gaps")
-    } else {
-        cycle_channel_tuple_list.add(curr_tuple)
-    }
-
-    test("<TEST_NAME>") {
-
-    }
-}
-*/
-
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     COMPLETION EMAIL AND SUMMARY
