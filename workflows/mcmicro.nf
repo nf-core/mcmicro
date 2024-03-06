@@ -270,13 +270,13 @@ def make_ashlar_input_sample(ArrayList sample_sheet_row, Map sample_sheet_index_
     image_dir_path_index = sample_sheet_index_map['image_directory']
     // TODO: check if image_directory ends with a slash and add one if not
     if (sample_sheet_index_map.keySet().collect().contains("cycle_images")) {
-        print('*** flag 1 ***')
         tmp_path = sample_sheet_row[image_dir_path_index]
         cycle_images = sample_sheet_row[sample_sheet_index_map['cycle_images']].split(' ').collect{ "$tmp_path/$it" }
         // TODO: we need to check that those files exist
     } else {
-        print('*** flag 2 ***')
         // TODO: when cycle_images not specified run every file in directory through ashlar 1 at a time
+        // this won't work though will it because we've only got one sample name, so
+        //   the only way to run multiple files with no samplesheet column is all at onece.
         cycle_images = []
         def image_dir = new File(sample_sheet_row[image_dir_path_index])
         image_dir.eachFileRecurse (FileType.FILES) {
