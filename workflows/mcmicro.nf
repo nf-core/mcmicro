@@ -268,7 +268,7 @@ def make_marker_sheet_index_map(String marker_sheet_path) {
 def make_ashlar_input_sample(ArrayList sample_sheet_row, Map sample_sheet_index_map) {
     sample_name_index = sample_sheet_index_map['sample']
     image_dir_path_index = sample_sheet_index_map['image_directory']
-    // TODO: check if image_directory ends with a slash and add one if not
+    // TODO: check if image_directory ends with a slash and add one if not then remove / from below collect cmd
     if (sample_sheet_index_map.keySet().collect().contains("cycle_images")) {
         tmp_path = sample_sheet_row[image_dir_path_index]
         cycle_images = sample_sheet_row[sample_sheet_index_map['cycle_images']].split(' ').collect{ "$tmp_path/$it" }

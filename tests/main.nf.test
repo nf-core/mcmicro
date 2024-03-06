@@ -346,6 +346,48 @@ nextflow_workflow {
                     { assert workflow.success }
                 )
             }
+        },
+
+        test("sample: multiple cycle ashlar input with multiple samples and basicpy illumination correction") {
+
+            when {
+                params {
+                    input_sample = "/home/pollen/github/mcmicro-nf-core/assets/samplesheet_1_row_sample_multi_2.csv"
+                    outdir = "$outputDir"
+                    marker_sheet = "/home/pollen/github/mcmicro-nf-core/assets/markers_multi_8.csv"
+                    illumination = "basicpy"
+                }
+                workflow {
+                    """
+                    // define inputs of the workflow here. Example:
+                    // input[0] = file("test-file.txt")
+                    """
+                }
+            }
+
+            then {
+                assertAll (
+                    {
+                        assert snapshot (
+                            path("$outputDir/ashlar/TEST1.ome.tif"),
+                            path("$outputDir/ashlar/TEST2.ome.tif"),
+                            path("$outputDir/deepcell/mask_TEST1.tif"),
+                            path("$outputDir/deepcell/mask_TEST2.tif"),
+                            path("$outputDir/marker/marker_sheet.valid.csv"),
+                            path("$outputDir/mcquant/TEST1_mask_TEST1.csv"),
+                            path("$outputDir/mcquant/TEST2_mask_TEST2.csv"),
+                            path("$outputDir/basicpy/cycif-tonsil-cycle1.ome-dfp.tiff"),
+                            path("$outputDir/basicpy/cycif-tonsil-cycle1.ome-ffp.tiff"),
+                            path("$outputDir/basicpy/cycif-tonsil-cycle2.ome-dfp.tiff"),
+                            path("$outputDir/basicpy/cycif-tonsil-cycle2.ome-ffp.tiff"),
+                            path("$outputDir/basicpy/cycif-tonsil-cycle3.ome-dfp.tiff"),
+                            path("$outputDir/basicpy/cycif-tonsil-cycle3.ome-ffp.tiff")
+                       ).match()
+                    },
+                    { assert workflow.success }
+                )
+            }
         }
+
     ]
 }
