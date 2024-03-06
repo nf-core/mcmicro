@@ -1,2 +1,2 @@
-sample,image_directory
-TEST1,/home/pollen/HITS/nextflow/test_mcmicro-nf-core/input_sample_multi_1
+sample,image_directory,cycle_images
+TEST1,/home/pollen/HITS/nextflow/test_mcmicro-nf-core/input_sample_multi_1,cycif-tonsil-cycle1.ome.tif cycif-tonsil-cycle2.ome.tif

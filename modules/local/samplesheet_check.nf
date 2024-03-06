@@ -8,8 +8,8 @@ process SAMPLESHEET_CHECK {
         'biocontainers/python:3.8.3' }"
 
     input:
-    // path samplesheet
     val input_type
+    path samplesheet
 
     output:
     // path '*.csv'       , emit: csv
@@ -22,6 +22,7 @@ process SAMPLESHEET_CHECK {
     """
     check_samplesheet.py \\
         $input_type \\
+        $samplesheet \\
         samplesheet.valid.csv
 
     cat <<-END_VERSIONS > versions.yml

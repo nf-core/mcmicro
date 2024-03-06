@@ -172,9 +172,31 @@ def sniff_format(handle):
     return dialect
 
 
-def check_samplesheet(input_type, file_out):
-    print("*** entering check_samplesheet ***")
+def check_samplesheet(input_type, samplesheet, file_out):
+    print(f'*** check_samplesheet: {input_type} ***')
+
     """
+    required_columns = {"sample","image_directory"}
+
+    with samplesheet.open(newline="") as in_handle:
+        reader = csv.DictReader(in_handle, dialect=sniff_format(in_handle))
+        # Validate the existence of the expected header columns.
+        if not required_columns.issubset(reader.fieldnames):
+            req_cols = ", ".join(required_columns)
+            logger.critical(f"The sample sheet **must** contain these column headers: {req_cols}.")
+            sys.exit(1)
+        # Validate each row.
+        #checker = RowChecker()
+        # we can check rows, but that's already done by the validation plug-in
+        for i, row in enumerate(reader):
+            print(f"{i}: {row}")
+            #try:
+            #    checker.validate_and_transform(row)
+            #except AssertionError as error:
+            #    logger.critical(f"{str(error)} On line {i + 2}.")
+            #    sys.exit(1)
+        #checker.validate_unique_samples()
+
     Check that the tabular samplesheet has the structure expected by nf-core pipelines.
 
     Validate the general shape of the table, expected columns, and each row.
@@ -198,11 +220,10 @@ def check_samplesheet(input_type, file_out):
     #.. _viral recon samplesheet:
     #    https://raw.githubusercontent.com/nf-core/test-datasets/viralrecon/samplesheet/samplesheet_test_illumina_amplicon.csv
 
-    """
-    required_columns = {"sample","cycle_number","channel_count","image_tiles"}
+    # required_columns = {"sample","cycle_number","channel_count","image_tiles"}
     # required_columns = {"sample","image_directory"}
     # See https://docs.python.org/3.9/library/csv.html#id3 to read up on `newline=""`.
-    '''
+
     with file_in.open(newline="") as in_handle:
         reader = csv.DictReader(in_handle, dialect=sniff_format(in_handle))
         # Validate the existence of the expected header columns.
@@ -227,10 +248,10 @@ def check_samplesheet(input_type, file_out):
         writer.writeheader()
         for row in checker.modified:
             writer.writerow(row)
-    '''
+    """
 
 def parse_args(argv=None):
-    """Define and immediately parse command line arguments."""
+    # Define and immediately parse command line arguments.
     parser = argparse.ArgumentParser(
         description="Validate and transform a tabular samplesheet.",
         epilog="Example: python check_samplesheet.py samplesheet.csv samplesheet.valid.csv",
@@ -240,6 +261,12 @@ def parse_args(argv=None):
         metavar="INPUT_TYPE",
         type=str,
         help="String defining the type of sample sheet: 'sample' or 'cycle' for 1 row per sample or 1 row per sample per cycle, respectively",
+    )
+    parser.add_argument(
+        "samplesheet",
+        metavar="SAMPLESHEET",
+        type=Path,
+        help="path to samplesheet",
     )
     parser.add_argument(
         "file_out",
@@ -256,7 +283,6 @@ def parse_args(argv=None):
     )
     return parser.parse_args(argv)
 
-
 def main(argv=None):
     """Coordinate argument parsing and program execution."""
     args = parse_args(argv)
@@ -265,7 +291,7 @@ def main(argv=None):
     #     logger.error(f"The given input file {args.file_in} was not found!")
     #     sys.exit(2)
     args.file_out.parent.mkdir(parents=True, exist_ok=True)
-    check_samplesheet(args.input_type, args.file_out)
+    check_samplesheet(args.input_type, args.samplesheet, args.file_out)
 
 
 if __name__ == "__main__":
