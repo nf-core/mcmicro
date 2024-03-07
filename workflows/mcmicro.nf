@@ -275,6 +275,12 @@ def make_ashlar_input_sample(ArrayList sample_sheet_row, Map sample_sheet_index_
         }
         cycle_images = sample_sheet_row[sample_sheet_index_map['cycle_images']].split(' ').collect{ "${tmp_path}${it}" }
         // TODO: we need to check that those files exist
+        cycle_images.each{ file_path ->
+            File file_test = new File(file_path)
+            if (!file_test.exists()) {
+                Nextflow.error("Error: ${file_path} does not exist!")
+            }
+        }
     } else {
         // TODO: when cycle_images not specified run every file in directory through ashlar 1 at a time
         // this won't work though will it because we've only got one sample name, so
