@@ -12,7 +12,8 @@ include { validateParameters; paramsHelp; paramsSummaryLog; fromSamplesheet; par
 def logo = NfcoreTemplate.logo(workflow, params.monochrome_logs)
 def citation = '\n' + WorkflowMain.citation(workflow) + '\n'
 def summary_params = paramsSummaryMap(workflow)
-def parameters_schema = '/home/pollen/github/mcmicro-nf-core/nextflow_schema.json'
+def parameters_schema = "assets/nextflow_schema.json"
+
 // Print parameter summary log to screen
 log.info logo + paramsSummaryLog(workflow) + citation
 
@@ -85,7 +86,6 @@ workflow MCMICRO {
                 { it ->
                     ashlar_input: make_ashlar_input_sample(it, sample_sheet_index_map)
                 }
-        //ch_from_samplesheet_3 = ch_from_samplesheet.ashlar_input
     } else if(!params.input_sample && params.input_cycle) {
         input_type = "cycle"
         sample_sheet_index_map = make_sample_sheet_index_map(params.input_cycle)
