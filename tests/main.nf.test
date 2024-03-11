@@ -10,9 +10,9 @@ nextflow_workflow {
 
             when {
                 params {
-                    input_cycle = "/home/pollen/github/mcmicro-nf-core/assets/samplesheet_1_row_sample_cycle.csv"
+                    input_cycle = "$projectDir/assets/samplesheet_1_row_sample_cycle.csv"
                     outdir = "$outputDir"
-                    marker_sheet = "/home/pollen/github/mcmicro-nf-core/assets/markers_1.csv"
+                    marker_sheet = "$projectDir/assets/markers_1.csv"
                 }
                 workflow {
                     """
@@ -42,9 +42,9 @@ nextflow_workflow {
 
             when {
                 params {
-                    input_cycle = "/home/pollen/github/mcmicro-nf-core/assets/samplesheet_1_row_sample_cycle.csv"
+                    input_cycle = "$projectDir/assets/samplesheet_1_row_sample_cycle.csv"
                     outdir = "$outputDir"
-                    marker_sheet = "/home/pollen/github/mcmicro-nf-core/assets/markers_1.csv"
+                    marker_sheet = "$projectDir/assets/markers_1.csv"
                     illumination = "basicpy"
                 }
                 workflow {
@@ -76,9 +76,9 @@ nextflow_workflow {
 
             when {
                 params {
-                    input_cycle = "/home/pollen/github/mcmicro-nf-core/assets/samplesheet_1_row_sample_cycle.csv"
+                    input_cycle = "$projectDir/assets/samplesheet_1_row_sample_cycle.csv"
                     outdir = "$outputDir"
-                    marker_sheet = "/home/pollen/github/mcmicro-nf-core/assets/markers_1.csv"
+                    marker_sheet = "$projectDir/assets/markers_1.csv"
                     illumination = "manual"
                     dfp = "/home/pollen/HITS/nextflow/test_mcmicro-nf-core/correction/cycif-tonsil-dfp.ome.tif"
                     ffp = "/home/pollen/HITS/nextflow/test_mcmicro-nf-core/correction/cycif-tonsil-ffp.ome.tif"
@@ -110,9 +110,9 @@ nextflow_workflow {
 
             when {
                 params {
-                    input_sample = "/home/pollen/github/mcmicro-nf-core/assets/samplesheet_1_row_sample.csv"
+                    input_sample = "$projectDir/assets/samplesheet_1_row_sample.csv"
                     outdir = "$outputDir"
-                    marker_sheet = "/home/pollen/github/mcmicro-nf-core/assets/markers_1.csv"
+                    marker_sheet = "$projectDir/assets/markers_1.csv"
                 }
                 workflow {
                     """
@@ -141,9 +141,9 @@ nextflow_workflow {
 
             when {
                 params {
-                    input_cycle = "/home/pollen/github/mcmicro-nf-core/assets/samplesheet_1_row_sample_cycle_multi.csv"
+                    input_cycle = "$projectDir/assets/samplesheet_1_row_sample_cycle_multi.csv"
                     outdir = "$outputDir"
-                    marker_sheet = "/home/pollen/github/mcmicro-nf-core/assets/markers_multi_12.csv"
+                    marker_sheet = "$projectDir/assets/markers_multi_12.csv"
                 }
                 workflow {
                     """
@@ -172,9 +172,9 @@ nextflow_workflow {
 
             when {
                 params {
-                    input_cycle = "/home/pollen/github/mcmicro-nf-core/assets/samplesheet_1_row_sample_cycle_multi_2.csv"
+                    input_cycle = "$projectDir/assets/samplesheet_1_row_sample_cycle_multi_2.csv"
                     outdir = "$outputDir"
-                    marker_sheet = "/home/pollen/github/mcmicro-nf-core/assets/markers_multi_8.csv"
+                    marker_sheet = "$projectDir/assets/markers_multi_8.csv"
                 }
                 workflow {
                     """
@@ -204,9 +204,9 @@ nextflow_workflow {
 
             when {
                 params {
-                    input_cycle = "/home/pollen/github/mcmicro-nf-core/assets/samplesheet_1_row_sample_cycle_multi.csv"
+                    input_cycle = "$projectDir/assets/samplesheet_1_row_sample_cycle_multi.csv"
                     outdir = "$outputDir"
-                    marker_sheet = "/home/pollen/github/mcmicro-nf-core/assets/markers_multi_12.csv"
+                    marker_sheet = "$projectDir/assets/markers_multi_12.csv"
                     illumination = "basicpy"
                 }
                 workflow {
@@ -242,9 +242,9 @@ nextflow_workflow {
 
             when {
                 params {
-                    input_cycle = "/home/pollen/github/mcmicro-nf-core/assets/samplesheet_1_row_sample_cycle_multi_2.csv"
+                    input_cycle = "$projectDir/assets/samplesheet_1_row_sample_cycle_multi_2.csv"
                     outdir = "$outputDir"
-                    marker_sheet = "/home/pollen/github/mcmicro-nf-core/assets/markers_multi_8.csv"
+                    marker_sheet = "$projectDir/assets/markers_multi_8.csv"
                     illumination = "basicpy"
                 }
                 workflow {
@@ -285,9 +285,9 @@ nextflow_workflow {
 
             when {
                 params {
-                    input_sample = "/home/pollen/github/mcmicro-nf-core/assets/samplesheet_1_row_sample_multi.csv"
+                    input_sample = "$projectDir/assets/samplesheet_1_row_sample_multi.csv"
                     outdir = "$outputDir"
-                    marker_sheet = "/home/pollen/github/mcmicro-nf-core/assets/markers_multi_8.csv"
+                    marker_sheet = "$projectDir/assets/markers_multi_8.csv"
                 }
                 workflow {
                     """
@@ -316,9 +316,9 @@ nextflow_workflow {
 
             when {
                 params {
-                    input_sample = "/home/pollen/github/mcmicro-nf-core/assets/samplesheet_1_row_sample_multi.csv"
+                    input_sample = "$projectDir/assets/samplesheet_1_row_sample_multi.csv"
                     outdir = "$outputDir"
-                    marker_sheet = "/home/pollen/github/mcmicro-nf-core/assets/markers_multi_8.csv"
+                    marker_sheet = "$projectDir/assets/markers_multi_8.csv"
                     illumination = "basicpy"
                 }
                 workflow {
@@ -352,9 +352,9 @@ nextflow_workflow {
 
             when {
                 params {
-                    input_sample = "/home/pollen/github/mcmicro-nf-core/assets/samplesheet_1_row_sample_multi_2.csv"
+                    input_sample = "$projectDir/assets/samplesheet_1_row_sample_multi_2.csv"
                     outdir = "$outputDir"
-                    marker_sheet = "/home/pollen/github/mcmicro-nf-core/assets/markers_multi_8.csv"
+                    marker_sheet = "$projectDir/assets/markers_multi_8.csv"
                     illumination = "basicpy"
                 }
                 workflow {
@@ -393,9 +393,9 @@ nextflow_workflow {
 
             when {
                 params {
-                    input_sample = "/home/pollen/github/mcmicro-nf-core/assets/samplesheet_1_row_sample_multi.csv"
+                    input_sample = "$projectDir/assets/samplesheet_1_row_sample_multi.csv"
                     outdir = "$outputDir"
-                    marker_sheet = "/home/pollen/github/mcmicro-nf-core/assets/markers_multi_8.csv"
+                    marker_sheet = "$projectDir/assets/markers_multi_8.csv"
                     illumination = "manual"
                     dfp = "/home/pollen/HITS/nextflow/test_mcmicro-nf-core/correction/cycif-tonsil-dfp.ome.tif"
                     ffp = "/home/pollen/HITS/nextflow/test_mcmicro-nf-core/correction/cycif-tonsil-ffp.ome.tif"
