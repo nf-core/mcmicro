@@ -109,15 +109,12 @@ workflow MCMICRO {
 
     ch_versions = Channel.empty()
 
-    // ch_from_samplesheet_2.ashlar_input.view { "ashlar_2 $it" }
-
     marker_sheet_index_map = make_marker_sheet_index_map(params.marker_sheet)
     ch_from_marker_sheet = Channel.fromSamplesheet(
         "marker_sheet",
         parameters_schema: parameters_schema,
         skip_duplicate_check: false
         )
-    //    .map { validate_marker_sheet(it, sample_sheet_index_map, marker_sheet_index_map) }
 
     //
     // MODULE: BASICPY
@@ -170,15 +167,9 @@ workflow MCMICRO {
         ch_ffp = []
     }
 
-    // MARKER_SHEET_CHECK(params.marker_sheet)
-    // INPUT_CHECK(params.input_cycle, params.marker_sheet)
     INPUT_CHECK( input_type, params.input_sample, params.input_cycle, params.marker_sheet )
-    // MARKER_CHECK(parmas.marker_sheet)
 
     // ASHLAR(ch_from_samplesheet.ashlar_input, [], [])
-    // ASHLAR(ch_from_samplesheet.ashlar_input, params.dfp, params.ffp)
-    // ASHLAR(ch_from_samplesheet.ashlar_input, correction_files.dfp, correction_files.ffp)
-    // ASHLAR(ch_from_samplesheet.ashlar_input, ch_dfp, ch_ffp)
     ASHLAR(ch_from_samplesheet.ashlar_input, ch_dfp, ch_ffp)
     ch_versions = ch_versions.mix(ASHLAR.out.versions)
 
@@ -199,9 +190,6 @@ workflow MCMICRO {
     ch_versions = ch_versions.mix(MCQUANT.out.versions)
 
     emit:
-    // ch_from_samplesheet.ashlar_input
-    // ch_versions
-    // ASHLAR.out.tif
     MCQUANT.out.csv
 
     /*
@@ -282,9 +270,7 @@ def make_ashlar_input_sample(ArrayList sample_sheet_row, Map sample_sheet_index_
             }
         }
     } else {
-        // TODO: when cycle_images not specified run every file in directory through ashlar 1 at a time
-        // this won't work though will it because we've only got one sample name, so
-        //   the only way to run multiple files with no samplesheet column is all at onece.
+        // TODO: remove this option or allow it to grab all files when no column in the samplesheet?
         cycle_images = []
         def image_dir = new File(sample_sheet_row[image_dir_path_index])
         image_dir.eachFileRecurse (FileType.FILES) {
