@@ -80,8 +80,9 @@ nextflow_workflow {
                     outdir = "$outputDir"
                     marker_sheet = "$projectDir/assets/markers_1.csv"
                     illumination = "manual"
-                    dfp = "/home/pollen/HITS/nextflow/test_mcmicro-nf-core/correction/cycif-tonsil-dfp.ome.tif"
-                    ffp = "/home/pollen/HITS/nextflow/test_mcmicro-nf-core/correction/cycif-tonsil-ffp.ome.tif"
+                    test_data_base = "https://raw.githubusercontent.com/nf-core/test-datasets/modules"
+                    dfp = "${test_data_base}/data/imaging/ome-tiff/cycif-tonsil-dfp.ome.tif"
+                    ffp = "${test_data_base}/data/imaging/ome-tiff/cycif-tonsil-ffp.ome.tif"
                 }
                 workflow {
                     """
@@ -397,8 +398,9 @@ nextflow_workflow {
                     outdir = "$outputDir"
                     marker_sheet = "$projectDir/assets/markers_multi_8.csv"
                     illumination = "manual"
-                    dfp = "/home/pollen/HITS/nextflow/test_mcmicro-nf-core/correction/cycif-tonsil-dfp.ome.tif"
-                    ffp = "/home/pollen/HITS/nextflow/test_mcmicro-nf-core/correction/cycif-tonsil-ffp.ome.tif"
+                    test_data_base = "https://raw.githubusercontent.com/nf-core/test-datasets/modules"
+                    dfp = "${test_data_base}/data/imaging/ome-tiff/cycif-tonsil-dfp.ome.tif"
+                    ffp = "${test_data_base}/data/imaging/ome-tiff/cycif-tonsil-ffp.ome.tif"
                 }
                 workflow {
                     """
