@@ -262,7 +262,6 @@ def make_ashlar_input_sample(ArrayList sample_sheet_row, Map sample_sheet_index_
             tmp_path = "${tmp_path}/"
         }
         cycle_images = sample_sheet_row[sample_sheet_index_map['cycle_images']].split(' ').collect{ "${tmp_path}${it}" }
-        // TODO: we need to check that those files exist
         cycle_images.each{ file_path ->
             File file_test = new File(file_path)
             if (!file_test.exists()) {
