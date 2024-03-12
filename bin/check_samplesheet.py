@@ -173,8 +173,6 @@ def sniff_format(handle):
 
 
 def check_samplesheet(input_type, samplesheet, file_out):
-    print(f'*** check_samplesheet: {input_type} ***')
-
     """
     required_columns = {"sample","image_directory"}
 
