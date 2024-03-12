@@ -16,10 +16,6 @@ workflow INPUT_CHECK {
 
     main:
 
-    // not running samplesheet_check because fromSamplesheet checks columns and data format
-    //   we can add it back if we'd like to do more in depth validation
-    // currently just running to output version.yml
-
     if ( input_type == "sample" ) {
         SAMPLESHEET_CHECK ( input_type, samplesheet_sample )
         input = Channel.fromSamplesheet(
