@@ -1,4 +1,4 @@
 sample,cycle_number,channel_count,image_tiles
-cycif-tonsil,1,10,/home/pollen/HITS/nextflow/test_mcmicro-nf-core/input/cycif-tonsil-cycle1.ome.tif
-cycif-tonsil,2,10,/home/pollen/HITS/nextflow/test_mcmicro-nf-core/input/cycif-tonsil-cycle2.ome.tif
-cycif-tonsil,3,10,/home/pollen/HITS/nextflow/test_mcmicro-nf-core/input/cycif-tonsil-cycle3.ome.tif
+cycif-tonsil,1,10,https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/imaging/ome-tiff/cycif-tonsil-cycle1.ome.tif
+cycif-tonsil,2,10,https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/imaging/ome-tiff/cycif-tonsil-cycle2.ome.tif
+cycif-tonsil,3,10,https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/imaging/ome-tiff/cycif-tonsil-cycle3.ome.tif
