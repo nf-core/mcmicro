@@ -271,8 +271,6 @@ nextflow_workflow {
                             path("$outputDir/basicpy/cycif-tonsil-cycle1.ome-ffp.tiff"),
                             path("$outputDir/basicpy/cycif-tonsil-cycle2.ome-dfp.tiff"),
                             path("$outputDir/basicpy/cycif-tonsil-cycle2.ome-ffp.tiff"),
-                            path("$outputDir/basicpy/cycif-tonsil-cycle2_2.ome-dfp.tiff"),
-                            path("$outputDir/basicpy/cycif-tonsil-cycle2_2.ome-ffp.tiff"),
                             path("$outputDir/basicpy/cycif-tonsil-cycle3.ome-dfp.tiff"),
                             path("$outputDir/basicpy/cycif-tonsil-cycle3.ome-ffp.tiff")
                         ).match()
