@@ -9,12 +9,12 @@
         "properties": {
             "sample": {
                 "type": "string",
-                "pattern": ".*$",
+                "pattern": "^\\S+$",
                 "errorMessage": "Sample name must be provided and cannot contain spaces"
             },
             "image_directory": {
                 "type": "string",
-                "pattern": ".*$",
+                "pattern": "^\\S+$",
                 "errorMessage": "Need to provide a path to a directory containing image files"
             },
             "cycle_images": {

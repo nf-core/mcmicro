@@ -9,7 +9,7 @@
         "properties": {
             "sample": {
                 "type": "string",
-                "pattern": ".*$",
+                "pattern": "^\\S+$",
                 "errorMessage": "sample name must be provided and cannot contain spaces"
             },
             "cycle_number": {
@@ -22,7 +22,7 @@
             },
             "image_tiles": {
                 "type": "string",
-                "pattern": ".*$",
+                "pattern": "^\\S+$",
                 "errorMessage": "Need to provide a path to a directory containing image files"
             }
         },

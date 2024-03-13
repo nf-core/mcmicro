@@ -17,7 +17,7 @@
             },
             "marker_name": {
                 "type": "string",
-                "pattern": ".*$",
+                "pattern": "^\\S+$",
                 "errorMessage": "marker_name must be provided and it cannot contain spaces"
             },
             "Filter": {
