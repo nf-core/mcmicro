@@ -17,8 +17,6 @@ def parameters_schema = "assets/nextflow_schema.json"
 // Print parameter summary log to screen
 log.info logo + paramsSummaryLog(workflow) + citation
 
-//WorkflowMcmicro.initialise(params, log)
-
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     CONFIG FILES
@@ -109,7 +107,6 @@ workflow MCMICRO {
 
     ch_versions = Channel.empty()
 
-    marker_sheet_index_map = make_marker_sheet_index_map(params.marker_sheet)
     ch_from_marker_sheet = Channel.fromSamplesheet(
         "marker_sheet",
         parameters_schema: parameters_schema,
@@ -241,18 +238,6 @@ def make_sample_sheet_index_map(String sample_sheet_path) {
     return sample_sheet_index_map
 }
 
-def make_marker_sheet_index_map(String marker_sheet_path) {
-    def marker_sheet_index_map = [:]
-    def header
-    new File(marker_sheet_path).withReader { header_list = it.readLine().split(',') }
-    def ctr = 0
-    header_list.each { value ->
-        marker_sheet_index_map[value] = ctr
-        ctr = ctr + 1
-    }
-    return marker_sheet_index_map
-}
-
 def make_ashlar_input_sample(ArrayList sample_sheet_row, Map sample_sheet_index_map) {
     sample_name_index = sample_sheet_index_map['sample']
     image_dir_path_index = sample_sheet_index_map['image_directory']
@@ -292,39 +277,6 @@ def make_ashlar_input_cycle(ArrayList sample_sheet_row, Map sample_sheet_index_m
     return ashlar_input
 }
 
-def make_ashlar_input_cycle_channel(sample_sheet_rows, sample_sheet_index_map) {
-
-    def input_map = [:].withDefault {[]}
-
-    sample_sheet_rows.each { row ->
-        input_map[row[0]].add(row[3])
-    }
-
-    input_list = []
-    input_map.each { entry ->
-        def value_str = entry.value.join(' ')
-        input_list.add([[id:entry.key], entry.value])
-    }
-
-    return input_list[0]
-}
-
-def test_channel(sample_sheet_rows) {
-
-    def input_map = [:].withDefault {[]}
-
-    sample_sheet_rows.each { row ->
-        input_map[row[0]].add(row[3])
-    }
-
-    input_list = []
-    input_map.each { entry ->
-        def value_str = entry.value.join(' ')
-        input_list.add([[id:entry.key], entry.value])
-    }
-
-    return input_list
-}
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     COMPLETION EMAIL AND SUMMARY
