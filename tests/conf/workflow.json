@@ -1,4 +1,4 @@
 {
-    "dfp": "/home/pollen/HITS/nextflow/test_mcmicro-nf-core/correction/cycif-tonsil-ffp.ome.tif",
-    "ffp": "/home/pollen/HITS/nextflow/test_mcmicro-nf-core/correction/cycif-tonsil-dfp.ome.tif"
+    "dfp": "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/imaging/ome-tiff/cycif-tonsil-dfp.ome.tif",
+    "ffp": "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/imaging/ome-tiff/cycif-tonsil-ffp.ome.tif"
 }
