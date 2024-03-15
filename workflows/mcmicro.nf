@@ -175,11 +175,12 @@ workflow MCMICRO {
     //BACKSUB(ASHLAR.out.tif, [[id: "backsub"], params.marker_sheet])
     //ch_versions = ch_versions.mix(BACKSUB.out.versions)
 
-    /* Run Segmentation */
+    // Run Segmentation
+
     DEEPCELL_MESMER(ASHLAR.out.tif, [[:],[]])
     ch_versions = ch_versions.mix(DEEPCELL_MESMER.out.versions)
 
-    // // Run Quantification
+    // Run Quantification
 
     MCQUANT(ASHLAR.out.tif,
             DEEPCELL_MESMER.out.mask,
