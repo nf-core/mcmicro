@@ -1,0 +1,141 @@
+{
+    "sample: multiple cycle ashlar input, no illumination correction": {
+        "content": [
+            "TEST1.ome.tif:md5,9d4fca1d7ec97be3f6343eb712af9dea",
+            "mask_TEST1.tif:md5,c1075eb025f558fcadedc1f0d903ec15",
+            "marker_sheet.valid.csv:md5,1ed88c61cb5819034cb35dbdee352847",
+            "TEST1_mask_TEST1.csv:md5,ad91b66b1daf56bf9ed3078bd429888c"
+        ],
+        "timestamp": "2024-03-05T12:16:31.533039292"
+    },
+    "sample: multiple cycle ashlar input, basicpy illumination correction": {
+        "content": [
+            "TEST1.ome.tif:md5,ae6f050a0f6d37078bd3c2326be94eb5",
+            "mask_TEST1.tif:md5,5b58666e2609cbd276d69d9571f398c9",
+            "marker_sheet.valid.csv:md5,1ed88c61cb5819034cb35dbdee352847",
+            "TEST1_mask_TEST1.csv:md5,d0823af383be498513e0687fcfc9f0e2",
+            "cycif-tonsil-cycle1.ome-dfp.tiff:md5,c580c686c2e76f1b57ed86ae858ef816",
+            "cycif-tonsil-cycle1.ome-ffp.tiff:md5,5cd0a0159a66f8d2ed40158fdd3264b7",
+            "cycif-tonsil-cycle2.ome-dfp.tiff:md5,c580c686c2e76f1b57ed86ae858ef816",
+            "cycif-tonsil-cycle2.ome-ffp.tiff:md5,72924ef634857aa71c6b014b05817a3c"
+        ],
+        "timestamp": "2024-03-06T14:40:23.477357985"
+    },
+    "sample: manual illumination correction": {
+        "content": [
+            "TEST1.ome.tif:md5,03df9a64f2b06e830a5af6293eae32c5",
+            "mask_TEST1.tif:md5,3a800ddba84b4eaea13aab100cbcc938",
+            "marker_sheet.valid.csv:md5,4def46df04574912da5861734ebc51c2",
+            "TEST1_mask_TEST1.csv:md5,a31c5cef96c93bf0e3d00043c59eaf2e"
+        ],
+        "timestamp": "2024-03-18T13:23:29.283289931"
+    },
+    "cycle: multiple file ashlar input no correction": {
+        "content": [
+            "cycif-tonsil.ome.tif:md5,5f4165203545b7efe04ed5f4a6d5ac9d",
+            "mask_cycif-tonsil.tif:md5,c1075eb025f558fcadedc1f0d903ec15",
+            "marker_sheet.valid.csv:md5,c81b7a654334b4edc20236d6e3be1ade",
+            "cycif-tonsil_mask_cycif-tonsil.csv:md5,1f46386d895924ca54065eb0b8fba550"
+        ],
+        "timestamp": "2024-02-20T14:40:12.70707046"
+    },
+    "cycle: basicpy illumination correction": {
+        "content": [
+            "TEST1.ome.tif:md5,0f162fe6639524eb9bb2e5b1941bf01e",
+            "mask_TEST1.tif:md5,5b58666e2609cbd276d69d9571f398c9",
+            "marker_sheet.valid.csv:md5,4def46df04574912da5861734ebc51c2",
+            "TEST1_mask_TEST1.csv:md5,c11320ae79150d22f7d093c05c448012",
+            "cycif-tonsil-cycle1.ome-dfp.tiff:md5,c580c686c2e76f1b57ed86ae858ef816",
+            "cycif-tonsil-cycle1.ome-ffp.tiff:md5,5cd0a0159a66f8d2ed40158fdd3264b7"
+        ],
+        "timestamp": "2024-02-20T14:29:02.668656821"
+    },
+    "cycle: no illumination correction": {
+        "content": [
+            "TEST1.ome.tif:md5,ae98ac74e3c818bb26c99ba4b9c2dd51",
+            "mask_TEST1.tif:md5,c1075eb025f558fcadedc1f0d903ec15",
+            "marker_sheet.valid.csv:md5,4def46df04574912da5861734ebc51c2",
+            "TEST1_mask_TEST1.csv:md5,0c78859ac34e5339b25715622aa9b614"
+        ],
+        "timestamp": "2024-02-20T14:28:35.944898883"
+    },
+    "cycle: multiple file ashlar input with basicpy correction": {
+        "content": [
+            "cycif-tonsil.ome.tif:md5,1c108061cbe313604c8c275d6492c717",
+            "mask_cycif-tonsil.tif:md5,5b58666e2609cbd276d69d9571f398c9",
+            "marker_sheet.valid.csv:md5,c81b7a654334b4edc20236d6e3be1ade",
+            "cycif-tonsil_mask_cycif-tonsil.csv:md5,9e8a1b6a3d3c2f1276f86bced5e46db8",
+            "cycif-tonsil-cycle1.ome-dfp.tiff:md5,c580c686c2e76f1b57ed86ae858ef816",
+            "cycif-tonsil-cycle1.ome-ffp.tiff:md5,5cd0a0159a66f8d2ed40158fdd3264b7",
+            "cycif-tonsil-cycle2.ome-dfp.tiff:md5,c580c686c2e76f1b57ed86ae858ef816",
+            "cycif-tonsil-cycle2.ome-ffp.tiff:md5,72924ef634857aa71c6b014b05817a3c",
+            "cycif-tonsil-cycle3.ome-dfp.tiff:md5,c580c686c2e76f1b57ed86ae858ef816",
+            "cycif-tonsil-cycle3.ome-ffp.tiff:md5,47ae03ac498a2e4c89786c1b1ea068fa"
+        ],
+        "timestamp": "2024-02-27T11:00:14.413856756"
+    },
+    "sample: no illumination correction": {
+        "content": [
+            "TEST1.ome.tif:md5,ae98ac74e3c818bb26c99ba4b9c2dd51",
+            "mask_TEST1.tif:md5,c1075eb025f558fcadedc1f0d903ec15",
+            "marker_sheet.valid.csv:md5,4def46df04574912da5861734ebc51c2",
+            "TEST1_mask_TEST1.csv:md5,0c78859ac34e5339b25715622aa9b614"
+        ],
+        "timestamp": "2024-02-20T14:29:39.203524578"
+    },
+    "sample: multiple cycle ashlar input with multiple samples and basicpy illumination correction": {
+        "content": [
+            "TEST1.ome.tif:md5,ae6f050a0f6d37078bd3c2326be94eb5",
+            "TEST2.ome.tif:md5,741de7f49497ecabdf017648cbee6c03",
+            "mask_TEST1.tif:md5,5b58666e2609cbd276d69d9571f398c9",
+            "mask_TEST2.tif:md5,057bd032f0610d710b722b8fc2e30449",
+            "marker_sheet.valid.csv:md5,1ed88c61cb5819034cb35dbdee352847",
+            "TEST1_mask_TEST1.csv:md5,d0823af383be498513e0687fcfc9f0e2",
+            "TEST2_mask_TEST2.csv:md5,cc179de58e9c0c80cc0b4740cb788322",
+            "cycif-tonsil-cycle1.ome-dfp.tiff:md5,c580c686c2e76f1b57ed86ae858ef816",
+            "cycif-tonsil-cycle1.ome-ffp.tiff:md5,5cd0a0159a66f8d2ed40158fdd3264b7",
+            "cycif-tonsil-cycle2.ome-dfp.tiff:md5,c580c686c2e76f1b57ed86ae858ef816",
+            "cycif-tonsil-cycle2.ome-ffp.tiff:md5,72924ef634857aa71c6b014b05817a3c",
+            "cycif-tonsil-cycle3.ome-dfp.tiff:md5,c580c686c2e76f1b57ed86ae858ef816",
+            "cycif-tonsil-cycle3.ome-ffp.tiff:md5,47ae03ac498a2e4c89786c1b1ea068fa"
+        ],
+        "timestamp": "2024-03-13T14:29:49.948078019"
+    },
+    "cycle: multiple file ashlar input with multiple samples and basicpy correction": {
+        "content": [
+            "cycif-tonsil.ome.tif:md5,ae6f050a0f6d37078bd3c2326be94eb5",
+            "cycif-tonsil2.ome.tif:md5,af06a66ea5478e162c285f25043d9220",
+            "mask_cycif-tonsil.tif:md5,5b58666e2609cbd276d69d9571f398c9",
+            "mask_cycif-tonsil2.tif:md5,039db99ebbc32256bb8d4ef465a572b1",
+            "marker_sheet.valid.csv:md5,1ed88c61cb5819034cb35dbdee352847",
+            "cycif-tonsil_mask_cycif-tonsil.csv:md5,d0823af383be498513e0687fcfc9f0e2",
+            "cycif-tonsil2_mask_cycif-tonsil2.csv:md5,d663dc54e1c10e91f3e623c4a06bdf6d",
+            "cycif-tonsil-cycle1.ome-dfp.tiff:md5,c580c686c2e76f1b57ed86ae858ef816",
+            "cycif-tonsil-cycle1.ome-ffp.tiff:md5,5cd0a0159a66f8d2ed40158fdd3264b7",
+            "cycif-tonsil-cycle2.ome-dfp.tiff:md5,c580c686c2e76f1b57ed86ae858ef816",
+            "cycif-tonsil-cycle2.ome-ffp.tiff:md5,72924ef634857aa71c6b014b05817a3c",
+            "cycif-tonsil-cycle3.ome-dfp.tiff:md5,c580c686c2e76f1b57ed86ae858ef816",
+            "cycif-tonsil-cycle3.ome-ffp.tiff:md5,47ae03ac498a2e4c89786c1b1ea068fa"
+        ],
+        "timestamp": "2024-03-13T14:34:52.027247671"
+    },
+    "cycle: manual illumination correction": {
+        "content": [
+            "TEST1.ome.tif:md5,ae98ac74e3c818bb26c99ba4b9c2dd51",
+            "mask_TEST1.tif:md5,c1075eb025f558fcadedc1f0d903ec15",
+            "marker_sheet.valid.csv:md5,4def46df04574912da5861734ebc51c2",
+            "TEST1_mask_TEST1.csv:md5,0c78859ac34e5339b25715622aa9b614"
+        ],
+        "timestamp": "2024-02-20T14:29:20.840332175"
+    },
+    "cycle: multiple file ashlar input with multiple samples no correction": {
+        "content": [
+            "cycif-tonsil.ome.tif:md5,9d4fca1d7ec97be3f6343eb712af9dea",
+            "mask_cycif-tonsil.tif:md5,c1075eb025f558fcadedc1f0d903ec15",
+            "mask_cycif-tonsil2.tif:md5,bacaeced4f2159b8b7f3b42d173f995c",
+            "marker_sheet.valid.csv:md5,1ed88c61cb5819034cb35dbdee352847",
+            "cycif-tonsil_mask_cycif-tonsil.csv:md5,ad91b66b1daf56bf9ed3078bd429888c"
+        ],
+        "timestamp": "2024-02-20T14:43:55.347824362"
+    }
+}

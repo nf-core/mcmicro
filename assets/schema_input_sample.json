@@ -21,6 +21,16 @@
                 "type": "string",
                 "pattern": ".*$",
                 "errorMessage": "cycle images for this sample in order"
+            },
+            "dfp": {
+                "type": "string",
+                "pattern": "^\\S+$",
+                "errorMessage": "provide path to dfp illumination correction file(s) if illumination parameter is manual"
+            },
+            "ffp": {
+                "type": "string",
+                "pattern": "^\\S+$",
+                "errorMessage": "provide path to ffp illumination correction file(s) if illumination parameter is manual"
             }
         },
         "required": ["sample","image_directory"]

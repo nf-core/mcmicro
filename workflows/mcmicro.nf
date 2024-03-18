@@ -124,11 +124,17 @@ workflow MCMICRO {
     //
 
     if ( params.illumination ) {
+
         if (params.illumination == 'basicpy') {
 
-            ch_from_samplesheet.ashlar_input
+            ch_from_samplesheet
                 .transpose()
-                .set { ch_basicpy_input }
+                .map { [[it[1].split('/')[-1][0..-5],it[0]], it[1]] }
+                .set { ashlar_input_keyed }
+
+                ch_from_samplesheet.ashlar_input
+                    .transpose()
+                    .set { ch_basicpy_input }
 
             BASICPY(ch_basicpy_input)
             ch_versions = ch_versions.mix(BASICPY.out.versions)
@@ -138,11 +144,6 @@ workflow MCMICRO {
                 .map { [[it[1].getBaseName()[0..-5],it[0]], it[1]]}
                 .groupTuple()
                 .set { correction_files_keyed }
-
-            ch_from_samplesheet
-                .transpose()
-                .map { [[it[1].split('/')[-1][0..-5],it[0]], it[1]] }
-                .set { ashlar_input_keyed }
 
             ashlar_input_keyed
                 .concat(correction_files_keyed)
@@ -162,9 +163,37 @@ workflow MCMICRO {
                 .map { it[1] }
 
         } else if(params.illumination == 'manual') {
-            ch_dfp = params.dfp
-            ch_ffp = params.ffp
+
+            dfp_index = sample_sheet_index_map["dfp"]
+            ffp_index = sample_sheet_index_map["ffp"]
+
+            if (input_type == "cycle") {
+                ch_manual_illumination_correction = Channel.fromSamplesheet(
+                    "input_cycle",
+                    parameters_schema: parameters_schema,
+                    skip_duplicate_check: false
+                )
+                .multiMap
+                    { it ->
+                        dfp: it[dfp_index]
+                        ffp: it[ffp_index]
+                    }
+            } else if (input_type == "sample") {
+                ch_manual_illumination_correction = Channel.fromSamplesheet(
+                    "input_sample",
+                    parameters_schema: parameters_schema,
+                    skip_duplicate_check: false
+                )
+                .multiMap
+                    { it ->
+                        dfp: it[dfp_index]
+                        ffp: it[ffp_index]
+                    }
+            }
+            ch_dfp = ch_manual_illumination_correction.dfp
+            ch_ffp = ch_manual_illumination_correction.ffp
         }
+
     } else {
         ch_dfp = []
         ch_ffp = []
