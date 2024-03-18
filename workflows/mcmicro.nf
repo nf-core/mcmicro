@@ -7,7 +7,7 @@
 import groovy.io.FileType
 import nextflow.Nextflow
 
-include { validateParameters; paramsHelp; paramsSummaryLog; fromSamplesheet; paramsSummaryMap } from 'plugin/nf-validation'
+include { paramsHelp; paramsSummaryLog; fromSamplesheet; paramsSummaryMap } from 'plugin/nf-validation'
 
 def logo = NfcoreTemplate.logo(workflow, params.monochrome_logs)
 def citation = '\n' + WorkflowMain.citation(workflow) + '\n'
@@ -168,28 +168,21 @@ workflow MCMICRO {
             ffp_index = sample_sheet_index_map["ffp"]
 
             if (input_type == "cycle") {
-                ch_manual_illumination_correction = Channel.fromSamplesheet(
-                    "input_cycle",
-                    parameters_schema: parameters_schema,
-                    skip_duplicate_check: false
-                )
-                .multiMap
-                    { it ->
-                        dfp: it[dfp_index]
-                        ffp: it[ffp_index]
-                    }
+                samplesheet = "input_cycle"
             } else if (input_type == "sample") {
-                ch_manual_illumination_correction = Channel.fromSamplesheet(
-                    "input_sample",
-                    parameters_schema: parameters_schema,
-                    skip_duplicate_check: false
-                )
-                .multiMap
-                    { it ->
-                        dfp: it[dfp_index]
-                        ffp: it[ffp_index]
-                    }
+                samplesheet = "input_sample"
             }
+            ch_manual_illumination_correction = Channel.fromSamplesheet(
+                samplesheet,
+                parameters_schema: parameters_schema,
+                skip_duplicate_check: false
+            )
+            .multiMap
+                { it ->
+                    dfp: it[dfp_index]
+                    ffp: it[ffp_index]
+                }
+
             ch_dfp = ch_manual_illumination_correction.dfp
             ch_ffp = ch_manual_illumination_correction.ffp
         }
