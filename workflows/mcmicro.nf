@@ -70,6 +70,12 @@ def multiqc_report = []
 
 workflow MCMICRO {
 
+    // TODO: missing outdir parameter not getting caught by schema check
+    //       even though listed as required in schema
+    if (!params.outdir) {
+        Nextflow.error("ERROR: outdir parameter must be provided!")
+    }
+
     def input_type
 
     if (params.input_sample && !params.input_cycle) {
