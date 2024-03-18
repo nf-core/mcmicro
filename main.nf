@@ -15,6 +15,8 @@ params.monochromeLogs = ''
 params.validationSkipDuplicateCheck = false
 params.validationS3PathCheck = false
 
+def parameters_schema = "assets/nextflow_schema.json"
+
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     GENOME PARAMETER VALUES
@@ -43,11 +45,9 @@ if (params.help) {
 */
 
 // Validate input parameters
-/*
 if (params.validate_params) {
-    validateParameters()
+    validateParameters(parameters_schema: parameters_schema)
 }
-*/
 
 WorkflowMain.initialise(workflow, params, log)
 
