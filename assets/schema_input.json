@@ -13,21 +13,39 @@
                 "errorMessage": "Sample name must be provided and cannot contain spaces",
                 "meta": ["id"]
             },
-            "fastq_1": {
+            "data": {
                 "type": "string",
-                "format": "file-path",
-                "exists": true,
-                "pattern": "^\\S+\\.f(ast)?q\\.gz$",
-                "errorMessage": "FastQ file for reads 1 must be provided, cannot contain spaces and must have extension '.fq.gz' or '.fastq.gz'"
+                "pattern": ".*$",
+                "errorMessage": "Need to provide a path to image files directory."
             },
-            "fastq_2": {
+            "markerFile": {
+                "errorMessage": "Need to provide a markerfile",
+                "anyOf": [
+                    {
+                        "type": "string",
+                        "pattern": ".*$"
+                    },
+                    {
+                        "type": "string",
+                        "maxLength": 0
+                    }
+                ]
+            },
+            "tissue": {
                 "type": "string",
-                "format": "file-path",
-                "exists": true,
-                "pattern": "^\\S+\\.f(ast)?q\\.gz$",
-                "errorMessage": "FastQ file for reads 2 cannot contain spaces and must have extension '.fq.gz' or '.fastq.gz'"
+                "errorMessage": "Sample name must be provided and cannot contain spaces",
+                "anyOf": [
+                    {
+                        "type": "string",
+                        "pattern": ".*$"
+                    },
+                    {
+                        "type": "string",
+                        "maxLength": 0
+                    }
+                ]
             }
         },
-        "required": ["sample", "fastq_1"]
+        "required": ["sample", "data", "markerFile"]
     }
 }
