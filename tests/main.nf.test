@@ -26,7 +26,7 @@ nextflow_workflow {
                 assertAll (
                     {
                         assert snapshot (
-                            path("$outputDir/ashlar/TEST1.ome.tif"),
+                            path("$outputDir/registration/ashlar/TEST1.ome.tif"),
                             path("$outputDir/deepcell/mask_TEST1.tif"),
                             path("$outputDir/marker/marker_sheet.valid.csv"),
                             path("$outputDir/mcquant/TEST1_mask_TEST1.csv")
@@ -58,7 +58,7 @@ nextflow_workflow {
                 assertAll (
                     {
                         assert snapshot (
-                            path("$outputDir/ashlar/TEST1.ome.tif"),
+                            path("$outputDir/registration/ashlar/TEST1.ome.tif"),
                             path("$outputDir/deepcell/mask_TEST1.tif"),
                             path("$outputDir/marker/marker_sheet.valid.csv"),
                             path("$outputDir/mcquant/TEST1_mask_TEST1.csv")
@@ -91,7 +91,7 @@ nextflow_workflow {
                 assertAll (
                     {
                         assert snapshot (
-                            path("$outputDir/ashlar/TEST1.ome.tif"),
+                            path("$outputDir/registration/ashlar/TEST1.ome.tif"),
                             path("$outputDir/deepcell/mask_TEST1.tif"),
                             path("$outputDir/marker/marker_sheet.valid.csv"),
                             path("$outputDir/mcquant/TEST1_mask_TEST1.csv"),
@@ -128,7 +128,7 @@ nextflow_workflow {
                 assertAll (
                     {
                         assert snapshot (
-                            path("$outputDir/ashlar/TEST1.ome.tif"),
+                            path("$outputDir/registration/ashlar/TEST1.ome.tif"),
                             path("$outputDir/deepcell/mask_TEST1.tif"),
                             path("$outputDir/marker/marker_sheet.valid.csv"),
                             path("$outputDir/mcquant/TEST1_mask_TEST1.csv")
@@ -159,7 +159,7 @@ nextflow_workflow {
                 assertAll (
                     {
                         assert snapshot (
-                            path("$outputDir/ashlar/TEST1.ome.tif"),
+                            path("$outputDir/registration/ashlar/TEST1.ome.tif"),
                             path("$outputDir/deepcell/mask_TEST1.tif"),
                             path("$outputDir/marker/marker_sheet.valid.csv"),
                             path("$outputDir/mcquant/TEST1_mask_TEST1.csv")
@@ -191,7 +191,7 @@ nextflow_workflow {
                 assertAll (
                     {
                         assert snapshot (
-                            path("$outputDir/ashlar/TEST1.ome.tif"),
+                            path("$outputDir/registration/ashlar/TEST1.ome.tif"),
                             path("$outputDir/deepcell/mask_TEST1.tif"),
                             path("$outputDir/marker/marker_sheet.valid.csv"),
                             path("$outputDir/mcquant/TEST1_mask_TEST1.csv")
@@ -222,7 +222,7 @@ nextflow_workflow {
                 assertAll (
                     {
                         assert snapshot (
-                            path("$outputDir/ashlar/cycif-tonsil.ome.tif"),
+                            path("$outputDir/registration/ashlar/cycif-tonsil.ome.tif"),
                             path("$outputDir/deepcell/mask_cycif-tonsil.tif"),
                             path("$outputDir/marker/marker_sheet.valid.csv"),
                             path("$outputDir/mcquant/cycif-tonsil_mask_cycif-tonsil.csv")
@@ -253,7 +253,7 @@ nextflow_workflow {
                 assertAll (
                     {
                         assert snapshot (
-                            path("$outputDir/ashlar/cycif-tonsil.ome.tif"),
+                            path("$outputDir/registration/ashlar/cycif-tonsil.ome.tif"),
                             path("$outputDir/deepcell/mask_cycif-tonsil.tif"),
                             path("$outputDir/deepcell/mask_cycif-tonsil2.tif"),
                             path("$outputDir/marker/marker_sheet.valid.csv"),
@@ -286,7 +286,7 @@ nextflow_workflow {
                 assertAll (
                     {
                         assert snapshot (
-                            path("$outputDir/ashlar/cycif-tonsil.ome.tif"),
+                            path("$outputDir/registration/ashlar/cycif-tonsil.ome.tif"),
                             path("$outputDir/deepcell/mask_cycif-tonsil.tif"),
                             path("$outputDir/marker/marker_sheet.valid.csv"),
                             path("$outputDir/mcquant/cycif-tonsil_mask_cycif-tonsil.csv"),
@@ -324,8 +324,8 @@ nextflow_workflow {
                 assertAll (
                     {
                         assert snapshot (
-                            path("$outputDir/ashlar/cycif-tonsil.ome.tif"),
-                            path("$outputDir/ashlar/cycif-tonsil2.ome.tif"),
+                            path("$outputDir/registration/ashlar/cycif-tonsil.ome.tif"),
+                            path("$outputDir/registration/ashlar/cycif-tonsil2.ome.tif"),
                             path("$outputDir/deepcell/mask_cycif-tonsil.tif"),
                             path("$outputDir/deepcell/mask_cycif-tonsil2.tif"),
                             path("$outputDir/marker/marker_sheet.valid.csv"),
@@ -364,7 +364,7 @@ nextflow_workflow {
                 assertAll (
                     {
                         assert snapshot (
-                            path("$outputDir/ashlar/TEST1.ome.tif"),
+                            path("$outputDir/registration/ashlar/TEST1.ome.tif"),
                             path("$outputDir/deepcell/mask_TEST1.tif"),
                             path("$outputDir/marker/marker_sheet.valid.csv"),
                             path("$outputDir/mcquant/TEST1_mask_TEST1.csv")
@@ -396,7 +396,7 @@ nextflow_workflow {
                 assertAll (
                     {
                         assert snapshot (
-                            path("$outputDir/ashlar/TEST1.ome.tif"),
+                            path("$outputDir/registration/ashlar/TEST1.ome.tif"),
                             path("$outputDir/deepcell/mask_TEST1.tif"),
                             path("$outputDir/marker/marker_sheet.valid.csv"),
                             path("$outputDir/mcquant/TEST1_mask_TEST1.csv"),
@@ -432,8 +432,8 @@ nextflow_workflow {
                 assertAll (
                     {
                         assert snapshot (
-                            path("$outputDir/ashlar/TEST1.ome.tif"),
-                            path("$outputDir/ashlar/TEST2.ome.tif"),
+                            path("$outputDir/registration/ashlar/TEST1.ome.tif"),
+                            path("$outputDir/registration/ashlar/TEST2.ome.tif"),
                             path("$outputDir/deepcell/mask_TEST1.tif"),
                             path("$outputDir/deepcell/mask_TEST2.tif"),
                             path("$outputDir/marker/marker_sheet.valid.csv"),
