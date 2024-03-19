@@ -38,6 +38,38 @@ nextflow_workflow {
 
         },
 
+        test("cycle: no illumination correction; spaces in markersheet (ticket #22)") {
+
+            when {
+                params {
+                    input_cycle = "$projectDir/assets/samplesheet_1_row_sample_cycle.csv"
+                    outdir = "$outputDir"
+                    marker_sheet = "$projectDir/assets/markers_1_sp.csv"
+                }
+                workflow {
+                    """
+                    // define inputs of the workflow here. Example:
+                    // input[0] = file("test-file.txt")
+                    """
+                }
+            }
+
+            then {
+                assertAll (
+                    {
+                        assert snapshot (
+                            path("$outputDir/ashlar/TEST1.ome.tif"),
+                            path("$outputDir/deepcell/mask_TEST1.tif"),
+                            path("$outputDir/marker/marker_sheet.valid.csv"),
+                            path("$outputDir/mcquant/TEST1_mask_TEST1.csv")
+                        ).match()
+                    },
+                    { assert workflow.success }
+                )
+            }
+
+        },
+
         test("cycle: basicpy illumination correction") {
 
             when {

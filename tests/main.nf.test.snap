@@ -21,14 +21,14 @@
         ],
         "timestamp": "2024-03-06T14:40:23.477357985"
     },
-    "sample: manual illumination correction": {
+    "cycle: no illumination correction; spaces in markersheet (ticket #22)": {
         "content": [
-            "TEST1.ome.tif:md5,03df9a64f2b06e830a5af6293eae32c5",
-            "mask_TEST1.tif:md5,3a800ddba84b4eaea13aab100cbcc938",
-            "marker_sheet.valid.csv:md5,f1cf3d8e7d8fe5134c698f77fb29ae25",
-            "TEST1_mask_TEST1.csv:md5,a31c5cef96c93bf0e3d00043c59eaf2e"
+            "TEST1.ome.tif:md5,ae98ac74e3c818bb26c99ba4b9c2dd51",
+            "mask_TEST1.tif:md5,c1075eb025f558fcadedc1f0d903ec15",
+            "marker_sheet.valid.csv:md5,15fa6d74598c89fd01abfafa9822144d",
+            "TEST1_mask_TEST1.csv:md5,754d387c02e6f13b33f42a907113ee90"
         ],
-        "timestamp": "2024-03-18T13:23:29.283289931"
+        "timestamp": "2024-03-19T15:23:48.983069962"
     },
     "cycle: multiple file ashlar input no correction": {
         "content": [
@@ -49,15 +49,6 @@
             "cycif-tonsil-cycle1.ome-ffp.tiff:md5,5cd0a0159a66f8d2ed40158fdd3264b7"
         ],
         "timestamp": "2024-02-20T14:29:02.668656821"
-    },
-    "cycle: no illumination correction": {
-        "content": [
-            "TEST1.ome.tif:md5,ae98ac74e3c818bb26c99ba4b9c2dd51",
-            "mask_TEST1.tif:md5,c1075eb025f558fcadedc1f0d903ec15",
-            "marker_sheet.valid.csv:md5,f1cf3d8e7d8fe5134c698f77fb29ae25",
-            "TEST1_mask_TEST1.csv:md5,0c78859ac34e5339b25715622aa9b614"
-        ],
-        "timestamp": "2024-02-20T14:28:35.944898883"
     },
     "cycle: multiple file ashlar input with basicpy correction": {
         "content": [
@@ -83,24 +74,6 @@
         ],
         "timestamp": "2024-02-20T14:29:39.203524578"
     },
-    "sample: multiple cycle ashlar input with multiple samples and basicpy illumination correction": {
-        "content": [
-            "TEST1.ome.tif:md5,ae6f050a0f6d37078bd3c2326be94eb5",
-            "TEST2.ome.tif:md5,741de7f49497ecabdf017648cbee6c03",
-            "mask_TEST1.tif:md5,5b58666e2609cbd276d69d9571f398c9",
-            "mask_TEST2.tif:md5,057bd032f0610d710b722b8fc2e30449",
-            "marker_sheet.valid.csv:md5,93b58772a86c6eb122809f5fc29d1a66",
-            "TEST1_mask_TEST1.csv:md5,d0823af383be498513e0687fcfc9f0e2",
-            "TEST2_mask_TEST2.csv:md5,cc179de58e9c0c80cc0b4740cb788322",
-            "cycif-tonsil-cycle1.ome-dfp.tiff:md5,c580c686c2e76f1b57ed86ae858ef816",
-            "cycif-tonsil-cycle1.ome-ffp.tiff:md5,5cd0a0159a66f8d2ed40158fdd3264b7",
-            "cycif-tonsil-cycle2.ome-dfp.tiff:md5,c580c686c2e76f1b57ed86ae858ef816",
-            "cycif-tonsil-cycle2.ome-ffp.tiff:md5,72924ef634857aa71c6b014b05817a3c",
-            "cycif-tonsil-cycle3.ome-dfp.tiff:md5,c580c686c2e76f1b57ed86ae858ef816",
-            "cycif-tonsil-cycle3.ome-ffp.tiff:md5,47ae03ac498a2e4c89786c1b1ea068fa"
-        ],
-        "timestamp": "2024-03-13T14:29:49.948078019"
-    },
     "cycle: multiple file ashlar input with multiple samples and basicpy correction": {
         "content": [
             "cycif-tonsil.ome.tif:md5,ae6f050a0f6d37078bd3c2326be94eb5",
@@ -119,15 +92,6 @@
         ],
         "timestamp": "2024-03-13T14:34:52.027247671"
     },
-    "cycle: manual illumination correction": {
-        "content": [
-            "TEST1.ome.tif:md5,ae98ac74e3c818bb26c99ba4b9c2dd51",
-            "mask_TEST1.tif:md5,c1075eb025f558fcadedc1f0d903ec15",
-            "marker_sheet.valid.csv:md5,f1cf3d8e7d8fe5134c698f77fb29ae25",
-            "TEST1_mask_TEST1.csv:md5,0c78859ac34e5339b25715622aa9b614"
-        ],
-        "timestamp": "2024-02-20T14:29:20.840332175"
-    },
     "cycle: multiple file ashlar input with multiple samples no correction": {
         "content": [
             "cycif-tonsil.ome.tif:md5,9d4fca1d7ec97be3f6343eb712af9dea",
@@ -137,5 +101,50 @@
             "cycif-tonsil_mask_cycif-tonsil.csv:md5,ad91b66b1daf56bf9ed3078bd429888c"
         ],
         "timestamp": "2024-02-20T14:43:55.347824362"
+    },
+    "sample: manual illumination correction": {
+        "content": [
+            "TEST1.ome.tif:md5,03df9a64f2b06e830a5af6293eae32c5",
+            "mask_TEST1.tif:md5,3a800ddba84b4eaea13aab100cbcc938",
+            "marker_sheet.valid.csv:md5,f1cf3d8e7d8fe5134c698f77fb29ae25",
+            "TEST1_mask_TEST1.csv:md5,a31c5cef96c93bf0e3d00043c59eaf2e"
+        ],
+        "timestamp": "2024-03-18T13:23:29.283289931"
+    },
+    "cycle: no illumination correction": {
+        "content": [
+            "TEST1.ome.tif:md5,ae98ac74e3c818bb26c99ba4b9c2dd51",
+            "mask_TEST1.tif:md5,c1075eb025f558fcadedc1f0d903ec15",
+            "marker_sheet.valid.csv:md5,f1cf3d8e7d8fe5134c698f77fb29ae25",
+            "TEST1_mask_TEST1.csv:md5,0c78859ac34e5339b25715622aa9b614"
+        ],
+        "timestamp": "2024-02-20T14:28:35.944898883"
+    },
+    "sample: multiple cycle ashlar input with multiple samples and basicpy illumination correction": {
+        "content": [
+            "TEST1.ome.tif:md5,ae6f050a0f6d37078bd3c2326be94eb5",
+            "TEST2.ome.tif:md5,741de7f49497ecabdf017648cbee6c03",
+            "mask_TEST1.tif:md5,5b58666e2609cbd276d69d9571f398c9",
+            "mask_TEST2.tif:md5,057bd032f0610d710b722b8fc2e30449",
+            "marker_sheet.valid.csv:md5,93b58772a86c6eb122809f5fc29d1a66",
+            "TEST1_mask_TEST1.csv:md5,d0823af383be498513e0687fcfc9f0e2",
+            "TEST2_mask_TEST2.csv:md5,cc179de58e9c0c80cc0b4740cb788322",
+            "cycif-tonsil-cycle1.ome-dfp.tiff:md5,c580c686c2e76f1b57ed86ae858ef816",
+            "cycif-tonsil-cycle1.ome-ffp.tiff:md5,5cd0a0159a66f8d2ed40158fdd3264b7",
+            "cycif-tonsil-cycle2.ome-dfp.tiff:md5,c580c686c2e76f1b57ed86ae858ef816",
+            "cycif-tonsil-cycle2.ome-ffp.tiff:md5,72924ef634857aa71c6b014b05817a3c",
+            "cycif-tonsil-cycle3.ome-dfp.tiff:md5,c580c686c2e76f1b57ed86ae858ef816",
+            "cycif-tonsil-cycle3.ome-ffp.tiff:md5,47ae03ac498a2e4c89786c1b1ea068fa"
+        ],
+        "timestamp": "2024-03-13T14:29:49.948078019"
+    },
+    "cycle: manual illumination correction": {
+        "content": [
+            "TEST1.ome.tif:md5,ae98ac74e3c818bb26c99ba4b9c2dd51",
+            "mask_TEST1.tif:md5,c1075eb025f558fcadedc1f0d903ec15",
+            "marker_sheet.valid.csv:md5,f1cf3d8e7d8fe5134c698f77fb29ae25",
+            "TEST1_mask_TEST1.csv:md5,0c78859ac34e5339b25715622aa9b614"
+        ],
+        "timestamp": "2024-02-20T14:29:20.840332175"
     }
 }

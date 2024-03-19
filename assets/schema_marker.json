@@ -17,12 +17,12 @@
             },
             "marker_name": {
                 "type": "string",
-                "pattern": "^\\S+$",
-                "errorMessage": "marker_name must be provided and it cannot contain spaces"
+                "pattern": "\\S",
+                "errorMessage": "marker_name must be provided"
             },
             "filter": {
                 "type": "string",
-                "pattern": ".*$",
+                "pattern": "\\S",
                 "errorMessage": ""
             },
             "excitation_wavelength": {
