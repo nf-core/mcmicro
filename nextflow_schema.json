@@ -256,11 +256,5 @@
         {
             "$ref": "#/definitions/generic_options"
         }
-    ],
-    "properties": {
-        "validationSchemaIgnoreParams": {
-            "type": "string",
-            "default": "genomes"
-        }
-    }
+    ]
 }
