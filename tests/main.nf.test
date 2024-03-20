@@ -27,9 +27,9 @@ nextflow_workflow {
                     {
                         assert snapshot (
                             path("$outputDir/registration/ashlar/TEST1.ome.tif"),
-                            path("$outputDir/deepcell/mask_TEST1.tif"),
-                            path("$outputDir/marker/marker_sheet.valid.csv"),
-                            path("$outputDir/mcquant/TEST1_mask_TEST1.csv")
+                            path("$outputDir/segmentation/deepcell_mesmer/mask_TEST1.tif"),
+                            path("$outputDir/input_validation/marker_sheet_check/marker_sheet.valid.csv"),
+                            path("$outputDir/quantification/mcquant/TEST1_mask_TEST1.csv")
                         ).match()
                     },
                     { assert workflow.success }
@@ -59,9 +59,9 @@ nextflow_workflow {
                     {
                         assert snapshot (
                             path("$outputDir/registration/ashlar/TEST1.ome.tif"),
-                            path("$outputDir/deepcell/mask_TEST1.tif"),
-                            path("$outputDir/marker/marker_sheet.valid.csv"),
-                            path("$outputDir/mcquant/TEST1_mask_TEST1.csv")
+                            path("$outputDir/segmentation/deepcell_mesmer/mask_TEST1.tif"),
+                            path("$outputDir/input_validation/marker_sheet_check/marker_sheet.valid.csv"),
+                            path("$outputDir/quantification/mcquant/TEST1_mask_TEST1.csv")
                         ).match()
                     },
                     { assert workflow.success }
@@ -92,11 +92,11 @@ nextflow_workflow {
                     {
                         assert snapshot (
                             path("$outputDir/registration/ashlar/TEST1.ome.tif"),
-                            path("$outputDir/deepcell/mask_TEST1.tif"),
-                            path("$outputDir/marker/marker_sheet.valid.csv"),
-                            path("$outputDir/mcquant/TEST1_mask_TEST1.csv"),
-                            path("$outputDir/basicpy/cycif-tonsil-cycle1.ome-dfp.tiff"),
-                            path("$outputDir/basicpy/cycif-tonsil-cycle1.ome-ffp.tiff")
+                            path("$outputDir/segmentation/deepcell_mesmer/mask_TEST1.tif"),
+                            path("$outputDir/input_validation/marker_sheet_check/marker_sheet.valid.csv"),
+                            path("$outputDir/quantification/mcquant/TEST1_mask_TEST1.csv"),
+                            path("$outputDir/illumination_correction/basicpy/cycif-tonsil-cycle1.ome-dfp.tiff"),
+                            path("$outputDir/illumination_correction/basicpy/cycif-tonsil-cycle1.ome-ffp.tiff")
                         ).match()
                     },
                     { assert workflow.success }
@@ -129,9 +129,9 @@ nextflow_workflow {
                     {
                         assert snapshot (
                             path("$outputDir/registration/ashlar/TEST1.ome.tif"),
-                            path("$outputDir/deepcell/mask_TEST1.tif"),
-                            path("$outputDir/marker/marker_sheet.valid.csv"),
-                            path("$outputDir/mcquant/TEST1_mask_TEST1.csv")
+                            path("$outputDir/segmentation/deepcell_mesmer/mask_TEST1.tif"),
+                            path("$outputDir/input_validation/marker_sheet_check/marker_sheet.valid.csv"),
+                            path("$outputDir/quantification/mcquant/TEST1_mask_TEST1.csv")
                         ).match()
                     },
                     { assert workflow.success }
@@ -160,9 +160,9 @@ nextflow_workflow {
                     {
                         assert snapshot (
                             path("$outputDir/registration/ashlar/TEST1.ome.tif"),
-                            path("$outputDir/deepcell/mask_TEST1.tif"),
-                            path("$outputDir/marker/marker_sheet.valid.csv"),
-                            path("$outputDir/mcquant/TEST1_mask_TEST1.csv")
+                            path("$outputDir/segmentation/deepcell_mesmer/mask_TEST1.tif"),
+                            path("$outputDir/input_validation/marker_sheet_check/marker_sheet.valid.csv"),
+                            path("$outputDir/quantification/mcquant/TEST1_mask_TEST1.csv")
                         ).match()
                     },
                     { assert workflow.success }
@@ -192,9 +192,9 @@ nextflow_workflow {
                     {
                         assert snapshot (
                             path("$outputDir/registration/ashlar/TEST1.ome.tif"),
-                            path("$outputDir/deepcell/mask_TEST1.tif"),
-                            path("$outputDir/marker/marker_sheet.valid.csv"),
-                            path("$outputDir/mcquant/TEST1_mask_TEST1.csv")
+                            path("$outputDir/segmentation/deepcell_mesmer/mask_TEST1.tif"),
+                            path("$outputDir/input_validation/marker_sheet_check/marker_sheet.valid.csv"),
+                            path("$outputDir/quantification/mcquant/TEST1_mask_TEST1.csv")
                         ).match()
                     },
                     { assert workflow.success }
@@ -223,9 +223,9 @@ nextflow_workflow {
                     {
                         assert snapshot (
                             path("$outputDir/registration/ashlar/cycif-tonsil.ome.tif"),
-                            path("$outputDir/deepcell/mask_cycif-tonsil.tif"),
-                            path("$outputDir/marker/marker_sheet.valid.csv"),
-                            path("$outputDir/mcquant/cycif-tonsil_mask_cycif-tonsil.csv")
+                            path("$outputDir/segmentation/deepcell_mesmer/mask_cycif-tonsil.tif"),
+                            path("$outputDir/input_validation/marker_sheet_check/marker_sheet.valid.csv"),
+                            path("$outputDir/quantification/mcquant/cycif-tonsil_mask_cycif-tonsil.csv")
                         ).match()
                     },
                     { assert workflow.success }
@@ -254,10 +254,10 @@ nextflow_workflow {
                     {
                         assert snapshot (
                             path("$outputDir/registration/ashlar/cycif-tonsil.ome.tif"),
-                            path("$outputDir/deepcell/mask_cycif-tonsil.tif"),
-                            path("$outputDir/deepcell/mask_cycif-tonsil2.tif"),
-                            path("$outputDir/marker/marker_sheet.valid.csv"),
-                            path("$outputDir/mcquant/cycif-tonsil_mask_cycif-tonsil.csv")
+                            path("$outputDir/segmentation/deepcell_mesmer/mask_cycif-tonsil.tif"),
+                            path("$outputDir/segmentation/deepcell_mesmer/mask_cycif-tonsil2.tif"),
+                            path("$outputDir/input_validation/marker_sheet_check/marker_sheet.valid.csv"),
+                            path("$outputDir/quantification/mcquant/cycif-tonsil_mask_cycif-tonsil.csv")
                         ).match()
                     },
                     { assert workflow.success }
@@ -287,15 +287,15 @@ nextflow_workflow {
                     {
                         assert snapshot (
                             path("$outputDir/registration/ashlar/cycif-tonsil.ome.tif"),
-                            path("$outputDir/deepcell/mask_cycif-tonsil.tif"),
-                            path("$outputDir/marker/marker_sheet.valid.csv"),
-                            path("$outputDir/mcquant/cycif-tonsil_mask_cycif-tonsil.csv"),
-                            path("$outputDir/basicpy/cycif-tonsil-cycle1.ome-dfp.tiff"),
-                            path("$outputDir/basicpy/cycif-tonsil-cycle1.ome-ffp.tiff"),
-                            path("$outputDir/basicpy/cycif-tonsil-cycle2.ome-dfp.tiff"),
-                            path("$outputDir/basicpy/cycif-tonsil-cycle2.ome-ffp.tiff"),
-                            path("$outputDir/basicpy/cycif-tonsil-cycle3.ome-dfp.tiff"),
-                            path("$outputDir/basicpy/cycif-tonsil-cycle3.ome-ffp.tiff")
+                            path("$outputDir/segmentation/deepcell_mesmer/mask_cycif-tonsil.tif"),
+                            path("$outputDir/input_validation/marker_sheet_check/marker_sheet.valid.csv"),
+                            path("$outputDir/quantification/mcquant/cycif-tonsil_mask_cycif-tonsil.csv"),
+                            path("$outputDir/illumination_correction/basicpy/cycif-tonsil-cycle1.ome-dfp.tiff"),
+                            path("$outputDir/illumination_correction/basicpy/cycif-tonsil-cycle1.ome-ffp.tiff"),
+                            path("$outputDir/illumination_correction/basicpy/cycif-tonsil-cycle2.ome-dfp.tiff"),
+                            path("$outputDir/illumination_correction/basicpy/cycif-tonsil-cycle2.ome-ffp.tiff"),
+                            path("$outputDir/illumination_correction/basicpy/cycif-tonsil-cycle3.ome-dfp.tiff"),
+                            path("$outputDir/illumination_correction/basicpy/cycif-tonsil-cycle3.ome-ffp.tiff")
                         ).match()
                     },
                     { assert workflow.success }
@@ -326,17 +326,17 @@ nextflow_workflow {
                         assert snapshot (
                             path("$outputDir/registration/ashlar/cycif-tonsil.ome.tif"),
                             path("$outputDir/registration/ashlar/cycif-tonsil2.ome.tif"),
-                            path("$outputDir/deepcell/mask_cycif-tonsil.tif"),
-                            path("$outputDir/deepcell/mask_cycif-tonsil2.tif"),
-                            path("$outputDir/marker/marker_sheet.valid.csv"),
-                            path("$outputDir/mcquant/cycif-tonsil_mask_cycif-tonsil.csv"),
-                            path("$outputDir/mcquant/cycif-tonsil2_mask_cycif-tonsil2.csv"),
-                            path("$outputDir/basicpy/cycif-tonsil-cycle1.ome-dfp.tiff"),
-                            path("$outputDir/basicpy/cycif-tonsil-cycle1.ome-ffp.tiff"),
-                            path("$outputDir/basicpy/cycif-tonsil-cycle2.ome-dfp.tiff"),
-                            path("$outputDir/basicpy/cycif-tonsil-cycle2.ome-ffp.tiff"),
-                            path("$outputDir/basicpy/cycif-tonsil-cycle3.ome-dfp.tiff"),
-                            path("$outputDir/basicpy/cycif-tonsil-cycle3.ome-ffp.tiff")
+                            path("$outputDir/segmentation/deepcell_mesmer/mask_cycif-tonsil.tif"),
+                            path("$outputDir/segmentation/deepcell_mesmer/mask_cycif-tonsil2.tif"),
+                            path("$outputDir/input_validation/marker_sheet_check/marker_sheet.valid.csv"),
+                            path("$outputDir/quantification/mcquant/cycif-tonsil_mask_cycif-tonsil.csv"),
+                            path("$outputDir/quantification/mcquant/cycif-tonsil2_mask_cycif-tonsil2.csv"),
+                            path("$outputDir/illumination_correction/basicpy/cycif-tonsil-cycle1.ome-dfp.tiff"),
+                            path("$outputDir/illumination_correction/basicpy/cycif-tonsil-cycle1.ome-ffp.tiff"),
+                            path("$outputDir/illumination_correction/basicpy/cycif-tonsil-cycle2.ome-dfp.tiff"),
+                            path("$outputDir/illumination_correction/basicpy/cycif-tonsil-cycle2.ome-ffp.tiff"),
+                            path("$outputDir/illumination_correction/basicpy/cycif-tonsil-cycle3.ome-dfp.tiff"),
+                            path("$outputDir/illumination_correction/basicpy/cycif-tonsil-cycle3.ome-ffp.tiff")
                         ).match()
                     },
                     { assert workflow.success }
@@ -365,9 +365,9 @@ nextflow_workflow {
                     {
                         assert snapshot (
                             path("$outputDir/registration/ashlar/TEST1.ome.tif"),
-                            path("$outputDir/deepcell/mask_TEST1.tif"),
-                            path("$outputDir/marker/marker_sheet.valid.csv"),
-                            path("$outputDir/mcquant/TEST1_mask_TEST1.csv")
+                            path("$outputDir/segmentation/deepcell_mesmer/mask_TEST1.tif"),
+                            path("$outputDir/input_validation/marker_sheet_check/marker_sheet.valid.csv"),
+                            path("$outputDir/quantification/mcquant/TEST1_mask_TEST1.csv")
                         ).match()
                     },
                     { assert workflow.success }
@@ -397,13 +397,13 @@ nextflow_workflow {
                     {
                         assert snapshot (
                             path("$outputDir/registration/ashlar/TEST1.ome.tif"),
-                            path("$outputDir/deepcell/mask_TEST1.tif"),
-                            path("$outputDir/marker/marker_sheet.valid.csv"),
-                            path("$outputDir/mcquant/TEST1_mask_TEST1.csv"),
-                            path("$outputDir/basicpy/cycif-tonsil-cycle1.ome-dfp.tiff"),
-                            path("$outputDir/basicpy/cycif-tonsil-cycle1.ome-ffp.tiff"),
-                            path("$outputDir/basicpy/cycif-tonsil-cycle2.ome-dfp.tiff"),
-                            path("$outputDir/basicpy/cycif-tonsil-cycle2.ome-ffp.tiff")
+                            path("$outputDir/segmentation/deepcell_mesmer/mask_TEST1.tif"),
+                            path("$outputDir/input_validation/marker_sheet_check/marker_sheet.valid.csv"),
+                            path("$outputDir/quantification/mcquant/TEST1_mask_TEST1.csv"),
+                            path("$outputDir/illumination_correction/basicpy/cycif-tonsil-cycle1.ome-dfp.tiff"),
+                            path("$outputDir/illumination_correction/basicpy/cycif-tonsil-cycle1.ome-ffp.tiff"),
+                            path("$outputDir/illumination_correction/basicpy/cycif-tonsil-cycle2.ome-dfp.tiff"),
+                            path("$outputDir/illumination_correction/basicpy/cycif-tonsil-cycle2.ome-ffp.tiff")
                         ).match()
                     },
                     { assert workflow.success }
@@ -434,17 +434,17 @@ nextflow_workflow {
                         assert snapshot (
                             path("$outputDir/registration/ashlar/TEST1.ome.tif"),
                             path("$outputDir/registration/ashlar/TEST2.ome.tif"),
-                            path("$outputDir/deepcell/mask_TEST1.tif"),
-                            path("$outputDir/deepcell/mask_TEST2.tif"),
-                            path("$outputDir/marker/marker_sheet.valid.csv"),
-                            path("$outputDir/mcquant/TEST1_mask_TEST1.csv"),
-                            path("$outputDir/mcquant/TEST2_mask_TEST2.csv"),
-                            path("$outputDir/basicpy/cycif-tonsil-cycle1.ome-dfp.tiff"),
-                            path("$outputDir/basicpy/cycif-tonsil-cycle1.ome-ffp.tiff"),
-                            path("$outputDir/basicpy/cycif-tonsil-cycle2.ome-dfp.tiff"),
-                            path("$outputDir/basicpy/cycif-tonsil-cycle2.ome-ffp.tiff"),
-                            path("$outputDir/basicpy/cycif-tonsil-cycle3.ome-dfp.tiff"),
-                            path("$outputDir/basicpy/cycif-tonsil-cycle3.ome-ffp.tiff")
+                            path("$outputDir/segmentation/deepcell_mesmer/mask_TEST1.tif"),
+                            path("$outputDir/segmentation/deepcell_mesmer/mask_TEST2.tif"),
+                            path("$outputDir/input_validation/marker_sheet_check/marker_sheet.valid.csv"),
+                            path("$outputDir/quantification/mcquant/TEST1_mask_TEST1.csv"),
+                            path("$outputDir/quantification/mcquant/TEST2_mask_TEST2.csv"),
+                            path("$outputDir/illumination_correction/basicpy/cycif-tonsil-cycle1.ome-dfp.tiff"),
+                            path("$outputDir/illumination_correction/basicpy/cycif-tonsil-cycle1.ome-ffp.tiff"),
+                            path("$outputDir/illumination_correction/basicpy/cycif-tonsil-cycle2.ome-dfp.tiff"),
+                            path("$outputDir/illumination_correction/basicpy/cycif-tonsil-cycle2.ome-ffp.tiff"),
+                            path("$outputDir/illumination_correction/basicpy/cycif-tonsil-cycle3.ome-dfp.tiff"),
+                            path("$outputDir/illumination_correction/basicpy/cycif-tonsil-cycle3.ome-ffp.tiff")
                        ).match()
                     },
                     { assert workflow.success }
