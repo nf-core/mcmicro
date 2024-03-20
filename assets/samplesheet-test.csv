@@ -1,0 +1,2 @@
+sample,data,markerFile,tissue
+TEST1,https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/imaging/ome-tiff/cycif-tonsil-cycle1.ome.tif,assets/markers-test.csv,tonsil
