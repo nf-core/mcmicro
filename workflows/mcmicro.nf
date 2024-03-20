@@ -38,17 +38,13 @@ workflow MCMICRO {
     ch_versions = Channel.empty()
     ch_multiqc_files = Channel.empty()
 
-    markerFile = [[id:"test_all" ], file("/workspace/data/cycif-tonsil-channels.csv")]
-
-    raw_images = [ [ id:'test_all' ],[
-                file("/workspace/data/ashlar/cycif-tonsil-cycle1.ome.tif"),
-                file("/workspace/data/ashlar/cycif-tonsil-cycle2.ome.tif"),
-                file("/workspace/data/ashlar/cycif-tonsil-cycle3.ome.tif")]
-                ]
-
-    dfp =file("/workspace/data/cycif-tonsil-dfp.ome.tif")
-    ffp =file("/workspace/data/cycif-tonsil-ffp.ome.tif")
-
+    ch_samplesheet
+        .multiMap {
+            meta, data, marker, tissue ->
+            registration: tuple(meta, data)
+            marker: tuple(meta, marker)
+        }
+        .set { input }
 
     // Format input for BASICPY
     // data_path = ch_from_samplesheet
@@ -73,7 +69,7 @@ workflow MCMICRO {
     // }
     // */
 
-    ASHLAR(raw_images, dfp, ffp)
+    ASHLAR(input.registration, [], [])
     ch_versions = ch_versions.mix(ASHLAR.out.versions)
 
     // // Run Background Correction
@@ -87,7 +83,7 @@ workflow MCMICRO {
     // // Run Quantification
     MCQUANT(ASHLAR.out.tif,
             DEEPCELL_MESMER.out.mask,
-            markerFile)
+            input.marker)
     ch_versions = ch_versions.mix(MCQUANT.out.versions)
 
     // // Run Reporting

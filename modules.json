@@ -7,7 +7,7 @@
                 "nf-core": {
                     "ashlar": {
                         "branch": "master",
-                        "git_sha": "97b7dc798a002688b6304a453da932b2144727b1",
+                        "git_sha": "a5a287db3590e7aa121e1251bf126c35e1418abf",
                         "installed_by": ["modules"]
                     },
                     "backsub": {
@@ -23,11 +23,6 @@
                     "cellpose": {
                         "branch": "master",
                         "git_sha": "716ef3019b66772a817b417078edce2f7b337858",
-                        "installed_by": ["modules"]
-                    },
-                    "custom/dumpsoftwareversions": {
-                        "branch": "master",
-                        "git_sha": "bba7e362e4afead70653f84d8700588ea28d0f9e",
                         "installed_by": ["modules"]
                     },
                     "deepcell/mesmer": {
