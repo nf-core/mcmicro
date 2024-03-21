@@ -9,8 +9,9 @@
         "properties": {
             "sample": {
                 "type": "string",
-                "pattern": ".*$",
-                "errorMessage": "Sample name must be provided and cannot contain spaces"
+                "pattern": "^\\S+$",
+                "errorMessage": "Sample name must be provided and cannot contain spaces",
+                "meta": ["id"]
             },
             "data": {
                 "type": "string",
