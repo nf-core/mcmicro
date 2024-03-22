@@ -1,7 +1,7 @@
-name: fastqc
+name: ashlar
 channels:
   - conda-forge
   - bioconda
   - defaults
 dependencies:
-  - bioconda::fastqc=0.12.1
+  - bioconda::ashlar=1.17.0
