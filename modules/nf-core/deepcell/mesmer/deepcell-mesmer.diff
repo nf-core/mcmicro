@@ -1,0 +1,25 @@
+Changes in module 'nf-core/deepcell/mesmer'
+--- modules/nf-core/deepcell/mesmer/main.nf
++++ modules/nf-core/deepcell/mesmer/main.nf
+@@ -10,8 +10,8 @@
+ 
+     // Output a .tif image, don't touch versions
+     output:
+-    tuple val(meta), path("mask.tif"), emit: mask
+-    path "versions.yml"              , emit: versions
++    tuple val(meta), path("*.tif")  , emit: mask
++    path "versions.yml"             , emit: versions
+ 
+     when:
+     task.ext.when == null || task.ext.when
+@@ -27,7 +27,7 @@
+         --squeeze \
+         --nuclear-image $img \
+         --output-directory . \
+-        --output-name mask.tif \
++        --output-name mask_${meta.id}.tif \
+         $membrane_command \
+         $args
+ 
+
+************************************************************

@@ -28,7 +28,8 @@
                     "deepcell/mesmer": {
                         "branch": "master",
                         "git_sha": "b9829e1064382745d8dff7f1d74d2138d2864f71",
-                        "installed_by": ["modules"]
+                        "installed_by": ["modules"],
+                        "patch": "modules/nf-core/deepcell/mesmer/deepcell-mesmer.diff"
                     },
                     "ilastik/multicut": {
                         "branch": "master",
