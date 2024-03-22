@@ -8,6 +8,8 @@
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
+import groovy.io.FileType
+
 include { UTILS_NFVALIDATION_PLUGIN } from '../../nf-core/utils_nfvalidation_plugin'
 include { paramsSummaryMap          } from 'plugin/nf-validation'
 include { fromSamplesheet           } from 'plugin/nf-validation'
@@ -35,7 +37,8 @@ workflow PIPELINE_INITIALISATION {
     monochrome_logs   // boolean: Do not use coloured log outputs
     nextflow_cli_args //   array: List of positional nextflow CLI args
     outdir            //  string: The output directory where the results will be saved
-    input             //  string: Path to input samplesheet
+    input_cycle       //  string: Path to input_cycle samplesheet
+    input_sample      //  string: Path to input_sample samplesheet
 
     main:
 
@@ -82,29 +85,23 @@ workflow PIPELINE_INITIALISATION {
     //
     def input_type
 
-    if (params.input_sample) {
-        sample_sheet_index_map = make_sample_sheet_index_map(params.input_sample)
+    if (input_sample) {
+        sample_sheet_index_map = make_sample_sheet_index_map(input_sample)
         ch_samplesheet = Channel.fromSamplesheet(
             "input_sample",
-            parameters_schema: parameters_schema,
+            //parameters_schema: parameters_schema,
             skip_duplicate_check: false
         )
-        .multiMap { it ->
-            ashlar_input: make_ashlar_input_sample(it, sample_sheet_index_map)
-        }
-    } else if(params.input_cycle) {
-        sample_sheet_index_map = make_sample_sheet_index_map(params.input_cycle)
+        .map { make_ashlar_input_sample(it, sample_sheet_index_map) }
+    } else if (input_cycle) {
+        sample_sheet_index_map = make_sample_sheet_index_map(input_cycle)
         ch_samplesheet = Channel.fromSamplesheet(
             "input_cycle",
-            parameters_schema: parameters_schema,
+            //parameters_schema: parameters_schema,
             skip_duplicate_check: false
         )
-        .map { it -> [[id:it[0]], it[3]] }
+        .map { [[id:it[0]], it[3]] }
         .groupTuple()
-        .multiMap { it ->
-            ashlar_input: it
-        }
-
     } else {
         error "Either input_sample or input_cycle is required."
     }
@@ -236,11 +233,6 @@ def make_ashlar_input_cycle(ArrayList sample_sheet_row, Map sample_sheet_index_m
     ashlar_input = [[id:sample_sheet_row[sample_name_index]], sample_sheet_row[image_tiles_path_index]]
 
     return ashlar_input
-}
-
-    emit:
-    multiqc_report = MULTIQC.out.report.toList() // channel: /path/to/multiqc_report.html
-    versions       = ch_versions                 // channel: [ path(versions.yml) ]
 }
 
 //

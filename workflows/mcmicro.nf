@@ -43,7 +43,6 @@ workflow MCMICRO {
 
     ch_from_marker_sheet = Channel.fromSamplesheet(
         "marker_sheet",
-        parameters_schema: parameters_schema,
         skip_duplicate_check: false
         )
 
@@ -60,7 +59,7 @@ workflow MCMICRO {
                 .map { [[it[1].split('/')[-1][0..-5],it[0]], it[1]] }
                 .set { ashlar_input_keyed }
 
-                ch_samplesheet.ashlar_input
+                ch_samplesheet
                     .transpose()
                     .set { ch_basicpy_input }
 
@@ -102,7 +101,6 @@ workflow MCMICRO {
             }
             ch_manual_illumination_correction = Channel.fromSamplesheet(
                 samplesheet,
-                parameters_schema: parameters_schema,
                 skip_duplicate_check: false
             )
             .multiMap
@@ -123,7 +121,7 @@ workflow MCMICRO {
     INPUT_CHECK( input_type, params.input_sample, params.input_cycle, params.marker_sheet )
 
     // ASHLAR(ch_samplesheet.ashlar_input, [], [])
-    ASHLAR(ch_samplesheet.ashlar_input, ch_dfp, ch_ffp)
+    ASHLAR(ch_samplesheet, ch_dfp, ch_ffp)
     ch_versions = ch_versions.mix(ASHLAR.out.versions)
 
     // // Run Background Correction
@@ -176,6 +174,11 @@ workflow MCMICRO {
         ch_multiqc_custom_config.toList(),
         ch_multiqc_logo.toList()
     )
+
+    emit:
+    multiqc_report = MULTIQC.out.report.toList() // channel: /path/to/multiqc_report.html
+    versions       = ch_versions                 // channel: [ path(versions.yml) ]
+}
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
