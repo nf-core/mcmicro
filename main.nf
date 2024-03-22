@@ -11,12 +11,6 @@
 
 nextflow.enable.dsl = 2
 
-params.monochromeLogs = ''
-params.validationSkipDuplicateCheck = false
-params.validationS3PathCheck = false
-
-def parameters_schema = "assets/nextflow_schema.json"
-
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     IMPORT FUNCTIONS / MODULES / SUBWORKFLOWS / WORKFLOWS
