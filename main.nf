@@ -68,7 +68,8 @@ workflow {
         params.monochrome_logs,
         args,
         params.outdir,
-        params.input
+        params.input_cycle,
+        params.input_sample
     )
 
     //
