@@ -8,14 +8,23 @@ nextflow_workflow {
 
         when {
             params {
-                input_cycle = "/home/pollen/github/mcmicro-nf-core/assets/samplesheet_1_row_sample_cycle.csv"
-                outdir = "./output"
-                marker_sheet = "/home/pollen/HITS/nextflow/test_mcmicro-nf-core/markers_1.csv"
+                input_sample = "$projectDir/assets/samplesheet-test.csv"
+                marker_sheet = "$projectDir/assets/markers-test.csv"
+            }
+            workflow {
+                """
+                input[0] = Channel.fromList([
+                    [[id:"TEST1"], ["https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/imaging/ome-tiff/cycif-tonsil-cycle1.ome.tif"]]
+                ])
+                """
             }
         }
 
         then {
-            assert workflow.success
+            assertAll(
+                { assert workflow.success },
+                { assert snapshot(workflow.out.versions).match("versions") }
+            )
         }
 
     }
