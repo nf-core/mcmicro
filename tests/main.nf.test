@@ -11,13 +11,13 @@ nextflow_workflow {
             when {
                 params {
                     input_cycle = "$projectDir/assets/samplesheet_1_row_sample_cycle.csv"
-                    outdir = "$outputDir"
                     marker_sheet = "$projectDir/assets/markers_1.csv"
                 }
                 workflow {
                     """
-                    // define inputs of the workflow here. Example:
-                    // input[0] = file("test-file.txt")
+                    input[0] = Channel.fromList([
+                        [[id:"TEST1"], ["https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/imaging/ome-tiff/cycif-tonsil-cycle1.ome.tif"]]
+                    ])
                     """
                 }
             }
@@ -28,8 +28,8 @@ nextflow_workflow {
                         assert snapshot (
                             path("$outputDir/registration/ashlar/TEST1.ome.tif"),
                             path("$outputDir/segmentation/deepcell_mesmer/mask_TEST1.tif"),
-                            path("$outputDir/input_validation/marker_sheet_check/marker_sheet.valid.csv"),
-                            path("$outputDir/quantification/mcquant/TEST1_mask_TEST1.csv")
+                            path("$outputDir/input_validation/marker_sheet_check/marker_sheet.valid.csv").readLines(),
+                            CsvUtils.roundColumns("$outputDir/quantification/mcquant/TEST1_mask_TEST1.csv"),
                         ).match()
                     },
                     { assert workflow.success }
