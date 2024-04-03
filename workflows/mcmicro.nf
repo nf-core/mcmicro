@@ -1,63 +1,27 @@
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    PRINT PARAMS SUMMARY
+    IMPORT MODULES / SUBWORKFLOWS / FUNCTIONS
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
 import groovy.io.FileType
 import nextflow.Nextflow
 
-include { paramsHelp; paramsSummaryLog; fromSamplesheet; paramsSummaryMap } from 'plugin/nf-validation'
+include { paramsSummaryMap       } from 'plugin/nf-validation'
+include { paramsSummaryMultiqc   } from '../subworkflows/nf-core/utils_nfcore_pipeline'
+include { softwareVersionsToYAML } from '../subworkflows/nf-core/utils_nfcore_pipeline'
+include { methodsDescriptionText } from '../subworkflows/local/utils_nfcore_mcmicro_pipeline'
+include { MULTIQC                } from '../modules/nf-core/multiqc/main'
 
-def logo = NfcoreTemplate.logo(workflow, params.monochrome_logs)
-def citation = '\n' + WorkflowMain.citation(workflow) + '\n'
-def summary_params = paramsSummaryMap(workflow)
-def parameters_schema = "assets/nextflow_schema.json"
-
-// Print parameter summary log to screen
-log.info logo + paramsSummaryLog(workflow) + citation
-
-/*
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    CONFIG FILES
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-*/
-
-ch_multiqc_config          = Channel.fromPath("$projectDir/assets/multiqc_config.yml", checkIfExists: true)
-ch_multiqc_custom_config   = params.multiqc_config ? Channel.fromPath( params.multiqc_config, checkIfExists: true ) : Channel.empty()
-ch_multiqc_logo            = params.multiqc_logo   ? Channel.fromPath( params.multiqc_logo, checkIfExists: true ) : Channel.empty()
-ch_multiqc_custom_methods_description = params.multiqc_methods_description ? file(params.multiqc_methods_description, checkIfExists: true) : file("$projectDir/assets/methods_description_template.yml", checkIfExists: true)
-
-/*
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    IMPORT LOCAL MODULES/SUBWORKFLOWS
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-*/
-
-//
-// SUBWORKFLOW: Consisting of a mix of local and nf-core/modules
-//
 include { INPUT_CHECK } from '../subworkflows/local/input_check'
 
-/*
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    IMPORT NF-CORE MODULES/SUBWORKFLOWS
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-*/
-
-//
-// MODULE: Installed directly from nf-core/modules
-//
-
-include { BASICPY                     } from '../modules/nf-core/basicpy/main'
-include { ASHLAR                      } from '../modules/nf-core/ashlar/main'
-include { BACKSUB                     } from '../modules/nf-core/backsub/main'
-include { CELLPOSE                    } from '../modules/nf-core/cellpose/main'
-include { DEEPCELL_MESMER             } from '../modules/nf-core/deepcell/mesmer/main'
-include { MCQUANT                     } from '../modules/nf-core/mcquant/main'
-// include { SCIMAP_MCMICRO              } from '../modules/nf-core/scimap/mcmicro/main'
-include { MULTIQC                     } from '../modules/nf-core/multiqc/main'
-include { CUSTOM_DUMPSOFTWAREVERSIONS } from '../modules/nf-core/custom/dumpsoftwareversions/main'
+include { BASICPY } from '../modules/nf-core/basicpy/main'
+include { ASHLAR } from '../modules/nf-core/ashlar/main'
+include { BACKSUB } from '../modules/nf-core/backsub/main'
+include { CELLPOSE } from '../modules/nf-core/cellpose/main'
+include { DEEPCELL_MESMER } from '../modules/nf-core/deepcell/mesmer/main'
+include { MCQUANT } from '../modules/nf-core/mcquant/main'
+include { SCIMAP_MCMICRO } from '../modules/nf-core/scimap/mcmicro/main'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -65,57 +29,20 @@ include { CUSTOM_DUMPSOFTWAREVERSIONS } from '../modules/nf-core/custom/dumpsoft
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
-// Info required for completion email and summary
-def multiqc_report = []
-
 workflow MCMICRO {
 
-    // TODO: missing outdir parameter not getting caught by schema check
-    //       even though listed as required in schema
-    if (!params.outdir) {
-        Nextflow.error("ERROR: outdir parameter must be provided!")
-    }
+    take:
+    ch_samplesheet // channel: samplesheet read in from --input
 
-    def input_type
-
-    if (params.input_sample && !params.input_cycle) {
-        input_type = "sample"
-        sample_sheet_index_map = make_sample_sheet_index_map(params.input_sample)
-        ch_from_samplesheet = Channel.fromSamplesheet(
-            "input_sample",
-            parameters_schema: parameters_schema,
-            skip_duplicate_check: false
-            )
-            .multiMap
-                { it ->
-                    ashlar_input: make_ashlar_input_sample(it, sample_sheet_index_map)
-                }
-    } else if(!params.input_sample && params.input_cycle) {
-        input_type = "cycle"
-        sample_sheet_index_map = make_sample_sheet_index_map(params.input_cycle)
-        ch_from_samplesheet = Channel.fromSamplesheet(
-                "input_cycle",
-                parameters_schema: parameters_schema,
-                skip_duplicate_check: false
-            )
-            .map { it -> [[id:it[0]], it[3]] }
-            .groupTuple()
-            .multiMap
-                { it ->
-                    ashlar_input: it
-                }
-
-    } else if(params.input_sample && params.input_cycle) {
-        Nextflow.error("ERROR: You must have EITHER an input_sample parameter OR an input_cycle parameter, but not both!")
-    } else if(!params.input_sample && !params.input_cycle) {
-        Nextflow.error("ERROR: You must have EITHER an input_sample parameter OR and input_cycle paramter!")
-    }
+    main:
 
     ch_versions = Channel.empty()
+    ch_multiqc_files = Channel.empty()
+
+    input_type = params.input_cycle ? "cycle" : "sample"
 
     ch_from_marker_sheet = Channel.fromSamplesheet(
         "marker_sheet",
-        parameters_schema: parameters_schema,
         skip_duplicate_check: false
         )
 
@@ -127,12 +54,12 @@ workflow MCMICRO {
 
         if (params.illumination == 'basicpy') {
 
-            ch_from_samplesheet
+            ch_samplesheet
                 .transpose()
                 .map { [[it[1].split('/')[-1][0..-5],it[0]], it[1]] }
                 .set { ashlar_input_keyed }
 
-                ch_from_samplesheet.ashlar_input
+                ch_samplesheet
                     .transpose()
                     .set { ch_basicpy_input }
 
@@ -174,7 +101,6 @@ workflow MCMICRO {
             }
             ch_manual_illumination_correction = Channel.fromSamplesheet(
                 samplesheet,
-                parameters_schema: parameters_schema,
                 skip_duplicate_check: false
             )
             .multiMap
@@ -194,8 +120,8 @@ workflow MCMICRO {
 
     INPUT_CHECK( input_type, params.input_sample, params.input_cycle, params.marker_sheet )
 
-    // ASHLAR(ch_from_samplesheet.ashlar_input, [], [])
-    ASHLAR(ch_from_samplesheet.ashlar_input, ch_dfp, ch_ffp)
+    // ASHLAR(ch_samplesheet.ashlar_input, [], [])
+    ASHLAR(ch_samplesheet, ch_dfp, ch_ffp)
     ch_versions = ch_versions.mix(ASHLAR.out.versions)
 
     // // Run Background Correction
@@ -215,35 +141,32 @@ workflow MCMICRO {
             [[:], file(params.marker_sheet)])
     ch_versions = ch_versions.mix(MCQUANT.out.versions)
 
-    emit:
-    MCQUANT.out.csv
-
     /*
     // // Run Reporting
     SCIMAP_MCMICRO(MCQUANT.out.csv)
     ch_versions = ch_versions.mix(SCIMAP_MCMICRO.out.versions)
     */
 
-    /*
-    CUSTOM_DUMPSOFTWAREVERSIONS (
-        ch_versions.unique().collectFile(name: 'collated_versions.yml')
-    )
-    */
+    //
+    // Collate and save software versions
+    //
+    softwareVersionsToYAML(ch_versions)
+        .collectFile(storeDir: "${params.outdir}/pipeline_info", name: 'nf_core_pipeline_software_mqc_versions.yml', sort: true, newLine: true)
+        .set { ch_collated_versions }
 
     //
     // MODULE: MultiQC
     //
-    /*
-    workflow_summary    = WorkflowMcmicro.paramsSummaryMultiqc(workflow, summary_params)
-    ch_workflow_summary = Channel.value(workflow_summary)
-
-    methods_description    = WorkflowMcmicro.methodsDescriptionText(workflow, ch_multiqc_custom_methods_description, params)
-    ch_methods_description = Channel.value(methods_description)
-
-    ch_multiqc_files = Channel.empty()
-    ch_multiqc_files = ch_multiqc_files.mix(ch_workflow_summary.collectFile(name: 'workflow_summary_mqc.yaml'))
-    ch_multiqc_files = ch_multiqc_files.mix(ch_methods_description.collectFile(name: 'methods_description_mqc.yaml'))
-    ch_multiqc_files = ch_multiqc_files.mix(CUSTOM_DUMPSOFTWAREVERSIONS.out.mqc_yml.collect())
+    ch_multiqc_config                     = Channel.fromPath("$projectDir/assets/multiqc_config.yml", checkIfExists: true)
+    ch_multiqc_custom_config              = params.multiqc_config ? Channel.fromPath(params.multiqc_config, checkIfExists: true) : Channel.empty()
+    ch_multiqc_logo                       = params.multiqc_logo ? Channel.fromPath(params.multiqc_logo, checkIfExists: true) : Channel.empty()
+    summary_params                        = paramsSummaryMap(workflow, parameters_schema: "nextflow_schema.json")
+    ch_workflow_summary                   = Channel.value(paramsSummaryMultiqc(summary_params))
+    ch_multiqc_custom_methods_description = params.multiqc_methods_description ? file(params.multiqc_methods_description, checkIfExists: true) : file("$projectDir/assets/methods_description_template.yml", checkIfExists: true)
+    ch_methods_description                = Channel.value(methodsDescriptionText(ch_multiqc_custom_methods_description))
+    ch_multiqc_files                      = ch_multiqc_files.mix(ch_workflow_summary.collectFile(name: 'workflow_summary_mqc.yaml'))
+    ch_multiqc_files                      = ch_multiqc_files.mix(ch_collated_versions)
+    ch_multiqc_files                      = ch_multiqc_files.mix(ch_methods_description.collectFile(name: 'methods_description_mqc.yaml', sort: false))
 
     MULTIQC (
         ch_multiqc_files.collect(),
@@ -251,80 +174,10 @@ workflow MCMICRO {
         ch_multiqc_custom_config.toList(),
         ch_multiqc_logo.toList()
     )
-    multiqc_report = MULTIQC.out.report.toList()
-    */
-}
 
-def make_sample_sheet_index_map(String sample_sheet_path) {
-    def sample_sheet_index_map = [:]
-    def header
-    new File(sample_sheet_path).withReader { header_list = it.readLine().split(',') }
-    def ctr = 0
-    header_list.each { value ->
-        sample_sheet_index_map[value] = ctr
-        ctr = ctr + 1
-    }
-    return sample_sheet_index_map
-}
-
-def make_ashlar_input_sample(ArrayList sample_sheet_row, Map sample_sheet_index_map) {
-    sample_name_index = sample_sheet_index_map['sample']
-    image_dir_path_index = sample_sheet_index_map['image_directory']
-    if (sample_sheet_index_map.keySet().collect().contains("cycle_images")) {
-        tmp_path = sample_sheet_row[image_dir_path_index]
-        if (tmp_path[-1] != "/") {
-            tmp_path = "${tmp_path}/"
-        }
-        cycle_images = sample_sheet_row[sample_sheet_index_map['cycle_images']].split(' ').collect{ "${tmp_path}${it}" }
-        cycle_images.each{ file_path ->
-            File file_test = new File(file_path)
-            if (!file_test.exists()) {
-                Nextflow.error("Error: ${file_path} does not exist!")
-            }
-        }
-    } else {
-        // TODO: remove this option or allow it to grab all files when no column in the samplesheet?
-        cycle_images = []
-        def image_dir = new File(sample_sheet_row[image_dir_path_index])
-        image_dir.eachFileRecurse (FileType.FILES) {
-            if(it.toString().endsWith(".ome.tif")){
-                cycle_images << file(it)
-            }
-        }
-    }
-
-    ashlar_input = [[id:sample_sheet_row[sample_name_index]], cycle_images]
-
-    return ashlar_input
-}
-
-def make_ashlar_input_cycle(ArrayList sample_sheet_row, Map sample_sheet_index_map) {
-    sample_name_index = sample_sheet_index_map['sample']
-    image_tiles_path_index = sample_sheet_index_map['image_tiles']
-    ashlar_input = [[id:sample_sheet_row[sample_name_index]], sample_sheet_row[image_tiles_path_index]]
-
-    return ashlar_input
-}
-
-/*
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    COMPLETION EMAIL AND SUMMARY
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-*/
-
-workflow.onComplete {
-    /*
-    if (params.email || params.email_on_fail) {
-        NfcoreTemplate.email(workflow, params, summary_params, projectDir, log, multiqc_report)
-    }
-    */
-    NfcoreTemplate.dump_parameters(workflow, params)
-    NfcoreTemplate.summary(workflow, params, log)
-    /*
-    if (params.hook_url) {
-        NfcoreTemplate.IM_notification(workflow, params, summary_params, projectDir, log)
-    }
-    */
+    emit:
+    multiqc_report = MULTIQC.out.report.toList() // channel: /path/to/multiqc_report.html
+    versions       = ch_versions                 // channel: [ path(versions.yml) ]
 }
 
 /*
