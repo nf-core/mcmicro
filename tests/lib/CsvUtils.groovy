@@ -12,10 +12,10 @@ static List roundColumns(String path) {
     return rows
 }
 
-// Parse and round floating point values to 13 decimal places. Pass other
+// Parse and round floating point values to 12 decimal places. Pass other
 // strings through untouched.
-static roundIfDouble(String value) {
+static String roundIfDouble(String value) {
     value.contains(".")
-        ? Math.round(Double.parseDouble(value) * 1e13) / 1e13
-        : value
+    ? (Math.round(Double.parseDouble(value) * 1e12) / 1e12).toString()
+    : value
 }
