@@ -1,0 +1,99 @@
+<!--
+  ~ Copyright 2013-2023, Seqera Labs
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+<html>
+<head>
+<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1, maximum-scale=1">
+</head>
+<body>
+<pre class="mermaid" style="text-align: center;">
+flowchart TB
+    subgraph " "
+    v0["Channel.fromPath"]
+    v6["channel.fromSamplesheet"]
+    v11["channel.fromSamplesheet"]
+    v28["input_type"]
+    v31["channel.fromSamplesheet"]
+    v33["input"]
+    v34["marker_sheet"]
+    v37["marker_sheet"]
+    v41["channel.fromSamplesheet"]
+    v45[" "]
+    v48[" "]
+    end
+    subgraph " "
+    v1["ch_multiqc_config"]
+    v12["ch_from_marker_sheet"]
+    v30["versions"]
+    v32["input"]
+    v36[" "]
+    v39[" "]
+    v40[" "]
+    v42["marker"]
+    v50["$out0"]
+    v52["ch_versions"]
+    end
+    subgraph NFCORE_MCMICRO
+    subgraph MCMICRO
+    v16([BASICPY])
+    subgraph INPUT_CHECK
+    v29([SAMPLESHEET_CHECK])
+    v35([SAMPLE_AND_MARKER_SHEET_CHECK])
+    v38([MARKER_SHEET_CHECK])
+    end
+    v43([ASHLAR])
+    v46([DEEPCELL_MESMER])
+    v49([MCQUANT])
+    v7(( ))
+    v17(( ))
+    v18(( ))
+    end
+    end
+    v0 --> v1
+    v6 --> v7
+    v11 --> v12
+    v7 --> v16
+    v16 --> v17
+    v16 --> v18
+    v28 --> v29
+    v29 --> v30
+    v31 --> v32
+    v33 --> v35
+    v34 --> v35
+    v35 --> v36
+    v37 --> v38
+    v38 --> v40
+    v38 --> v39
+    v41 --> v42
+    v7 --> v43
+    v18 --> v43
+    v43 --> v46
+    v43 --> v49
+    v43 --> v17
+    v45 --> v46
+    v46 --> v49
+    v46 --> v17
+    v48 --> v49
+    v49 --> v50
+    v49 --> v17
+    v17 --> v52
+
+</pre>
+<script type="module">
+  import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+  mermaid.initialize({ startOnLoad: true });
+</script>
+</body>
+</html>
