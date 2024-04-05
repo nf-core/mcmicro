@@ -28,7 +28,6 @@ nextflow_workflow {
                         assert snapshot (
                             path("$outputDir/registration/ashlar/TEST1.ome.tif"),
                             path("$outputDir/segmentation/deepcell_mesmer/mask_TEST1.tif"),
-                            path("$outputDir/input_validation/marker_sheet_check/marker_sheet.valid.csv").readLines(),
                             CsvUtils.roundColumns("$outputDir/quantification/mcquant/TEST1_mask_TEST1.csv"),
                         ).match()
                     },

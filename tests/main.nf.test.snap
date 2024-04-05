@@ -106,13 +106,6 @@
             "TEST1.ome.tif:md5,ae98ac74e3c818bb26c99ba4b9c2dd51",
             "mask_TEST1.tif:md5,c1075eb025f558fcadedc1f0d903ec15",
             [
-                "channel_number,cycle_number,marker_name,filter,excitation_wavelength,emission_wavelength,background",
-                "21,1,DNA_6,DAPI,395,431,21",
-                "22,1,ELANE,FITC,485,525,21",
-                "23,1,CD57,Sytox,555,590,21",
-                "24,1,CD45,Cy5,640,690,21"
-            ],
-            [
                 [
                     "CellID",
                     "DNA_6",

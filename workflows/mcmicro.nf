@@ -118,7 +118,7 @@ workflow MCMICRO {
         ch_ffp = []
     }
 
-    INPUT_CHECK( input_type, params.input_sample, params.input_cycle, params.marker_sheet )
+    // INPUT_CHECK( input_type, params.input_sample, params.input_cycle, params.marker_sheet )
 
     // ASHLAR(ch_samplesheet.ashlar_input, [], [])
     ASHLAR(ch_samplesheet, ch_dfp, ch_ffp)

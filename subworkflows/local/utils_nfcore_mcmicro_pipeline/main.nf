@@ -9,6 +9,9 @@
 */
 
 import groovy.io.FileType
+import groovy.json.JsonSlurper
+
+markersheet_schema = "${projectDir}/assets/schema_marker.json"
 
 include { UTILS_NFVALIDATION_PLUGIN } from '../../nf-core/utils_nfvalidation_plugin'
 include { paramsSummaryMap          } from 'plugin/nf-validation'
@@ -89,7 +92,6 @@ workflow PIPELINE_INITIALISATION {
         sample_sheet_index_map = make_sample_sheet_index_map(input_sample)
         ch_samplesheet = Channel.fromSamplesheet(
             "input_sample",
-            //parameters_schema: parameters_schema,
             skip_duplicate_check: false
         )
         .map { make_ashlar_input_sample(it, sample_sheet_index_map) }
@@ -97,7 +99,6 @@ workflow PIPELINE_INITIALISATION {
         sample_sheet_index_map = make_sample_sheet_index_map(input_cycle)
         ch_samplesheet = Channel.fromSamplesheet(
             "input_cycle",
-            //parameters_schema: parameters_schema,
             skip_duplicate_check: false
         )
         .map { [[id:it[0]], it[3]] }
@@ -111,6 +112,19 @@ workflow PIPELINE_INITIALISATION {
             validateInputSamplesheet(it)
         }
         .set { ch_samplesheet }
+
+    Channel.fromSamplesheet(
+        "marker_sheet",
+        skip_duplicate_check: false
+        )
+        .set { markersheet_data }
+
+    markersheet_header = sheet_keys(markersheet_schema)
+    Channel.from(markersheet_header)
+        .toList()
+        .concat(markersheet_data)
+        .toList()
+        .map{ validateInputMarkersheet(it) }
 
     emit:
     samplesheet = ch_samplesheet
@@ -163,11 +177,6 @@ workflow PIPELINE_COMPLETION {
 // Check and validate pipeline parameters
 //
 def validateInputParameters() {
-    // TODO: missing outdir parameter not getting caught by schema check
-    //       even though listed as required in schema
-    if (!params.outdir) {
-        error "outdir parameter must be provided."
-    }
 
     if (params.input_sample && params.input_cycle) {
         error "You must specify EITHER input_sample OR input_cycle, but not both."
@@ -179,6 +188,70 @@ def validateInputParameters() {
 //
 // Validate channels from input samplesheet
 //
+
+def validateInputMarkersheet( sheet_data ) {
+
+    marker_map = [:]
+    ctr = 0
+    sheet_data.each { curr_list ->
+        if ( ctr == 0 ) {
+            keys = curr_list.unique( false )
+            keys.each { curr_val ->
+                marker_map[curr_val] = []
+            }
+        } else {
+            idx = 0
+            curr_list.each { curr_val ->
+                marker_map[keys[idx]].add(curr_val)
+                idx++
+            }
+        }
+        ctr++
+    }
+
+    // uniqueness of marker name in marker sheet
+    if ( marker_map['marker_name'].size() != marker_map['marker_name'].unique( false ).size() ) {
+        throw new Exception("Error: duplicate marker name found in marker sheet!")
+    }
+
+    // uniqueness of (channel, cycle) tuple in marker sheet
+    test_tuples = [marker_map['channel_number'], marker_map['cycle_number']].transpose()
+    if ( test_tuples.size() != test_tuples.unique( false ).size() ) {
+        throw new Exception("Error: duplicate (channel,cycle) pair")
+    }
+
+    // cycle and channel are 1-based so 0 should throw an exception
+    if (marker_map['channel_number'].stream().anyMatch { it.toInteger() < 1 }) {
+        throw new Exception("Error: channel_number must be >= 1")
+    }
+    if (marker_map['cycle_number'].stream().anyMatch { it.toInteger() < 1 }) {
+        throw new Exception("Error: cycle_number must be >= 1")
+    }
+
+    // cycle and channel cannot skip values and must be in order
+    prev_cycle = marker_map['cycle_number'][0]
+    marker_map['cycle_number'].each { curr_cycle ->
+        if ( (curr_cycle.toInteger() != prev_cycle.toInteger() ) && (curr_cycle.toInteger() != prev_cycle.toInteger() + 1) ) {
+            throw new Exception("Error: cycle_number cannot skip values and must be in order!")
+        }
+        prev_cycle = curr_cycle
+    }
+    prev_channel = marker_map['channel_number'][0]
+    marker_map['channel_number'].each { curr_channel ->
+        if ( (curr_channel.toInteger() != prev_channel.toInteger() ) && (curr_channel.toInteger() != (prev_channel.toInteger() + 1)) ) {
+            throw new Exception("Error: channel_number cannot skip values and must be in order!")
+        }
+        prev_channel = curr_channel
+    }
+}
+
+def sheet_keys(path_marker_schema) {
+    def inputFile = new File(path_marker_schema)
+    def InputJSON = new JsonSlurper().parseText(inputFile.text)
+    //InputJSON.each{ println it }
+    return InputJSON['items']['properties'].keySet()
+}
+
 def validateInputSamplesheet(input) {
     // TODO: Add sample sheet validation.
     return input
