@@ -91,13 +91,14 @@ workflow MCMICRO {
 
         } else if(params.illumination == 'manual') {
 
-            dfp_index = sample_sheet_index_map["dfp"]
-            ffp_index = sample_sheet_index_map["ffp"]
-
             if (input_type == "cycle") {
                 samplesheet = "input_cycle"
+                dfp_index = 4
+                ffp_index = 5
             } else if (input_type == "sample") {
                 samplesheet = "input_sample"
+                dfp_index = 3
+                ffp_index = 4
             }
             ch_manual_illumination_correction = Channel.fromSamplesheet(
                 samplesheet,
