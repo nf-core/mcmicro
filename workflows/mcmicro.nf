@@ -136,9 +136,12 @@ workflow MCMICRO {
     ch_versions = ch_versions.mix(DEEPCELL_MESMER.out.versions)
 
     // Run Quantification
-
-    MCQUANT(ASHLAR.out.tif,
-            DEEPCELL_MESMER.out.mask,
+    mcquant_in = ASHLAR.out.tif.join(DEEPCELL_MESMER.out.mask).multiMap { it ->
+        image: [it[0], it[1]]
+        mask: [it[0], it[2]]
+    }
+    MCQUANT(mcquant_in.image,
+            mcquant_in.mask,
             [[:], file(params.marker_sheet)])
     ch_versions = ch_versions.mix(MCQUANT.out.versions)
 
