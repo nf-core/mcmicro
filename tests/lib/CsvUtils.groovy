@@ -1,15 +1,22 @@
 @Grab(group='com.opencsv', module='opencsv', version='5.9')
 import com.opencsv.CSVReader
+import com.opencsv.CSVWriter
 
-static List roundColumns(String path) {
+import com.askimed.nf.test.util.ObjectUtil
+import java.nio.file.Paths
+
+static String roundAndHashCsv(String path) {
+    def name = Paths.get(path).getFileName().toString()
     def reader = new CSVReader(new File(path).newReader())
-    def headers = reader.readNext()
-    def rows = [headers]
+    def strWriter = new StringWriter()
+    def writer = new CSVWriter(strWriter)
     def row
     while (row = reader.readNext()) {
-        rows << row.collect(this.&roundIfDouble)
+        row = row.collect(this.&roundIfDouble)
+        writer.writeNext(row as String[], false)
     }
-    return rows
+    def csvContent = strWriter.toString()
+    return name + ":rounded:md5," + ObjectUtil.getMd5(csvContent)
 }
 
 // Parse and round floating point values to 12 decimal places. Pass other
