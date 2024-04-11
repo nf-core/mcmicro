@@ -13,9 +13,9 @@ nextflow_workflow {
             }
             workflow {
                 """
-                input[0] = Channel.fromList([
+                input[0] = Channel.of(
                     [[id:"TEST1"], ["https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/imaging/ome-tiff/cycif-tonsil-cycle1.ome.tif"]]
-                ])
+                )
                 """
             }
         }
