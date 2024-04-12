@@ -26,9 +26,9 @@
                 "physicalSizeY": 0.65,
                 "physicalSizeZ": null
             },
-            "mask_TEST1.tif:md5,5b58666e2609cbd276d69d9571f398c9",
+            "mask_TEST1.tif:md5,b4d705f488f83e1201e61c353268b395",
             "marker_sheet.valid.csv:md5,93b58772a86c6eb122809f5fc29d1a66",
-            "TEST1_mask_TEST1.csv:rounded:md5,0d758408109d31cdfb1c1eabf66d2c6c",
+            "TEST1_mask_TEST1.csv:rounded:md5,85478c0ed7786830059c5407a7af0855",
             {
                 "format": "Tagged Image File Format",
                 "type": "float",
@@ -82,7 +82,7 @@
             "nf-test": "0.8.4",
             "nextflow": "23.10.1"
         },
-        "timestamp": "2024-04-11T16:00:42.415417139"
+        "timestamp": "2024-04-12T13:59:30.100755953"
     },
     "cycle: no illumination correction; spaces in markersheet (ticket #22)": {
         "content": [
@@ -124,9 +124,9 @@
                 "physicalSizeY": 0.65,
                 "physicalSizeZ": null
             },
-            "mask_TEST1.tif:md5,5b58666e2609cbd276d69d9571f398c9",
+            "mask_TEST1.tif:md5,b4d705f488f83e1201e61c353268b395",
             "marker_sheet.valid.csv:md5,f1cf3d8e7d8fe5134c698f77fb29ae25",
-            "TEST1_mask_TEST1.csv:rounded:md5,3d69dea99f6dc221122e01c81cbb788d",
+            "TEST1_mask_TEST1.csv:rounded:md5,82901238918e98097ecde83c6141f893",
             {
                 "format": "Tagged Image File Format",
                 "type": "float",
@@ -156,7 +156,7 @@
             "nf-test": "0.8.4",
             "nextflow": "23.10.1"
         },
-        "timestamp": "2024-04-10T14:18:57.865081221"
+        "timestamp": "2024-04-12T13:58:05.171322515"
     },
     "cycle: multiple file ashlar input with basicpy correction": {
         "content": [
@@ -172,9 +172,9 @@
                 "physicalSizeY": 0.65,
                 "physicalSizeZ": null
             },
-            "mask_cycif-tonsil.tif:md5,5b58666e2609cbd276d69d9571f398c9",
+            "mask_cycif-tonsil.tif:md5,b4d705f488f83e1201e61c353268b395",
             "marker_sheet.valid.csv:md5,8b59a59f92c40da7a129a32e04458f9a",
-            "cycif-tonsil_mask_cycif-tonsil.csv:rounded:md5,a1a68f05c2623cda2a54ce7282072171",
+            "cycif-tonsil_mask_cycif-tonsil.csv:rounded:md5,225f673c55394ef629f80add9c269522",
             {
                 "format": "Tagged Image File Format",
                 "type": "float",
@@ -252,7 +252,7 @@
             "nf-test": "0.8.4",
             "nextflow": "23.10.1"
         },
-        "timestamp": "2024-04-11T16:00:14.663902199"
+        "timestamp": "2024-04-12T13:58:33.041373239"
     },
     "sample: no illumination correction": {
         "content": [
@@ -293,11 +293,11 @@
                 "physicalSizeY": 0.65,
                 "physicalSizeZ": null
             },
-            "mask_cycif-tonsil.tif:md5,5b58666e2609cbd276d69d9571f398c9",
-            "mask_cycif-tonsil2.tif:md5,039db99ebbc32256bb8d4ef465a572b1",
+            "mask_cycif-tonsil.tif:md5,b4d705f488f83e1201e61c353268b395",
+            "mask_cycif-tonsil2.tif:md5,bacaeced4f2159b8b7f3b42d173f995c",
             "marker_sheet.valid.csv:md5,93b58772a86c6eb122809f5fc29d1a66",
-            "cycif-tonsil_mask_cycif-tonsil.csv:rounded:md5,0d758408109d31cdfb1c1eabf66d2c6c",
-            "cycif-tonsil2_mask_cycif-tonsil2.csv:rounded:md5,6487a731f8d0f652e2f4336471b510e4",
+            "cycif-tonsil_mask_cycif-tonsil.csv:rounded:md5,85478c0ed7786830059c5407a7af0855",
+            "cycif-tonsil2_mask_cycif-tonsil2.csv:rounded:md5,ba5e9ca20965b62ec12ddaed66faef1b",
             {
                 "format": "Tagged Image File Format",
                 "type": "float",
@@ -375,7 +375,7 @@
             "nf-test": "0.8.4",
             "nextflow": "23.10.1"
         },
-        "timestamp": "2024-04-11T15:21:05.496236922"
+        "timestamp": "2024-04-12T13:59:01.996682659"
     },
     "cycle: multiple file ashlar input with multiple samples no correction": {
         "content": [
@@ -445,11 +445,11 @@
                 "physicalSizeY": 0.65,
                 "physicalSizeZ": null
             },
-            "mask_TEST1.tif:md5,5b58666e2609cbd276d69d9571f398c9",
-            "mask_TEST2.tif:md5,057bd032f0610d710b722b8fc2e30449",
+            "mask_TEST1.tif:md5,b4d705f488f83e1201e61c353268b395",
+            "mask_TEST2.tif:md5,74da1dd8bfe02932d983087a96cd249f",
             "marker_sheet.valid.csv:md5,93b58772a86c6eb122809f5fc29d1a66",
-            "TEST1_mask_TEST1.csv:rounded:md5,0d758408109d31cdfb1c1eabf66d2c6c",
-            "TEST2_mask_TEST2.csv:rounded:md5,d725b5b05175d3468eea8bb6f73ab0c2",
+            "TEST1_mask_TEST1.csv:rounded:md5,85478c0ed7786830059c5407a7af0855",
+            "TEST2_mask_TEST2.csv:rounded:md5,a9e142b97f700c108e88d1154d5e1ce6",
             {
                 "format": "Tagged Image File Format",
                 "type": "float",
@@ -527,7 +527,7 @@
             "nf-test": "0.8.4",
             "nextflow": "23.10.1"
         },
-        "timestamp": "2024-04-11T15:47:47.79683034"
+        "timestamp": "2024-04-12T13:59:59.487593271"
     },
     "cycle: manual illumination correction": {
         "content": [
