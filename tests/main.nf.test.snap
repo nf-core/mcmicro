@@ -39,7 +39,29 @@
                 "physicalSizeZ": null
             },
             "marker_sheet.valid.csv:md5,93b58772a86c6eb122809f5fc29d1a66",
-            "TEST1_mask_TEST1.csv:rounded:md5,8af035eb78d29e0bd0a1ded4d496df0a",
+            {
+                "headers": [
+                    "CellID",
+                    "DNA_6",
+                    "ELANE",
+                    "CD57",
+                    "CD45",
+                    "DNA_7",
+                    "ELANE7",
+                    "CD577",
+                    "CD457",
+                    "X_centroid",
+                    "Y_centroid",
+                    "Area",
+                    "MajorAxisLength",
+                    "MinorAxisLength",
+                    "Eccentricity",
+                    "Solidity",
+                    "Extent",
+                    "Orientation"
+                ],
+                "rowCount": 311
+            },
             {
                 "format": "Tagged Image File Format",
                 "type": "float",
@@ -93,7 +115,7 @@
             "nf-test": "0.8.4",
             "nextflow": "23.10.1"
         },
-        "timestamp": "2024-04-23T10:34:53.629541415"
+        "timestamp": "2024-04-23T11:54:16.090191859"
     },
     "cycle: no illumination correction; spaces in markersheet (ticket #22)": {
         "content": [
@@ -148,7 +170,25 @@
                 "physicalSizeZ": null
             },
             "marker_sheet.valid.csv:md5,f1cf3d8e7d8fe5134c698f77fb29ae25",
-            "TEST1_mask_TEST1.csv:rounded:md5,437feb93ecd68d97431980ef2a416d9a",
+            {
+                "headers": [
+                    "CellID",
+                    "DNA_6",
+                    "ELANE",
+                    "CD57",
+                    "CD45",
+                    "X_centroid",
+                    "Y_centroid",
+                    "Area",
+                    "MajorAxisLength",
+                    "MinorAxisLength",
+                    "Eccentricity",
+                    "Solidity",
+                    "Extent",
+                    "Orientation"
+                ],
+                "rowCount": 311
+            },
             {
                 "format": "Tagged Image File Format",
                 "type": "float",
@@ -178,7 +218,7 @@
             "nf-test": "0.8.4",
             "nextflow": "23.10.1"
         },
-        "timestamp": "2024-04-23T10:33:29.333450686"
+        "timestamp": "2024-04-23T11:52:51.734421588"
     },
     "cycle: multiple file ashlar input with basicpy correction": {
         "content": [
@@ -207,7 +247,33 @@
                 "physicalSizeZ": null
             },
             "marker_sheet.valid.csv:md5,8b59a59f92c40da7a129a32e04458f9a",
-            "cycif-tonsil_mask_cycif-tonsil.csv:rounded:md5,7f2493caba775724706e9599f759ef5f",
+            {
+                "headers": [
+                    "CellID",
+                    "DNA_6",
+                    "ELANE",
+                    "CD57",
+                    "CD45",
+                    "DNA_7",
+                    "ELANE7",
+                    "CD577",
+                    "CD457",
+                    "DNA_8",
+                    "ELANE8",
+                    "CD578",
+                    "CD458",
+                    "X_centroid",
+                    "Y_centroid",
+                    "Area",
+                    "MajorAxisLength",
+                    "MinorAxisLength",
+                    "Eccentricity",
+                    "Solidity",
+                    "Extent",
+                    "Orientation"
+                ],
+                "rowCount": 311
+            },
             {
                 "format": "Tagged Image File Format",
                 "type": "float",
@@ -285,7 +351,7 @@
             "nf-test": "0.8.4",
             "nextflow": "23.10.1"
         },
-        "timestamp": "2024-04-23T10:33:57.834797223"
+        "timestamp": "2024-04-23T11:53:19.871380893"
     },
     "sample: no illumination correction": {
         "content": [
@@ -340,8 +406,52 @@
             },
             "mask_cycif-tonsil2.tif:md5,bacaeced4f2159b8b7f3b42d173f995c",
             "marker_sheet.valid.csv:md5,93b58772a86c6eb122809f5fc29d1a66",
-            "cycif-tonsil_mask_cycif-tonsil.csv:rounded:md5,8af035eb78d29e0bd0a1ded4d496df0a",
-            "cycif-tonsil2_mask_cycif-tonsil2.csv:rounded:md5,a9146c1291d5e764fcdeb5bea2169ba1",
+            {
+                "headers": [
+                    "CellID",
+                    "DNA_6",
+                    "ELANE",
+                    "CD57",
+                    "CD45",
+                    "DNA_7",
+                    "ELANE7",
+                    "CD577",
+                    "CD457",
+                    "X_centroid",
+                    "Y_centroid",
+                    "Area",
+                    "MajorAxisLength",
+                    "MinorAxisLength",
+                    "Eccentricity",
+                    "Solidity",
+                    "Extent",
+                    "Orientation"
+                ],
+                "rowCount": 311
+            },
+            {
+                "headers": [
+                    "CellID",
+                    "DNA_6",
+                    "ELANE",
+                    "CD57",
+                    "CD45",
+                    "DNA_7",
+                    "ELANE7",
+                    "CD577",
+                    "CD457",
+                    "X_centroid",
+                    "Y_centroid",
+                    "Area",
+                    "MajorAxisLength",
+                    "MinorAxisLength",
+                    "Eccentricity",
+                    "Solidity",
+                    "Extent",
+                    "Orientation"
+                ],
+                "rowCount": 297
+            },
             {
                 "format": "Tagged Image File Format",
                 "type": "float",
@@ -419,7 +529,7 @@
             "nf-test": "0.8.4",
             "nextflow": "23.10.1"
         },
-        "timestamp": "2024-04-23T10:34:26.835729551"
+        "timestamp": "2024-04-23T11:53:49.129871827"
     },
     "cycle: multiple file ashlar input with multiple samples no correction": {
         "content": [
@@ -514,8 +624,52 @@
                 "physicalSizeZ": null
             },
             "marker_sheet.valid.csv:md5,93b58772a86c6eb122809f5fc29d1a66",
-            "TEST1_mask_TEST1.csv:rounded:md5,8af035eb78d29e0bd0a1ded4d496df0a",
-            "TEST2_mask_TEST2.csv:rounded:md5,906a366d2ee1c5edccad906a832bcd59",
+            {
+                "headers": [
+                    "CellID",
+                    "DNA_6",
+                    "ELANE",
+                    "CD57",
+                    "CD45",
+                    "DNA_7",
+                    "ELANE7",
+                    "CD577",
+                    "CD457",
+                    "X_centroid",
+                    "Y_centroid",
+                    "Area",
+                    "MajorAxisLength",
+                    "MinorAxisLength",
+                    "Eccentricity",
+                    "Solidity",
+                    "Extent",
+                    "Orientation"
+                ],
+                "rowCount": 311
+            },
+            {
+                "headers": [
+                    "CellID",
+                    "DNA_6",
+                    "ELANE",
+                    "CD57",
+                    "CD45",
+                    "DNA_7",
+                    "ELANE7",
+                    "CD577",
+                    "CD457",
+                    "X_centroid",
+                    "Y_centroid",
+                    "Area",
+                    "MajorAxisLength",
+                    "MinorAxisLength",
+                    "Eccentricity",
+                    "Solidity",
+                    "Extent",
+                    "Orientation"
+                ],
+                "rowCount": 288
+            },
             {
                 "format": "Tagged Image File Format",
                 "type": "float",
@@ -593,7 +747,7 @@
             "nf-test": "0.8.4",
             "nextflow": "23.10.1"
         },
-        "timestamp": "2024-04-23T10:35:22.439744363"
+        "timestamp": "2024-04-23T11:54:45.190635939"
     },
     "cycle: manual illumination correction": {
         "content": [

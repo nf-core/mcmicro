@@ -26,7 +26,7 @@ static String roundCsv(String path, int precision) {
     return csvContent
 }
 
-static String summarizeCsv(String path) {
+static Map summarizeCsv(String path) {
     def reader = new CSVReader(new File(path).newReader())
     def strWriter = new StringWriter()
     def headers = reader.readNext() as List
