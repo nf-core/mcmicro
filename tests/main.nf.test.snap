@@ -26,9 +26,20 @@
                 "physicalSizeY": 0.65,
                 "physicalSizeZ": null
             },
-            "mask_TEST1.tif:md5,b4d705f488f83e1201e61c353268b395",
+            {
+                "format": "Tagged Image File Format",
+                "type": "int32",
+                "sizeX": 591,
+                "sizeY": 470,
+                "sizeZ": 1,
+                "sizeC": 1,
+                "sizeT": 1,
+                "physicalSizeX": 1.0,
+                "physicalSizeY": 1.0,
+                "physicalSizeZ": null
+            },
             "marker_sheet.valid.csv:md5,93b58772a86c6eb122809f5fc29d1a66",
-            "TEST1_mask_TEST1.csv:rounded:md5,c54f83d21b25e03e7507751090b326e4",
+            "TEST1_mask_TEST1.csv:rounded:md5,8af035eb78d29e0bd0a1ded4d496df0a",
             {
                 "format": "Tagged Image File Format",
                 "type": "float",
@@ -82,7 +93,7 @@
             "nf-test": "0.8.4",
             "nextflow": "23.10.1"
         },
-        "timestamp": "2024-04-22T17:43:25.099132375"
+        "timestamp": "2024-04-23T10:34:53.629541415"
     },
     "cycle: no illumination correction; spaces in markersheet (ticket #22)": {
         "content": [
@@ -137,7 +148,7 @@
                 "physicalSizeZ": null
             },
             "marker_sheet.valid.csv:md5,f1cf3d8e7d8fe5134c698f77fb29ae25",
-            "TEST1_mask_TEST1.csv:rounded:md5,9a259cf51a4bd65b30dab15b947b38c1",
+            "TEST1_mask_TEST1.csv:rounded:md5,437feb93ecd68d97431980ef2a416d9a",
             {
                 "format": "Tagged Image File Format",
                 "type": "float",
@@ -167,7 +178,7 @@
             "nf-test": "0.8.4",
             "nextflow": "23.10.1"
         },
-        "timestamp": "2024-04-22T17:09:30.549375723"
+        "timestamp": "2024-04-23T10:33:29.333450686"
     },
     "cycle: multiple file ashlar input with basicpy correction": {
         "content": [
@@ -183,9 +194,20 @@
                 "physicalSizeY": 0.65,
                 "physicalSizeZ": null
             },
-            "mask_cycif-tonsil.tif:md5,b4d705f488f83e1201e61c353268b395",
+            {
+                "format": "Tagged Image File Format",
+                "type": "int32",
+                "sizeX": 591,
+                "sizeY": 470,
+                "sizeZ": 1,
+                "sizeC": 1,
+                "sizeT": 1,
+                "physicalSizeX": 1.0,
+                "physicalSizeY": 1.0,
+                "physicalSizeZ": null
+            },
             "marker_sheet.valid.csv:md5,8b59a59f92c40da7a129a32e04458f9a",
-            "cycif-tonsil_mask_cycif-tonsil.csv:rounded:md5,0028397b8b7860e57061e0906cc9a84d",
+            "cycif-tonsil_mask_cycif-tonsil.csv:rounded:md5,7f2493caba775724706e9599f759ef5f",
             {
                 "format": "Tagged Image File Format",
                 "type": "float",
@@ -263,7 +285,7 @@
             "nf-test": "0.8.4",
             "nextflow": "23.10.1"
         },
-        "timestamp": "2024-04-22T17:42:28.24343877"
+        "timestamp": "2024-04-23T10:33:57.834797223"
     },
     "sample: no illumination correction": {
         "content": [
@@ -304,11 +326,22 @@
                 "physicalSizeY": 0.65,
                 "physicalSizeZ": null
             },
-            "mask_cycif-tonsil.tif:md5,b4d705f488f83e1201e61c353268b395",
+            {
+                "format": "Tagged Image File Format",
+                "type": "int32",
+                "sizeX": 591,
+                "sizeY": 470,
+                "sizeZ": 1,
+                "sizeC": 1,
+                "sizeT": 1,
+                "physicalSizeX": 1.0,
+                "physicalSizeY": 1.0,
+                "physicalSizeZ": null
+            },
             "mask_cycif-tonsil2.tif:md5,bacaeced4f2159b8b7f3b42d173f995c",
             "marker_sheet.valid.csv:md5,93b58772a86c6eb122809f5fc29d1a66",
-            "cycif-tonsil_mask_cycif-tonsil.csv:rounded:md5,c54f83d21b25e03e7507751090b326e4",
-            "cycif-tonsil2_mask_cycif-tonsil2.csv:rounded:md5,1486c5ee6aeb54c88c41dbdd85e0a805",
+            "cycif-tonsil_mask_cycif-tonsil.csv:rounded:md5,8af035eb78d29e0bd0a1ded4d496df0a",
+            "cycif-tonsil2_mask_cycif-tonsil2.csv:rounded:md5,a9146c1291d5e764fcdeb5bea2169ba1",
             {
                 "format": "Tagged Image File Format",
                 "type": "float",
@@ -386,7 +419,7 @@
             "nf-test": "0.8.4",
             "nextflow": "23.10.1"
         },
-        "timestamp": "2024-04-22T18:16:30.023636675"
+        "timestamp": "2024-04-23T10:34:26.835729551"
     },
     "cycle: multiple file ashlar input with multiple samples no correction": {
         "content": [
@@ -456,7 +489,18 @@
                 "physicalSizeY": 0.65,
                 "physicalSizeZ": null
             },
-            "mask_TEST1.tif:md5,b4d705f488f83e1201e61c353268b395",
+            {
+                "format": "Tagged Image File Format",
+                "type": "int32",
+                "sizeX": 591,
+                "sizeY": 470,
+                "sizeZ": 1,
+                "sizeC": 1,
+                "sizeT": 1,
+                "physicalSizeX": 1.0,
+                "physicalSizeY": 1.0,
+                "physicalSizeZ": null
+            },
             {
                 "format": "Tagged Image File Format",
                 "type": "int32",
@@ -470,7 +514,7 @@
                 "physicalSizeZ": null
             },
             "marker_sheet.valid.csv:md5,93b58772a86c6eb122809f5fc29d1a66",
-            "TEST1_mask_TEST1.csv:rounded:md5,c54f83d21b25e03e7507751090b326e4",
+            "TEST1_mask_TEST1.csv:rounded:md5,8af035eb78d29e0bd0a1ded4d496df0a",
             "TEST2_mask_TEST2.csv:rounded:md5,906a366d2ee1c5edccad906a832bcd59",
             {
                 "format": "Tagged Image File Format",
@@ -549,7 +593,7 @@
             "nf-test": "0.8.4",
             "nextflow": "23.10.1"
         },
-        "timestamp": "2024-04-22T18:29:20.807656072"
+        "timestamp": "2024-04-23T10:35:22.439744363"
     },
     "cycle: manual illumination correction": {
         "content": [
