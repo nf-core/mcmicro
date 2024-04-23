@@ -1,5 +1,5 @@
 - name: e2e mcmicro workflow test
-  command:  nextflow run /home/pollen/github/mcmicro-nf-core/main.nf --input_cycle /home/pollen/github/mcmicro-nf-core/assets/samplesheet_1_row_sample_cycle.csv --outdir output --marker_sheet /home/pollen/HITS/nextflow/test_mcmicro-nf-core/markers_1.csv -profile test_work -params-file /home/pollen/github/mcmicro-nf-core/conf/workflow.json
+  command: nextflow run /home/pollen/github/mcmicro-nf-core/main.nf --input_cycle /home/pollen/github/mcmicro-nf-core/assets/samplesheet_1_row_sample_cycle.csv --outdir output --marker_sheet /home/pollen/HITS/nextflow/test_mcmicro-nf-core/markers_1.csv -profile test_work -params-file /home/pollen/github/mcmicro-nf-core/conf/workflow.json
   files:
     - path: output/ashlar/TEST1.ome.tif
       md5sum: ae98ac74e3c818bb26c99ba4b9c2dd51

@@ -146,8 +146,8 @@ nextflow_workflow {
                 workflow {
                     """
                     input[0] = Channel.of(
-                          [[id:"TEST1"], ["https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/imaging/ome-tiff/cycif-tonsil-cycle1.ome.tif"]],
-                        )
+                        [[id:"TEST1"], ["https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/imaging/ome-tiff/cycif-tonsil-cycle1.ome.tif"]],
+                    )
                     """
                 }
             }
@@ -167,7 +167,7 @@ nextflow_workflow {
             }
         },
 
-       test("sample: manual illumination correction") {
+        test("sample: manual illumination correction") {
 
             when {
                 params {
@@ -210,12 +210,12 @@ nextflow_workflow {
                     """
                     input[0] = Channel.of(
                         [
-                           [id:"cycif-tonsil"],
-                           [
-                               "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/imaging/ome-tiff/cycif-tonsil-cycle1.ome.tif",
-                               "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/imaging/ome-tiff/cycif-tonsil-cycle2.ome.tif",
-                               "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/imaging/ome-tiff/cycif-tonsil-cycle3.ome.tif"
-                           ]
+                            [id:"cycif-tonsil"],
+                            [
+                                "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/imaging/ome-tiff/cycif-tonsil-cycle1.ome.tif",
+                                "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/imaging/ome-tiff/cycif-tonsil-cycle2.ome.tif",
+                                "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/imaging/ome-tiff/cycif-tonsil-cycle3.ome.tif"
+                            ]
                         ]
                     )
                     """
@@ -248,18 +248,18 @@ nextflow_workflow {
                     """
                     input[0] = Channel.of(
                         [
-                           [id:"cycif-tonsil"],
-                           [
-                               "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/imaging/ome-tiff/cycif-tonsil-cycle1.ome.tif",
-                               "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/imaging/ome-tiff/cycif-tonsil-cycle2.ome.tif"
-                           ]
+                            [id:"cycif-tonsil"],
+                            [
+                                "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/imaging/ome-tiff/cycif-tonsil-cycle1.ome.tif",
+                                "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/imaging/ome-tiff/cycif-tonsil-cycle2.ome.tif"
+                            ]
                         ],
                         [
-                           [id:"cycif-tonsil2"],
-                           [
-                               "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/imaging/ome-tiff/cycif-tonsil-cycle2.ome.tif",
-                               "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/imaging/ome-tiff/cycif-tonsil-cycle3.ome.tif"
-                           ]
+                            [id:"cycif-tonsil2"],
+                            [
+                                "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/imaging/ome-tiff/cycif-tonsil-cycle2.ome.tif",
+                                "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/imaging/ome-tiff/cycif-tonsil-cycle3.ome.tif"
+                            ]
                         ]
 
                     )
@@ -297,12 +297,12 @@ nextflow_workflow {
                     """
                     input[0] = Channel.of(
                         [
-                           [id:"cycif-tonsil"],
-                           [
-                               "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/imaging/ome-tiff/cycif-tonsil-cycle1.ome.tif",
-                               "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/imaging/ome-tiff/cycif-tonsil-cycle2.ome.tif",
-                               "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/imaging/ome-tiff/cycif-tonsil-cycle3.ome.tif"
-                           ]
+                            [id:"cycif-tonsil"],
+                            [
+                                "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/imaging/ome-tiff/cycif-tonsil-cycle1.ome.tif",
+                                "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/imaging/ome-tiff/cycif-tonsil-cycle2.ome.tif",
+                                "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/imaging/ome-tiff/cycif-tonsil-cycle3.ome.tif"
+                            ]
                         ]
                     )
                     """
@@ -342,18 +342,18 @@ nextflow_workflow {
                     """
                     input[0] = Channel.of(
                         [
-                           [id:"cycif-tonsil"],
-                           [
-                               "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/imaging/ome-tiff/cycif-tonsil-cycle1.ome.tif",
-                               "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/imaging/ome-tiff/cycif-tonsil-cycle2.ome.tif"
-                           ]
+                            [id:"cycif-tonsil"],
+                            [
+                                "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/imaging/ome-tiff/cycif-tonsil-cycle1.ome.tif",
+                                "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/imaging/ome-tiff/cycif-tonsil-cycle2.ome.tif"
+                            ]
                         ],
                         [
-                           [id:"cycif-tonsil2"],
-                           [
-                               "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/imaging/ome-tiff/cycif-tonsil-cycle2.ome.tif",
-                               "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/imaging/ome-tiff/cycif-tonsil-cycle3.ome.tif"
-                           ]
+                            [id:"cycif-tonsil2"],
+                            [
+                                "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/imaging/ome-tiff/cycif-tonsil-cycle2.ome.tif",
+                                "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/imaging/ome-tiff/cycif-tonsil-cycle3.ome.tif"
+                            ]
                         ]
 
                     )
@@ -396,11 +396,11 @@ nextflow_workflow {
                     """
                     input[0] = Channel.of(
                         [
-                           [id:"TEST1"],
-                           [
-                               "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/imaging/ome-tiff/cycif-tonsil-cycle1.ome.tif",
-                               "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/imaging/ome-tiff/cycif-tonsil-cycle2.ome.tif"
-                           ]
+                            [id:"TEST1"],
+                            [
+                                "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/imaging/ome-tiff/cycif-tonsil-cycle1.ome.tif",
+                                "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/imaging/ome-tiff/cycif-tonsil-cycle2.ome.tif"
+                            ]
                         ]
                     )
                     """
@@ -434,11 +434,11 @@ nextflow_workflow {
                     """
                     input[0] = Channel.of(
                         [
-                           [id:"TEST1"],
-                           [
-                               "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/imaging/ome-tiff/cycif-tonsil-cycle1.ome.tif",
-                               "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/imaging/ome-tiff/cycif-tonsil-cycle2.ome.tif"
-                           ]
+                            [id:"TEST1"],
+                            [
+                                "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/imaging/ome-tiff/cycif-tonsil-cycle1.ome.tif",
+                                "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/imaging/ome-tiff/cycif-tonsil-cycle2.ome.tif"
+                            ]
                         ]
                     )
                     """
@@ -476,18 +476,18 @@ nextflow_workflow {
                     """
                     input[0] = Channel.of(
                         [
-                           [id:"TEST1"],
-                           [
-                               "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/imaging/ome-tiff/cycif-tonsil-cycle1.ome.tif",
-                               "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/imaging/ome-tiff/cycif-tonsil-cycle2.ome.tif"
-                           ]
+                            [id:"TEST1"],
+                            [
+                                "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/imaging/ome-tiff/cycif-tonsil-cycle1.ome.tif",
+                                "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/imaging/ome-tiff/cycif-tonsil-cycle2.ome.tif"
+                            ]
                         ],
                         [
-                           [id:"TEST2"],
-                           [
-                               "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/imaging/ome-tiff/cycif-tonsil-cycle3.ome.tif",
-                               "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/imaging/ome-tiff/cycif-tonsil-cycle1.ome.tif"
-                           ]
+                            [id:"TEST2"],
+                            [
+                                "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/imaging/ome-tiff/cycif-tonsil-cycle3.ome.tif",
+                                "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/imaging/ome-tiff/cycif-tonsil-cycle1.ome.tif"
+                            ]
                         ]
 
                     )
@@ -514,7 +514,7 @@ nextflow_workflow {
                             ImageUtils.getImageMetadata("$outputDir/illumination_correction/basicpy/cycif-tonsil-cycle2.ome-ffp.tiff"),
                             ImageUtils.getImageMetadata("$outputDir/illumination_correction/basicpy/cycif-tonsil-cycle3.ome-dfp.tiff"),
                             ImageUtils.getImageMetadata("$outputDir/illumination_correction/basicpy/cycif-tonsil-cycle3.ome-ffp.tiff")
-                       ).match()
+                        ).match()
                     },
                     { assert workflow.success }
                 )

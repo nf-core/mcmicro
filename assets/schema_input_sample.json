@@ -33,6 +33,6 @@
                 "errorMessage": "provide path to ffp illumination correction file(s) if illumination parameter is manual"
             }
         },
-        "required": ["sample","image_directory"]
+        "required": ["sample", "image_directory"]
     }
 }

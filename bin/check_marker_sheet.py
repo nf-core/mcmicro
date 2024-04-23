@@ -44,7 +44,7 @@ class RowChecker:
                 (default "sample").
             first_col (str): The name of the column that contains the cycles number.
             second_col (str): The name of the column that contains the number of channels.
-            third_col (str): The name of the column that contains the image tiles file 
+            third_col (str): The name of the column that contains the image tiles file
                 path (default "tiff").
 
         """
@@ -191,7 +191,7 @@ def check_marker_sheet(file_in, file_out):
             marker_dict[key].append(value)
 
     # uniqueness of marker name in marker sheet
-            
+
     tmp_name_list = []
     for name in marker_dict['marker_name']:
         if name in tmp_name_list:
@@ -200,7 +200,7 @@ def check_marker_sheet(file_in, file_out):
             tmp_name_list.append(name)
 
     # uniqueness of (channel, cycle) tuple in marker sheet
-    
+
     tmp_tup_list = []
     for i in range(len(marker_dict[list(marker_dict.keys())[0]])):
         curr_tup = (marker_dict['channel_number'][i], marker_dict['cycle_number'][i])
@@ -208,13 +208,13 @@ def check_marker_sheet(file_in, file_out):
             raise Exception('Duplicate (channel_number, cycle_number) tuple in marker sheet!')
         else:
             tmp_tup_list.append(curr_tup)
-        
+
     # cycle and channel are 1-based so 0 should throw an exception
     # cycle and channel cannot have skips and must be in order
-            
+
     if int(marker_dict['channel_number'][0]) <= 0 or int(marker_dict['cycle_number'][0]) <= 0:
         raise Exception('channel_number and cycle number in the marker sheet are 1-based, so cannot be 0 or negative!')
-    
+
     for i in range(1, len(marker_dict[list(marker_dict.keys())[0]])):
         if ( (marker_dict['channel_number'][i] != marker_dict['channel_number'][i-1]) and
              (int(marker_dict['channel_number'][i]) != int(marker_dict['channel_number'][i-1])+1) ):
@@ -235,7 +235,7 @@ def check_marker_sheet(file_in, file_out):
                 curr_row_list.append(marker_dict[k][i])
             curr_row_str = ','.join(curr_row_list) + "\n"
             fout.write(curr_row_str)
-        
+
 
     '''
     required_columns = {"channel_number", "cycle_number", "marker_name", "excitation_wavelength", "emission_wavelength"}

@@ -10,20 +10,21 @@
 
 ## Samplesheet input
 
-
-You will need to create a samplesheet with information about the samples you would like to analyse before running the pipeline. We currently accept 2 formats for the input samplesheets.  One format is one row per sample and the other is one row per sample per cycle.  Use the parameter `input_sample` for one row per sample or the parameter `input_cycle` for one row per sample per cycle, to specify its location. It has to be a comma-separated file with a header row and either two (input_sample) or four (input_cycle) columns as shown in the examples below.
+You will need to create a samplesheet with information about the samples you would like to analyse before running the pipeline. We currently accept 2 formats for the input samplesheets. One format is one row per sample and the other is one row per sample per cycle. Use the parameter `input_sample` for one row per sample or the parameter `input_cycle` for one row per sample per cycle, to specify its location. It has to be a comma-separated file with a header row and either two (input_sample) or four (input_cycle) columns as shown in the examples below.
 
 ```bash
 --input_cycle '[path to one row per sample per cycle samplesheet file]'
 ```
+
 **OR**
+
 ```bash
 --input_sample '[path to one row per sample samplesheet file]'
 ```
 
 ### Samplesheet with one row per sample per cycle
 
-The `sample` identifier must be the same for multiple cycles of the same sample.  All the files from the same sample will be run in a single run of Ashlar in the cycle order that they appear in the samplesheet.  If illumination correction is requested using Basicpy each cycle will be corrected separately.
+The `sample` identifier must be the same for multiple cycles of the same sample. All the files from the same sample will be run in a single run of Ashlar in the cycle order that they appear in the samplesheet. If illumination correction is requested using Basicpy each cycle will be corrected separately.
 
 ```csv title="samplesheet_cycle.csv"
 sample,cycle_number,channel_count,image_tiles
@@ -32,12 +33,12 @@ TEST1,2,10,/path/to/image/cycif-tonsil-cycle2.ome.tif
 TEST1,3,10,/path/to/image/cycif-tonsil-cycle3.ome.tif
 ```
 
-| Column    | Description                                                                                                                                                                            |
-| --------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `sample`  | Custom sample name. |
-| `cycle_number` | Integer giving the cycle for the file in the current row.                                                             |
-| `channel_count` | Integer giving the total number of channels in the file in the current row.                                                             |
-| `image_tiles` | Full path to the input image file.                                                             |
+| Column          | Description                                                                 |
+| --------------- | --------------------------------------------------------------------------- |
+| `sample`        | Custom sample name.                                                         |
+| `cycle_number`  | Integer giving the cycle for the file in the current row.                   |
+| `channel_count` | Integer giving the total number of channels in the file in the current row. |
+| `image_tiles`   | Full path to the input image file.                                          |
 
 An [example one row per sample per cycle samplesheet](../assets/samplesheet_1_row_sample_cycle.csv) has been provided with the pipeline.
 
@@ -50,10 +51,10 @@ sample,image_directory
 TEST1,/path/to/image/directory
 ```
 
-| Column    | Description                                                                                                                                                                            |
-| --------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `sample`  | Custom sample name. |
-| `image_directory` | Full path to directory containing input image files.                                                              |
+| Column            | Description                                          |
+| ----------------- | ---------------------------------------------------- |
+| `sample`          | Custom sample name.                                  |
+| `image_directory` | Full path to directory containing input image files. |
 
 An [example one row per sample samplesheet](../assets/samplesheet_1_row_sample.csv) has been provided with the pipeline.
 
