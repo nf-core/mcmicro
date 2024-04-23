@@ -44,7 +44,7 @@ An [example one row per sample per cycle samplesheet](../assets/samplesheet_1_ro
 
 ### Samplesheet with one row per sample
 
-All image files in the `image_directory` will be run individually by Ashlar.
+All per-cycle image files in the `image_directory` for a given sample will be run in a single run of Ashlar. If illumination correction is requested using Basicpy each cycle will be corrected separately.
 
 ```csv title="samplesheet_sample.csv"
 sample,image_directory
@@ -65,7 +65,7 @@ An [example one row per sample samplesheet](../assets/samplesheet_1_row_sample.c
 The typical command for running the one row per sample per cycle pipeline is as follows:
 
 ```bash
-nextflow run ~/github/mcmicro-nf-core/main.nf --input_cycle ~/github/mcmicro-nf-core/assets/samplesheet_1_row_sample_cycle.csv --outdir ./output --marker_sheet ~/github/mcmicro-nf-core/assets/markers_1.csv -profile test_work -params-file ~/github/mcmicro-nf-core/conf/workflow.json
+nextflow run nf-core/mcmicro --input_cycle ./samplesheet_cycle.csv --outdir ./results --marker_sheet markers.csv -profile docker
 ```
 
 # One row per sample
@@ -73,7 +73,7 @@ nextflow run ~/github/mcmicro-nf-core/main.nf --input_cycle ~/github/mcmicro-nf-
 The typical command for running the one row per sample pipeline is as follows:
 
 ```bash
-nextflow run ~/github/mcmicro-nf-core/main.nf --input_sample ~/github/mcmicro-nf-core/assets/samplesheet_1_row_sample.csv --outdir ./output --marker_sheet ~/github/mcmicro-nf-core/assets/markers_1.csv -profile test_work -params-file ~/github/mcmicro-nf-core/conf/workflow.json
+nextflow run nf-core/mcmicro --input_sample ./samplesheet_sample.csv --outdir ./results --marker_sheet markers.csv -profile docker
 ```
 
 This will launch the pipeline with the `docker` configuration profile. See below for more information about profiles.
