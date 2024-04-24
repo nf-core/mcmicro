@@ -86,7 +86,8 @@ workflow PIPELINE_INITIALISATION {
     def input_type
 
     if (input_sample) {
-        sample_sheet_index_map = make_sample_sheet_index_map(input_sample)
+        // FIXME toString works around nextflow#4944 - remove when fixed
+        sample_sheet_index_map = make_sample_sheet_index_map(input_sample.toString())
         ch_samplesheet = Channel.fromSamplesheet(
             "input_sample",
             //parameters_schema: parameters_schema,
@@ -94,7 +95,8 @@ workflow PIPELINE_INITIALISATION {
         )
         .map { make_ashlar_input_sample(it, sample_sheet_index_map) }
     } else if (input_cycle) {
-        sample_sheet_index_map = make_sample_sheet_index_map(input_cycle)
+        // FIXME toString works around nextflow#4944 - remove when fixed
+        sample_sheet_index_map = make_sample_sheet_index_map(input_cycle.toString())
         ch_samplesheet = Channel.fromSamplesheet(
             "input_cycle",
             //parameters_schema: parameters_schema,
