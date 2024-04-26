@@ -8,8 +8,6 @@ include { SAMPLESHEET_CHECK  } from '../../modules/local/samplesheet_check' */
 include { MARKER_SHEET_CHECK  } from '../../modules/local/marker_sheet_check'
 include { SAMPLE_AND_MARKER_SHEET_CHECK } from '../../modules/local/sample_and_marker_sheet_check'
 
-parameters_schema = "assets/nextflow_schema.json"
-
 workflow INPUT_CHECK {
     take:
     input_type          // either 'sample' or 'cycle'
@@ -24,7 +22,6 @@ workflow INPUT_CHECK {
         SAMPLESHEET_CHECK ( input_type, samplesheet_sample )
         input = Channel.fromSamplesheet(
             "input_sample",
-            parameters_schema: parameters_schema,
             skip_duplicate_check: false)
         */
         SAMPLE_AND_MARKER_SHEET_CHECK ( params.input_sample, params.marker_sheet )
@@ -33,7 +30,6 @@ workflow INPUT_CHECK {
         SAMPLESHEET_CHECK ( input_type, samplesheet_cycle )
         input = Channel.fromSamplesheet(
             "input_cycle",
-            parameters_schema: parameters_schema,
             skip_duplicate_check: false)
         */
         SAMPLE_AND_MARKER_SHEET_CHECK ( params.input_cycle, params.marker_sheet )
@@ -42,7 +38,6 @@ workflow INPUT_CHECK {
     MARKER_SHEET_CHECK ( params.marker_sheet )
     marker = Channel.fromSamplesheet(
         "marker_sheet",
-        parameters_schema: parameters_schema,
         skip_duplicate_check: false
         )
 
