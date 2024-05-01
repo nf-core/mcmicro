@@ -1,2 +1,2 @@
-sample,image_directory,dfp,ffp
-TEST1,/home/pollen/HITS/nextflow/test_mcmicro-nf-core/input_sample,https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/imaging/ome-tiff/cycif-tonsil-dfp.ome.tif,https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/imaging/ome-tiff/cycif-tonsil-ffp.ome.tif
+sample,image_directory,cycle_images,dfp,ffp
+TEST1,https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/imaging/ome-tiff,cycif-tonsil-cycle1.ome.tif,https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/imaging/ome-tiff/cycif-tonsil-dfp.ome.tif,https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/imaging/ome-tiff/cycif-tonsil-ffp.ome.tif
