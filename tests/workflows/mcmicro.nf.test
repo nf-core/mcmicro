@@ -1,0 +1,31 @@
+nextflow_workflow {
+
+    name "test mcmicro workflow"
+    script "workflows/mcmicro.nf"
+    workflow "MCMICRO"
+
+    test("test 1") {
+
+        when {
+            params {
+                input_sample = "$projectDir/assets/samplesheet-test.csv"
+                marker_sheet = "$projectDir/assets/markers-test.csv"
+            }
+            workflow {
+                """
+                input[0] = Channel.of(
+                    [[id:"TEST1"], ["https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/imaging/ome-tiff/cycif-tonsil-cycle1.ome.tif"]]
+                )
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success },
+                { assert snapshot(workflow.out.versions).match("versions") }
+            )
+        }
+
+    }
+}

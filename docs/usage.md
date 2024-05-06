@@ -10,54 +10,70 @@
 
 ## Samplesheet input
 
-You will need to create a samplesheet with information about the samples you would like to analyse before running the pipeline. Use this parameter to specify its location. It has to be a comma-separated file with 3 columns, and a header row as shown in the examples below.
+You will need to create a samplesheet with information about the samples you would like to analyse before running the pipeline. We currently accept 2 formats for the input samplesheets. One format is one row per sample and the other is one row per sample per cycle. Use the parameter `input_sample` for one row per sample or the parameter `input_cycle` for one row per sample per cycle, to specify its location. It has to be a comma-separated file with a header row and either two (input_sample) or four (input_cycle) columns as shown in the examples below.
 
 ```bash
---input '[path to samplesheet file]'
+--input_cycle '[path to one row per sample per cycle samplesheet file]'
 ```
 
-### Multiple runs of the same sample
+**OR**
 
-The `sample` identifiers have to be the same when you have re-sequenced the same sample more than once e.g. to increase sequencing depth. The pipeline will concatenate the raw reads before performing any downstream analysis. Below is an example for the same sample sequenced across 3 lanes:
-
-```csv title="samplesheet.csv"
-sample,fastq_1,fastq_2
-CONTROL_REP1,AEG588A1_S1_L002_R1_001.fastq.gz,AEG588A1_S1_L002_R2_001.fastq.gz
-CONTROL_REP1,AEG588A1_S1_L003_R1_001.fastq.gz,AEG588A1_S1_L003_R2_001.fastq.gz
-CONTROL_REP1,AEG588A1_S1_L004_R1_001.fastq.gz,AEG588A1_S1_L004_R2_001.fastq.gz
+```bash
+--input_sample '[path to one row per sample samplesheet file]'
 ```
 
-### Full samplesheet
+### Samplesheet with one row per sample per cycle
 
-The pipeline will auto-detect whether a sample is single- or paired-end using the information provided in the samplesheet. The samplesheet can have as many columns as you desire, however, there is a strict requirement for the first 3 columns to match those defined in the table below.
+The `sample` identifier must be the same for multiple cycles of the same sample. All the files from the same sample will be run in a single run of Ashlar in the cycle order that they appear in the samplesheet. If illumination correction is requested using Basicpy each cycle will be corrected separately.
 
-A final samplesheet file consisting of both single- and paired-end data may look something like the one below. This is for 6 samples, where `TREATMENT_REP3` has been sequenced twice.
-
-```csv title="samplesheet.csv"
-sample,fastq_1,fastq_2
-CONTROL_REP1,AEG588A1_S1_L002_R1_001.fastq.gz,AEG588A1_S1_L002_R2_001.fastq.gz
-CONTROL_REP2,AEG588A2_S2_L002_R1_001.fastq.gz,AEG588A2_S2_L002_R2_001.fastq.gz
-CONTROL_REP3,AEG588A3_S3_L002_R1_001.fastq.gz,AEG588A3_S3_L002_R2_001.fastq.gz
-TREATMENT_REP1,AEG588A4_S4_L003_R1_001.fastq.gz,
-TREATMENT_REP2,AEG588A5_S5_L003_R1_001.fastq.gz,
-TREATMENT_REP3,AEG588A6_S6_L003_R1_001.fastq.gz,
-TREATMENT_REP3,AEG588A6_S6_L004_R1_001.fastq.gz,
+```csv title="samplesheet_cycle.csv"
+sample,cycle_number,channel_count,image_tiles
+TEST1,1,10,/path/to/image/cycif-tonsil-cycle1.ome.tif
+TEST1,2,10,/path/to/image/cycif-tonsil-cycle2.ome.tif
+TEST1,3,10,/path/to/image/cycif-tonsil-cycle3.ome.tif
 ```
 
-| Column    | Description                                                                                                                                                                            |
-| --------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `sample`  | Custom sample name. This entry will be identical for multiple sequencing libraries/runs from the same sample. Spaces in sample names are automatically converted to underscores (`_`). |
-| `fastq_1` | Full path to FastQ file for Illumina short reads 1. File has to be gzipped and have the extension ".fastq.gz" or ".fq.gz".                                                             |
-| `fastq_2` | Full path to FastQ file for Illumina short reads 2. File has to be gzipped and have the extension ".fastq.gz" or ".fq.gz".                                                             |
+| Column          | Description                                                                 |
+| --------------- | --------------------------------------------------------------------------- |
+| `sample`        | Custom sample name.                                                         |
+| `cycle_number`  | Integer giving the cycle for the file in the current row.                   |
+| `channel_count` | Integer giving the total number of channels in the file in the current row. |
+| `image_tiles`   | Full path to the input image file.                                          |
 
-An [example samplesheet](../assets/samplesheet.csv) has been provided with the pipeline.
+An [example one row per sample per cycle samplesheet](../assets/samplesheet_1_row_sample_cycle.csv) has been provided with the pipeline.
+
+### Samplesheet with one row per sample
+
+All per-cycle image files in the `image_directory` for a given sample will be run in a single run of Ashlar. If illumination correction is requested using Basicpy each cycle will be corrected separately.
+
+```csv title="samplesheet_sample.csv"
+sample,image_directory
+TEST1,/path/to/image/directory
+```
+
+| Column            | Description                                          |
+| ----------------- | ---------------------------------------------------- |
+| `sample`          | Custom sample name.                                  |
+| `image_directory` | Full path to directory containing input image files. |
+
+An [example one row per sample samplesheet](../assets/samplesheet_1_row_sample.csv) has been provided with the pipeline.
 
 ## Running the pipeline
 
-The typical command for running the pipeline is as follows:
+# One row per sample per cycle
+
+The typical command for running the one row per sample per cycle pipeline is as follows:
 
 ```bash
-nextflow run nf-core/mcmicro --input ./samplesheet.csv --outdir ./results --genome GRCh37 -profile docker
+nextflow run nf-core/mcmicro --input_cycle ./samplesheet_cycle.csv --outdir ./results --marker_sheet markers.csv -profile docker
+```
+
+# One row per sample
+
+The typical command for running the one row per sample pipeline is as follows:
+
+```bash
+nextflow run nf-core/mcmicro --input_sample ./samplesheet_sample.csv --outdir ./results --marker_sheet markers.csv -profile docker
 ```
 
 This will launch the pipeline with the `docker` configuration profile. See below for more information about profiles.

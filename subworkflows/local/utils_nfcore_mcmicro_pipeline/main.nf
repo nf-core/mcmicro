@@ -8,6 +8,8 @@
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
+import groovy.io.FileType
+
 include { UTILS_NFVALIDATION_PLUGIN } from '../../nf-core/utils_nfvalidation_plugin'
 include { paramsSummaryMap          } from 'plugin/nf-validation'
 include { fromSamplesheet           } from 'plugin/nf-validation'
@@ -35,7 +37,8 @@ workflow PIPELINE_INITIALISATION {
     monochrome_logs   // boolean: Do not use coloured log outputs
     nextflow_cli_args //   array: List of positional nextflow CLI args
     outdir            //  string: The output directory where the results will be saved
-    input             //  string: Path to input samplesheet
+    input_cycle       //  string: Path to input_cycle samplesheet
+    input_sample      //  string: Path to input_sample samplesheet
 
     main:
 
@@ -80,8 +83,32 @@ workflow PIPELINE_INITIALISATION {
     //
     // Create channel from input file provided through params.input
     //
-    Channel
-        .fromSamplesheet("input")
+    def input_type
+
+    if (input_sample) {
+        // FIXME toString works around nextflow#4944 - remove when fixed
+        sample_sheet_index_map = make_sample_sheet_index_map(input_sample.toString())
+        ch_samplesheet = Channel.fromSamplesheet(
+            "input_sample",
+            //parameters_schema: parameters_schema,
+            skip_duplicate_check: false
+        )
+        .map { make_ashlar_input_sample(it, sample_sheet_index_map) }
+    } else if (input_cycle) {
+        // FIXME toString works around nextflow#4944 - remove when fixed
+        sample_sheet_index_map = make_sample_sheet_index_map(input_cycle.toString())
+        ch_samplesheet = Channel.fromSamplesheet(
+            "input_cycle",
+            //parameters_schema: parameters_schema,
+            skip_duplicate_check: false
+        )
+        .map { [[id:it[0]], it[3]] }
+        .groupTuple()
+    } else {
+        error "Either input_sample or input_cycle is required."
+    }
+
+    ch_samplesheet
         .map {
             validateInputSamplesheet(it)
         }
@@ -138,7 +165,17 @@ workflow PIPELINE_COMPLETION {
 // Check and validate pipeline parameters
 //
 def validateInputParameters() {
-    // TODO: Add param validation.
+    // TODO: missing outdir parameter not getting caught by schema check
+    //       even though listed as required in schema
+    if (!params.outdir) {
+        error "outdir parameter must be provided."
+    }
+
+    if (params.input_sample && params.input_cycle) {
+        error "You must specify EITHER input_sample OR input_cycle, but not both."
+    } else if(!params.input_sample && !params.input_cycle) {
+        error "You must specify either input_sample or input_cycle."
+    }
 }
 
 //
@@ -147,6 +184,57 @@ def validateInputParameters() {
 def validateInputSamplesheet(input) {
     // TODO: Add sample sheet validation.
     return input
+}
+
+def make_sample_sheet_index_map(String sample_sheet_path) {
+    def sample_sheet_index_map = [:]
+    def header
+    new File(sample_sheet_path).withReader { header_list = it.readLine().split(',') }
+    def ctr = 0
+    header_list.each { value ->
+        sample_sheet_index_map[value] = ctr
+        ctr = ctr + 1
+    }
+    return sample_sheet_index_map
+}
+
+def make_ashlar_input_sample(ArrayList sample_sheet_row, Map sample_sheet_index_map) {
+    sample_name_index = sample_sheet_index_map['sample']
+    image_dir_path_index = sample_sheet_index_map['image_directory']
+    if (sample_sheet_index_map.keySet().collect().contains("cycle_images")) {
+        tmp_path = sample_sheet_row[image_dir_path_index]
+        if (tmp_path[-1] != "/") {
+            tmp_path = "${tmp_path}/"
+        }
+        cycle_images = sample_sheet_row[sample_sheet_index_map['cycle_images']].split(';').collect{ "${tmp_path}${it}" }
+        cycle_images.each{ file_path ->
+            def file_test = file(file_path)
+            if (!file_test.exists()) {
+                error "Error: ${file_path} does not exist!"
+            }
+        }
+    } else {
+        // TODO: remove this option or allow it to grab all files when no column in the samplesheet?
+        cycle_images = []
+        def image_dir = new File(sample_sheet_row[image_dir_path_index])
+        image_dir.eachFileRecurse (FileType.FILES) {
+            if(it.toString().endsWith(".ome.tif")){
+                cycle_images << file(it)
+            }
+        }
+    }
+
+    ashlar_input = [[id:sample_sheet_row[sample_name_index]], cycle_images]
+
+    return ashlar_input
+}
+
+def make_ashlar_input_cycle(ArrayList sample_sheet_row, Map sample_sheet_index_map) {
+    sample_name_index = sample_sheet_index_map['sample']
+    image_tiles_path_index = sample_sheet_index_map['image_tiles']
+    ashlar_input = [[id:sample_sheet_row[sample_name_index]], sample_sheet_row[image_tiles_path_index]]
+
+    return ashlar_input
 }
 
 //
