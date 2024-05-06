@@ -28,7 +28,6 @@ nextflow_workflow {
                         assert snapshot (
                             path("$outputDir/registration/ashlar/TEST1.ome.tif"),
                             path("$outputDir/segmentation/deepcell_mesmer/mask_TEST1.tif"),
-                            path("$outputDir/input_validation/marker_sheet_check/marker_sheet.valid.csv"),
                             CsvUtils.roundAndHashCsv("$outputDir/quantification/mcquant/TEST1_mask_TEST1.csv"),
                         ).match()
                     },
@@ -60,7 +59,6 @@ nextflow_workflow {
                         assert snapshot (
                             path("$outputDir/registration/ashlar/TEST1.ome.tif"),
                             path("$outputDir/segmentation/deepcell_mesmer/mask_TEST1.tif"),
-                            path("$outputDir/input_validation/marker_sheet_check/marker_sheet.valid.csv"),
                             CsvUtils.roundAndHashCsv("$outputDir/quantification/mcquant/TEST1_mask_TEST1.csv")
                         ).match()
                     },
@@ -93,7 +91,6 @@ nextflow_workflow {
                         assert snapshot (
                             ImageUtils.getImageMetadata("$outputDir/registration/ashlar/TEST1.ome.tif"),
                             ImageUtils.getImageMetadata("$outputDir/segmentation/deepcell_mesmer/mask_TEST1.tif"),
-                            path("$outputDir/input_validation/marker_sheet_check/marker_sheet.valid.csv"),
                             CsvUtils.summarizeCsv("$outputDir/quantification/mcquant/TEST1_mask_TEST1.csv"),
                             ImageUtils.getImageMetadata("$outputDir/illumination_correction/basicpy/cycif-tonsil-cycle1.ome-dfp.tiff"),
                             ImageUtils.getImageMetadata("$outputDir/illumination_correction/basicpy/cycif-tonsil-cycle1.ome-ffp.tiff")
@@ -127,7 +124,6 @@ nextflow_workflow {
                         assert snapshot (
                             path("$outputDir/registration/ashlar/TEST1.ome.tif"),
                             path("$outputDir/segmentation/deepcell_mesmer/mask_TEST1.tif"),
-                            path("$outputDir/input_validation/marker_sheet_check/marker_sheet.valid.csv"),
                             CsvUtils.roundAndHashCsv("$outputDir/quantification/mcquant/TEST1_mask_TEST1.csv")
                         ).match()
                     },
@@ -158,7 +154,6 @@ nextflow_workflow {
                         assert snapshot (
                             path("$outputDir/registration/ashlar/TEST1.ome.tif"),
                             path("$outputDir/segmentation/deepcell_mesmer/mask_TEST1.tif"),
-                            path("$outputDir/input_validation/marker_sheet_check/marker_sheet.valid.csv"),
                             CsvUtils.roundAndHashCsv("$outputDir/quantification/mcquant/TEST1_mask_TEST1.csv")
                         ).match()
                     },
@@ -190,7 +185,6 @@ nextflow_workflow {
                         assert snapshot (
                             path("$outputDir/registration/ashlar/TEST1.ome.tif"),
                             path("$outputDir/segmentation/deepcell_mesmer/mask_TEST1.tif"),
-                            path("$outputDir/input_validation/marker_sheet_check/marker_sheet.valid.csv"),
                             CsvUtils.roundAndHashCsv("$outputDir/quantification/mcquant/TEST1_mask_TEST1.csv")
                         ).match()
                     },
@@ -228,7 +222,6 @@ nextflow_workflow {
                         assert snapshot (
                             path("$outputDir/registration/ashlar/cycif-tonsil.ome.tif"),
                             path("$outputDir/segmentation/deepcell_mesmer/mask_cycif-tonsil.tif"),
-                            path("$outputDir/input_validation/marker_sheet_check/marker_sheet.valid.csv"),
                             CsvUtils.roundAndHashCsv("$outputDir/quantification/mcquant/cycif-tonsil_mask_cycif-tonsil.csv")
                         ).match()
                     },
@@ -275,7 +268,6 @@ nextflow_workflow {
                             path("$outputDir/registration/ashlar/cycif-tonsil2.ome.tif"),
                             path("$outputDir/segmentation/deepcell_mesmer/mask_cycif-tonsil.tif"),
                             path("$outputDir/segmentation/deepcell_mesmer/mask_cycif-tonsil2.tif"),
-                            path("$outputDir/input_validation/marker_sheet_check/marker_sheet.valid.csv"),
                             CsvUtils.roundAndHashCsv("$outputDir/quantification/mcquant/cycif-tonsil_mask_cycif-tonsil.csv"),
                             CsvUtils.roundAndHashCsv("$outputDir/quantification/mcquant/cycif-tonsil2_mask_cycif-tonsil2.csv"),
                         ).match()
@@ -315,7 +307,6 @@ nextflow_workflow {
                         assert snapshot (
                             ImageUtils.getImageMetadata("$outputDir/registration/ashlar/cycif-tonsil.ome.tif"),
                             ImageUtils.getImageMetadata("$outputDir/segmentation/deepcell_mesmer/mask_cycif-tonsil.tif"),
-                            path("$outputDir/input_validation/marker_sheet_check/marker_sheet.valid.csv"),
                             CsvUtils.summarizeCsv("$outputDir/quantification/mcquant/cycif-tonsil_mask_cycif-tonsil.csv"),
                             ImageUtils.getImageMetadata("$outputDir/illumination_correction/basicpy/cycif-tonsil-cycle1.ome-dfp.tiff"),
                             ImageUtils.getImageMetadata("$outputDir/illumination_correction/basicpy/cycif-tonsil-cycle1.ome-ffp.tiff"),
@@ -369,7 +360,6 @@ nextflow_workflow {
                             ImageUtils.getImageMetadata("$outputDir/registration/ashlar/cycif-tonsil2.ome.tif"),
                             ImageUtils.getImageMetadata("$outputDir/segmentation/deepcell_mesmer/mask_cycif-tonsil.tif"),
                             path("$outputDir/segmentation/deepcell_mesmer/mask_cycif-tonsil2.tif"),
-                            path("$outputDir/input_validation/marker_sheet_check/marker_sheet.valid.csv"),
                             CsvUtils.summarizeCsv("$outputDir/quantification/mcquant/cycif-tonsil_mask_cycif-tonsil.csv"),
                             CsvUtils.summarizeCsv("$outputDir/quantification/mcquant/cycif-tonsil2_mask_cycif-tonsil2.csv"),
                             ImageUtils.getImageMetadata("$outputDir/illumination_correction/basicpy/cycif-tonsil-cycle1.ome-dfp.tiff"),
@@ -413,7 +403,6 @@ nextflow_workflow {
                         assert snapshot (
                             path("$outputDir/registration/ashlar/TEST1.ome.tif"),
                             path("$outputDir/segmentation/deepcell_mesmer/mask_TEST1.tif"),
-                            path("$outputDir/input_validation/marker_sheet_check/marker_sheet.valid.csv"),
                             CsvUtils.roundAndHashCsv("$outputDir/quantification/mcquant/TEST1_mask_TEST1.csv")
                         ).match()
                     },
@@ -451,7 +440,6 @@ nextflow_workflow {
                         assert snapshot (
                             ImageUtils.getImageMetadata("$outputDir/registration/ashlar/TEST1.ome.tif"),
                             ImageUtils.getImageMetadata("$outputDir/segmentation/deepcell_mesmer/mask_TEST1.tif"),
-                            path("$outputDir/input_validation/marker_sheet_check/marker_sheet.valid.csv"),
                             CsvUtils.summarizeCsv("$outputDir/quantification/mcquant/TEST1_mask_TEST1.csv"),
                             ImageUtils.getImageMetadata("$outputDir/illumination_correction/basicpy/cycif-tonsil-cycle1.ome-dfp.tiff"),
                             ImageUtils.getImageMetadata("$outputDir/illumination_correction/basicpy/cycif-tonsil-cycle1.ome-ffp.tiff"),
@@ -505,7 +493,6 @@ nextflow_workflow {
                             // TODO Check whether this can be reverted to a
                             // plain `path` snapshot with Ashlar 1.18.
                             ImageUtils.getImageMetadata("$outputDir/segmentation/deepcell_mesmer/mask_TEST2.tif"),
-                            path("$outputDir/input_validation/marker_sheet_check/marker_sheet.valid.csv"),
                             CsvUtils.summarizeCsv("$outputDir/quantification/mcquant/TEST1_mask_TEST1.csv"),
                             CsvUtils.summarizeCsv("$outputDir/quantification/mcquant/TEST2_mask_TEST2.csv"),
                             ImageUtils.getImageMetadata("$outputDir/illumination_correction/basicpy/cycif-tonsil-cycle1.ome-dfp.tiff"),

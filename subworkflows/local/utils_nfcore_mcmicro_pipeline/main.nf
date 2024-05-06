@@ -9,6 +9,7 @@
 */
 
 import groovy.io.FileType
+import groovy.json.JsonSlurper
 
 include { UTILS_NFVALIDATION_PLUGIN } from '../../nf-core/utils_nfvalidation_plugin'
 include { paramsSummaryMap          } from 'plugin/nf-validation'
@@ -84,35 +85,44 @@ workflow PIPELINE_INITIALISATION {
     // Create channel from input file provided through params.input
     //
     def input_type
-
     if (input_sample) {
-        // FIXME toString works around nextflow#4944 - remove when fixed
-        sample_sheet_index_map = make_sample_sheet_index_map(input_sample.toString())
+        input_type = "sample"
         ch_samplesheet = Channel.fromSamplesheet(
             "input_sample",
-            //parameters_schema: parameters_schema,
             skip_duplicate_check: false
         )
-        .map { make_ashlar_input_sample(it, sample_sheet_index_map) }
+        .tap { ch_raw_samplesheet }
+        .map { validateInputSamplesheetRow(it, input_type) }
+        .map { make_ashlar_input_sample(it) }
+
     } else if (input_cycle) {
-        // FIXME toString works around nextflow#4944 - remove when fixed
-        sample_sheet_index_map = make_sample_sheet_index_map(input_cycle.toString())
+        input_type = "cycle"
         ch_samplesheet = Channel.fromSamplesheet(
             "input_cycle",
-            //parameters_schema: parameters_schema,
             skip_duplicate_check: false
         )
+        .tap { ch_raw_samplesheet }
+        .map { validateInputSamplesheetRow(it, input_type) }
         .map { [[id:it[0]], it[3]] }
         .groupTuple()
+
     } else {
         error "Either input_sample or input_cycle is required."
     }
 
-    ch_samplesheet
-        .map {
-            validateInputSamplesheet(it)
-        }
-        .set { ch_samplesheet }
+    Channel.fromSamplesheet(
+        "marker_sheet",
+        skip_duplicate_check: false
+        )
+        .tap { markersheet_data }
+        .toList()
+        .map{ validateInputMarkersheet(it) }
+
+    ch_raw_samplesheet
+        .toList()
+        .concat(markersheet_data)
+        .toList()
+        .map { validateInputSamplesheetMarkersheet(it, input_type) }
 
     emit:
     samplesheet = ch_samplesheet
@@ -165,11 +175,6 @@ workflow PIPELINE_COMPLETION {
 // Check and validate pipeline parameters
 //
 def validateInputParameters() {
-    // TODO: missing outdir parameter not getting caught by schema check
-    //       even though listed as required in schema
-    if (!params.outdir) {
-        error "outdir parameter must be provided."
-    }
 
     if (params.input_sample && params.input_cycle) {
         error "You must specify EITHER input_sample OR input_cycle, but not both."
@@ -181,42 +186,145 @@ def validateInputParameters() {
 //
 // Validate channels from input samplesheet
 //
-def validateInputSamplesheet(input) {
-    // TODO: Add sample sheet validation.
-    return input
-}
 
-def make_sample_sheet_index_map(String sample_sheet_path) {
-    def sample_sheet_index_map = [:]
-    def header
-    new File(sample_sheet_path).withReader { header_list = it.readLine().split(',') }
-    def ctr = 0
-    header_list.each { value ->
-        sample_sheet_index_map[value] = ctr
-        ctr = ctr + 1
+def validateInputMarkersheet( sheet_data ) {
+
+    def idx_marker_name = input_sheet_index("marker", "marker_name")
+    def idx_channel_number = input_sheet_index("marker", "channel_number")
+    def idx_cycle_number = input_sheet_index("marker", "cycle_number")
+    def marker_name_list = []
+    def channel_number_list = []
+    def cycle_number_list = []
+
+    sheet_data.each { curr_list ->
+        def idx = 0
+        curr_list.each { curr_val ->
+            curr_pair = [-1, -1]
+            if (idx == idx_marker_name) {
+                if (marker_name_list.contains(curr_val)) {
+                    error("Error: duplicate marker name found in marker sheet!")
+                } else {
+                    marker_name_list.add(curr_val)
+                }
+            } else if (idx == idx_channel_number) {
+                if (curr_val <= 0) {
+                    error("Error: channel_number must be >= 1")
+                } else if (channel_number_list && (curr_val != channel_number_list[-1] && curr_val != channel_number_list[-1].toInteger() + 1)) {
+                    error("Error: channel_number cannot skip values and must be in order!")
+                } else {
+                    channel_number_list.add(curr_val)
+                }
+            } else if (idx == idx_cycle_number) {
+                if (curr_val <= 0) {
+                    error("Error: cycle_number must be >= 1")
+                } else if (cycle_number_list && (curr_val != cycle_number_list[-1] && curr_val != cycle_number_list[-1].toInteger() + 1)) {
+                    error("Error: cycle_number cannot skip values and must be in order!")
+                } else {
+                    cycle_number_list.add(curr_val)
+                }
+            }
+            idx++
+        }
     }
-    return sample_sheet_index_map
+
+    // uniqueness of (channel, cycle) tuple in marker sheet
+    def test_tuples = [channel_number_list, cycle_number_list].transpose()
+    if ( test_tuples.size() != test_tuples.unique( false ).size() ) {
+        error("Error: duplicate (channel,cycle) pair")
+    }
+
+    return sheet_data
 }
 
-def make_ashlar_input_sample(ArrayList sample_sheet_row, Map sample_sheet_index_map) {
-    sample_name_index = sample_sheet_index_map['sample']
-    image_dir_path_index = sample_sheet_index_map['image_directory']
-    if (sample_sheet_index_map.keySet().collect().contains("cycle_images")) {
-        tmp_path = sample_sheet_row[image_dir_path_index]
+// function that returns the index of a given column from a given sheet
+//   as defined in the schema file.
+//   (will need to be updated when the schema files change)
+def input_sheet_index( sheet_type, column_name ) {
+
+    def index_map = [:]
+    if (sheet_type == "sample") {
+        index_map = [sample: 0, image_directory: 1, cycle_images: 2, dfp: 3, ffp: 4]
+    } else if (sheet_type == "cycle") {
+        index_map = [sample: 0, cycle_number: 1, channel_count: 2, image_tiles: 3, dfp: 4, ffp: 5]
+    } else if (sheet_type == "marker") {
+        index_map = [channel_number: 0, cycle_number: 1, marker_name: 2, filter: 3,
+                        excitation_wavelength: 4, emission_wavelength: 5]
+    } else {
+        error("Error: bad sheet type: $sheet_type")
+    }
+
+    return index_map[column_name]
+}
+
+def validateInputSamplesheetRow ( row, mode ) {
+    // TODO: Add sample sheet validation for cycle inputs
+
+    if (mode == "sample") {
+        // check for the existence of all files under cycle_image column in the given image_directory
+        if (row.size() >= 3 && row[2] != []) {
+            def file_list = row[2].split(" ")
+            file_list.each { curr_file ->
+                def curr_path = new File(row[1].toString() + "/" + curr_file)
+                if (!curr_path.exists()) {
+                    error("Error: file in samplesheet not found: $curr_path")
+                }
+            }
+        }
+    }
+
+    return row
+}
+
+def validateInputSamplesheetMarkersheet ( sheet_data, mode ) {
+    if (mode == 'cycle' ) {
+        def ctr = 0
+        def sample_cycle_list = []
+        def marker_cycle_list = []
+        def idx_sample_cycle = input_sheet_index("cycle", "cycle_number")
+        def idx_marker_cycle = input_sheet_index("marker", "cycle_number")
+
+        sheet_data.each { curr_list ->
+            if (ctr == 0) {
+                curr_list.each { curr_sublist ->
+                    sample_cycle_list.add(curr_sublist[idx_sample_cycle])
+                }
+            } else {
+                marker_cycle_list.add(curr_list[idx_marker_cycle])
+            }
+            ctr++
+        }
+        if (marker_cycle_list.unique() != sample_cycle_list.unique() ) {
+            error("Error: cycle_number in sample and marker sheets must match 1:1!")
+        }
+    } else if ( mode == 'sample' ) {
+        // TODO: add validation for 1 row per sample samplesheet & markersheet correspondence
+    } else {
+        error("Error: bad mode $mode in validateInputSamplesheetMarkersheet()")
+    }
+}
+
+def make_ashlar_input_sample( samplesheet_row ) {
+
+    def cycle_images = []
+    def index_sample_cycle_images = input_sheet_index("sample", "cycle_images")
+    def index_sample_image_directory = input_sheet_index("sample","image_directory")
+    def index_sample_sample = input_sheet_index("sample", "sample")
+
+    if (samplesheet_row[index_sample_cycle_images]) {
+        def tmp_path = samplesheet_row[index_sample_image_directory]
         if (tmp_path[-1] != "/") {
             tmp_path = "${tmp_path}/"
         }
-        cycle_images = sample_sheet_row[sample_sheet_index_map['cycle_images']].split(';').collect{ "${tmp_path}${it}" }
+        cycle_images = samplesheet_row[index_sample_cycle_images].split(' ').collect{ "${tmp_path}${it}" }
         cycle_images.each{ file_path ->
-            def file_test = file(file_path)
+            def file_test = new File(file_path)
             if (!file_test.exists()) {
-                error "Error: ${file_path} does not exist!"
+                Nextflow.error("Error: ${file_path} does not exist!")
             }
         }
     } else {
         // TODO: remove this option or allow it to grab all files when no column in the samplesheet?
-        cycle_images = []
-        def image_dir = new File(sample_sheet_row[image_dir_path_index])
+        def image_dir = samplesheet_row[index_sample_image_directory]
         image_dir.eachFileRecurse (FileType.FILES) {
             if(it.toString().endsWith(".ome.tif")){
                 cycle_images << file(it)
@@ -224,17 +332,7 @@ def make_ashlar_input_sample(ArrayList sample_sheet_row, Map sample_sheet_index_
         }
     }
 
-    ashlar_input = [[id:sample_sheet_row[sample_name_index]], cycle_images]
-
-    return ashlar_input
-}
-
-def make_ashlar_input_cycle(ArrayList sample_sheet_row, Map sample_sheet_index_map) {
-    sample_name_index = sample_sheet_index_map['sample']
-    image_tiles_path_index = sample_sheet_index_map['image_tiles']
-    ashlar_input = [[id:sample_sheet_row[sample_name_index]], sample_sheet_row[image_tiles_path_index]]
-
-    return ashlar_input
+    return [[id:samplesheet_row[index_sample_sample]], cycle_images]
 }
 
 //
@@ -266,7 +364,7 @@ def toolBibliographyText() {
     return reference_text
 }
 
-def methodsDescriptionText(mqc_methods_yaml) {
+def methodsDescriptionText( mqc_methods_yaml ) {
     // Convert  to a named map so can be used as with familar NXF ${workflow} variable syntax in the MultiQC YML file
     def meta = [:]
     meta.workflow = workflow.toMap()

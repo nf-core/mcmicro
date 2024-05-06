@@ -12,16 +12,13 @@ include { paramsSummaryMultiqc   } from '../subworkflows/nf-core/utils_nfcore_pi
 include { softwareVersionsToYAML } from '../subworkflows/nf-core/utils_nfcore_pipeline'
 include { methodsDescriptionText } from '../subworkflows/local/utils_nfcore_mcmicro_pipeline'
 include { MULTIQC                } from '../modules/nf-core/multiqc/main'
-
-include { INPUT_CHECK } from '../subworkflows/local/input_check'
-
-include { BASICPY } from '../modules/nf-core/basicpy/main'
-include { ASHLAR } from '../modules/nf-core/ashlar/main'
-include { BACKSUB } from '../modules/nf-core/backsub/main'
-include { CELLPOSE } from '../modules/nf-core/cellpose/main'
-include { DEEPCELL_MESMER } from '../modules/nf-core/deepcell/mesmer/main'
-include { MCQUANT } from '../modules/nf-core/mcquant/main'
-include { SCIMAP_MCMICRO } from '../modules/nf-core/scimap/mcmicro/main'
+include { BASICPY                } from '../modules/nf-core/basicpy/main'
+include { ASHLAR                 } from '../modules/nf-core/ashlar/main'
+include { BACKSUB                } from '../modules/nf-core/backsub/main'
+include { CELLPOSE               } from '../modules/nf-core/cellpose/main'
+include { DEEPCELL_MESMER        } from '../modules/nf-core/deepcell/mesmer/main'
+include { MCQUANT                } from '../modules/nf-core/mcquant/main'
+include { SCIMAP_MCMICRO         } from '../modules/nf-core/scimap/mcmicro/main'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -119,9 +116,6 @@ workflow MCMICRO {
         ch_ffp = []
     }
 
-    INPUT_CHECK( input_type, params.input_sample, params.input_cycle, params.marker_sheet )
-
-    // ASHLAR(ch_samplesheet.ashlar_input, [], [])
     ASHLAR(ch_samplesheet, ch_dfp, ch_ffp)
     ch_versions = ch_versions.mix(ASHLAR.out.versions)
 
