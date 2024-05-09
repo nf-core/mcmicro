@@ -9,7 +9,6 @@
 */
 
 import groovy.io.FileType
-import groovy.json.JsonSlurper
 
 include { UTILS_NFVALIDATION_PLUGIN } from '../../nf-core/utils_nfvalidation_plugin'
 include { paramsSummaryMap          } from 'plugin/nf-validation'
