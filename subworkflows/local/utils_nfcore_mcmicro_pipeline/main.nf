@@ -319,7 +319,7 @@ def make_ashlar_input_sample( samplesheet_row ) {
         cycle_images.each{ file_path ->
             def file_test = new File(file_path)
             if (!file_test.exists()) {
-                Nextflow.error("Error: ${file_path} does not exist!")
+                error("Error: ${file_path} does not exist!")
             }
         }
     } else {
