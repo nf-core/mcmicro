@@ -194,8 +194,10 @@ def validateInputMarkersheet( sheet_data ) {
     def marker_name_list = []
     def channel_number_list = []
     def cycle_number_list = []
+    def outstr = ""
 
     sheet_data.each { curr_list ->
+        outstr = outstr + curr_list.join(",") + '\n'
         def idx = 0
         curr_list.each { curr_val ->
             curr_pair = [-1, -1]
@@ -231,6 +233,17 @@ def validateInputMarkersheet( sheet_data ) {
     if ( test_tuples.size() != test_tuples.unique( false ).size() ) {
         error("Error: duplicate (channel,cycle) pair")
     }
+
+    // output validated csv
+    // TODO: should we have a function like input_sheet_index below that outputs the headers for each type of sheet?
+    def markersheet_header = "channel_number,cycle_number,marker_name,filter,excitation_wavelength,emission_wavelength\n"
+    outstr = markersheet_header + outstr
+    def base_marker_valid_path = "$params.outdir/validation/markersheet/"
+    File dir_marker_valid = new File(base_marker_valid_path)
+    if (!dir_mvarker_valid.exists()) {
+        dir_marker_valid.mkdirs()
+    }
+    new File(base_marker_valid_path + "markersheet.valid.csv").text = outstr
 
     return sheet_data
 }
