@@ -88,14 +88,12 @@ workflow PIPELINE_INITIALISATION {
         input_type = "sample"
         ch_samplesheet = Channel.fromSamplesheet("input_sample")
         .tap { ch_raw_samplesheet }
-        .map { validateInputSamplesheetRow(it, input_type) }
         .map { make_ashlar_input_sample(it) }
 
     } else if (input_cycle) {
         input_type = "cycle"
         ch_samplesheet = Channel.fromSamplesheet("input_cycle")
         .tap { ch_raw_samplesheet }
-        .map { validateInputSamplesheetRow(it, input_type) }
         .map { [[id:it[0]], it[3]] }
         .groupTuple()
 
@@ -260,25 +258,6 @@ def input_sheet_index( sheet_type, column_name ) {
     return index_map[column_name]
 }
 
-def validateInputSamplesheetRow ( row, mode ) {
-    // TODO: Add sample sheet validation for cycle inputs
-
-    if (mode == "sample") {
-        // check for the existence of all files under cycle_image column in the given image_directory
-        if (row.size() >= 3 && row[2] != []) {
-            def file_list = row[2].split(" ")
-            file_list.each { curr_file ->
-                def curr_path = new File(row[1].toString() + "/" + curr_file)
-                if (!curr_path.exists()) {
-                    error("File in samplesheet not found: $curr_path")
-                }
-            }
-        }
-    }
-
-    return row
-}
-
 def validateInputSamplesheetMarkersheet ( sheet_data, mode ) {
     if (mode == 'cycle' ) {
         def ctr = 0
@@ -309,34 +288,16 @@ def validateInputSamplesheetMarkersheet ( sheet_data, mode ) {
 
 def make_ashlar_input_sample( samplesheet_row ) {
 
-    def cycle_images = []
-    def index_sample_cycle_images = input_sheet_index("sample", "cycle_images")
-    def index_sample_image_directory = input_sheet_index("sample","image_directory")
-    def index_sample_sample = input_sheet_index("sample", "sample")
+    def cycle_image_list = []
+    def (sample,image_directory,cycle_images,dfp,ffp) = samplesheet_row
 
-    if (samplesheet_row[index_sample_cycle_images]) {
-        def tmp_path = samplesheet_row[index_sample_image_directory]
-        if (tmp_path[-1] != "/") {
-            tmp_path = "${tmp_path}/"
-        }
-        cycle_images = samplesheet_row[index_sample_cycle_images].split(' ').collect{ "${tmp_path}${it}" }
-        cycle_images.each{ file_path ->
-            def file_test = new File(file_path)
-            if (!file_test.exists()) {
-                error("Error: ${file_path} does not exist!")
-            }
-        }
-    } else {
-        // TODO: remove this option or allow it to grab all files when no column in the samplesheet?
-        def image_dir = samplesheet_row[index_sample_image_directory]
-        image_dir.eachFileRecurse (FileType.FILES) {
-            if(it.toString().endsWith(".ome.tif")){
-                cycle_images << file(it)
-            }
+    image_directory.eachFileRecurse (FileType.FILES) {
+        if(it.toString().endsWith(".ome.tif")){
+            cycle_image_list << file(it)
         }
     }
 
-    return [[id:samplesheet_row[index_sample_sample]], cycle_images]
+    return [[id:sample], cycle_image_list]
 }
 
 //

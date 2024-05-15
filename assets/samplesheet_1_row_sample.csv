@@ -1,2 +1,2 @@
-sample,image_directory,cycle_images
-TEST1,https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/imaging/ome-tiff,cycif-tonsil-cycle1.ome.tif
+sample,image_directory
+TEST1,https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/imaging/ome-tiff
