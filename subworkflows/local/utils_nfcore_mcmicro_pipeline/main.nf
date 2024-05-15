@@ -86,20 +86,14 @@ workflow PIPELINE_INITIALISATION {
     def input_type
     if (input_sample) {
         input_type = "sample"
-        ch_samplesheet = Channel.fromSamplesheet(
-            "input_sample",
-            skip_duplicate_check: false
-        )
+        ch_samplesheet = Channel.fromSamplesheet("input_sample")
         .tap { ch_raw_samplesheet }
         .map { validateInputSamplesheetRow(it, input_type) }
         .map { make_ashlar_input_sample(it) }
 
     } else if (input_cycle) {
         input_type = "cycle"
-        ch_samplesheet = Channel.fromSamplesheet(
-            "input_cycle",
-            skip_duplicate_check: false
-        )
+        ch_samplesheet = Channel.fromSamplesheet("input_cycle")
         .tap { ch_raw_samplesheet }
         .map { validateInputSamplesheetRow(it, input_type) }
         .map { [[id:it[0]], it[3]] }
@@ -109,10 +103,7 @@ workflow PIPELINE_INITIALISATION {
         error "Either input_sample or input_cycle is required."
     }
 
-    Channel.fromSamplesheet(
-        "marker_sheet",
-        skip_duplicate_check: false
-        )
+    Channel.fromSamplesheet("marker_sheet")
         .tap { markersheet_data }
         .toList()
         .map{ validateInputMarkersheet(it) }
@@ -203,23 +194,23 @@ def validateInputMarkersheet( sheet_data ) {
             curr_pair = [-1, -1]
             if (idx == idx_marker_name) {
                 if (marker_name_list.contains(curr_val)) {
-                    error("Error: duplicate marker name found in marker sheet!")
+                    error("Duplicate marker name found in marker sheet!")
                 } else {
                     marker_name_list.add(curr_val)
                 }
             } else if (idx == idx_channel_number) {
                 if (curr_val <= 0) {
-                    error("Error: channel_number must be >= 1")
+                    error("Channel_number must be >= 1")
                 } else if (channel_number_list && (curr_val != channel_number_list[-1] && curr_val != channel_number_list[-1].toInteger() + 1)) {
-                    error("Error: channel_number cannot skip values and must be in order!")
+                    error("Channel_number cannot skip values and must be in order!")
                 } else {
                     channel_number_list.add(curr_val)
                 }
             } else if (idx == idx_cycle_number) {
                 if (curr_val <= 0) {
-                    error("Error: cycle_number must be >= 1")
+                    error("Cycle_number must be >= 1")
                 } else if (cycle_number_list && (curr_val != cycle_number_list[-1] && curr_val != cycle_number_list[-1].toInteger() + 1)) {
-                    error("Error: cycle_number cannot skip values and must be in order!")
+                    error("Cycle_number cannot skip values and must be in order!")
                 } else {
                     cycle_number_list.add(curr_val)
                 }
@@ -230,8 +221,9 @@ def validateInputMarkersheet( sheet_data ) {
 
     // uniqueness of (channel, cycle) tuple in marker sheet
     def test_tuples = [channel_number_list, cycle_number_list].transpose()
-    if ( test_tuples.size() != test_tuples.unique( false ).size() ) {
-        error("Error: duplicate (channel,cycle) pair")
+    def dups = test_tuples.countBy{ it }.findAll{ _, count -> count > 1 }*.key
+    if (dups) {
+        error("Duplicate [channel, cycle] pairs: ${dups}")
     }
 
     // output validated csv
@@ -240,7 +232,7 @@ def validateInputMarkersheet( sheet_data ) {
     outstr = markersheet_header + outstr
     def base_marker_valid_path = "$params.outdir/validation/markersheet/"
     File dir_marker_valid = new File(base_marker_valid_path)
-    if (!dir_mvarker_valid.exists()) {
+    if (!dir_marker_valid.exists()) {
         dir_marker_valid.mkdirs()
     }
     new File(base_marker_valid_path + "markersheet.valid.csv").text = outstr
@@ -262,7 +254,7 @@ def input_sheet_index( sheet_type, column_name ) {
         index_map = [channel_number: 0, cycle_number: 1, marker_name: 2, filter: 3,
                         excitation_wavelength: 4, emission_wavelength: 5]
     } else {
-        error("Error: bad sheet type: $sheet_type")
+        error("Bad sheet type: $sheet_type")
     }
 
     return index_map[column_name]
@@ -278,7 +270,7 @@ def validateInputSamplesheetRow ( row, mode ) {
             file_list.each { curr_file ->
                 def curr_path = new File(row[1].toString() + "/" + curr_file)
                 if (!curr_path.exists()) {
-                    error("Error: file in samplesheet not found: $curr_path")
+                    error("File in samplesheet not found: $curr_path")
                 }
             }
         }
@@ -306,12 +298,12 @@ def validateInputSamplesheetMarkersheet ( sheet_data, mode ) {
             ctr++
         }
         if (marker_cycle_list.unique() != sample_cycle_list.unique() ) {
-            error("Error: cycle_number in sample and marker sheets must match 1:1!")
+            error("Cycle_number in sample and marker sheets must match 1:1!")
         }
     } else if ( mode == 'sample' ) {
         // TODO: add validation for 1 row per sample samplesheet & markersheet correspondence
     } else {
-        error("Error: bad mode $mode in validateInputSamplesheetMarkersheet()")
+        error("Bad mode $mode in validateInputSamplesheetMarkersheet()")
     }
 }
 
