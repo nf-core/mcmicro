@@ -175,13 +175,13 @@ def validateInputParameters() {
 // Validate channels from input samplesheet
 //
 
-def validateInputMarkersheet( sheet_data ) {
+def validateInputMarkersheet( markersheet_data ) {
 
     def marker_name_list = []
     def channel_number_list = []
     def cycle_number_list = []
 
-    sheet_data.each { curr_list ->
+    markersheet_data.each { curr_list ->
         def (channel_number, cycle_number, marker_name) = curr_list
 
         if (marker_name_list.contains(marker_name)) {
@@ -214,22 +214,24 @@ def validateInputMarkersheet( sheet_data ) {
         error("Duplicate [channel, cycle] pairs: ${dups}")
     }
 
-    return sheet_data
+    return markersheet_data
 }
 
 def validateInputSamplesheetMarkersheet ( samplesheet_data, markersheet_data, mode ) {
-    def sample_cycle_list = samplesheet_data.collect { it[1] }
-    def marker_cycle_list = markersheet_data.collect { it[1] }
+    if (mode == "cycle") {
+        def sample_cycle_list = samplesheet_data.collect { it[1] }
+        def marker_cycle_list = markersheet_data.collect { it[1] }
 
-    if (marker_cycle_list.unique() != sample_cycle_list.unique() ) {
-        error("Cycle_number in sample and marker sheets must match 1:1!")
+        if (marker_cycle_list.unique() != sample_cycle_list.unique() ) {
+            error("Cycle_number in sample and marker sheets must match 1:1!")
+        }
     }
 }
 
 def make_ashlar_input_sample( samplesheet_row ) {
 
     def cycle_image_list = []
-    def (sample,image_directory,cycle_images,dfp,ffp) = samplesheet_row
+    def (sample,image_directory) = samplesheet_row
 
     image_directory.eachFileRecurse (FileType.FILES) {
         if(it.toString().endsWith(".ome.tif")){
