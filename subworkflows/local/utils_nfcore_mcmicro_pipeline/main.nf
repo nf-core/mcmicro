@@ -217,26 +217,6 @@ def validateInputMarkersheet( sheet_data ) {
     return sheet_data
 }
 
-// function that returns the index of a given column from a given sheet
-//   as defined in the schema file.
-//   (will need to be updated when the schema files change)
-def input_sheet_index( sheet_type, column_name ) {
-
-    def index_map = [:]
-    if (sheet_type == "sample") {
-        index_map = [sample: 0, image_directory: 1, cycle_images: 2, dfp: 3, ffp: 4]
-    } else if (sheet_type == "cycle") {
-        index_map = [sample: 0, cycle_number: 1, channel_count: 2, image_tiles: 3, dfp: 4, ffp: 5]
-    } else if (sheet_type == "marker") {
-        index_map = [channel_number: 0, cycle_number: 1, marker_name: 2, filter: 3,
-                        excitation_wavelength: 4, emission_wavelength: 5]
-    } else {
-        error("Bad sheet type: $sheet_type")
-    }
-
-    return index_map[column_name]
-}
-
 def validateInputSamplesheetMarkersheet ( samplesheet_data, markersheet_data, mode ) {
     def sample_cycle_list = samplesheet_data.collect { it[1] }
     def marker_cycle_list = markersheet_data.collect { it[1] }
