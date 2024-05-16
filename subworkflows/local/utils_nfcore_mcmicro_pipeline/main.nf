@@ -218,8 +218,8 @@ def validateInputMarkersheet( markersheet_data ) {
 
 def validateInputSamplesheetMarkersheet ( samplesheet_data, markersheet_data, mode ) {
     if (mode == "cycle") {
-        def sample_cycle_list = samplesheet_data.collect { it[1] }
-        def marker_cycle_list = markersheet_data.collect { it[1] }
+        def sample_cycle_list = samplesheet_data.collect { sample,cycle_number,channel_count,image_tiles,dfp,ffp -> cycle_number }
+        def marker_cycle_list = markersheet_data.collect { channel_number,cycle_number,marker_name,filter,excitation_wavelength,emission_wavelength -> cycle_number }
 
         if (marker_cycle_list.unique() != sample_cycle_list.unique() ) {
             error("Cycle_number in sample and marker sheets must match 1:1!")
