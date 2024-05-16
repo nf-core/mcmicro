@@ -110,7 +110,7 @@ workflow PIPELINE_INITIALISATION {
         .toList()
         .concat(markersheet_data)
         .toList()
-        .map { validateInputSamplesheetMarkersheet(it, input_type) }
+        .map { validateInputSamplesheetMarkersheet(it[0], it[1..-1], input_type) }
 
     emit:
     samplesheet = ch_samplesheet
@@ -237,31 +237,12 @@ def input_sheet_index( sheet_type, column_name ) {
     return index_map[column_name]
 }
 
-def validateInputSamplesheetMarkersheet ( sheet_data, mode ) {
-    if (mode == 'cycle' ) {
-        def ctr = 0
-        def sample_cycle_list = []
-        def marker_cycle_list = []
-        def idx_sample_cycle = input_sheet_index("cycle", "cycle_number")
-        def idx_marker_cycle = input_sheet_index("marker", "cycle_number")
+def validateInputSamplesheetMarkersheet ( samplesheet_data, markersheet_data, mode ) {
+    def sample_cycle_list = samplesheet_data.collect { it[1] }
+    def marker_cycle_list = markersheet_data.collect { it[1] }
 
-        sheet_data.each { curr_list ->
-            if (ctr == 0) {
-                curr_list.each { curr_sublist ->
-                    sample_cycle_list.add(curr_sublist[idx_sample_cycle])
-                }
-            } else {
-                marker_cycle_list.add(curr_list[idx_marker_cycle])
-            }
-            ctr++
-        }
-        if (marker_cycle_list.unique() != sample_cycle_list.unique() ) {
-            error("Cycle_number in sample and marker sheets must match 1:1!")
-        }
-    } else if ( mode == 'sample' ) {
-        // TODO: add validation for 1 row per sample samplesheet & markersheet correspondence
-    } else {
-        error("Bad mode $mode in validateInputSamplesheetMarkersheet()")
+    if (marker_cycle_list.unique() != sample_cycle_list.unique() ) {
+        error("Cycle_number in sample and marker sheets must match 1:1!")
     }
 }
 
