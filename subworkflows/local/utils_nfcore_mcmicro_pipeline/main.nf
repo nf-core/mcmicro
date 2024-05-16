@@ -177,43 +177,33 @@ def validateInputParameters() {
 
 def validateInputMarkersheet( sheet_data ) {
 
-    def idx_marker_name = input_sheet_index("marker", "marker_name")
-    def idx_channel_number = input_sheet_index("marker", "channel_number")
-    def idx_cycle_number = input_sheet_index("marker", "cycle_number")
     def marker_name_list = []
     def channel_number_list = []
     def cycle_number_list = []
-    def outstr = ""
 
     sheet_data.each { curr_list ->
-        outstr = outstr + curr_list.join(",") + '\n'
-        def idx = 0
-        curr_list.each { curr_val ->
-            curr_pair = [-1, -1]
-            if (idx == idx_marker_name) {
-                if (marker_name_list.contains(curr_val)) {
-                    error("Duplicate marker name found in marker sheet!")
-                } else {
-                    marker_name_list.add(curr_val)
-                }
-            } else if (idx == idx_channel_number) {
-                if (curr_val <= 0) {
-                    error("Channel_number must be >= 1")
-                } else if (channel_number_list && (curr_val != channel_number_list[-1] && curr_val != channel_number_list[-1].toInteger() + 1)) {
-                    error("Channel_number cannot skip values and must be in order!")
-                } else {
-                    channel_number_list.add(curr_val)
-                }
-            } else if (idx == idx_cycle_number) {
-                if (curr_val <= 0) {
-                    error("Cycle_number must be >= 1")
-                } else if (cycle_number_list && (curr_val != cycle_number_list[-1] && curr_val != cycle_number_list[-1].toInteger() + 1)) {
-                    error("Cycle_number cannot skip values and must be in order!")
-                } else {
-                    cycle_number_list.add(curr_val)
-                }
-            }
-            idx++
+        def (channel_number, cycle_number, marker_name) = curr_list
+
+        if (marker_name_list.contains(marker_name)) {
+            error("Duplicate marker name found in marker sheet!")
+        } else {
+            marker_name_list.add(marker_name)
+        }
+
+        if (channel_number <= 0) {
+            error("Channel_number must be >= 1")
+        } else if (channel_number_list && (channel_number != channel_number_list[-1] && channel_number != channel_number_list[-1] + 1)) {
+            error("Channel_number cannot skip values and must be in order!")
+        } else {
+            channel_number_list.add(channel_number)
+        }
+
+        if (cycle_number <= 0) {
+            error("Cycle_number must be >= 1")
+        } else if (cycle_number_list && (cycle_number != cycle_number_list[-1] && cycle_number != cycle_number_list[-1] + 1)) {
+            error("Cycle_number cannot skip values and must be in order!")
+        } else {
+            cycle_number_list.add(cycle_number)
         }
     }
 
@@ -223,17 +213,6 @@ def validateInputMarkersheet( sheet_data ) {
     if (dups) {
         error("Duplicate [channel, cycle] pairs: ${dups}")
     }
-
-    // output validated csv
-    // TODO: should we have a function like input_sheet_index below that outputs the headers for each type of sheet?
-    def markersheet_header = "channel_number,cycle_number,marker_name,filter,excitation_wavelength,emission_wavelength\n"
-    outstr = markersheet_header + outstr
-    def base_marker_valid_path = "$params.outdir/validation/markersheet/"
-    File dir_marker_valid = new File(base_marker_valid_path)
-    if (!dir_marker_valid.exists()) {
-        dir_marker_valid.mkdirs()
-    }
-    new File(base_marker_valid_path + "markersheet.valid.csv").text = outstr
 
     return sheet_data
 }
