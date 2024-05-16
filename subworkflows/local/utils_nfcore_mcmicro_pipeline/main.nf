@@ -189,17 +189,13 @@ def validateInputMarkersheet( markersheet_data ) {
             marker_name_list.add(marker_name)
         }
 
-        if (channel_number <= 0) {
-            error("Channel_number must be >= 1")
-        } else if (channel_number_list && (channel_number != channel_number_list[-1] && channel_number != channel_number_list[-1] + 1)) {
+        if (channel_number_list && (channel_number != channel_number_list[-1] && channel_number != channel_number_list[-1] + 1)) {
             error("Channel_number cannot skip values and must be in order!")
         } else {
             channel_number_list.add(channel_number)
         }
 
-        if (cycle_number <= 0) {
-            error("Cycle_number must be >= 1")
-        } else if (cycle_number_list && (cycle_number != cycle_number_list[-1] && cycle_number != cycle_number_list[-1] + 1)) {
+        if (cycle_number_list && (cycle_number != cycle_number_list[-1] && cycle_number != cycle_number_list[-1] + 1)) {
             error("Cycle_number cannot skip values and must be in order!")
         } else {
             cycle_number_list.add(cycle_number)

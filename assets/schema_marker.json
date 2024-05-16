@@ -9,10 +9,12 @@
         "properties": {
             "channel_number": {
                 "type": "integer",
+                "minimum": 1,
                 "errorMessage": "channel_number must be provided"
             },
             "cycle_number": {
                 "type": "integer",
+                "minimum": 1,
                 "errorMessage": "cycle_number must be provided"
             },
             "marker_name": {
