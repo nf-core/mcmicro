@@ -106,11 +106,10 @@ workflow PIPELINE_INITIALISATION {
         .toList()
         .map{ validateInputMarkersheet(it) }
 
-    ch_raw_samplesheet
+    ch_raw_samplesheet.toList()
+        .concat(markersheet_data.toList())
         .toList()
-        .concat(markersheet_data)
-        .toList()
-        .map { validateInputSamplesheetMarkersheet(it[0], it[1..-1], input_type) }
+        .map { validateInputSamplesheetMarkersheet(it[0], it[1], input_type) }
 
     emit:
     samplesheet = ch_samplesheet
@@ -181,8 +180,8 @@ def validateInputMarkersheet( markersheet_data ) {
     def channel_number_list = []
     def cycle_number_list = []
 
-    markersheet_data.each { curr_list ->
-        def (channel_number, cycle_number, marker_name) = curr_list
+    markersheet_data.each { row ->
+        def (channel_number, cycle_number, marker_name) = row
 
         if (marker_name_list.contains(marker_name)) {
             error("Duplicate marker name found in marker sheet!")
