@@ -39,6 +39,7 @@ workflow PIPELINE_INITIALISATION {
     outdir            //  string: The output directory where the results will be saved
     input_cycle       //  string: Path to input_cycle samplesheet
     input_sample      //  string: Path to input_sample samplesheet
+    marker_sheet      //  string: Path to marker_sheet
 
     main:
 
@@ -81,38 +82,40 @@ workflow PIPELINE_INITIALISATION {
     validateInputParameters()
 
     //
-    // Create channel from input file provided through params.input
+    // Create channel from input file provided through params.input_cycle or .input_sample
     //
-    def input_type
-    if (input_sample) {
-        input_type = "sample"
-        ch_samplesheet = Channel.fromSamplesheet("input_sample")
-        .tap { ch_raw_samplesheet }
-        .map { make_ashlar_input_sample(it) }
-
-    } else if (input_cycle) {
-        input_type = "cycle"
-        ch_samplesheet = Channel.fromSamplesheet("input_cycle")
-        .tap { ch_raw_samplesheet }
-        .map { [[id:it[0]], it[3]] }
-        .groupTuple()
-
-    } else {
-        error "Either input_sample or input_cycle is required."
+    if (input_cycle) {
+        // TODO: Validate that cycle_number is 1..N, in order, for all samples.
+        ch_samplesheet = Channel.fromSamplesheet('input_cycle')
+            .map{
+                sample, cycle_number, channel_count, image_tiles, dfp, ffp ->
+                [
+                    [id: sample, cycle_number: cycle_number, channel_count: channel_count],
+                    image_tiles,
+                    dfp,
+                    ffp
+                ]
+            }
+            .dump(tag: 'ch_samplesheet (cycle)')
+    } else if (input_sample) {
+        ch_samplesheet = Channel.fromSamplesheet('input_sample')
+            .flatMap { expandSampleRow(it) }
+            .dump(tag: 'ch_samplesheet (sample)')
     }
 
-    Channel.fromSamplesheet("marker_sheet")
-        .tap { markersheet_data }
+    ch_markersheet = Channel.fromSamplesheet('marker_sheet')
         .toList()
         .map{ validateInputMarkersheet(it) }
+        .dump(tag: 'ch_markersheet')
 
-    ch_raw_samplesheet.toList()
-        .concat(markersheet_data.toList())
+    ch_samplesheet.toList()
+        .concat(ch_markersheet)
         .toList()
-        .map { validateInputSamplesheetMarkersheet(it[0], it[1], input_type) }
+        .map{ samples, markers -> validateInputSamplesheetMarkersheet(samples, markers) }
 
     emit:
     samplesheet = ch_samplesheet
+    markersheet = ch_markersheet
     versions    = ch_versions
 }
 
@@ -212,29 +215,28 @@ def validateInputMarkersheet( markersheet_data ) {
     return markersheet_data
 }
 
-def validateInputSamplesheetMarkersheet ( samplesheet_data, markersheet_data, mode ) {
-    if (mode == "cycle") {
-        def sample_cycle_list = samplesheet_data.collect { sample,cycle_number,channel_count,image_tiles,dfp,ffp -> cycle_number }
-        def marker_cycle_list = markersheet_data.collect { channel_number,cycle_number,marker_name,filter,excitation_wavelength,emission_wavelength -> cycle_number }
+def validateInputSamplesheetMarkersheet ( samples, markers ) {
+    def sample_cycles = samples.collect{ meta, image_tiles, dfp, ffp -> meta.cycle_number }
+    def marker_cycles = markers.collect{ channel_number, cycle_number, marker_name, filter, excitation_wavelength, emission_wavelength -> cycle_number }
 
-        if (marker_cycle_list.unique() != sample_cycle_list.unique() ) {
-            error("Cycle_number in sample and marker sheets must match 1:1!")
-        }
+    if (marker_cycles.unique(false) != sample_cycles.unique(false) ) {
+        error("cycle_number values must match between sample and marker sheets")
     }
 }
 
-def make_ashlar_input_sample( samplesheet_row ) {
+def expandSampleRow( row ) {
+    def (sample, image_directory, dfp, ffp) = row
+    def files = []
 
-    def cycle_image_list = []
-    def (sample,image_directory) = samplesheet_row
-
-    image_directory.eachFileRecurse (FileType.FILES) {
+    file(image_directory).eachFileRecurse (FileType.FILES) {
         if(it.toString().endsWith(".ome.tif")){
-            cycle_image_list << file(it)
+            files << file(it)
         }
     }
 
-    return [[id:sample], cycle_image_list]
+    return files.withIndex(1).collect{ f, i ->
+        [[id: sample, cycle_number: i], f, dfp, ffp]
+    }
 }
 
 //

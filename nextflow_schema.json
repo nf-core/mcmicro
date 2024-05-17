@@ -63,7 +63,7 @@
                 },
                 "illumination": {
                     "type": "string",
-                    "enum": ["manual", "basicpy"],
+                    "enum": ["basicpy"],
                     "description": "input that defines type of illumination correction to be performed"
                 }
             }

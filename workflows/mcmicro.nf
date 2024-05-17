@@ -29,94 +29,43 @@ include { SCIMAP_MCMICRO         } from '../modules/nf-core/scimap/mcmicro/main'
 workflow MCMICRO {
 
     take:
-    ch_samplesheet // channel: samplesheet read in from --input
+    ch_samplesheet // channel: samplesheet read in from --input_cycle or --input_sample
+    ch_markersheet // channel: markersheet read in from --marker_sheet
 
     main:
 
     ch_versions = Channel.empty()
     ch_multiqc_files = Channel.empty()
 
-    input_type = params.input_cycle ? "cycle" : "sample"
-
-    ch_from_marker_sheet = Channel.fromSamplesheet(
-        "marker_sheet",
-        skip_duplicate_check: false
-        )
-
     //
     // MODULE: BASICPY
     //
-
-    if ( params.illumination ) {
-
-        if (params.illumination == 'basicpy') {
-
-            ch_samplesheet
-                .transpose()
-                .map { [[it[1].split('/')[-1][0..-5],it[0]], it[1]] }
-                .set { ashlar_input_keyed }
-
-                ch_samplesheet
-                    .transpose()
-                    .set { ch_basicpy_input }
-
-            BASICPY(ch_basicpy_input)
-            ch_versions = ch_versions.mix(BASICPY.out.versions)
-
-            BASICPY.out.fields
-                .transpose()
-                .map { [[it[1].getBaseName()[0..-5],it[0]], it[1]]}
-                .groupTuple()
-                .set { correction_files_keyed }
-
-            ashlar_input_keyed
-                .concat(correction_files_keyed)
-                .groupTuple()
-                .map { [it[0][1], it[1][1]] }
-                .transpose()
-                .branch {
-                    dfp: it =~ /-dfp.tiff/
-                    ffp: it =~ /-ffp.tiff/
-                }
-                .set { ordered_correction_files }
-            ch_dfp = ordered_correction_files.dfp
-                .groupTuple()
-                .map { it[1] }
-            ch_ffp = ordered_correction_files.ffp
-                .groupTuple()
-                .map { it[1] }
-
-        } else if(params.illumination == 'manual') {
-
-            if (input_type == "cycle") {
-                samplesheet = "input_cycle"
-                dfp_index = 4
-                ffp_index = 5
-            } else if (input_type == "sample") {
-                samplesheet = "input_sample"
-                dfp_index = 3
-                ffp_index = 4
+    if (params.illumination == 'basicpy') {
+        ch_basicpy_in = ch_samplesheet
+            .map{ meta, image_tiles, dfp, ffp ->
+                [meta.subMap('id', 'cycle_number'), image_tiles]
             }
-            ch_manual_illumination_correction = Channel.fromSamplesheet(
-                samplesheet,
-                skip_duplicate_check: false
-            )
-            .multiMap
-                { it ->
-                    dfp: it[dfp_index]
-                    ffp: it[ffp_index]
-                }
-
-            ch_dfp = ch_manual_illumination_correction.dfp
-            ch_ffp = ch_manual_illumination_correction.ffp
-        }
-
-    } else {
-        ch_dfp = []
-        ch_ffp = []
+            .dump(tag: 'ch_basicpy_in')
+        BASICPY(ch_basicpy_in)
+        ch_samplesheet = ch_samplesheet
+            .map{ meta, image_tiles, dfp, ffp ->
+                [meta.subMap('id', 'cycle_number'), image_tiles]
+            }
+            .join(BASICPY.out.profiles)
+            .dump(tag: 'ch_samplesheet (after BASICPY)')
     }
 
-    ASHLAR(ch_samplesheet, ch_dfp, ch_ffp)
+    ch_ashlar_in = ch_samplesheet
+        .map{ meta, image_tiles, dfp, ffp ->
+            [[id: meta.id], [meta.cycle_number, image_tiles, dfp, ffp]]
+        }
+         // FIXME: pass groupTuple size: from samplesheet cycle count
+        .groupTuple(sort: { a, b -> a[0] <=> b[0] })
+        .map{ meta, cycles -> [meta, *cycles.collect{ it[1..-1] }.transpose()]}
+        // flatten() handles list of empty-lists, turning it into a single empty list.
+        .map{ meta, images, dfps, ffps -> [meta, images, dfps.flatten(), ffps.flatten()] }
+        .dump(tag: 'ch_ashlar_in')
+    ASHLAR(ch_ashlar_in)
     ch_versions = ch_versions.mix(ASHLAR.out.versions)
 
     // // Run Background Correction

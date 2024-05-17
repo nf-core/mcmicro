@@ -33,7 +33,8 @@ include { PIPELINE_COMPLETION     } from './subworkflows/local/utils_nfcore_mcmi
 workflow NFCORE_MCMICRO {
 
     take:
-    samplesheet // channel: samplesheet read in from --input
+    samplesheet // channel: samplesheet read in from --input_cycle or --input_sample
+    markersheet // channel: markersheet read in from --marker_sheet
 
     main:
 
@@ -41,7 +42,8 @@ workflow NFCORE_MCMICRO {
     // WORKFLOW: Run pipeline
     //
     MCMICRO (
-        samplesheet
+        samplesheet,
+        markersheet
     )
 
     emit:
@@ -69,14 +71,16 @@ workflow {
         args,
         params.outdir,
         params.input_cycle,
-        params.input_sample
+        params.input_sample,
+        params.marker_sheet
     )
 
     //
     // WORKFLOW: Run main workflow
     //
     NFCORE_MCMICRO (
-        PIPELINE_INITIALISATION.out.samplesheet
+        PIPELINE_INITIALISATION.out.samplesheet,
+        PIPELINE_INITIALISATION.out.markersheet
     )
 
     //
