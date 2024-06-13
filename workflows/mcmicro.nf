@@ -79,13 +79,24 @@ workflow MCMICRO {
     ch_versions = ch_versions.mix(DEEPCELL_MESMER.out.versions)
 
     // Run Quantification
-    mcquant_in = ASHLAR.out.tif.join(DEEPCELL_MESMER.out.mask).multiMap { it ->
-        image: [it[0], it[1]]
-        mask: [it[0], it[2]]
-    }
-    MCQUANT(mcquant_in.image,
-            mcquant_in.mask,
-            [[:], file(params.marker_sheet)])
+
+    // Generate markers.csv for mcquant with just the marker_name column.
+    ch_mcquant_markers = ch_markersheet
+        .flatMap{
+            ['marker_name'] +
+            it.collect{ _1, _2, marker_name, _4, _5, _6 -> '"' + marker_name + '"' }
+        }
+        .collectFile(name: 'markers.csv', sort: false, newLine: true)
+    mcquant_in = ASHLAR.out.tif
+        .join(DEEPCELL_MESMER.out.mask)
+        .combine(ch_mcquant_markers)
+        .dump(tag: 'MCQUANT_IN')
+        .multiMap { it ->
+            image: [it[0], it[1]]
+            mask: [it[0], it[2]]
+            markers: [it[0], it[3]]
+        }
+    MCQUANT(mcquant_in.image, mcquant_in.mask, mcquant_in.markers)
     ch_versions = ch_versions.mix(MCQUANT.out.versions)
 
     /*
