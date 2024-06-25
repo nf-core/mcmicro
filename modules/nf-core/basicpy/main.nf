@@ -27,7 +27,7 @@ process BASICPY {
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        basicpy:: $VERSION
+        basicpy: $VERSION
     END_VERSIONS
     """
 
@@ -42,7 +42,7 @@ process BASICPY {
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        basicpy:: $VERSION
+        basicpy: $VERSION
     END_VERSIONS
     """
 }

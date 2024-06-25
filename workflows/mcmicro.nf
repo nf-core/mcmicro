@@ -41,12 +41,13 @@ workflow MCMICRO {
     // MODULE: BASICPY
     //
     if (params.illumination == 'basicpy') {
-        ch_basicpy_in = ch_samplesheet
+        ch_samplesheet
             .map{ meta, image_tiles, dfp, ffp ->
                 [meta.subMap('id', 'cycle_number'), image_tiles]
             }
-            .dump(tag: 'ch_basicpy_in')
-        BASICPY(ch_basicpy_in)
+            .dump(tag: 'BASICPY in')
+            | BASICPY
+        ch_versions = ch_versions.mix(BASICPY.out.versions)
         ch_samplesheet = ch_samplesheet
             .map{ meta, image_tiles, dfp, ffp ->
                 [meta.subMap('id', 'cycle_number'), image_tiles]
@@ -55,17 +56,21 @@ workflow MCMICRO {
             .dump(tag: 'ch_samplesheet (after BASICPY)')
     }
 
-    ch_ashlar_in = ch_samplesheet
+    ch_samplesheet
         .map{ meta, image_tiles, dfp, ffp ->
             [[id: meta.id], [meta.cycle_number, image_tiles, dfp, ffp]]
         }
          // FIXME: pass groupTuple size: from samplesheet cycle count
         .groupTuple(sort: { a, b -> a[0] <=> b[0] })
         .map{ meta, cycles -> [meta, *cycles.collect{ it[1..-1] }.transpose()]}
+        .dump(tag: 'ASHLAR in')
         // flatten() handles list of empty-lists, turning it into a single empty list.
-        .map{ meta, images, dfps, ffps -> [meta, images, dfps.flatten(), ffps.flatten()] }
-        .dump(tag: 'ch_ashlar_in')
-    ASHLAR(ch_ashlar_in)
+        .multiMap{ meta, images, dfps, ffps ->
+            images: [meta, images]
+            dfps: dfps.flatten()
+            ffps: ffps.flatten()
+        }
+        | ASHLAR
     ch_versions = ch_versions.mix(ASHLAR.out.versions)
 
     // // Run Background Correction
@@ -87,16 +92,16 @@ workflow MCMICRO {
             it.collect{ _1, _2, marker_name, _4, _5, _6 -> '"' + marker_name + '"' }
         }
         .collectFile(name: 'markers.csv', sort: false, newLine: true)
-    mcquant_in = ASHLAR.out.tif
+    ASHLAR.out.tif
         .join(DEEPCELL_MESMER.out.mask)
         .combine(ch_mcquant_markers)
-        .dump(tag: 'MCQUANT_IN')
+        .dump(tag: 'MCQUANT in')
         .multiMap { it ->
             image: [it[0], it[1]]
             mask: [it[0], it[2]]
             markers: [it[0], it[3]]
         }
-    MCQUANT(mcquant_in.image, mcquant_in.mask, mcquant_in.markers)
+        | MCQUANT
     ch_versions = ch_versions.mix(MCQUANT.out.versions)
 
     /*
