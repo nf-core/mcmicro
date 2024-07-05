@@ -60,7 +60,7 @@ workflow MCMICRO {
         .map{ meta, image_tiles, dfp, ffp ->
             [[id: meta.id], [meta.cycle_number, image_tiles, dfp, ffp]]
         }
-         // FIXME: pass groupTuple size: from samplesheet cycle count
+        // FIXME: pass groupTuple size: from samplesheet cycle count
         .groupTuple(sort: { a, b -> a[0] <=> b[0] })
         .map{ meta, cycles -> [meta, *cycles.collect{ it[1..-1] }.transpose()]}
         .dump(tag: 'ASHLAR in')
