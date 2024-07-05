@@ -1,140 +1,8 @@
 {
-    "sample: multiple cycle ashlar input, no illumination correction": {
-        "content": [
-            "TEST1.ome.tif:md5,9d4fca1d7ec97be3f6343eb712af9dea",
-            "mask_TEST1.tif:md5,c1075eb025f558fcadedc1f0d903ec15",
-            "marker_sheet.valid.csv:md5,93b58772a86c6eb122809f5fc29d1a66",
-            "TEST1_mask_TEST1.csv:rounded:md5,5b5036130a84dc31268007aaf3322917"
-        ],
-        "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "23.10.1"
-        },
-        "timestamp": "2024-04-22T16:02:12.196826937"
-    },
-    "sample: multiple cycle ashlar input, basicpy illumination correction": {
-        "content": [
-            {
-                "format": "OME-TIFF",
-                "type": "uint16",
-                "sizeX": 591,
-                "sizeY": 470,
-                "sizeZ": 1,
-                "sizeC": 8,
-                "sizeT": 1,
-                "physicalSizeX": 0.65,
-                "physicalSizeY": 0.65,
-                "physicalSizeZ": null
-            },
-            {
-                "format": "Tagged Image File Format",
-                "type": "int32",
-                "sizeX": 591,
-                "sizeY": 470,
-                "sizeZ": 1,
-                "sizeC": 1,
-                "sizeT": 1,
-                "physicalSizeX": 1.0,
-                "physicalSizeY": 1.0,
-                "physicalSizeZ": null
-            },
-            "marker_sheet.valid.csv:md5,93b58772a86c6eb122809f5fc29d1a66",
-            {
-                "headers": [
-                    "CellID",
-                    "DNA_6",
-                    "ELANE",
-                    "CD57",
-                    "CD45",
-                    "DNA_7",
-                    "ELANE7",
-                    "CD577",
-                    "CD457",
-                    "X_centroid",
-                    "Y_centroid",
-                    "Area",
-                    "MajorAxisLength",
-                    "MinorAxisLength",
-                    "Eccentricity",
-                    "Solidity",
-                    "Extent",
-                    "Orientation"
-                ],
-                "rowCount": 311
-            },
-            {
-                "format": "Tagged Image File Format",
-                "type": "float",
-                "sizeX": 220,
-                "sizeY": 180,
-                "sizeZ": 1,
-                "sizeC": 4,
-                "sizeT": 1,
-                "physicalSizeX": 1.0,
-                "physicalSizeY": 1.0,
-                "physicalSizeZ": null
-            },
-            {
-                "format": "Tagged Image File Format",
-                "type": "float",
-                "sizeX": 220,
-                "sizeY": 180,
-                "sizeZ": 1,
-                "sizeC": 4,
-                "sizeT": 1,
-                "physicalSizeX": 1.0,
-                "physicalSizeY": 1.0,
-                "physicalSizeZ": null
-            },
-            {
-                "format": "Tagged Image File Format",
-                "type": "float",
-                "sizeX": 220,
-                "sizeY": 180,
-                "sizeZ": 1,
-                "sizeC": 4,
-                "sizeT": 1,
-                "physicalSizeX": 1.0,
-                "physicalSizeY": 1.0,
-                "physicalSizeZ": null
-            },
-            {
-                "format": "Tagged Image File Format",
-                "type": "float",
-                "sizeX": 220,
-                "sizeY": 180,
-                "sizeZ": 1,
-                "sizeC": 4,
-                "sizeT": 1,
-                "physicalSizeX": 1.0,
-                "physicalSizeY": 1.0,
-                "physicalSizeZ": null
-            }
-        ],
-        "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "23.10.1"
-        },
-        "timestamp": "2024-04-23T11:54:16.090191859"
-    },
-    "cycle: no illumination correction; spaces in markersheet (ticket #22)": {
-        "content": [
-            "TEST1.ome.tif:md5,ae98ac74e3c818bb26c99ba4b9c2dd51",
-            "mask_TEST1.tif:md5,c1075eb025f558fcadedc1f0d903ec15",
-            "marker_sheet.valid.csv:md5,15fa6d74598c89fd01abfafa9822144d",
-            "TEST1_mask_TEST1.csv:rounded:md5,ea78917fc9b21e5b6f424627e6226da1"
-        ],
-        "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "23.10.1"
-        },
-        "timestamp": "2024-04-22T15:58:57.545086596"
-    },
     "cycle: multiple file ashlar input no correction": {
         "content": [
             "cycif-tonsil.ome.tif:md5,5f4165203545b7efe04ed5f4a6d5ac9d",
             "mask_cycif-tonsil.tif:md5,c1075eb025f558fcadedc1f0d903ec15",
-            "marker_sheet.valid.csv:md5,8b59a59f92c40da7a129a32e04458f9a",
             "cycif-tonsil_mask_cycif-tonsil.csv:rounded:md5,01286b0d3b0245d5ece0d279c0a5391e"
         ],
         "meta": {
@@ -169,7 +37,6 @@
                 "physicalSizeY": 1.0,
                 "physicalSizeZ": null
             },
-            "marker_sheet.valid.csv:md5,f1cf3d8e7d8fe5134c698f77fb29ae25",
             {
                 "headers": [
                     "CellID",
@@ -246,7 +113,6 @@
                 "physicalSizeY": 1.0,
                 "physicalSizeZ": null
             },
-            "marker_sheet.valid.csv:md5,8b59a59f92c40da7a129a32e04458f9a",
             {
                 "headers": [
                     "CellID",
@@ -353,19 +219,6 @@
         },
         "timestamp": "2024-04-23T11:53:19.871380893"
     },
-    "sample: no illumination correction": {
-        "content": [
-            "TEST1.ome.tif:md5,ae98ac74e3c818bb26c99ba4b9c2dd51",
-            "mask_TEST1.tif:md5,c1075eb025f558fcadedc1f0d903ec15",
-            "marker_sheet.valid.csv:md5,f1cf3d8e7d8fe5134c698f77fb29ae25",
-            "TEST1_mask_TEST1.csv:rounded:md5,a7c226a3d32a94dd05356c5998eae522"
-        ],
-        "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "23.10.1"
-        },
-        "timestamp": "2024-04-22T15:59:59.693635237"
-    },
     "cycle: multiple file ashlar input with multiple samples and basicpy correction": {
         "content": [
             {
@@ -405,7 +258,6 @@
                 "physicalSizeZ": null
             },
             "mask_cycif-tonsil2.tif:md5,bacaeced4f2159b8b7f3b42d173f995c",
-            "marker_sheet.valid.csv:md5,93b58772a86c6eb122809f5fc29d1a66",
             {
                 "headers": [
                     "CellID",
@@ -537,7 +389,6 @@
             "cycif-tonsil2.ome.tif:md5,ea772fef41d398ffd76cbb6354266678",
             "mask_cycif-tonsil.tif:md5,c1075eb025f558fcadedc1f0d903ec15",
             "mask_cycif-tonsil2.tif:md5,bacaeced4f2159b8b7f3b42d173f995c",
-            "marker_sheet.valid.csv:md5,93b58772a86c6eb122809f5fc29d1a66",
             "cycif-tonsil_mask_cycif-tonsil.csv:rounded:md5,5b5036130a84dc31268007aaf3322917",
             "cycif-tonsil2_mask_cycif-tonsil2.csv:rounded:md5,61eb9b30399fb29041f2d080181b6e47"
         ],
@@ -547,24 +398,10 @@
         },
         "timestamp": "2024-04-22T16:00:55.775911164"
     },
-    "sample: manual illumination correction": {
-        "content": [
-            "TEST1.ome.tif:md5,ae98ac74e3c818bb26c99ba4b9c2dd51",
-            "mask_TEST1.tif:md5,c1075eb025f558fcadedc1f0d903ec15",
-            "marker_sheet.valid.csv:md5,f1cf3d8e7d8fe5134c698f77fb29ae25",
-            "TEST1_mask_TEST1.csv:rounded:md5,a7c226a3d32a94dd05356c5998eae522"
-        ],
-        "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "23.10.1"
-        },
-        "timestamp": "2024-04-22T16:00:17.163342084"
-    },
     "cycle: no illumination correction": {
         "content": [
             "TEST1.ome.tif:md5,ae98ac74e3c818bb26c99ba4b9c2dd51",
             "mask_TEST1.tif:md5,c1075eb025f558fcadedc1f0d903ec15",
-            "marker_sheet.valid.csv:md5,f1cf3d8e7d8fe5134c698f77fb29ae25",
             "TEST1_mask_TEST1.csv:rounded:md5,a7c226a3d32a94dd05356c5998eae522"
         ],
         "meta": {
@@ -573,187 +410,10 @@
         },
         "timestamp": "2024-04-22T15:58:40.245133922"
     },
-    "sample: multiple cycle ashlar input with multiple samples and basicpy illumination correction": {
-        "content": [
-            {
-                "format": "OME-TIFF",
-                "type": "uint16",
-                "sizeX": 591,
-                "sizeY": 470,
-                "sizeZ": 1,
-                "sizeC": 8,
-                "sizeT": 1,
-                "physicalSizeX": 0.65,
-                "physicalSizeY": 0.65,
-                "physicalSizeZ": null
-            },
-            {
-                "format": "OME-TIFF",
-                "type": "uint16",
-                "sizeX": 594,
-                "sizeY": 475,
-                "sizeZ": 1,
-                "sizeC": 8,
-                "sizeT": 1,
-                "physicalSizeX": 0.65,
-                "physicalSizeY": 0.65,
-                "physicalSizeZ": null
-            },
-            {
-                "format": "Tagged Image File Format",
-                "type": "int32",
-                "sizeX": 591,
-                "sizeY": 470,
-                "sizeZ": 1,
-                "sizeC": 1,
-                "sizeT": 1,
-                "physicalSizeX": 1.0,
-                "physicalSizeY": 1.0,
-                "physicalSizeZ": null
-            },
-            {
-                "format": "Tagged Image File Format",
-                "type": "int32",
-                "sizeX": 594,
-                "sizeY": 475,
-                "sizeZ": 1,
-                "sizeC": 1,
-                "sizeT": 1,
-                "physicalSizeX": 1.0,
-                "physicalSizeY": 1.0,
-                "physicalSizeZ": null
-            },
-            "marker_sheet.valid.csv:md5,93b58772a86c6eb122809f5fc29d1a66",
-            {
-                "headers": [
-                    "CellID",
-                    "DNA_6",
-                    "ELANE",
-                    "CD57",
-                    "CD45",
-                    "DNA_7",
-                    "ELANE7",
-                    "CD577",
-                    "CD457",
-                    "X_centroid",
-                    "Y_centroid",
-                    "Area",
-                    "MajorAxisLength",
-                    "MinorAxisLength",
-                    "Eccentricity",
-                    "Solidity",
-                    "Extent",
-                    "Orientation"
-                ],
-                "rowCount": 311
-            },
-            {
-                "headers": [
-                    "CellID",
-                    "DNA_6",
-                    "ELANE",
-                    "CD57",
-                    "CD45",
-                    "DNA_7",
-                    "ELANE7",
-                    "CD577",
-                    "CD457",
-                    "X_centroid",
-                    "Y_centroid",
-                    "Area",
-                    "MajorAxisLength",
-                    "MinorAxisLength",
-                    "Eccentricity",
-                    "Solidity",
-                    "Extent",
-                    "Orientation"
-                ],
-                "rowCount": 288
-            },
-            {
-                "format": "Tagged Image File Format",
-                "type": "float",
-                "sizeX": 220,
-                "sizeY": 180,
-                "sizeZ": 1,
-                "sizeC": 4,
-                "sizeT": 1,
-                "physicalSizeX": 1.0,
-                "physicalSizeY": 1.0,
-                "physicalSizeZ": null
-            },
-            {
-                "format": "Tagged Image File Format",
-                "type": "float",
-                "sizeX": 220,
-                "sizeY": 180,
-                "sizeZ": 1,
-                "sizeC": 4,
-                "sizeT": 1,
-                "physicalSizeX": 1.0,
-                "physicalSizeY": 1.0,
-                "physicalSizeZ": null
-            },
-            {
-                "format": "Tagged Image File Format",
-                "type": "float",
-                "sizeX": 220,
-                "sizeY": 180,
-                "sizeZ": 1,
-                "sizeC": 4,
-                "sizeT": 1,
-                "physicalSizeX": 1.0,
-                "physicalSizeY": 1.0,
-                "physicalSizeZ": null
-            },
-            {
-                "format": "Tagged Image File Format",
-                "type": "float",
-                "sizeX": 220,
-                "sizeY": 180,
-                "sizeZ": 1,
-                "sizeC": 4,
-                "sizeT": 1,
-                "physicalSizeX": 1.0,
-                "physicalSizeY": 1.0,
-                "physicalSizeZ": null
-            },
-            {
-                "format": "Tagged Image File Format",
-                "type": "float",
-                "sizeX": 220,
-                "sizeY": 180,
-                "sizeZ": 1,
-                "sizeC": 4,
-                "sizeT": 1,
-                "physicalSizeX": 1.0,
-                "physicalSizeY": 1.0,
-                "physicalSizeZ": null
-            },
-            {
-                "format": "Tagged Image File Format",
-                "type": "float",
-                "sizeX": 220,
-                "sizeY": 180,
-                "sizeZ": 1,
-                "sizeC": 4,
-                "sizeT": 1,
-                "physicalSizeX": 1.0,
-                "physicalSizeY": 1.0,
-                "physicalSizeZ": null
-            }
-        ],
-        "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "23.10.1"
-        },
-        "timestamp": "2024-04-23T11:54:45.190635939"
-    },
     "cycle: manual illumination correction": {
         "content": [
             "TEST1.ome.tif:md5,ae98ac74e3c818bb26c99ba4b9c2dd51",
             "mask_TEST1.tif:md5,c1075eb025f558fcadedc1f0d903ec15",
-            "marker_sheet.valid.csv:md5,f1cf3d8e7d8fe5134c698f77fb29ae25",
             "TEST1_mask_TEST1.csv:rounded:md5,a7c226a3d32a94dd05356c5998eae522"
         ],
         "meta": {

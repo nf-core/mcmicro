@@ -17,11 +17,6 @@
                 "pattern": "^\\S+$",
                 "errorMessage": "Need to provide a path to a directory containing image files"
             },
-            "cycle_images": {
-                "type": "string",
-                "pattern": ".*$",
-                "errorMessage": "cycle images for this sample in order"
-            },
             "dfp": {
                 "type": "string",
                 "pattern": "^\\S+$",

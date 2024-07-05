@@ -1,22 +1,31 @@
 nextflow_workflow {
 
     name "Test Workflow NFCORE_MCMICRO"
-    script "main.nf"
-    workflow "NFCORE_MCMICRO"
+    script "workflows/mcmicro.nf"
+    workflow "MCMICRO"
 
 
     [
         test("cycle: no illumination correction") {
 
             when {
-                params {
-                    input_cycle = "$projectDir/assets/samplesheet_1_row_sample_cycle.csv"
-                    marker_sheet = "$projectDir/assets/markers_1.csv"
-                }
                 workflow {
                     """
                     input[0] = Channel.of(
-                        [[id:"TEST1"], ["https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/imaging/ome-tiff/cycif-tonsil-cycle1.ome.tif"]]
+                        [
+                            [id:"TEST1", cycle_number:1, channel_count:4],
+                            "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/imaging/ome-tiff/cycif-tonsil-cycle1.ome.tif",
+                            [],
+                            [],
+                        ],
+                    )
+                    input[1] = Channel.of(
+                        [
+                            [1,1,'DNA_6',[],[],[]],
+                            [2,1,'ELANE',[],[],[]],
+                            [3,1,'CD57',[],[],[]],
+                            [4,1,'CD45',[],[],[]],
+                        ],
                     )
                     """
                 }
@@ -28,40 +37,7 @@ nextflow_workflow {
                         assert snapshot (
                             path("$outputDir/registration/ashlar/TEST1.ome.tif"),
                             path("$outputDir/segmentation/deepcell_mesmer/mask_TEST1.tif"),
-                            path("$outputDir/input_validation/marker_sheet_check/marker_sheet.valid.csv"),
                             CsvUtils.roundAndHashCsv("$outputDir/quantification/mcquant/TEST1_mask_TEST1.csv"),
-                        ).match()
-                    },
-                    { assert workflow.success }
-                )
-            }
-
-        },
-
-        test("cycle: no illumination correction; spaces in markersheet (ticket #22)") {
-
-            when {
-                params {
-                    input_cycle = "$projectDir/assets/samplesheet_1_row_sample_cycle.csv"
-                    marker_sheet = "$projectDir/assets/markers_1_sp.csv"
-                }
-                workflow {
-                    """
-                    input[0] = Channel.of(
-                        [[id:"TEST1"], ["https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/imaging/ome-tiff/cycif-tonsil-cycle1.ome.tif"]]
-                    )
-                    """
-                }
-            }
-
-            then {
-                assertAll (
-                    {
-                        assert snapshot (
-                            path("$outputDir/registration/ashlar/TEST1.ome.tif"),
-                            path("$outputDir/segmentation/deepcell_mesmer/mask_TEST1.tif"),
-                            path("$outputDir/input_validation/marker_sheet_check/marker_sheet.valid.csv"),
-                            CsvUtils.roundAndHashCsv("$outputDir/quantification/mcquant/TEST1_mask_TEST1.csv")
                         ).match()
                     },
                     { assert workflow.success }
@@ -74,14 +50,25 @@ nextflow_workflow {
 
             when {
                 params {
-                    input_cycle = "$projectDir/assets/samplesheet_1_row_sample_cycle.csv"
-                    marker_sheet = "$projectDir/assets/markers_1.csv"
                     illumination = "basicpy"
                 }
                 workflow {
                     """
                     input[0] = Channel.of(
-                        [[id:"TEST1"], ["https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/imaging/ome-tiff/cycif-tonsil-cycle1.ome.tif"]]
+                        [
+                            [id:"TEST1", cycle_number:1, channel_count:4],
+                            "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/imaging/ome-tiff/cycif-tonsil-cycle1.ome.tif",
+                            [],
+                            [],
+                        ],
+                    )
+                    input[1] = Channel.of(
+                        [
+                            [1,1,'DNA_6',[],[],[]],
+                            [2,1,'ELANE',[],[],[]],
+                            [3,1,'CD57',[],[],[]],
+                            [4,1,'CD45',[],[],[]],
+                        ],
                     )
                     """
                 }
@@ -93,7 +80,6 @@ nextflow_workflow {
                         assert snapshot (
                             ImageUtils.getImageMetadata("$outputDir/registration/ashlar/TEST1.ome.tif"),
                             ImageUtils.getImageMetadata("$outputDir/segmentation/deepcell_mesmer/mask_TEST1.tif"),
-                            path("$outputDir/input_validation/marker_sheet_check/marker_sheet.valid.csv"),
                             CsvUtils.summarizeCsv("$outputDir/quantification/mcquant/TEST1_mask_TEST1.csv"),
                             ImageUtils.getImageMetadata("$outputDir/illumination_correction/basicpy/cycif-tonsil-cycle1.ome-dfp.tiff"),
                             ImageUtils.getImageMetadata("$outputDir/illumination_correction/basicpy/cycif-tonsil-cycle1.ome-ffp.tiff")
@@ -108,14 +94,25 @@ nextflow_workflow {
 
             when {
                 params {
-                    input_cycle = "$projectDir/assets/samplesheet_1_row_sample_cycle_manual.csv"
-                    marker_sheet = "$projectDir/assets/markers_1.csv"
                     illumination = "manual"
                 }
                 workflow {
                     """
                     input[0] = Channel.of(
-                        [[id:"TEST1"], ["https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/imaging/ome-tiff/cycif-tonsil-cycle1.ome.tif"]]
+                        [
+                            [id:"TEST1", cycle_number:1, channel_count:4],
+                            "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/imaging/ome-tiff/cycif-tonsil-cycle1.ome.tif",
+                            "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/imaging/ome-tiff/cycif-tonsil-dfp.ome.tif",
+                            "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/imaging/ome-tiff/cycif-tonsil-ffp.ome.tif",
+                        ],
+                    )
+                    input[1] = Channel.of(
+                        [
+                            [1,1,'DNA_6',[],[],[]],
+                            [2,1,'ELANE',[],[],[]],
+                            [3,1,'CD57',[],[],[]],
+                            [4,1,'CD45',[],[],[]],
+                        ],
                     )
                     """
                 }
@@ -127,70 +124,6 @@ nextflow_workflow {
                         assert snapshot (
                             path("$outputDir/registration/ashlar/TEST1.ome.tif"),
                             path("$outputDir/segmentation/deepcell_mesmer/mask_TEST1.tif"),
-                            path("$outputDir/input_validation/marker_sheet_check/marker_sheet.valid.csv"),
-                            CsvUtils.roundAndHashCsv("$outputDir/quantification/mcquant/TEST1_mask_TEST1.csv")
-                        ).match()
-                    },
-                    { assert workflow.success }
-                )
-            }
-        },
-
-        test("sample: no illumination correction") {
-
-            when {
-                params {
-                    input_sample = "$projectDir/assets/samplesheet_1_row_sample.csv"
-                    marker_sheet = "$projectDir/assets/markers_1.csv"
-                }
-                workflow {
-                    """
-                    input[0] = Channel.of(
-                        [[id:"TEST1"], ["https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/imaging/ome-tiff/cycif-tonsil-cycle1.ome.tif"]],
-                    )
-                    """
-                }
-            }
-
-            then {
-                assertAll (
-                    {
-                        assert snapshot (
-                            path("$outputDir/registration/ashlar/TEST1.ome.tif"),
-                            path("$outputDir/segmentation/deepcell_mesmer/mask_TEST1.tif"),
-                            path("$outputDir/input_validation/marker_sheet_check/marker_sheet.valid.csv"),
-                            CsvUtils.roundAndHashCsv("$outputDir/quantification/mcquant/TEST1_mask_TEST1.csv")
-                        ).match()
-                    },
-                    { assert workflow.success }
-                )
-            }
-        },
-
-        test("sample: manual illumination correction") {
-
-            when {
-                params {
-                    input_sample = "$projectDir/assets/samplesheet_1_row_sample_manual.csv"
-                    marker_sheet = "$projectDir/assets/markers_1.csv"
-                    illumination = "manual"
-                }
-                workflow {
-                    """
-                    input[0] = Channel.of(
-                        [[id:"TEST1"], ["https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/imaging/ome-tiff/cycif-tonsil-cycle1.ome.tif"]]
-                    )
-                    """
-                }
-            }
-
-            then {
-                assertAll (
-                    {
-                        assert snapshot (
-                            path("$outputDir/registration/ashlar/TEST1.ome.tif"),
-                            path("$outputDir/segmentation/deepcell_mesmer/mask_TEST1.tif"),
-                            path("$outputDir/input_validation/marker_sheet_check/marker_sheet.valid.csv"),
                             CsvUtils.roundAndHashCsv("$outputDir/quantification/mcquant/TEST1_mask_TEST1.csv")
                         ).match()
                     },
@@ -202,21 +135,43 @@ nextflow_workflow {
         test("cycle: multiple file ashlar input no correction") {
 
             when {
-                params {
-                    input_cycle = "$projectDir/assets/samplesheet_1_row_sample_cycle_multi.csv"
-                    marker_sheet = "$projectDir/assets/markers_multi_12.csv"
-                }
                 workflow {
                     """
                     input[0] = Channel.of(
                         [
-                            [id:"cycif-tonsil"],
-                            [
-                                "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/imaging/ome-tiff/cycif-tonsil-cycle1.ome.tif",
-                                "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/imaging/ome-tiff/cycif-tonsil-cycle2.ome.tif",
-                                "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/imaging/ome-tiff/cycif-tonsil-cycle3.ome.tif"
-                            ]
-                        ]
+                            [id:"cycif-tonsil", cycle_number:1, channel_count:4],
+                            "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/imaging/ome-tiff/cycif-tonsil-cycle1.ome.tif",
+                            [],
+                            [],
+                        ],
+                        [
+                            [id:"cycif-tonsil", cycle_number:2, channel_count:4],
+                            "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/imaging/ome-tiff/cycif-tonsil-cycle2.ome.tif",
+                            [],
+                            [],
+                        ],
+                        [
+                            [id:"cycif-tonsil", cycle_number:3, channel_count:4],
+                            "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/imaging/ome-tiff/cycif-tonsil-cycle3.ome.tif",
+                            [],
+                            [],
+                        ],
+                    )
+                    input[1] = Channel.of(
+                        [
+                            [1,1,'DNA_6',[],[],[]],
+                            [2,1,'ELANE',[],[],[]],
+                            [3,1,'CD57',[],[],[]],
+                            [4,1,'CD45',[],[],[]],
+                            [5,1,'DNA_7',[],[],[]],
+                            [6,1,'ELANE7',[],[],[]],
+                            [7,1,'CD577',[],[],[]],
+                            [8,1,'CD457',[],[],[]],
+                            [9,1,'DNA_8',[],[],[]],
+                            [10,1,'ELANE8',[],[],[]],
+                            [11,1,'CD578',[],[],[]],
+                            [12,1,'CD458',[],[],[]],
+                        ],
                     )
                     """
                 }
@@ -228,7 +183,6 @@ nextflow_workflow {
                         assert snapshot (
                             path("$outputDir/registration/ashlar/cycif-tonsil.ome.tif"),
                             path("$outputDir/segmentation/deepcell_mesmer/mask_cycif-tonsil.tif"),
-                            path("$outputDir/input_validation/marker_sheet_check/marker_sheet.valid.csv"),
                             CsvUtils.roundAndHashCsv("$outputDir/quantification/mcquant/cycif-tonsil_mask_cycif-tonsil.csv")
                         ).match()
                     },
@@ -240,28 +194,45 @@ nextflow_workflow {
         test("cycle: multiple file ashlar input with multiple samples no correction") {
 
             when {
-                params {
-                    input_cycle = "$projectDir/assets/samplesheet_1_row_sample_cycle_multi_2.csv"
-                    marker_sheet = "$projectDir/assets/markers_multi_8.csv"
-                }
                 workflow {
                     """
                     input[0] = Channel.of(
                         [
-                            [id:"cycif-tonsil"],
-                            [
-                                "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/imaging/ome-tiff/cycif-tonsil-cycle1.ome.tif",
-                                "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/imaging/ome-tiff/cycif-tonsil-cycle2.ome.tif"
-                            ]
+                            [id:"cycif-tonsil", cycle_number:1, channel_count:4],
+                            "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/imaging/ome-tiff/cycif-tonsil-cycle1.ome.tif",
+                            [],
+                            [],
                         ],
                         [
-                            [id:"cycif-tonsil2"],
-                            [
-                                "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/imaging/ome-tiff/cycif-tonsil-cycle2.ome.tif",
-                                "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/imaging/ome-tiff/cycif-tonsil-cycle3.ome.tif"
-                            ]
-                        ]
-
+                            [id:"cycif-tonsil", cycle_number:2, channel_count:4],
+                            "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/imaging/ome-tiff/cycif-tonsil-cycle2.ome.tif",
+                            [],
+                            [],
+                        ],
+                        [
+                            [id:"cycif-tonsil2", cycle_number:1, channel_count:4],
+                            "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/imaging/ome-tiff/cycif-tonsil-cycle2.ome.tif",
+                            [],
+                            [],
+                        ],
+                        [
+                            [id:"cycif-tonsil2", cycle_number:2, channel_count:4],
+                            "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/imaging/ome-tiff/cycif-tonsil-cycle3.ome.tif",
+                            [],
+                            [],
+                        ],
+                    )
+                    input[1] = Channel.of(
+                        [
+                            [1,1,'DNA_6',[],[],[]],
+                            [2,1,'ELANE',[],[],[]],
+                            [3,1,'CD57',[],[],[]],
+                            [4,1,'CD45',[],[],[]],
+                            [5,1,'DNA_7',[],[],[]],
+                            [6,1,'ELANE7',[],[],[]],
+                            [7,1,'CD577',[],[],[]],
+                            [8,1,'CD457',[],[],[]],
+                        ],
                     )
                     """
                 }
@@ -275,7 +246,6 @@ nextflow_workflow {
                             path("$outputDir/registration/ashlar/cycif-tonsil2.ome.tif"),
                             path("$outputDir/segmentation/deepcell_mesmer/mask_cycif-tonsil.tif"),
                             path("$outputDir/segmentation/deepcell_mesmer/mask_cycif-tonsil2.tif"),
-                            path("$outputDir/input_validation/marker_sheet_check/marker_sheet.valid.csv"),
                             CsvUtils.roundAndHashCsv("$outputDir/quantification/mcquant/cycif-tonsil_mask_cycif-tonsil.csv"),
                             CsvUtils.roundAndHashCsv("$outputDir/quantification/mcquant/cycif-tonsil2_mask_cycif-tonsil2.csv"),
                         ).match()
@@ -289,21 +259,45 @@ nextflow_workflow {
 
             when {
                 params {
-                    input_cycle = "$projectDir/assets/samplesheet_1_row_sample_cycle_multi.csv"
-                    marker_sheet = "$projectDir/assets/markers_multi_12.csv"
                     illumination = "basicpy"
                 }
                 workflow {
                     """
                     input[0] = Channel.of(
                         [
-                            [id:"cycif-tonsil"],
-                            [
-                                "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/imaging/ome-tiff/cycif-tonsil-cycle1.ome.tif",
-                                "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/imaging/ome-tiff/cycif-tonsil-cycle2.ome.tif",
-                                "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/imaging/ome-tiff/cycif-tonsil-cycle3.ome.tif"
-                            ]
-                        ]
+                            [id:"cycif-tonsil", cycle_number:1, channel_count:4],
+                            "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/imaging/ome-tiff/cycif-tonsil-cycle1.ome.tif",
+                            [],
+                            [],
+                        ],
+                        [
+                            [id:"cycif-tonsil", cycle_number:2, channel_count:4],
+                            "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/imaging/ome-tiff/cycif-tonsil-cycle2.ome.tif",
+                            [],
+                            [],
+                        ],
+                        [
+                            [id:"cycif-tonsil", cycle_number:3, channel_count:4],
+                            "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/imaging/ome-tiff/cycif-tonsil-cycle3.ome.tif",
+                            [],
+                            [],
+                        ],
+                    )
+                    input[1] = Channel.of(
+                        [
+                            [1,1,'DNA_6',[],[],[]],
+                            [2,1,'ELANE',[],[],[]],
+                            [3,1,'CD57',[],[],[]],
+                            [4,1,'CD45',[],[],[]],
+                            [5,1,'DNA_7',[],[],[]],
+                            [6,1,'ELANE7',[],[],[]],
+                            [7,1,'CD577',[],[],[]],
+                            [8,1,'CD457',[],[],[]],
+                            [9,1,'DNA_8',[],[],[]],
+                            [10,1,'ELANE8',[],[],[]],
+                            [11,1,'CD578',[],[],[]],
+                            [12,1,'CD458',[],[],[]],
+                        ],
                     )
                     """
                 }
@@ -315,7 +309,6 @@ nextflow_workflow {
                         assert snapshot (
                             ImageUtils.getImageMetadata("$outputDir/registration/ashlar/cycif-tonsil.ome.tif"),
                             ImageUtils.getImageMetadata("$outputDir/segmentation/deepcell_mesmer/mask_cycif-tonsil.tif"),
-                            path("$outputDir/input_validation/marker_sheet_check/marker_sheet.valid.csv"),
                             CsvUtils.summarizeCsv("$outputDir/quantification/mcquant/cycif-tonsil_mask_cycif-tonsil.csv"),
                             ImageUtils.getImageMetadata("$outputDir/illumination_correction/basicpy/cycif-tonsil-cycle1.ome-dfp.tiff"),
                             ImageUtils.getImageMetadata("$outputDir/illumination_correction/basicpy/cycif-tonsil-cycle1.ome-ffp.tiff"),
@@ -334,28 +327,47 @@ nextflow_workflow {
 
             when {
                 params {
-                    input_cycle = "$projectDir/assets/samplesheet_1_row_sample_cycle_multi_2.csv"
-                    marker_sheet = "$projectDir/assets/markers_multi_8.csv"
                     illumination = "basicpy"
                 }
                 workflow {
                     """
                     input[0] = Channel.of(
                         [
-                            [id:"cycif-tonsil"],
-                            [
-                                "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/imaging/ome-tiff/cycif-tonsil-cycle1.ome.tif",
-                                "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/imaging/ome-tiff/cycif-tonsil-cycle2.ome.tif"
-                            ]
+                            [id:"cycif-tonsil", cycle_number:1, channel_count:4],
+                            "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/imaging/ome-tiff/cycif-tonsil-cycle1.ome.tif",
+                            [],
+                            [],
                         ],
                         [
-                            [id:"cycif-tonsil2"],
-                            [
-                                "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/imaging/ome-tiff/cycif-tonsil-cycle2.ome.tif",
-                                "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/imaging/ome-tiff/cycif-tonsil-cycle3.ome.tif"
-                            ]
-                        ]
-
+                            [id:"cycif-tonsil", cycle_number:2, channel_count:4],
+                            "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/imaging/ome-tiff/cycif-tonsil-cycle2.ome.tif",
+                            [],
+                            [],
+                        ],
+                        [
+                            [id:"cycif-tonsil2", cycle_number:1, channel_count:4],
+                            "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/imaging/ome-tiff/cycif-tonsil-cycle2.ome.tif",
+                            [],
+                            [],
+                        ],
+                        [
+                            [id:"cycif-tonsil2", cycle_number:2, channel_count:4],
+                            "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/imaging/ome-tiff/cycif-tonsil-cycle3.ome.tif",
+                            [],
+                            [],
+                        ],
+                    )
+                    input[1] = Channel.of(
+                        [
+                            [1,1,'DNA_6',[],[],[]],
+                            [2,1,'ELANE',[],[],[]],
+                            [3,1,'CD57',[],[],[]],
+                            [4,1,'CD45',[],[],[]],
+                            [5,1,'DNA_7',[],[],[]],
+                            [6,1,'ELANE7',[],[],[]],
+                            [7,1,'CD577',[],[],[]],
+                            [8,1,'CD457',[],[],[]],
+                        ],
                     )
                     """
                 }
@@ -369,145 +381,8 @@ nextflow_workflow {
                             ImageUtils.getImageMetadata("$outputDir/registration/ashlar/cycif-tonsil2.ome.tif"),
                             ImageUtils.getImageMetadata("$outputDir/segmentation/deepcell_mesmer/mask_cycif-tonsil.tif"),
                             path("$outputDir/segmentation/deepcell_mesmer/mask_cycif-tonsil2.tif"),
-                            path("$outputDir/input_validation/marker_sheet_check/marker_sheet.valid.csv"),
                             CsvUtils.summarizeCsv("$outputDir/quantification/mcquant/cycif-tonsil_mask_cycif-tonsil.csv"),
                             CsvUtils.summarizeCsv("$outputDir/quantification/mcquant/cycif-tonsil2_mask_cycif-tonsil2.csv"),
-                            ImageUtils.getImageMetadata("$outputDir/illumination_correction/basicpy/cycif-tonsil-cycle1.ome-dfp.tiff"),
-                            ImageUtils.getImageMetadata("$outputDir/illumination_correction/basicpy/cycif-tonsil-cycle1.ome-ffp.tiff"),
-                            ImageUtils.getImageMetadata("$outputDir/illumination_correction/basicpy/cycif-tonsil-cycle2.ome-dfp.tiff"),
-                            ImageUtils.getImageMetadata("$outputDir/illumination_correction/basicpy/cycif-tonsil-cycle2.ome-ffp.tiff"),
-                            ImageUtils.getImageMetadata("$outputDir/illumination_correction/basicpy/cycif-tonsil-cycle3.ome-dfp.tiff"),
-                            ImageUtils.getImageMetadata("$outputDir/illumination_correction/basicpy/cycif-tonsil-cycle3.ome-ffp.tiff")
-                        ).match()
-                    },
-                    { assert workflow.success }
-                )
-            }
-        },
-
-        test("sample: multiple cycle ashlar input, no illumination correction") {
-
-            when {
-                params {
-                    input_sample = "$projectDir/assets/samplesheet_1_row_sample_multi.csv"
-                    marker_sheet = "$projectDir/assets/markers_multi_8.csv"
-                }
-                workflow {
-                    """
-                    input[0] = Channel.of(
-                        [
-                            [id:"TEST1"],
-                            [
-                                "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/imaging/ome-tiff/cycif-tonsil-cycle1.ome.tif",
-                                "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/imaging/ome-tiff/cycif-tonsil-cycle2.ome.tif"
-                            ]
-                        ]
-                    )
-                    """
-                }
-            }
-
-            then {
-                assertAll (
-                    {
-                        assert snapshot (
-                            path("$outputDir/registration/ashlar/TEST1.ome.tif"),
-                            path("$outputDir/segmentation/deepcell_mesmer/mask_TEST1.tif"),
-                            path("$outputDir/input_validation/marker_sheet_check/marker_sheet.valid.csv"),
-                            CsvUtils.roundAndHashCsv("$outputDir/quantification/mcquant/TEST1_mask_TEST1.csv")
-                        ).match()
-                    },
-                    { assert workflow.success }
-                )
-            }
-        },
-
-        test("sample: multiple cycle ashlar input, basicpy illumination correction") {
-
-            when {
-                params {
-                    input_sample = "$projectDir/assets/samplesheet_1_row_sample_multi.csv"
-                    marker_sheet = "$projectDir/assets/markers_multi_8.csv"
-                    illumination = "basicpy"
-                }
-                workflow {
-                    """
-                    input[0] = Channel.of(
-                        [
-                            [id:"TEST1"],
-                            [
-                                "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/imaging/ome-tiff/cycif-tonsil-cycle1.ome.tif",
-                                "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/imaging/ome-tiff/cycif-tonsil-cycle2.ome.tif"
-                            ]
-                        ]
-                    )
-                    """
-                }
-            }
-
-            then {
-                assertAll (
-                    {
-                        assert snapshot (
-                            ImageUtils.getImageMetadata("$outputDir/registration/ashlar/TEST1.ome.tif"),
-                            ImageUtils.getImageMetadata("$outputDir/segmentation/deepcell_mesmer/mask_TEST1.tif"),
-                            path("$outputDir/input_validation/marker_sheet_check/marker_sheet.valid.csv"),
-                            CsvUtils.summarizeCsv("$outputDir/quantification/mcquant/TEST1_mask_TEST1.csv"),
-                            ImageUtils.getImageMetadata("$outputDir/illumination_correction/basicpy/cycif-tonsil-cycle1.ome-dfp.tiff"),
-                            ImageUtils.getImageMetadata("$outputDir/illumination_correction/basicpy/cycif-tonsil-cycle1.ome-ffp.tiff"),
-                            ImageUtils.getImageMetadata("$outputDir/illumination_correction/basicpy/cycif-tonsil-cycle2.ome-dfp.tiff"),
-                            ImageUtils.getImageMetadata("$outputDir/illumination_correction/basicpy/cycif-tonsil-cycle2.ome-ffp.tiff")
-                        ).match()
-                    },
-                    { assert workflow.success }
-                )
-            }
-        },
-
-        test("sample: multiple cycle ashlar input with multiple samples and basicpy illumination correction") {
-
-            when {
-                params {
-                    input_sample = "$projectDir/assets/samplesheet_1_row_sample_multi_2.csv"
-                    marker_sheet = "$projectDir/assets/markers_multi_8.csv"
-                    illumination = "basicpy"
-                }
-                workflow {
-                    """
-                    input[0] = Channel.of(
-                        [
-                            [id:"TEST1"],
-                            [
-                                "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/imaging/ome-tiff/cycif-tonsil-cycle1.ome.tif",
-                                "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/imaging/ome-tiff/cycif-tonsil-cycle2.ome.tif"
-                            ]
-                        ],
-                        [
-                            [id:"TEST2"],
-                            [
-                                "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/imaging/ome-tiff/cycif-tonsil-cycle3.ome.tif",
-                                "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/imaging/ome-tiff/cycif-tonsil-cycle1.ome.tif"
-                            ]
-                        ]
-
-                    )
-                    """
-                }
-            }
-
-            then {
-                assertAll (
-                    {
-                        assert snapshot (
-                            ImageUtils.getImageMetadata("$outputDir/registration/ashlar/TEST1.ome.tif"),
-                            ImageUtils.getImageMetadata("$outputDir/registration/ashlar/TEST2.ome.tif"),
-                            ImageUtils.getImageMetadata("$outputDir/segmentation/deepcell_mesmer/mask_TEST1.tif"),
-                            // TODO Check whether this can be reverted to a
-                            // plain `path` snapshot with Ashlar 1.18.
-                            ImageUtils.getImageMetadata("$outputDir/segmentation/deepcell_mesmer/mask_TEST2.tif"),
-                            path("$outputDir/input_validation/marker_sheet_check/marker_sheet.valid.csv"),
-                            CsvUtils.summarizeCsv("$outputDir/quantification/mcquant/TEST1_mask_TEST1.csv"),
-                            CsvUtils.summarizeCsv("$outputDir/quantification/mcquant/TEST2_mask_TEST2.csv"),
                             ImageUtils.getImageMetadata("$outputDir/illumination_correction/basicpy/cycif-tonsil-cycle1.ome-dfp.tiff"),
                             ImageUtils.getImageMetadata("$outputDir/illumination_correction/basicpy/cycif-tonsil-cycle1.ome-ffp.tiff"),
                             ImageUtils.getImageMetadata("$outputDir/illumination_correction/basicpy/cycif-tonsil-cycle2.ome-dfp.tiff"),

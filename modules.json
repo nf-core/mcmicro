@@ -8,7 +8,8 @@
                     "ashlar": {
                         "branch": "master",
                         "git_sha": "a5a287db3590e7aa121e1251bf126c35e1418abf",
-                        "installed_by": ["modules"]
+                        "installed_by": ["modules"],
+                        "patch": "modules/nf-core/ashlar/ashlar.diff"
                     },
                     "backsub": {
                         "branch": "master",
@@ -18,7 +19,8 @@
                     "basicpy": {
                         "branch": "master",
                         "git_sha": "716ef3019b66772a817b417078edce2f7b337858",
-                        "installed_by": ["modules"]
+                        "installed_by": ["modules"],
+                        "patch": "modules/nf-core/basicpy/basicpy.diff"
                     },
                     "cellpose": {
                         "branch": "master",

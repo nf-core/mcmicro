@@ -1,0 +1,34 @@
+Changes in module 'nf-core/basicpy'
+--- modules/nf-core/basicpy/main.nf
++++ modules/nf-core/basicpy/main.nf
+@@ -8,8 +8,8 @@
+     tuple val(meta), path(image)
+ 
+     output:
+-    tuple val(meta), path("*.tiff"), emit: fields
+-    path "versions.yml"            , emit: versions
++    tuple val(meta), path("*-dfp.tiff"), path("*-ffp.tiff"), emit: profiles
++    path "versions.yml",                                     emit: versions
+ 
+     when:
+     task.ext.when == null || task.ext.when
+@@ -27,7 +27,7 @@
+ 
+     cat <<-END_VERSIONS > versions.yml
+     "${task.process}":
+-        basicpy:: $VERSION
++        basicpy: $VERSION
+     END_VERSIONS
+     """
+ 
+@@ -42,7 +42,7 @@
+ 
+     cat <<-END_VERSIONS > versions.yml
+     "${task.process}":
+-        basicpy:: $VERSION
++        basicpy: $VERSION
+     END_VERSIONS
+     """
+ }
+
+************************************************************
