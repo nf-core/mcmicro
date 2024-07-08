@@ -76,12 +76,52 @@ workflow MCMICRO {
     // // Run Background Correction
     // BACKSUB(ASHLAR.out.tif, ch_markers)
     //BACKSUB(ASHLAR.out.tif, [[id: "backsub"], params.marker_sheet])
+    /*
+    if (params.backsub) {
+        BACKSUB(ASHLAR.out.tif, [[id:"$ASHLAR.out.tif[0]['id']"], params.marker_sheet])
+        ch_segmentation_input = BACKSUB.out.backsub_tif
+        ch_versions = ch_versions.mix(BACKSUB.out.versions)
+    } else {
+    */
+        ch_segmentation_input = ASHLAR.out.tif
+    /*
+    }
+    */
+
     //ch_versions = ch_versions.mix(BACKSUB.out.versions)
 
     // Run Segmentation
 
-    DEEPCELL_MESMER(ASHLAR.out.tif, [[:],[]])
-    ch_versions = ch_versions.mix(DEEPCELL_MESMER.out.versions)
+    params.segmentation_list = params.segmentation.split(',') as List
+    mesmer_out_mask = channel.empty()
+    if ("mesmer" in params.segmentation_list) {
+        DEEPCELL_MESMER(ch_segmentation_input, [[:],[]])
+        ch_versions = ch_versions.mix(DEEPCELL_MESMER.out.versions)
+        ch_segmentation_input
+            .join(DEEPCELL_MESMER.out.mask)
+            .dump(tag: 'MCQUANT in mesmer')
+            .multiMap { it ->
+                image: [it[0], it[1]]
+                mask: [[id: it[0]['id'], segmenter: 'mesmer'], it[2]]
+            }
+            .set { ch_mesmer_out }
+        mesmer_out_mask = ch_mesmer_out.mask
+    }
+
+    cellpose_out_mask = channel.empty()
+    if ("cellpose" in params.segmentation_list) {
+        CELLPOSE( ch_segmentation_input, [] )
+        ch_versions = ch_versions.mix(CELLPOSE.out.versions)
+        ch_segmentation_input
+            .join(CELLPOSE.out.mask)
+            .dump(tag: 'MCQUANT in cellpose')
+            .multiMap { it ->
+                image: [it[0], it[1]]
+                mask: [[id: it[0]['id'], segmenter: 'cellpose'], it[2]]
+            }
+            .set { ch_cellpose_out }
+        cellpose_out_mask = ch_cellpose_out.mask
+    }
 
     // Run Quantification
 
@@ -92,17 +132,23 @@ workflow MCMICRO {
             it.collect{ _1, _2, marker_name, _4, _5, _6 -> '"' + marker_name + '"' }
         }
         .collectFile(name: 'markers.csv', sort: false, newLine: true)
+
+    ch_mcquant_masks = channel.empty()
+        .mix(mesmer_out_mask, cellpose_out_mask) // add new seg_out here when seg module added above
+        .dump(tag: "MCQUANT IN MASK")
+
     ASHLAR.out.tif
-        .join(DEEPCELL_MESMER.out.mask)
+        .combine(ch_mcquant_masks)
         .combine(ch_mcquant_markers)
-        .dump(tag: 'MCQUANT in')
+        .dump(tag: 'MCQUANT IN')
         .multiMap { it ->
             image: [it[0], it[1]]
-            mask: [it[0], it[2]]
-            markers: [it[0], it[3]]
+            mask: [it[2], it[3]]
+            markers: [it[2], it[4]]
         }
         | MCQUANT
-    ch_versions = ch_versions.mix(MCQUANT.out.versions)
+
+    ch_versions = ch_versions.mix(DEEPCELL_MESMER.out.versions)
 
     /*
     // // Run Reporting
