@@ -266,6 +266,77 @@ nextflow_workflow {
             }
         },
 
+        test("cycle: multiple file ashlar input with multiple samples no correction, multiple segmentation") {
+
+            when {
+                params {
+                    segmentation = "mesmer,cellpose"
+                }
+                workflow {
+                    """
+                    input[0] = Channel.of(
+                        [
+                            [id:"cycif-tonsil", cycle_number:1, channel_count:4],
+                            "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/imaging/ome-tiff/cycif-tonsil-cycle1.ome.tif",
+                            [],
+                            [],
+                        ],
+                        [
+                            [id:"cycif-tonsil", cycle_number:2, channel_count:4],
+                            "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/imaging/ome-tiff/cycif-tonsil-cycle2.ome.tif",
+                            [],
+                            [],
+                        ],
+                        [
+                            [id:"cycif-tonsil2", cycle_number:1, channel_count:4],
+                            "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/imaging/ome-tiff/cycif-tonsil-cycle2.ome.tif",
+                            [],
+                            [],
+                        ],
+                        [
+                            [id:"cycif-tonsil2", cycle_number:2, channel_count:4],
+                            "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/imaging/ome-tiff/cycif-tonsil-cycle3.ome.tif",
+                            [],
+                            [],
+                        ],
+                    )
+                    input[1] = Channel.of(
+                        [
+                            [1,1,'DNA_6',[],[],[]],
+                            [2,1,'ELANE',[],[],[]],
+                            [3,1,'CD57',[],[],[]],
+                            [4,1,'CD45',[],[],[]],
+                            [5,1,'DNA_7',[],[],[]],
+                            [6,1,'ELANE7',[],[],[]],
+                            [7,1,'CD577',[],[],[]],
+                            [8,1,'CD457',[],[],[]],
+                        ],
+                    )
+                    """
+                }
+            }
+
+            then {
+                assertAll (
+                    {
+                        assert snapshot (
+                            path("$outputDir/registration/ashlar/cycif-tonsil.ome.tif"),
+                            path("$outputDir/registration/ashlar/cycif-tonsil2.ome.tif"),
+                            path("$outputDir/segmentation/deepcell_mesmer/mask_cycif-tonsil.tif"),
+                            path("$outputDir/segmentation/deepcell_mesmer/mask_cycif-tonsil2.tif"),
+                            path("$outputDir/segmentation/cellpose/cycif-tonsil.ome_cp_masks.tif"),
+                            path("$outputDir/segmentation/cellpose/cycif-tonsil2.ome_cp_masks.tif"),
+                            CsvUtils.roundAndHashCsv("$outputDir/quantification/mcquant/mesmer/cycif-tonsil_mask_cycif-tonsil.csv"),
+                            CsvUtils.roundAndHashCsv("$outputDir/quantification/mcquant/mesmer/cycif-tonsil2_mask_cycif-tonsil2.csv"),
+                            CsvUtils.roundAndHashCsv("$outputDir/quantification/mcquant/cellpose/cycif-tonsil_cycif-tonsil.csv"),
+                            CsvUtils.roundAndHashCsv("$outputDir/quantification/mcquant/cellpose/cycif-tonsil2_cycif-tonsil2.csv"),
+                        ).match()
+                    },
+                    { assert workflow.success }
+                )
+            }
+        },
+
         test("cycle: multiple file ashlar input with basicpy correction") {
 
             when {
