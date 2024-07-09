@@ -106,6 +106,7 @@ workflow MCMICRO {
             }
             .set { ch_mesmer_out }
         mesmer_out_mask = ch_mesmer_out.mask
+        ch_versions = ch_versions.mix(DEEPCELL_MESMER.out.versions)
     }
 
     cellpose_out_mask = channel.empty()
@@ -121,6 +122,8 @@ workflow MCMICRO {
             }
             .set { ch_cellpose_out }
         cellpose_out_mask = ch_cellpose_out.mask
+            .dump(tag: 'MASK')
+        ch_versions = ch_versions.mix(CELLPOSE.out.versions)
     }
 
     // Run Quantification
@@ -133,22 +136,40 @@ workflow MCMICRO {
         }
         .collectFile(name: 'markers.csv', sort: false, newLine: true)
 
-    ch_mcquant_masks = channel.empty()
+    ch_mcquant_masks_markers = channel.empty()
         .mix(mesmer_out_mask, cellpose_out_mask) // add new seg_out here when seg module added above
+        .combine(ch_mcquant_markers)
         .dump(tag: "MCQUANT IN MASK")
 
-    ASHLAR.out.tif
-        .combine(ch_mcquant_masks)
-        .combine(ch_mcquant_markers)
-        .dump(tag: 'MCQUANT IN')
+    ch_mm_key = ch_mcquant_masks_markers.map { meta, mask, marker -> [meta.id, meta, mask, marker ] }
+        .dump(tag: 'MM_KEY')
+    ch_img_key = ASHLAR.out.tif.map { meta, img -> [meta.id, meta, img]}
+        .dump(tag: 'IMG KEY')
+
+    ch_img_key
+        .combine(ch_mm_key, by: 0)
+        .dump(tag: 'MCQUANT IN 1')
         .multiMap { it ->
-            image: [it[0], it[1]]
-            mask: [it[2], it[3]]
-            markers: [it[2], it[4]]
+            image: [it[1], it[2]]
+            mask: [it[3], it[4]]
+            markers: [it[3], it[5]]
         }
         | MCQUANT
 
-    ch_versions = ch_versions.mix(DEEPCELL_MESMER.out.versions)
+    /* close (not making enough input images in the channel so only running mcquant 2x)
+    ch_img_key
+        .join(ch_mm_key)
+        .dump(tag: 'MCQUANT IN 1')
+        .multiMap { it ->
+            image: [it[1], it[2]]
+            mask: [it[3], it[4]]
+            markers: [it[3], it[5]]
+        }
+        | MCQUANT
+    */
+
+
+    ch_versions = ch_versions.mix(MCQUANT.out.versions)
 
     /*
     // // Run Reporting
