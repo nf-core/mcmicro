@@ -136,38 +136,24 @@ workflow MCMICRO {
         }
         .collectFile(name: 'markers.csv', sort: false, newLine: true)
 
-    ch_mcquant_masks_markers = channel.empty()
+    ch_mcquant_masks_markers_key = channel.empty()
         .mix(mesmer_out_mask, cellpose_out_mask) // add new seg_out here when seg module added above
         .combine(ch_mcquant_markers)
-        .dump(tag: "MCQUANT IN MASK")
+        .map { meta, mask, marker -> [meta.id, meta, mask, marker ] }
+        .dump(tag: 'MCQUANT MM KEY')
 
-    ch_mm_key = ch_mcquant_masks_markers.map { meta, mask, marker -> [meta.id, meta, mask, marker ] }
-        .dump(tag: 'MM_KEY')
-    ch_img_key = ASHLAR.out.tif.map { meta, img -> [meta.id, meta, img]}
-        .dump(tag: 'IMG KEY')
+    ch_mcquant_ashlar_key = ASHLAR.out.tif.map { meta, img -> [meta.id, meta, img]}
+        .dump(tag: 'MCQUANT IMG KEY')
 
-    ch_img_key
-        .combine(ch_mm_key, by: 0)
-        .dump(tag: 'MCQUANT IN 1')
+    ch_mcquant_ashlar_key
+        .combine(ch_mcquant_masks_markers_key, by: 0)
+        .dump(tag: 'MCQUANT IN')
         .multiMap { it ->
             image: [it[1], it[2]]
             mask: [it[3], it[4]]
             markers: [it[3], it[5]]
         }
         | MCQUANT
-
-    /* close (not making enough input images in the channel so only running mcquant 2x)
-    ch_img_key
-        .join(ch_mm_key)
-        .dump(tag: 'MCQUANT IN 1')
-        .multiMap { it ->
-            image: [it[1], it[2]]
-            mask: [it[3], it[4]]
-            markers: [it[3], it[5]]
-        }
-        | MCQUANT
-    */
-
 
     ch_versions = ch_versions.mix(MCQUANT.out.versions)
 
