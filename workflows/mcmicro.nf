@@ -111,9 +111,6 @@ workflow MCMICRO {
 
     cellpose_out_mask = channel.empty()
     if ("cellpose" in params.segmentation_list) {
-        if (!params.cellpose_model) {
-            params.cellpose_model = []
-        }
         CELLPOSE( ch_segmentation_input, params.cellpose_model )
         ch_versions = ch_versions.mix(CELLPOSE.out.versions)
         ch_segmentation_input

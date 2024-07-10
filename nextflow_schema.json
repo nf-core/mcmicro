@@ -72,8 +72,6 @@
                 },
                 "cellpose_model": {
                     "type": "string",
-                    "format": "file-path",
-                    "exists": true,
                     "description": "optional model file for cellpose segmentation"
                 }
             }
