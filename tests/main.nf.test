@@ -480,5 +480,49 @@ nextflow_workflow {
             }
         },
 
+        test("cycle: no illumination correction, cellpose segmentation with pretrained model") {
+
+            when {
+                params {
+                    segmentation = "cellpose"
+                    cellpose_model = "$projectDir/assets/nucleitorch_0"
+                }
+                workflow {
+                    """
+                    input[0] = Channel.of(
+                        [
+                            [id:"TEST1", cycle_number:1, channel_count:4],
+                            "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/imaging/ome-tiff/cycif-tonsil-cycle1.ome.tif",
+                            [],
+                            [],
+                        ],
+                    )
+                    input[1] = Channel.of(
+                        [
+                            [1,1,'DNA_6',[],[],[]],
+                            [2,1,'ELANE',[],[],[]],
+                            [3,1,'CD57',[],[],[]],
+                            [4,1,'CD45',[],[],[]],
+                        ],
+                    )
+                    """
+                }
+            }
+
+            then {
+                assertAll (
+                    {
+                        assert snapshot (
+                            path("$outputDir/registration/ashlar/TEST1.ome.tif"),
+                            path("$outputDir/segmentation/cellpose/TEST1.ome_cp_masks.tif"),
+                            CsvUtils.roundAndHashCsv("$outputDir/quantification/mcquant/cellpose/TEST1_TEST1.csv"),
+                        ).match()
+                    },
+                    { assert workflow.success }
+                )
+            }
+
+        },
+
     ]
 }
