@@ -65,6 +65,10 @@
                     "type": "string",
                     "enum": ["basicpy"],
                     "description": "input that defines type of illumination correction to be performed"
+                },
+                "coreograph": {
+                    "type": "boolean",
+                    "description": "Apply coreograph module to create separate images before segmentation"
                 }
             }
         },

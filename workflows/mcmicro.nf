@@ -16,6 +16,7 @@ include { BASICPY                } from '../modules/nf-core/basicpy/main'
 include { ASHLAR                 } from '../modules/nf-core/ashlar/main'
 include { BACKSUB                } from '../modules/nf-core/backsub/main'
 include { CELLPOSE               } from '../modules/nf-core/cellpose/main'
+include { COREOGRAPH             } from '../modules/nf-core/coreograph/main'
 include { DEEPCELL_MESMER        } from '../modules/nf-core/deepcell/mesmer/main'
 include { MCQUANT                } from '../modules/nf-core/mcquant/main'
 include { SCIMAP_MCMICRO         } from '../modules/nf-core/scimap/mcmicro/main'
@@ -78,9 +79,20 @@ workflow MCMICRO {
     //BACKSUB(ASHLAR.out.tif, [[id: "backsub"], params.marker_sheet])
     //ch_versions = ch_versions.mix(BACKSUB.out.versions)
 
+    // Run Coreograph
+    if (params.coreograph) {
+        COREOGRAPH(ASHLAR.out.tif)
+        COREOGRAPH.out.cores
+            .transpose()
+            .map { meta, img -> [[id: meta.id, subimg: img.toString().split('/')[-1].tokenize(".")[0]], img]}
+            .set { ch_segmentation_input }
+    } else {
+        ch_segmentation_input = ASHLAR.out.tif
+    }
+
     // Run Segmentation
 
-    DEEPCELL_MESMER(ASHLAR.out.tif, [[:],[]])
+    DEEPCELL_MESMER(ch_segmentation_input, [[:],[]])
     ch_versions = ch_versions.mix(DEEPCELL_MESMER.out.versions)
 
     // Run Quantification
@@ -92,16 +104,33 @@ workflow MCMICRO {
             it.collect{ _1, _2, marker_name, _4, _5, _6 -> '"' + marker_name + '"' }
         }
         .collectFile(name: 'markers.csv', sort: false, newLine: true)
-    ASHLAR.out.tif
-        .join(DEEPCELL_MESMER.out.mask)
-        .combine(ch_mcquant_markers)
-        .dump(tag: 'MCQUANT in')
-        .multiMap { it ->
-            image: [it[0], it[1]]
-            mask: [it[0], it[2]]
-            markers: [it[0], it[3]]
-        }
-        | MCQUANT
+
+    if (params.coreograph) {
+        img = ch_segmentation_input.map { meta, img -> [meta.subimg, meta, img]}.dump(tag: "IMG")
+        mask = DEEPCELL_MESMER.out.mask.map { meta, mask -> [meta.subimg, meta, mask]}.dump(tag: "MASK")
+        img
+            .combine(mask, by: [0])
+            .combine(ch_mcquant_markers)
+            .dump(tag: "TEST")
+            .multiMap { it ->
+                image: [it[1], it[2]]
+                mask: [it[1], it[4]]
+                markers: [it[1], it[5]]
+            }
+            | MCQUANT
+
+    } else {
+        ASHLAR.out.tif
+            .join(DEEPCELL_MESMER.out.mask)
+            .combine(ch_mcquant_markers)
+            .dump(tag: 'MCQUANT in')
+            .multiMap { it ->
+                image: [it[0], it[1]]
+                mask: [it[0], it[2]]
+                markers: [it[0], it[3]]
+            }
+            | MCQUANT
+    }
     ch_versions = ch_versions.mix(MCQUANT.out.versions)
 
     /*

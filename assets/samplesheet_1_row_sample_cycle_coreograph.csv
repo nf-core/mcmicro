@@ -1,0 +1,2 @@
+sample,cycle_number,channel_count,image_tiles
+TEST1,1,10,/home/pollen/github/mcmicro-nf-core/assets/coreograph_test.tif
