@@ -185,7 +185,7 @@ def validateInputParameters() {
     }
 
     if (params.cellpose_model && !segmentation_list.contains('cellpose')) {
-        error "You can only provide a cellpose model is you have selected cellpose as one of your segmentation methods"
+        error "You can only provide a cellpose model if you have selected cellpose as one of your segmentation methods"
     }
 
 }
