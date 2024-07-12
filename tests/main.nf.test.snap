@@ -219,6 +219,18 @@
         },
         "timestamp": "2024-04-23T11:53:19.871380893"
     },
+    "cycle: no illumination correction": {
+        "content": [
+            "TEST1.ome.tif:md5,ae98ac74e3c818bb26c99ba4b9c2dd51",
+            "mask_TEST1.tif:md5,c1075eb025f558fcadedc1f0d903ec15",
+            "TEST1_mask_TEST1.csv:rounded:md5,a7c226a3d32a94dd05356c5998eae522"
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-04-22T15:58:40.245133922"
+    },
     "cycle: multiple file ashlar input with multiple samples and basicpy correction": {
         "content": [
             {
@@ -398,18 +410,6 @@
         },
         "timestamp": "2024-04-22T16:00:55.775911164"
     },
-    "cycle: no illumination correction": {
-        "content": [
-            "TEST1.ome.tif:md5,ae98ac74e3c818bb26c99ba4b9c2dd51",
-            "mask_TEST1.tif:md5,c1075eb025f558fcadedc1f0d903ec15",
-            "TEST1_mask_TEST1.csv:rounded:md5,a7c226a3d32a94dd05356c5998eae522"
-        ],
-        "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "23.10.1"
-        },
-        "timestamp": "2024-04-22T15:58:40.245133922"
-    },
     "cycle: manual illumination correction": {
         "content": [
             "TEST1.ome.tif:md5,ae98ac74e3c818bb26c99ba4b9c2dd51",
@@ -421,5 +421,63 @@
             "nextflow": "23.10.1"
         },
         "timestamp": "2024-04-22T15:59:42.197064018"
+    },
+    "cycle: no illumination correction, coreograph": {
+        "content": [
+            "TEST1.ome.tif:md5,4b667e356ab2f1c675dd74ef1436d902",
+            "mask_TEST1.tif:md5,ec3b7db9867410223375be113e35f867",
+            "1_mask_TEST1.csv:rounded:md5,a125a716375795805baeaedc663e8c17",
+            "2_mask_TEST1.csv:rounded:md5,da512f703f05b73392853361e96844cf",
+            "3_mask_TEST1.csv:rounded:md5,cef3fd27ae5ddb05873fa6feeb87ba36",
+            "4_mask_TEST1.csv:rounded:md5,b97ddd3fbc3ff583aefc3ffb31b2b579",
+            "5_mask_TEST1.csv:rounded:md5,7cf80746d3ef0d14c60d30e0a34baf57",
+            "6_mask_TEST1.csv:rounded:md5,88c40dd535b9721343b849b533d5114f",
+            "7_mask_TEST1.csv:rounded:md5,f3c93fd36c0258a70f78aafeff8d2456",
+            "8_mask_TEST1.csv:rounded:md5,ec5163ff0fdac175ba4136001e6e8129",
+            "9_mask_TEST1.csv:rounded:md5,40e8414f1ddb32322797dd24dcf0c94d",
+            "10_mask_TEST1.csv:rounded:md5,88888b39611e403cec429c5e853e454f",
+            "11_mask_TEST1.csv:rounded:md5,115536dcf4e8b93ec8f9edece045a100",
+            "12_mask_TEST1.csv:rounded:md5,f52995e23bbf7bcafdab46e82311932c",
+            "13_mask_TEST1.csv:rounded:md5,fa2a4393fb30e20ea523ca4886431134",
+            "14_mask_TEST1.csv:rounded:md5,2d5ec14301d60b24dfa7d44cb530ef92",
+            "15_mask_TEST1.csv:rounded:md5,3689f3ecb776c083b2e52eeb54b5c4c3",
+            "16_mask_TEST1.csv:rounded:md5,a56468f308a68306b68ac227eb1e0c9a",
+            "17_mask_TEST1.csv:rounded:md5,fb95739a681f1c14bf501711128f4785",
+            "18_mask_TEST1.csv:rounded:md5,7cd59af88becb6490aaf8d501b6524c4",
+            "19_mask_TEST1.csv:rounded:md5,b3ef0b127fdea20d23a4712b263debcb",
+            "20_mask_TEST1.csv:rounded:md5,80c4eb68ea7c1125b4502bb3117466b8",
+            "21_mask_TEST1.csv:rounded:md5,bf972b95d8b152129ecde5c09019661b",
+            "22_mask_TEST1.csv:rounded:md5,c3701c16db941942412c95cbd7be264e",
+            "23_mask_TEST1.csv:rounded:md5,ddf78293a28b7d232efb4cc08276c546",
+            "24_mask_TEST1.csv:rounded:md5,0577754ad841c493d0b74fb245cb0202",
+            "25_mask_TEST1.csv:rounded:md5,94f07122ebf58c5bc81ec274ad7faaa0",
+            "26_mask_TEST1.csv:rounded:md5,cdbf1e1edd00251e640f3dc9f1249bfa",
+            "27_mask_TEST1.csv:rounded:md5,4f4154669989de86d0f9179f22a6ae02",
+            "28_mask_TEST1.csv:rounded:md5,eb3017af35690dcd4e1b23dee0389790",
+            "29_mask_TEST1.csv:rounded:md5,6fefd178e0af1e2e32ccb0caf25ae082",
+            "30_mask_TEST1.csv:rounded:md5,74557027dbd25a85a8a3001530c3b9cd",
+            "31_mask_TEST1.csv:rounded:md5,2acb00dd5584c0d59ab8b0ce8c09c48d",
+            "32_mask_TEST1.csv:rounded:md5,946278c08a6c09f93c841285047daa6e",
+            "33_mask_TEST1.csv:rounded:md5,0c307d5303aabc3eaf0364f6b93323a4",
+            "34_mask_TEST1.csv:rounded:md5,af1e478bcb84d16cbcb98cb32a85b060",
+            "35_mask_TEST1.csv:rounded:md5,d3ef58ddcb221bc8c0819e3a08d4120e",
+            "36_mask_TEST1.csv:rounded:md5,7fdf13290ef6965a3431e743b281421a",
+            "37_mask_TEST1.csv:rounded:md5,eda1fa49c691fec5ccaed36f50c8e873",
+            "38_mask_TEST1.csv:rounded:md5,2cb2aee630b148967b38e0d89bc9dfa1",
+            "39_mask_TEST1.csv:rounded:md5,730bb6fa5116a037acd39aeaa4143e5f",
+            "40_mask_TEST1.csv:rounded:md5,6e66a2d2975efd282265391ac6f5f117",
+            "41_mask_TEST1.csv:rounded:md5,10ff7e852033c3d1b1fd9b54aa6a5ef6",
+            "42_mask_TEST1.csv:rounded:md5,81938474e1cd053eae9c61a5f229fb55",
+            "43_mask_TEST1.csv:rounded:md5,789f8707c20c81e193a69fd7a07c882e",
+            "44_mask_TEST1.csv:rounded:md5,20f4dd4ffc64a493d461e74b7aaab1af",
+            "45_mask_TEST1.csv:rounded:md5,e0e62301aeca4c41ef0dda76b675a11e",
+            "46_mask_TEST1.csv:rounded:md5,57fd5e9858d0b107e35646f31f96e577",
+            "47_mask_TEST1.csv:rounded:md5,7f8171726aaf1763911b39c209ac8fe6"
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-07-12T12:14:21.916439265"
     }
 }

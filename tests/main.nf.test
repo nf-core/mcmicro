@@ -396,5 +396,92 @@ nextflow_workflow {
             }
         },
 
+        test("cycle: no illumination correction, coreograph") {
+
+            when {
+                params {
+                    segmentation = "mesmer"
+                    coreograph = true
+
+                }
+                workflow {
+                    """
+                    input[0] = Channel.of(
+                        [
+                            [id:"TEST1", cycle_number:1, channel_count:4],
+                            "/home/pollen/github/mcmicro-nf-core/assets/coreograph_test.tif",
+                            [],
+                            [],
+                        ],
+                    )
+                    input[1] = Channel.of(
+                        [
+                            [1,1,'DNA_6',[],[],[]],
+                        ],
+                    )
+                    """
+                }
+            }
+
+            then {
+                assertAll (
+                    {
+                        assert snapshot (
+                            path("$outputDir/registration/ashlar/TEST1.ome.tif"),
+                            path("$outputDir/segmentation/deepcell_mesmer/mask_TEST1.tif"),
+                            CsvUtils.roundAndHashCsv("$outputDir/quantification/mcquant/1_mask_TEST1.csv"),
+                            CsvUtils.roundAndHashCsv("$outputDir/quantification/mcquant/2_mask_TEST1.csv"),
+                            CsvUtils.roundAndHashCsv("$outputDir/quantification/mcquant/3_mask_TEST1.csv"),
+                            CsvUtils.roundAndHashCsv("$outputDir/quantification/mcquant/4_mask_TEST1.csv"),
+                            CsvUtils.roundAndHashCsv("$outputDir/quantification/mcquant/5_mask_TEST1.csv"),
+                            CsvUtils.roundAndHashCsv("$outputDir/quantification/mcquant/6_mask_TEST1.csv"),
+                            CsvUtils.roundAndHashCsv("$outputDir/quantification/mcquant/7_mask_TEST1.csv"),
+                            CsvUtils.roundAndHashCsv("$outputDir/quantification/mcquant/8_mask_TEST1.csv"),
+                            CsvUtils.roundAndHashCsv("$outputDir/quantification/mcquant/9_mask_TEST1.csv"),
+                            CsvUtils.roundAndHashCsv("$outputDir/quantification/mcquant/10_mask_TEST1.csv"),
+                            CsvUtils.roundAndHashCsv("$outputDir/quantification/mcquant/11_mask_TEST1.csv"),
+                            CsvUtils.roundAndHashCsv("$outputDir/quantification/mcquant/12_mask_TEST1.csv"),
+                            CsvUtils.roundAndHashCsv("$outputDir/quantification/mcquant/13_mask_TEST1.csv"),
+                            CsvUtils.roundAndHashCsv("$outputDir/quantification/mcquant/14_mask_TEST1.csv"),
+                            CsvUtils.roundAndHashCsv("$outputDir/quantification/mcquant/15_mask_TEST1.csv"),
+                            CsvUtils.roundAndHashCsv("$outputDir/quantification/mcquant/16_mask_TEST1.csv"),
+                            CsvUtils.roundAndHashCsv("$outputDir/quantification/mcquant/17_mask_TEST1.csv"),
+                            CsvUtils.roundAndHashCsv("$outputDir/quantification/mcquant/18_mask_TEST1.csv"),
+                            CsvUtils.roundAndHashCsv("$outputDir/quantification/mcquant/19_mask_TEST1.csv"),
+                            CsvUtils.roundAndHashCsv("$outputDir/quantification/mcquant/20_mask_TEST1.csv"),
+                            CsvUtils.roundAndHashCsv("$outputDir/quantification/mcquant/21_mask_TEST1.csv"),
+                            CsvUtils.roundAndHashCsv("$outputDir/quantification/mcquant/22_mask_TEST1.csv"),
+                            CsvUtils.roundAndHashCsv("$outputDir/quantification/mcquant/23_mask_TEST1.csv"),
+                            CsvUtils.roundAndHashCsv("$outputDir/quantification/mcquant/24_mask_TEST1.csv"),
+                            CsvUtils.roundAndHashCsv("$outputDir/quantification/mcquant/25_mask_TEST1.csv"),
+                            CsvUtils.roundAndHashCsv("$outputDir/quantification/mcquant/26_mask_TEST1.csv"),
+                            CsvUtils.roundAndHashCsv("$outputDir/quantification/mcquant/27_mask_TEST1.csv"),
+                            CsvUtils.roundAndHashCsv("$outputDir/quantification/mcquant/28_mask_TEST1.csv"),
+                            CsvUtils.roundAndHashCsv("$outputDir/quantification/mcquant/29_mask_TEST1.csv"),
+                            CsvUtils.roundAndHashCsv("$outputDir/quantification/mcquant/30_mask_TEST1.csv"),
+                            CsvUtils.roundAndHashCsv("$outputDir/quantification/mcquant/31_mask_TEST1.csv"),
+                            CsvUtils.roundAndHashCsv("$outputDir/quantification/mcquant/32_mask_TEST1.csv"),
+                            CsvUtils.roundAndHashCsv("$outputDir/quantification/mcquant/33_mask_TEST1.csv"),
+                            CsvUtils.roundAndHashCsv("$outputDir/quantification/mcquant/34_mask_TEST1.csv"),
+                            CsvUtils.roundAndHashCsv("$outputDir/quantification/mcquant/35_mask_TEST1.csv"),
+                            CsvUtils.roundAndHashCsv("$outputDir/quantification/mcquant/36_mask_TEST1.csv"),
+                            CsvUtils.roundAndHashCsv("$outputDir/quantification/mcquant/37_mask_TEST1.csv"),
+                            CsvUtils.roundAndHashCsv("$outputDir/quantification/mcquant/38_mask_TEST1.csv"),
+                            CsvUtils.roundAndHashCsv("$outputDir/quantification/mcquant/39_mask_TEST1.csv"),
+                            CsvUtils.roundAndHashCsv("$outputDir/quantification/mcquant/40_mask_TEST1.csv"),
+                            CsvUtils.roundAndHashCsv("$outputDir/quantification/mcquant/41_mask_TEST1.csv"),
+                            CsvUtils.roundAndHashCsv("$outputDir/quantification/mcquant/42_mask_TEST1.csv"),
+                            CsvUtils.roundAndHashCsv("$outputDir/quantification/mcquant/43_mask_TEST1.csv"),
+                            CsvUtils.roundAndHashCsv("$outputDir/quantification/mcquant/44_mask_TEST1.csv"),
+                            CsvUtils.roundAndHashCsv("$outputDir/quantification/mcquant/45_mask_TEST1.csv"),
+                            CsvUtils.roundAndHashCsv("$outputDir/quantification/mcquant/46_mask_TEST1.csv"),
+                            CsvUtils.roundAndHashCsv("$outputDir/quantification/mcquant/47_mask_TEST1.csv"),
+                        ).match()
+                    },
+                    { assert workflow.success }
+                )
+            }
+        },
+
     ]
 }
