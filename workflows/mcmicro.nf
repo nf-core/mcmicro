@@ -128,22 +128,15 @@ workflow MCMICRO {
         }
         .collectFile(name: 'markers.csv', sort: false, newLine: true)
 
-    ch_mcquant_masks_markers_key = channel.empty()
-        .mix(ch_masks)
+    ASHLAR.out.tif
+        .cross(ch_masks) { it[0]['id'] }
+        .map{ t_ashlar, t_mask -> [t_mask[0], t_ashlar[1], t_mask[1]] }
         .combine(ch_mcquant_markers)
-        .map { meta, mask, marker -> [meta.id, meta, mask, marker ] }
-        .dump(tag: 'MCQUANT MM KEY')
-
-    ch_mcquant_ashlar_key = ASHLAR.out.tif.map { meta, img -> [meta.id, meta, img]}
-        .dump(tag: 'MCQUANT IMG KEY')
-
-    ch_mcquant_ashlar_key
-        .combine(ch_mcquant_masks_markers_key, by: 0)
         .dump(tag: 'MCQUANT IN')
-        .multiMap { key, meta1, image, meta2, mask, marker ->
-            image: [meta1, image]
-            mask: [meta2, mask]
-            markers: [meta2, marker]
+        .multiMap{ meta, image, mask, marker ->
+            image: [meta, image]
+            mask: [meta, mask]
+            markers: [meta, marker]
         }
         | MCQUANT
 
