@@ -99,7 +99,7 @@ workflow MCMICRO {
         .dump(tag: 'MCQUANT in mesmer')
         .multiMap { meta, image, mask ->
             image: [meta, image]
-            mask: [[id: meta['id'], segmenter: 'mesmer'], mask]
+            mask: [meta + [segmenter: 'mesmer'], mask]
         }
         .set { ch_mesmer_out }
     ch_versions = ch_versions.mix(DEEPCELL_MESMER.out.versions)
@@ -111,7 +111,7 @@ workflow MCMICRO {
         .dump(tag: 'MCQUANT in cellpose')
         .multiMap { meta, image, mask ->
             image: [meta, image]
-            mask: [[id: meta['id'], segmenter: 'cellpose'], mask]
+            mask: [meta + [segmenter: 'cellpose'], mask]
         }
         .set { ch_cellpose_out }
     ch_versions = ch_versions.mix(CELLPOSE.out.versions)
