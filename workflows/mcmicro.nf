@@ -92,38 +92,31 @@ workflow MCMICRO {
 
     // Run Segmentation
 
-    mesmer_out_mask = channel.empty()
-    if (params.segmentation?.split(',').contains('mesmer')) {
-        DEEPCELL_MESMER(ch_segmentation_input, [[:],[]])
-        ch_versions = ch_versions.mix(DEEPCELL_MESMER.out.versions)
-        ch_segmentation_input
-            .join(DEEPCELL_MESMER.out.mask)
-            .dump(tag: 'MCQUANT in mesmer')
-            .multiMap { it ->
-                image: [it[0], it[1]]
-                mask: [[id: it[0]['id'], segmenter: 'mesmer'], it[2]]
-            }
-            .set { ch_mesmer_out }
-        mesmer_out_mask = ch_mesmer_out.mask
-        ch_versions = ch_versions.mix(DEEPCELL_MESMER.out.versions)
-    }
+    DEEPCELL_MESMER(ch_segmentation_input, [[:],[]])
+    ch_versions = ch_versions.mix(DEEPCELL_MESMER.out.versions)
+    ch_segmentation_input
+        .join(DEEPCELL_MESMER.out.mask)
+        .dump(tag: 'MCQUANT in mesmer')
+        .multiMap { it ->
+            image: [it[0], it[1]]
+            mask: [[id: it[0]['id'], segmenter: 'mesmer'], it[2]]
+        }
+        .set { ch_mesmer_out }
+    ch_versions = ch_versions.mix(DEEPCELL_MESMER.out.versions)
 
-    cellpose_out_mask = channel.empty()
-    if (params.segmentation?.split(',').contains('cellpose')) {
-        CELLPOSE( ch_segmentation_input, params.cellpose_model )
-        ch_versions = ch_versions.mix(CELLPOSE.out.versions)
-        ch_segmentation_input
-            .join(CELLPOSE.out.mask)
-            .dump(tag: 'MCQUANT in cellpose')
-            .multiMap { it ->
-                image: [it[0], it[1]]
-                mask: [[id: it[0]['id'], segmenter: 'cellpose'], it[2]]
-            }
-            .set { ch_cellpose_out }
-        cellpose_out_mask = ch_cellpose_out.mask
-            .dump(tag: 'MASK')
-        ch_versions = ch_versions.mix(CELLPOSE.out.versions)
-    }
+    CELLPOSE( ch_segmentation_input, params.cellpose_model )
+    ch_versions = ch_versions.mix(CELLPOSE.out.versions)
+    ch_segmentation_input
+        .join(CELLPOSE.out.mask)
+        .dump(tag: 'MCQUANT in cellpose')
+        .multiMap { it ->
+            image: [it[0], it[1]]
+            mask: [[id: it[0]['id'], segmenter: 'cellpose'], it[2]]
+        }
+        .set { ch_cellpose_out }
+    ch_versions = ch_versions.mix(CELLPOSE.out.versions)
+
+    ch_masks = ch_mesmer_out.mask.mix(ch_cellpose_out.mask)
 
     // Run Quantification
 
@@ -136,7 +129,7 @@ workflow MCMICRO {
         .collectFile(name: 'markers.csv', sort: false, newLine: true)
 
     ch_mcquant_masks_markers_key = channel.empty()
-        .mix(mesmer_out_mask, cellpose_out_mask) // add new seg_out here when seg module added above
+        .mix(ch_masks)
         .combine(ch_mcquant_markers)
         .map { meta, mask, marker -> [meta.id, meta, mask, marker ] }
         .dump(tag: 'MCQUANT MM KEY')
