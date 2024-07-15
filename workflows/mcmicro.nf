@@ -97,9 +97,9 @@ workflow MCMICRO {
     ch_segmentation_input
         .join(DEEPCELL_MESMER.out.mask)
         .dump(tag: 'MCQUANT in mesmer')
-        .multiMap { it ->
-            image: [it[0], it[1]]
-            mask: [[id: it[0]['id'], segmenter: 'mesmer'], it[2]]
+        .multiMap { meta, image, mask ->
+            image: [meta, image]
+            mask: [[id: meta['id'], segmenter: 'mesmer'], mask]
         }
         .set { ch_mesmer_out }
     ch_versions = ch_versions.mix(DEEPCELL_MESMER.out.versions)
@@ -109,9 +109,9 @@ workflow MCMICRO {
     ch_segmentation_input
         .join(CELLPOSE.out.mask)
         .dump(tag: 'MCQUANT in cellpose')
-        .multiMap { it ->
-            image: [it[0], it[1]]
-            mask: [[id: it[0]['id'], segmenter: 'cellpose'], it[2]]
+        .multiMap { meta, image, mask ->
+            image: [meta, image]
+            mask: [[id: meta['id'], segmenter: 'cellpose'], mask]
         }
         .set { ch_cellpose_out }
     ch_versions = ch_versions.mix(CELLPOSE.out.versions)
@@ -140,10 +140,10 @@ workflow MCMICRO {
     ch_mcquant_ashlar_key
         .combine(ch_mcquant_masks_markers_key, by: 0)
         .dump(tag: 'MCQUANT IN')
-        .multiMap { it ->
-            image: [it[1], it[2]]
-            mask: [it[3], it[4]]
-            markers: [it[3], it[5]]
+        .multiMap { key, meta1, image, meta2, mask, marker ->
+            image: [meta1, image]
+            mask: [meta2, mask]
+            markers: [meta2, marker]
         }
         | MCQUANT
 
