@@ -92,9 +92,8 @@ workflow MCMICRO {
 
     // Run Segmentation
 
-    params.segmentation_list = params.segmentation.split(',') as List
     mesmer_out_mask = channel.empty()
-    if ("mesmer" in params.segmentation_list) {
+    if (params.segmentation?.split(',').contains('mesmer')) {
         DEEPCELL_MESMER(ch_segmentation_input, [[:],[]])
         ch_versions = ch_versions.mix(DEEPCELL_MESMER.out.versions)
         ch_segmentation_input
@@ -110,7 +109,7 @@ workflow MCMICRO {
     }
 
     cellpose_out_mask = channel.empty()
-    if ("cellpose" in params.segmentation_list) {
+    if (params.segmentation?.split(',').contains('cellpose')) {
         CELLPOSE( ch_segmentation_input, params.cellpose_model )
         ch_versions = ch_versions.mix(CELLPOSE.out.versions)
         ch_segmentation_input

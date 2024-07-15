@@ -176,14 +176,6 @@ def validateInputParameters() {
         error "You must specify either input_sample or input_cycle."
     }
 
-    valid_segmentation = ['mesmer', 'cellpose']
-    def segmentation_list = params.segmentation.split(',') as List
-    segmentation_list.each {
-        if (!valid_segmentation.contains(it)) {
-            error "Valid segmentation options are: $valid_segmentation. $it is not supported."
-        }
-    }
-
     if (params.cellpose_model && !segmentation_list.contains('cellpose')) {
         error "You can only provide a cellpose model if you have selected cellpose as one of your segmentation methods"
     }
