@@ -84,7 +84,7 @@ workflow MCMICRO {
         COREOGRAPH(ASHLAR.out.tif)
         COREOGRAPH.out.cores
             .transpose()
-            .map { meta, img -> [[id: meta.id, subimg: img.toString().split('/')[-1].tokenize(".")[0]], img]}
+            .map { meta, img -> [[id: meta.id + '_' + img.toString().split('/')[-1].tokenize(".")[0]], img]}
             .set { ch_segmentation_input }
     } else {
         ch_segmentation_input = ASHLAR.out.tif
@@ -105,32 +105,17 @@ workflow MCMICRO {
         }
         .collectFile(name: 'markers.csv', sort: false, newLine: true)
 
-    if (params.coreograph) {
-        img = ch_segmentation_input.map { meta, img -> [meta.subimg, meta, img]}.dump(tag: "IMG")
-        mask = DEEPCELL_MESMER.out.mask.map { meta, mask -> [meta.subimg, meta, mask]}.dump(tag: "MASK")
-        img
-            .combine(mask, by: [0])
-            .combine(ch_mcquant_markers)
-            .dump(tag: "TEST")
-            .multiMap { it ->
-                image: [it[1], it[2]]
-                mask: [it[1], it[4]]
-                markers: [it[1], it[5]]
-            }
-            | MCQUANT
+    ch_segmentation_input
+        .combine(DEEPCELL_MESMER.out.mask, by: [0])
+        .combine(ch_mcquant_markers)
+        .dump(tag: 'MCQUANT in')
+        .multiMap { meta, image, mask, marker ->
+            image: [meta, image]
+            mask: [meta, mask]
+            markers: [meta, marker]
+        }
+        | MCQUANT
 
-    } else {
-        ASHLAR.out.tif
-            .join(DEEPCELL_MESMER.out.mask)
-            .combine(ch_mcquant_markers)
-            .dump(tag: 'MCQUANT in')
-            .multiMap { it ->
-                image: [it[0], it[1]]
-                mask: [it[0], it[2]]
-                markers: [it[0], it[3]]
-            }
-            | MCQUANT
-    }
     ch_versions = ch_versions.mix(MCQUANT.out.versions)
 
     /*
