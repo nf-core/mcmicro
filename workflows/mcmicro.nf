@@ -80,7 +80,7 @@ workflow MCMICRO {
     //ch_versions = ch_versions.mix(BACKSUB.out.versions)
 
     // Run Coreograph
-    if (params.coreograph) {
+    if (params.tma_dearray) {
         COREOGRAPH(ASHLAR.out.tif)
         COREOGRAPH.out.cores
             .transpose()

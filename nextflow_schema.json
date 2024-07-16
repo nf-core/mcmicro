@@ -66,7 +66,7 @@
                     "enum": ["basicpy"],
                     "description": "input that defines type of illumination correction to be performed"
                 },
-                "coreograph": {
+                "tma_dearray": {
                     "type": "boolean",
                     "description": "Apply coreograph module to create separate images before segmentation"
                 }
