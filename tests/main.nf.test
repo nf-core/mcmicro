@@ -401,7 +401,7 @@ nextflow_workflow {
             when {
                 params {
                     segmentation = "mesmer"
-                    coreograph = true
+                    tma_dearray = true
 
                 }
                 workflow {
