@@ -90,29 +90,25 @@ workflow MCMICRO {
 
     // Run Segmentation
 
-    DEEPCELL_MESMER(ch_segmentation_input, [[:],[]])
+    ch_masks = Channel.empty()
+
     ch_segmentation_input
-        .join(DEEPCELL_MESMER.out.mask)
-        .dump(tag: 'MCQUANT in mesmer')
-        .multiMap { meta, image, mask ->
-            image: [meta, image]
-            mask: [meta + [segmenter: 'mesmer'], mask]
+        .multiMap{ meta, image ->
+            img: [meta + [segmenter: 'mesmer'], image]
+            membrane_img: [[:], []]
         }
-        .set { ch_mesmer_out }
+        | DEEPCELL_MESMER
+    ch_masks = ch_masks.mix(DEEPCELL_MESMER.out.mask)
     ch_versions = ch_versions.mix(DEEPCELL_MESMER.out.versions)
 
-    CELLPOSE( ch_segmentation_input, params.cellpose_model )
     ch_segmentation_input
-        .join(CELLPOSE.out.mask)
-        .dump(tag: 'MCQUANT in cellpose')
-        .multiMap { meta, image, mask ->
-            image: [meta, image]
-            mask: [meta + [segmenter: 'cellpose'], mask]
+        .multiMap{ meta, image ->
+            image: [meta + [segmenter: 'cellpose'], image]
+            model: params.cellpose_model
         }
-        .set { ch_cellpose_out }
+        | CELLPOSE
+    ch_masks = ch_masks.mix(CELLPOSE.out.mask)
     ch_versions = ch_versions.mix(CELLPOSE.out.versions)
-
-    ch_masks = ch_mesmer_out.mask.mix(ch_cellpose_out.mask)
 
     // Run Quantification
 
