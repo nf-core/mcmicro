@@ -88,12 +88,9 @@ workflow MCMICRO {
     }
     */
 
-    //ch_versions = ch_versions.mix(BACKSUB.out.versions)
-
     // Run Segmentation
 
     DEEPCELL_MESMER(ch_segmentation_input, [[:],[]])
-    ch_versions = ch_versions.mix(DEEPCELL_MESMER.out.versions)
     ch_segmentation_input
         .join(DEEPCELL_MESMER.out.mask)
         .dump(tag: 'MCQUANT in mesmer')
@@ -105,7 +102,6 @@ workflow MCMICRO {
     ch_versions = ch_versions.mix(DEEPCELL_MESMER.out.versions)
 
     CELLPOSE( ch_segmentation_input, params.cellpose_model )
-    ch_versions = ch_versions.mix(CELLPOSE.out.versions)
     ch_segmentation_input
         .join(CELLPOSE.out.mask)
         .dump(tag: 'MCQUANT in cellpose')
