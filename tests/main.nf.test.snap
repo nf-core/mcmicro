@@ -1,16 +1,4 @@
 {
-    "cycle: no illumination correction, cellpose segmentation with pretrained model": {
-        "content": [
-            "TEST1.ome.tif:md5,ae98ac74e3c818bb26c99ba4b9c2dd51",
-            "TEST1.ome_cp_masks.tif:md5,c5384f8c52ea8d22b3d2ba524cdfb00b",
-            "TEST1_TEST1.csv:rounded:md5,846e3b184a78328ca0614d26d78e0243"
-        ],
-        "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "23.10.1"
-        },
-        "timestamp": "2024-07-10T10:03:02.962100005"
-    },
     "cycle: multiple file ashlar input no correction": {
         "content": [
             "cycif-tonsil.ome.tif:md5,5f4165203545b7efe04ed5f4a6d5ac9d",
@@ -117,6 +105,18 @@
             "nextflow": "23.10.1"
         },
         "timestamp": "2024-07-09T14:19:05.560663388"
+    },
+    "cycle: no illumination correction, cellpose segmentation": {
+        "content": [
+            "TEST1.ome.tif:md5,ae98ac74e3c818bb26c99ba4b9c2dd51",
+            "TEST1.ome_cp_masks.tif:md5,47bd29c261db5fe062ee35c1b5daccc1",
+            "TEST1_TEST1.csv:rounded:md5,42ecd15013bea6dbea4e0343c7b0bef7"
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-07-18T17:30:38.010217727"
     },
     "cycle: multiple file ashlar input with basicpy correction": {
         "content": [

@@ -480,12 +480,11 @@ nextflow_workflow {
             }
         },
 
-        test("cycle: no illumination correction, cellpose segmentation with pretrained model") {
+        test("cycle: no illumination correction, cellpose segmentation") {
 
             when {
                 params {
                     segmentation = "cellpose"
-                    cellpose_model = "$projectDir/assets/nucleitorch_0"
                 }
                 workflow {
                     """
