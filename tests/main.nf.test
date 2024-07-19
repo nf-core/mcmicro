@@ -9,6 +9,9 @@ nextflow_workflow {
         test("cycle: no illumination correction") {
 
             when {
+                params {
+                    segmentation = "mesmer"
+                }
                 workflow {
                     """
                     input[0] = Channel.of(
@@ -37,7 +40,7 @@ nextflow_workflow {
                         assert snapshot (
                             path("$outputDir/registration/ashlar/TEST1.ome.tif"),
                             path("$outputDir/segmentation/deepcell_mesmer/mask_TEST1.tif"),
-                            CsvUtils.roundAndHashCsv("$outputDir/quantification/mcquant/TEST1_mask_TEST1.csv"),
+                            CsvUtils.roundAndHashCsv("$outputDir/quantification/mcquant/mesmer/TEST1_mask_TEST1.csv"),
                         ).match()
                     },
                     { assert workflow.success }
@@ -51,6 +54,7 @@ nextflow_workflow {
             when {
                 params {
                     illumination = "basicpy"
+                    segmentation = "mesmer"
                 }
                 workflow {
                     """
@@ -80,7 +84,7 @@ nextflow_workflow {
                         assert snapshot (
                             ImageUtils.getImageMetadata("$outputDir/registration/ashlar/TEST1.ome.tif"),
                             ImageUtils.getImageMetadata("$outputDir/segmentation/deepcell_mesmer/mask_TEST1.tif"),
-                            CsvUtils.summarizeCsv("$outputDir/quantification/mcquant/TEST1_mask_TEST1.csv"),
+                            CsvUtils.summarizeCsv("$outputDir/quantification/mcquant/mesmer/TEST1_mask_TEST1.csv"),
                             ImageUtils.getImageMetadata("$outputDir/illumination_correction/basicpy/cycif-tonsil-cycle1.ome-dfp.tiff"),
                             ImageUtils.getImageMetadata("$outputDir/illumination_correction/basicpy/cycif-tonsil-cycle1.ome-ffp.tiff")
                         ).match()
@@ -95,6 +99,7 @@ nextflow_workflow {
             when {
                 params {
                     illumination = "manual"
+                    segmentation = "mesmer"
                 }
                 workflow {
                     """
@@ -124,7 +129,7 @@ nextflow_workflow {
                         assert snapshot (
                             path("$outputDir/registration/ashlar/TEST1.ome.tif"),
                             path("$outputDir/segmentation/deepcell_mesmer/mask_TEST1.tif"),
-                            CsvUtils.roundAndHashCsv("$outputDir/quantification/mcquant/TEST1_mask_TEST1.csv")
+                            CsvUtils.roundAndHashCsv("$outputDir/quantification/mcquant/mesmer/TEST1_mask_TEST1.csv")
                         ).match()
                     },
                     { assert workflow.success }
@@ -135,6 +140,9 @@ nextflow_workflow {
         test("cycle: multiple file ashlar input no correction") {
 
             when {
+                params {
+                    segmentation = "mesmer"
+                }
                 workflow {
                     """
                     input[0] = Channel.of(
@@ -183,7 +191,7 @@ nextflow_workflow {
                         assert snapshot (
                             path("$outputDir/registration/ashlar/cycif-tonsil.ome.tif"),
                             path("$outputDir/segmentation/deepcell_mesmer/mask_cycif-tonsil.tif"),
-                            CsvUtils.roundAndHashCsv("$outputDir/quantification/mcquant/cycif-tonsil_mask_cycif-tonsil.csv")
+                            CsvUtils.roundAndHashCsv("$outputDir/quantification/mcquant/mesmer/cycif-tonsil_mask_cycif-tonsil.csv")
                         ).match()
                     },
                     { assert workflow.success }
@@ -194,6 +202,9 @@ nextflow_workflow {
         test("cycle: multiple file ashlar input with multiple samples no correction") {
 
             when {
+                params {
+                    segmentation = "mesmer"
+                }
                 workflow {
                     """
                     input[0] = Channel.of(
@@ -246,8 +257,79 @@ nextflow_workflow {
                             path("$outputDir/registration/ashlar/cycif-tonsil2.ome.tif"),
                             path("$outputDir/segmentation/deepcell_mesmer/mask_cycif-tonsil.tif"),
                             path("$outputDir/segmentation/deepcell_mesmer/mask_cycif-tonsil2.tif"),
-                            CsvUtils.roundAndHashCsv("$outputDir/quantification/mcquant/cycif-tonsil_mask_cycif-tonsil.csv"),
-                            CsvUtils.roundAndHashCsv("$outputDir/quantification/mcquant/cycif-tonsil2_mask_cycif-tonsil2.csv"),
+                            CsvUtils.roundAndHashCsv("$outputDir/quantification/mcquant/mesmer/cycif-tonsil_mask_cycif-tonsil.csv"),
+                            CsvUtils.roundAndHashCsv("$outputDir/quantification/mcquant/mesmer/cycif-tonsil2_mask_cycif-tonsil2.csv"),
+                        ).match()
+                    },
+                    { assert workflow.success }
+                )
+            }
+        },
+
+        test("cycle: multiple file ashlar input with multiple samples no correction, multiple segmentation") {
+
+            when {
+                params {
+                    segmentation = "mesmer,cellpose"
+                }
+                workflow {
+                    """
+                    input[0] = Channel.of(
+                        [
+                            [id:"cycif-tonsil", cycle_number:1, channel_count:4],
+                            "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/imaging/ome-tiff/cycif-tonsil-cycle1.ome.tif",
+                            [],
+                            [],
+                        ],
+                        [
+                            [id:"cycif-tonsil", cycle_number:2, channel_count:4],
+                            "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/imaging/ome-tiff/cycif-tonsil-cycle2.ome.tif",
+                            [],
+                            [],
+                        ],
+                        [
+                            [id:"cycif-tonsil2", cycle_number:1, channel_count:4],
+                            "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/imaging/ome-tiff/cycif-tonsil-cycle2.ome.tif",
+                            [],
+                            [],
+                        ],
+                        [
+                            [id:"cycif-tonsil2", cycle_number:2, channel_count:4],
+                            "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/imaging/ome-tiff/cycif-tonsil-cycle3.ome.tif",
+                            [],
+                            [],
+                        ],
+                    )
+                    input[1] = Channel.of(
+                        [
+                            [1,1,'DNA_6',[],[],[]],
+                            [2,1,'ELANE',[],[],[]],
+                            [3,1,'CD57',[],[],[]],
+                            [4,1,'CD45',[],[],[]],
+                            [5,1,'DNA_7',[],[],[]],
+                            [6,1,'ELANE7',[],[],[]],
+                            [7,1,'CD577',[],[],[]],
+                            [8,1,'CD457',[],[],[]],
+                        ],
+                    )
+                    """
+                }
+            }
+
+            then {
+                assertAll (
+                    {
+                        assert snapshot (
+                            path("$outputDir/registration/ashlar/cycif-tonsil.ome.tif"),
+                            path("$outputDir/registration/ashlar/cycif-tonsil2.ome.tif"),
+                            path("$outputDir/segmentation/deepcell_mesmer/mask_cycif-tonsil.tif"),
+                            path("$outputDir/segmentation/deepcell_mesmer/mask_cycif-tonsil2.tif"),
+                            path("$outputDir/segmentation/cellpose/cycif-tonsil.ome_cp_masks.tif"),
+                            path("$outputDir/segmentation/cellpose/cycif-tonsil2.ome_cp_masks.tif"),
+                            CsvUtils.roundAndHashCsv("$outputDir/quantification/mcquant/mesmer/cycif-tonsil_mask_cycif-tonsil.csv"),
+                            CsvUtils.roundAndHashCsv("$outputDir/quantification/mcquant/mesmer/cycif-tonsil2_mask_cycif-tonsil2.csv"),
+                            CsvUtils.roundAndHashCsv("$outputDir/quantification/mcquant/cellpose/cycif-tonsil_cycif-tonsil.csv"),
+                            CsvUtils.roundAndHashCsv("$outputDir/quantification/mcquant/cellpose/cycif-tonsil2_cycif-tonsil2.csv"),
                         ).match()
                     },
                     { assert workflow.success }
@@ -260,6 +342,7 @@ nextflow_workflow {
             when {
                 params {
                     illumination = "basicpy"
+                    segmentation = "mesmer"
                 }
                 workflow {
                     """
@@ -309,7 +392,7 @@ nextflow_workflow {
                         assert snapshot (
                             ImageUtils.getImageMetadata("$outputDir/registration/ashlar/cycif-tonsil.ome.tif"),
                             ImageUtils.getImageMetadata("$outputDir/segmentation/deepcell_mesmer/mask_cycif-tonsil.tif"),
-                            CsvUtils.summarizeCsv("$outputDir/quantification/mcquant/cycif-tonsil_mask_cycif-tonsil.csv"),
+                            CsvUtils.summarizeCsv("$outputDir/quantification/mcquant/mesmer/cycif-tonsil_mask_cycif-tonsil.csv"),
                             ImageUtils.getImageMetadata("$outputDir/illumination_correction/basicpy/cycif-tonsil-cycle1.ome-dfp.tiff"),
                             ImageUtils.getImageMetadata("$outputDir/illumination_correction/basicpy/cycif-tonsil-cycle1.ome-ffp.tiff"),
                             ImageUtils.getImageMetadata("$outputDir/illumination_correction/basicpy/cycif-tonsil-cycle2.ome-dfp.tiff"),
@@ -328,6 +411,7 @@ nextflow_workflow {
             when {
                 params {
                     illumination = "basicpy"
+                    segmentation = "mesmer"
                 }
                 workflow {
                     """
@@ -381,8 +465,8 @@ nextflow_workflow {
                             ImageUtils.getImageMetadata("$outputDir/registration/ashlar/cycif-tonsil2.ome.tif"),
                             ImageUtils.getImageMetadata("$outputDir/segmentation/deepcell_mesmer/mask_cycif-tonsil.tif"),
                             path("$outputDir/segmentation/deepcell_mesmer/mask_cycif-tonsil2.tif"),
-                            CsvUtils.summarizeCsv("$outputDir/quantification/mcquant/cycif-tonsil_mask_cycif-tonsil.csv"),
-                            CsvUtils.summarizeCsv("$outputDir/quantification/mcquant/cycif-tonsil2_mask_cycif-tonsil2.csv"),
+                            CsvUtils.summarizeCsv("$outputDir/quantification/mcquant/mesmer/cycif-tonsil_mask_cycif-tonsil.csv"),
+                            CsvUtils.summarizeCsv("$outputDir/quantification/mcquant/mesmer/cycif-tonsil2_mask_cycif-tonsil2.csv"),
                             ImageUtils.getImageMetadata("$outputDir/illumination_correction/basicpy/cycif-tonsil-cycle1.ome-dfp.tiff"),
                             ImageUtils.getImageMetadata("$outputDir/illumination_correction/basicpy/cycif-tonsil-cycle1.ome-ffp.tiff"),
                             ImageUtils.getImageMetadata("$outputDir/illumination_correction/basicpy/cycif-tonsil-cycle2.ome-dfp.tiff"),
@@ -394,6 +478,49 @@ nextflow_workflow {
                     { assert workflow.success }
                 )
             }
+        },
+
+        test("cycle: no illumination correction, cellpose segmentation") {
+
+            when {
+                params {
+                    segmentation = "cellpose"
+                }
+                workflow {
+                    """
+                    input[0] = Channel.of(
+                        [
+                            [id:"TEST1", cycle_number:1, channel_count:4],
+                            "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/imaging/ome-tiff/cycif-tonsil-cycle1.ome.tif",
+                            [],
+                            [],
+                        ],
+                    )
+                    input[1] = Channel.of(
+                        [
+                            [1,1,'DNA_6',[],[],[]],
+                            [2,1,'ELANE',[],[],[]],
+                            [3,1,'CD57',[],[],[]],
+                            [4,1,'CD45',[],[],[]],
+                        ],
+                    )
+                    """
+                }
+            }
+
+            then {
+                assertAll (
+                    {
+                        assert snapshot (
+                            path("$outputDir/registration/ashlar/TEST1.ome.tif"),
+                            path("$outputDir/segmentation/cellpose/TEST1.ome_cp_masks.tif"),
+                            CsvUtils.roundAndHashCsv("$outputDir/quantification/mcquant/cellpose/TEST1_TEST1.csv"),
+                        ).match()
+                    },
+                    { assert workflow.success }
+                )
+            }
+
         },
 
         test("cycle: no illumination correction, coreograph") {
@@ -475,53 +602,53 @@ nextflow_workflow {
                             path("$outputDir/segmentation/deepcell_mesmer/mask_TEST1_45.tif"),
                             path("$outputDir/segmentation/deepcell_mesmer/mask_TEST1_46.tif"),
                             path("$outputDir/segmentation/deepcell_mesmer/mask_TEST1_47.tif"),
-                            CsvUtils.roundAndHashCsv("$outputDir/quantification/mcquant/1_mask_TEST1_1.csv"),
-                            CsvUtils.roundAndHashCsv("$outputDir/quantification/mcquant/2_mask_TEST1_2.csv"),
-                            CsvUtils.roundAndHashCsv("$outputDir/quantification/mcquant/3_mask_TEST1_3.csv"),
-                            CsvUtils.roundAndHashCsv("$outputDir/quantification/mcquant/4_mask_TEST1_4.csv"),
-                            CsvUtils.roundAndHashCsv("$outputDir/quantification/mcquant/5_mask_TEST1_5.csv"),
-                            CsvUtils.roundAndHashCsv("$outputDir/quantification/mcquant/6_mask_TEST1_6.csv"),
-                            CsvUtils.roundAndHashCsv("$outputDir/quantification/mcquant/7_mask_TEST1_7.csv"),
-                            CsvUtils.roundAndHashCsv("$outputDir/quantification/mcquant/8_mask_TEST1_8.csv"),
-                            CsvUtils.roundAndHashCsv("$outputDir/quantification/mcquant/9_mask_TEST1_9.csv"),
-                            CsvUtils.roundAndHashCsv("$outputDir/quantification/mcquant/10_mask_TEST1_10.csv"),
-                            CsvUtils.roundAndHashCsv("$outputDir/quantification/mcquant/11_mask_TEST1_11.csv"),
-                            CsvUtils.roundAndHashCsv("$outputDir/quantification/mcquant/12_mask_TEST1_12.csv"),
-                            CsvUtils.roundAndHashCsv("$outputDir/quantification/mcquant/13_mask_TEST1_13.csv"),
-                            CsvUtils.roundAndHashCsv("$outputDir/quantification/mcquant/14_mask_TEST1_14.csv"),
-                            CsvUtils.roundAndHashCsv("$outputDir/quantification/mcquant/15_mask_TEST1_15.csv"),
-                            CsvUtils.roundAndHashCsv("$outputDir/quantification/mcquant/16_mask_TEST1_16.csv"),
-                            CsvUtils.roundAndHashCsv("$outputDir/quantification/mcquant/17_mask_TEST1_17.csv"),
-                            CsvUtils.roundAndHashCsv("$outputDir/quantification/mcquant/18_mask_TEST1_18.csv"),
-                            CsvUtils.roundAndHashCsv("$outputDir/quantification/mcquant/19_mask_TEST1_19.csv"),
-                            CsvUtils.roundAndHashCsv("$outputDir/quantification/mcquant/20_mask_TEST1_20.csv"),
-                            CsvUtils.roundAndHashCsv("$outputDir/quantification/mcquant/21_mask_TEST1_21.csv"),
-                            CsvUtils.roundAndHashCsv("$outputDir/quantification/mcquant/22_mask_TEST1_22.csv"),
-                            CsvUtils.roundAndHashCsv("$outputDir/quantification/mcquant/23_mask_TEST1_23.csv"),
-                            CsvUtils.roundAndHashCsv("$outputDir/quantification/mcquant/24_mask_TEST1_24.csv"),
-                            CsvUtils.roundAndHashCsv("$outputDir/quantification/mcquant/25_mask_TEST1_25.csv"),
-                            CsvUtils.roundAndHashCsv("$outputDir/quantification/mcquant/26_mask_TEST1_26.csv"),
-                            CsvUtils.roundAndHashCsv("$outputDir/quantification/mcquant/27_mask_TEST1_27.csv"),
-                            CsvUtils.roundAndHashCsv("$outputDir/quantification/mcquant/28_mask_TEST1_28.csv"),
-                            CsvUtils.roundAndHashCsv("$outputDir/quantification/mcquant/29_mask_TEST1_29.csv"),
-                            CsvUtils.roundAndHashCsv("$outputDir/quantification/mcquant/30_mask_TEST1_30.csv"),
-                            CsvUtils.roundAndHashCsv("$outputDir/quantification/mcquant/31_mask_TEST1_31.csv"),
-                            CsvUtils.roundAndHashCsv("$outputDir/quantification/mcquant/32_mask_TEST1_32.csv"),
-                            CsvUtils.roundAndHashCsv("$outputDir/quantification/mcquant/33_mask_TEST1_33.csv"),
-                            CsvUtils.roundAndHashCsv("$outputDir/quantification/mcquant/34_mask_TEST1_34.csv"),
-                            CsvUtils.roundAndHashCsv("$outputDir/quantification/mcquant/35_mask_TEST1_35.csv"),
-                            CsvUtils.roundAndHashCsv("$outputDir/quantification/mcquant/36_mask_TEST1_36.csv"),
-                            CsvUtils.roundAndHashCsv("$outputDir/quantification/mcquant/37_mask_TEST1_37.csv"),
-                            CsvUtils.roundAndHashCsv("$outputDir/quantification/mcquant/38_mask_TEST1_38.csv"),
-                            CsvUtils.roundAndHashCsv("$outputDir/quantification/mcquant/39_mask_TEST1_39.csv"),
-                            CsvUtils.roundAndHashCsv("$outputDir/quantification/mcquant/40_mask_TEST1_40.csv"),
-                            CsvUtils.roundAndHashCsv("$outputDir/quantification/mcquant/41_mask_TEST1_41.csv"),
-                            CsvUtils.roundAndHashCsv("$outputDir/quantification/mcquant/42_mask_TEST1_42.csv"),
-                            CsvUtils.roundAndHashCsv("$outputDir/quantification/mcquant/43_mask_TEST1_43.csv"),
-                            CsvUtils.roundAndHashCsv("$outputDir/quantification/mcquant/44_mask_TEST1_44.csv"),
-                            CsvUtils.roundAndHashCsv("$outputDir/quantification/mcquant/45_mask_TEST1_45.csv"),
-                            CsvUtils.roundAndHashCsv("$outputDir/quantification/mcquant/46_mask_TEST1_46.csv"),
-                            CsvUtils.roundAndHashCsv("$outputDir/quantification/mcquant/47_mask_TEST1_47.csv"),
+                            CsvUtils.roundAndHashCsv("$outputDir/quantification/mcquant/mesmer/1_mask_TEST1_1.csv"),
+                            CsvUtils.roundAndHashCsv("$outputDir/quantification/mcquant/mesmer/2_mask_TEST1_2.csv"),
+                            CsvUtils.roundAndHashCsv("$outputDir/quantification/mcquant/mesmer/3_mask_TEST1_3.csv"),
+                            CsvUtils.roundAndHashCsv("$outputDir/quantification/mcquant/mesmer/4_mask_TEST1_4.csv"),
+                            CsvUtils.roundAndHashCsv("$outputDir/quantification/mcquant/mesmer/5_mask_TEST1_5.csv"),
+                            CsvUtils.roundAndHashCsv("$outputDir/quantification/mcquant/mesmer/6_mask_TEST1_6.csv"),
+                            CsvUtils.roundAndHashCsv("$outputDir/quantification/mcquant/mesmer/7_mask_TEST1_7.csv"),
+                            CsvUtils.roundAndHashCsv("$outputDir/quantification/mcquant/mesmer/8_mask_TEST1_8.csv"),
+                            CsvUtils.roundAndHashCsv("$outputDir/quantification/mcquant/mesmer/9_mask_TEST1_9.csv"),
+                            CsvUtils.roundAndHashCsv("$outputDir/quantification/mcquant/mesmer/10_mask_TEST1_10.csv"),
+                            CsvUtils.roundAndHashCsv("$outputDir/quantification/mcquant/mesmer/11_mask_TEST1_11.csv"),
+                            CsvUtils.roundAndHashCsv("$outputDir/quantification/mcquant/mesmer/12_mask_TEST1_12.csv"),
+                            CsvUtils.roundAndHashCsv("$outputDir/quantification/mcquant/mesmer/13_mask_TEST1_13.csv"),
+                            CsvUtils.roundAndHashCsv("$outputDir/quantification/mcquant/mesmer/14_mask_TEST1_14.csv"),
+                            CsvUtils.roundAndHashCsv("$outputDir/quantification/mcquant/mesmer/15_mask_TEST1_15.csv"),
+                            CsvUtils.roundAndHashCsv("$outputDir/quantification/mcquant/mesmer/16_mask_TEST1_16.csv"),
+                            CsvUtils.roundAndHashCsv("$outputDir/quantification/mcquant/mesmer/17_mask_TEST1_17.csv"),
+                            CsvUtils.roundAndHashCsv("$outputDir/quantification/mcquant/mesmer/18_mask_TEST1_18.csv"),
+                            CsvUtils.roundAndHashCsv("$outputDir/quantification/mcquant/mesmer/19_mask_TEST1_19.csv"),
+                            CsvUtils.roundAndHashCsv("$outputDir/quantification/mcquant/mesmer/20_mask_TEST1_20.csv"),
+                            CsvUtils.roundAndHashCsv("$outputDir/quantification/mcquant/mesmer/21_mask_TEST1_21.csv"),
+                            CsvUtils.roundAndHashCsv("$outputDir/quantification/mcquant/mesmer/22_mask_TEST1_22.csv"),
+                            CsvUtils.roundAndHashCsv("$outputDir/quantification/mcquant/mesmer/23_mask_TEST1_23.csv"),
+                            CsvUtils.roundAndHashCsv("$outputDir/quantification/mcquant/mesmer/24_mask_TEST1_24.csv"),
+                            CsvUtils.roundAndHashCsv("$outputDir/quantification/mcquant/mesmer/25_mask_TEST1_25.csv"),
+                            CsvUtils.roundAndHashCsv("$outputDir/quantification/mcquant/mesmer/26_mask_TEST1_26.csv"),
+                            CsvUtils.roundAndHashCsv("$outputDir/quantification/mcquant/mesmer/27_mask_TEST1_27.csv"),
+                            CsvUtils.roundAndHashCsv("$outputDir/quantification/mcquant/mesmer/28_mask_TEST1_28.csv"),
+                            CsvUtils.roundAndHashCsv("$outputDir/quantification/mcquant/mesmer/29_mask_TEST1_29.csv"),
+                            CsvUtils.roundAndHashCsv("$outputDir/quantification/mcquant/mesmer/30_mask_TEST1_30.csv"),
+                            CsvUtils.roundAndHashCsv("$outputDir/quantification/mcquant/mesmer/31_mask_TEST1_31.csv"),
+                            CsvUtils.roundAndHashCsv("$outputDir/quantification/mcquant/mesmer/32_mask_TEST1_32.csv"),
+                            CsvUtils.roundAndHashCsv("$outputDir/quantification/mcquant/mesmer/33_mask_TEST1_33.csv"),
+                            CsvUtils.roundAndHashCsv("$outputDir/quantification/mcquant/mesmer/34_mask_TEST1_34.csv"),
+                            CsvUtils.roundAndHashCsv("$outputDir/quantification/mcquant/mesmer/35_mask_TEST1_35.csv"),
+                            CsvUtils.roundAndHashCsv("$outputDir/quantification/mcquant/mesmer/36_mask_TEST1_36.csv"),
+                            CsvUtils.roundAndHashCsv("$outputDir/quantification/mcquant/mesmer/37_mask_TEST1_37.csv"),
+                            CsvUtils.roundAndHashCsv("$outputDir/quantification/mcquant/mesmer/38_mask_TEST1_38.csv"),
+                            CsvUtils.roundAndHashCsv("$outputDir/quantification/mcquant/mesmer/39_mask_TEST1_39.csv"),
+                            CsvUtils.roundAndHashCsv("$outputDir/quantification/mcquant/mesmer/40_mask_TEST1_40.csv"),
+                            CsvUtils.roundAndHashCsv("$outputDir/quantification/mcquant/mesmer/41_mask_TEST1_41.csv"),
+                            CsvUtils.roundAndHashCsv("$outputDir/quantification/mcquant/mesmer/42_mask_TEST1_42.csv"),
+                            CsvUtils.roundAndHashCsv("$outputDir/quantification/mcquant/mesmer/43_mask_TEST1_43.csv"),
+                            CsvUtils.roundAndHashCsv("$outputDir/quantification/mcquant/mesmer/44_mask_TEST1_44.csv"),
+                            CsvUtils.roundAndHashCsv("$outputDir/quantification/mcquant/mesmer/45_mask_TEST1_45.csv"),
+                            CsvUtils.roundAndHashCsv("$outputDir/quantification/mcquant/mesmer/46_mask_TEST1_46.csv"),
+                            CsvUtils.roundAndHashCsv("$outputDir/quantification/mcquant/mesmer/47_mask_TEST1_47.csv"),
                         ).match()
                     },
                     { assert workflow.success }

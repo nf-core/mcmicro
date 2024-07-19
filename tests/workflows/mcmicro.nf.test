@@ -7,6 +7,9 @@ nextflow_workflow {
     test("test 1") {
 
         when {
+            params {
+                segmentation = "mesmer"
+            }
             workflow {
                 """
                 input[0] = Channel.of(

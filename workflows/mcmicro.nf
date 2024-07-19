@@ -77,7 +77,17 @@ workflow MCMICRO {
     // // Run Background Correction
     // BACKSUB(ASHLAR.out.tif, ch_markers)
     //BACKSUB(ASHLAR.out.tif, [[id: "backsub"], params.marker_sheet])
-    //ch_versions = ch_versions.mix(BACKSUB.out.versions)
+    /*
+    if (params.backsub) {
+        BACKSUB(ASHLAR.out.tif, [[id:"$ASHLAR.out.tif[0]['id']"], params.marker_sheet])
+        ch_segmentation_input = BACKSUB.out.backsub_tif
+        ch_versions = ch_versions.mix(BACKSUB.out.versions)
+    } else {
+    */
+        ch_segmentation_input = ASHLAR.out.tif
+    /*
+    }
+    */
 
     // Run Coreograph
     if (params.tma_dearray) {
@@ -92,8 +102,25 @@ workflow MCMICRO {
 
     // Run Segmentation
 
-    DEEPCELL_MESMER(ch_segmentation_input, [[:],[]])
+    ch_masks = Channel.empty()
+
+    ch_segmentation_input
+        .multiMap{ meta, image ->
+            img: [meta + [segmenter: 'mesmer'], image]
+            membrane_img: [[:], []]
+        }
+        | DEEPCELL_MESMER
+    ch_masks = ch_masks.mix(DEEPCELL_MESMER.out.mask)
     ch_versions = ch_versions.mix(DEEPCELL_MESMER.out.versions)
+
+    ch_segmentation_input
+        .multiMap{ meta, image ->
+            image: [meta + [segmenter: 'cellpose'], image]
+            model: params.cellpose_model
+        }
+        | CELLPOSE
+    ch_masks = ch_masks.mix(CELLPOSE.out.mask)
+    ch_versions = ch_versions.mix(CELLPOSE.out.versions)
 
     // Run Quantification
 
@@ -106,10 +133,11 @@ workflow MCMICRO {
         .collectFile(name: 'markers.csv', sort: false, newLine: true)
 
     ch_segmentation_input
-        .combine(DEEPCELL_MESMER.out.mask, by: [0])
+        .cross(ch_masks) { it[0]['id'] }
+        .map{ t_ashlar, t_mask -> [t_mask[0], t_ashlar[1], t_mask[1]] }
         .combine(ch_mcquant_markers)
-        .dump(tag: 'MCQUANT in')
-        .multiMap { meta, image, mask, marker ->
+        .dump(tag: 'MCQUANT IN')
+        .multiMap{ meta, image, mask, marker ->
             image: [meta, image]
             mask: [meta, mask]
             markers: [meta, marker]

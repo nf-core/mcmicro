@@ -69,6 +69,15 @@
                 "tma_dearray": {
                     "type": "boolean",
                     "description": "Apply coreograph module to create separate images before segmentation"
+                },
+                "segmentation": {
+                    "type": "string",
+                    "pattern": "^((cellpose|mesmer)?,?)*(?<!,)$",
+                    "description": "comma separated list of segmentation modules to run. options are ['mesmer','cellpose']"
+                },
+                "cellpose_model": {
+                    "type": "string",
+                    "description": "optional model file for cellpose segmentation"
                 }
             }
         },

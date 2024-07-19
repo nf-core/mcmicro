@@ -175,6 +175,11 @@ def validateInputParameters() {
     } else if(!params.input_sample && !params.input_cycle) {
         error "You must specify either input_sample or input_cycle."
     }
+
+    if (params.cellpose_model && !segmentation_list.contains('cellpose')) {
+        error "You can only provide a cellpose model if you have selected cellpose as one of your segmentation methods"
+    }
+
 }
 
 //

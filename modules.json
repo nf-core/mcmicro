@@ -25,6 +25,12 @@
                     "cellpose": {
                         "branch": "master",
                         "git_sha": "716ef3019b66772a817b417078edce2f7b337858",
+                        "installed_by": ["modules"],
+                        "patch": "modules/nf-core/cellpose/cellpose.diff"
+                    },
+                    "coreograph": {
+                        "branch": "master",
+                        "git_sha": "3f5420aa22e00bd030a2556dfdffc9e164ec0ec5",
                         "installed_by": ["modules"]
                     },
                     "deepcell/mesmer": {
