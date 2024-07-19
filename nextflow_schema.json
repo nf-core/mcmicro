@@ -65,6 +65,15 @@
                     "type": "string",
                     "enum": ["basicpy"],
                     "description": "input that defines type of illumination correction to be performed"
+                },
+                "segmentation": {
+                    "type": "string",
+                    "pattern": "^((cellpose|mesmer)?,?)*(?<!,)$",
+                    "description": "comma separated list of segmentation modules to run. options are ['mesmer','cellpose']"
+                },
+                "cellpose_model": {
+                    "type": "string",
+                    "description": "optional model file for cellpose segmentation"
                 }
             }
         },

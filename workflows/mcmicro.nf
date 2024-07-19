@@ -76,12 +76,39 @@ workflow MCMICRO {
     // // Run Background Correction
     // BACKSUB(ASHLAR.out.tif, ch_markers)
     //BACKSUB(ASHLAR.out.tif, [[id: "backsub"], params.marker_sheet])
-    //ch_versions = ch_versions.mix(BACKSUB.out.versions)
+    /*
+    if (params.backsub) {
+        BACKSUB(ASHLAR.out.tif, [[id:"$ASHLAR.out.tif[0]['id']"], params.marker_sheet])
+        ch_segmentation_input = BACKSUB.out.backsub_tif
+        ch_versions = ch_versions.mix(BACKSUB.out.versions)
+    } else {
+    */
+        ch_segmentation_input = ASHLAR.out.tif
+    /*
+    }
+    */
 
     // Run Segmentation
 
-    DEEPCELL_MESMER(ASHLAR.out.tif, [[:],[]])
+    ch_masks = Channel.empty()
+
+    ch_segmentation_input
+        .multiMap{ meta, image ->
+            img: [meta + [segmenter: 'mesmer'], image]
+            membrane_img: [[:], []]
+        }
+        | DEEPCELL_MESMER
+    ch_masks = ch_masks.mix(DEEPCELL_MESMER.out.mask)
     ch_versions = ch_versions.mix(DEEPCELL_MESMER.out.versions)
+
+    ch_segmentation_input
+        .multiMap{ meta, image ->
+            image: [meta + [segmenter: 'cellpose'], image]
+            model: params.cellpose_model
+        }
+        | CELLPOSE
+    ch_masks = ch_masks.mix(CELLPOSE.out.mask)
+    ch_versions = ch_versions.mix(CELLPOSE.out.versions)
 
     // Run Quantification
 
@@ -92,16 +119,19 @@ workflow MCMICRO {
             it.collect{ _1, _2, marker_name, _4, _5, _6 -> '"' + marker_name + '"' }
         }
         .collectFile(name: 'markers.csv', sort: false, newLine: true)
+
     ASHLAR.out.tif
-        .join(DEEPCELL_MESMER.out.mask)
+        .cross(ch_masks) { it[0]['id'] }
+        .map{ t_ashlar, t_mask -> [t_mask[0], t_ashlar[1], t_mask[1]] }
         .combine(ch_mcquant_markers)
-        .dump(tag: 'MCQUANT in')
-        .multiMap { it ->
-            image: [it[0], it[1]]
-            mask: [it[0], it[2]]
-            markers: [it[0], it[3]]
+        .dump(tag: 'MCQUANT IN')
+        .multiMap{ meta, image, mask, marker ->
+            image: [meta, image]
+            mask: [meta, mask]
+            markers: [meta, marker]
         }
         | MCQUANT
+
     ch_versions = ch_versions.mix(MCQUANT.out.versions)
 
     /*

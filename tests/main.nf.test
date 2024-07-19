@@ -9,6 +9,9 @@ nextflow_workflow {
         test("cycle: no illumination correction") {
 
             when {
+                params {
+                    segmentation = "mesmer"
+                }
                 workflow {
                     """
                     input[0] = Channel.of(
@@ -37,7 +40,7 @@ nextflow_workflow {
                         assert snapshot (
                             path("$outputDir/registration/ashlar/TEST1.ome.tif"),
                             path("$outputDir/segmentation/deepcell_mesmer/mask_TEST1.tif"),
-                            CsvUtils.roundAndHashCsv("$outputDir/quantification/mcquant/TEST1_mask_TEST1.csv"),
+                            CsvUtils.roundAndHashCsv("$outputDir/quantification/mcquant/mesmer/TEST1_mask_TEST1.csv"),
                         ).match()
                     },
                     { assert workflow.success }
@@ -51,6 +54,7 @@ nextflow_workflow {
             when {
                 params {
                     illumination = "basicpy"
+                    segmentation = "mesmer"
                 }
                 workflow {
                     """
@@ -80,7 +84,7 @@ nextflow_workflow {
                         assert snapshot (
                             ImageUtils.getImageMetadata("$outputDir/registration/ashlar/TEST1.ome.tif"),
                             ImageUtils.getImageMetadata("$outputDir/segmentation/deepcell_mesmer/mask_TEST1.tif"),
-                            CsvUtils.summarizeCsv("$outputDir/quantification/mcquant/TEST1_mask_TEST1.csv"),
+                            CsvUtils.summarizeCsv("$outputDir/quantification/mcquant/mesmer/TEST1_mask_TEST1.csv"),
                             ImageUtils.getImageMetadata("$outputDir/illumination_correction/basicpy/cycif-tonsil-cycle1.ome-dfp.tiff"),
                             ImageUtils.getImageMetadata("$outputDir/illumination_correction/basicpy/cycif-tonsil-cycle1.ome-ffp.tiff")
                         ).match()
@@ -95,6 +99,7 @@ nextflow_workflow {
             when {
                 params {
                     illumination = "manual"
+                    segmentation = "mesmer"
                 }
                 workflow {
                     """
@@ -124,7 +129,7 @@ nextflow_workflow {
                         assert snapshot (
                             path("$outputDir/registration/ashlar/TEST1.ome.tif"),
                             path("$outputDir/segmentation/deepcell_mesmer/mask_TEST1.tif"),
-                            CsvUtils.roundAndHashCsv("$outputDir/quantification/mcquant/TEST1_mask_TEST1.csv")
+                            CsvUtils.roundAndHashCsv("$outputDir/quantification/mcquant/mesmer/TEST1_mask_TEST1.csv")
                         ).match()
                     },
                     { assert workflow.success }
@@ -135,6 +140,9 @@ nextflow_workflow {
         test("cycle: multiple file ashlar input no correction") {
 
             when {
+                params {
+                    segmentation = "mesmer"
+                }
                 workflow {
                     """
                     input[0] = Channel.of(
@@ -183,7 +191,7 @@ nextflow_workflow {
                         assert snapshot (
                             path("$outputDir/registration/ashlar/cycif-tonsil.ome.tif"),
                             path("$outputDir/segmentation/deepcell_mesmer/mask_cycif-tonsil.tif"),
-                            CsvUtils.roundAndHashCsv("$outputDir/quantification/mcquant/cycif-tonsil_mask_cycif-tonsil.csv")
+                            CsvUtils.roundAndHashCsv("$outputDir/quantification/mcquant/mesmer/cycif-tonsil_mask_cycif-tonsil.csv")
                         ).match()
                     },
                     { assert workflow.success }
@@ -194,6 +202,9 @@ nextflow_workflow {
         test("cycle: multiple file ashlar input with multiple samples no correction") {
 
             when {
+                params {
+                    segmentation = "mesmer"
+                }
                 workflow {
                     """
                     input[0] = Channel.of(
@@ -246,8 +257,79 @@ nextflow_workflow {
                             path("$outputDir/registration/ashlar/cycif-tonsil2.ome.tif"),
                             path("$outputDir/segmentation/deepcell_mesmer/mask_cycif-tonsil.tif"),
                             path("$outputDir/segmentation/deepcell_mesmer/mask_cycif-tonsil2.tif"),
-                            CsvUtils.roundAndHashCsv("$outputDir/quantification/mcquant/cycif-tonsil_mask_cycif-tonsil.csv"),
-                            CsvUtils.roundAndHashCsv("$outputDir/quantification/mcquant/cycif-tonsil2_mask_cycif-tonsil2.csv"),
+                            CsvUtils.roundAndHashCsv("$outputDir/quantification/mcquant/mesmer/cycif-tonsil_mask_cycif-tonsil.csv"),
+                            CsvUtils.roundAndHashCsv("$outputDir/quantification/mcquant/mesmer/cycif-tonsil2_mask_cycif-tonsil2.csv"),
+                        ).match()
+                    },
+                    { assert workflow.success }
+                )
+            }
+        },
+
+        test("cycle: multiple file ashlar input with multiple samples no correction, multiple segmentation") {
+
+            when {
+                params {
+                    segmentation = "mesmer,cellpose"
+                }
+                workflow {
+                    """
+                    input[0] = Channel.of(
+                        [
+                            [id:"cycif-tonsil", cycle_number:1, channel_count:4],
+                            "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/imaging/ome-tiff/cycif-tonsil-cycle1.ome.tif",
+                            [],
+                            [],
+                        ],
+                        [
+                            [id:"cycif-tonsil", cycle_number:2, channel_count:4],
+                            "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/imaging/ome-tiff/cycif-tonsil-cycle2.ome.tif",
+                            [],
+                            [],
+                        ],
+                        [
+                            [id:"cycif-tonsil2", cycle_number:1, channel_count:4],
+                            "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/imaging/ome-tiff/cycif-tonsil-cycle2.ome.tif",
+                            [],
+                            [],
+                        ],
+                        [
+                            [id:"cycif-tonsil2", cycle_number:2, channel_count:4],
+                            "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/imaging/ome-tiff/cycif-tonsil-cycle3.ome.tif",
+                            [],
+                            [],
+                        ],
+                    )
+                    input[1] = Channel.of(
+                        [
+                            [1,1,'DNA_6',[],[],[]],
+                            [2,1,'ELANE',[],[],[]],
+                            [3,1,'CD57',[],[],[]],
+                            [4,1,'CD45',[],[],[]],
+                            [5,1,'DNA_7',[],[],[]],
+                            [6,1,'ELANE7',[],[],[]],
+                            [7,1,'CD577',[],[],[]],
+                            [8,1,'CD457',[],[],[]],
+                        ],
+                    )
+                    """
+                }
+            }
+
+            then {
+                assertAll (
+                    {
+                        assert snapshot (
+                            path("$outputDir/registration/ashlar/cycif-tonsil.ome.tif"),
+                            path("$outputDir/registration/ashlar/cycif-tonsil2.ome.tif"),
+                            path("$outputDir/segmentation/deepcell_mesmer/mask_cycif-tonsil.tif"),
+                            path("$outputDir/segmentation/deepcell_mesmer/mask_cycif-tonsil2.tif"),
+                            path("$outputDir/segmentation/cellpose/cycif-tonsil.ome_cp_masks.tif"),
+                            path("$outputDir/segmentation/cellpose/cycif-tonsil2.ome_cp_masks.tif"),
+                            CsvUtils.roundAndHashCsv("$outputDir/quantification/mcquant/mesmer/cycif-tonsil_mask_cycif-tonsil.csv"),
+                            CsvUtils.roundAndHashCsv("$outputDir/quantification/mcquant/mesmer/cycif-tonsil2_mask_cycif-tonsil2.csv"),
+                            CsvUtils.roundAndHashCsv("$outputDir/quantification/mcquant/cellpose/cycif-tonsil_cycif-tonsil.csv"),
+                            CsvUtils.roundAndHashCsv("$outputDir/quantification/mcquant/cellpose/cycif-tonsil2_cycif-tonsil2.csv"),
                         ).match()
                     },
                     { assert workflow.success }
@@ -260,6 +342,7 @@ nextflow_workflow {
             when {
                 params {
                     illumination = "basicpy"
+                    segmentation = "mesmer"
                 }
                 workflow {
                     """
@@ -309,7 +392,7 @@ nextflow_workflow {
                         assert snapshot (
                             ImageUtils.getImageMetadata("$outputDir/registration/ashlar/cycif-tonsil.ome.tif"),
                             ImageUtils.getImageMetadata("$outputDir/segmentation/deepcell_mesmer/mask_cycif-tonsil.tif"),
-                            CsvUtils.summarizeCsv("$outputDir/quantification/mcquant/cycif-tonsil_mask_cycif-tonsil.csv"),
+                            CsvUtils.summarizeCsv("$outputDir/quantification/mcquant/mesmer/cycif-tonsil_mask_cycif-tonsil.csv"),
                             ImageUtils.getImageMetadata("$outputDir/illumination_correction/basicpy/cycif-tonsil-cycle1.ome-dfp.tiff"),
                             ImageUtils.getImageMetadata("$outputDir/illumination_correction/basicpy/cycif-tonsil-cycle1.ome-ffp.tiff"),
                             ImageUtils.getImageMetadata("$outputDir/illumination_correction/basicpy/cycif-tonsil-cycle2.ome-dfp.tiff"),
@@ -328,6 +411,7 @@ nextflow_workflow {
             when {
                 params {
                     illumination = "basicpy"
+                    segmentation = "mesmer"
                 }
                 workflow {
                     """
@@ -381,8 +465,8 @@ nextflow_workflow {
                             ImageUtils.getImageMetadata("$outputDir/registration/ashlar/cycif-tonsil2.ome.tif"),
                             ImageUtils.getImageMetadata("$outputDir/segmentation/deepcell_mesmer/mask_cycif-tonsil.tif"),
                             path("$outputDir/segmentation/deepcell_mesmer/mask_cycif-tonsil2.tif"),
-                            CsvUtils.summarizeCsv("$outputDir/quantification/mcquant/cycif-tonsil_mask_cycif-tonsil.csv"),
-                            CsvUtils.summarizeCsv("$outputDir/quantification/mcquant/cycif-tonsil2_mask_cycif-tonsil2.csv"),
+                            CsvUtils.summarizeCsv("$outputDir/quantification/mcquant/mesmer/cycif-tonsil_mask_cycif-tonsil.csv"),
+                            CsvUtils.summarizeCsv("$outputDir/quantification/mcquant/mesmer/cycif-tonsil2_mask_cycif-tonsil2.csv"),
                             ImageUtils.getImageMetadata("$outputDir/illumination_correction/basicpy/cycif-tonsil-cycle1.ome-dfp.tiff"),
                             ImageUtils.getImageMetadata("$outputDir/illumination_correction/basicpy/cycif-tonsil-cycle1.ome-ffp.tiff"),
                             ImageUtils.getImageMetadata("$outputDir/illumination_correction/basicpy/cycif-tonsil-cycle2.ome-dfp.tiff"),
@@ -394,6 +478,49 @@ nextflow_workflow {
                     { assert workflow.success }
                 )
             }
+        },
+
+        test("cycle: no illumination correction, cellpose segmentation") {
+
+            when {
+                params {
+                    segmentation = "cellpose"
+                }
+                workflow {
+                    """
+                    input[0] = Channel.of(
+                        [
+                            [id:"TEST1", cycle_number:1, channel_count:4],
+                            "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/imaging/ome-tiff/cycif-tonsil-cycle1.ome.tif",
+                            [],
+                            [],
+                        ],
+                    )
+                    input[1] = Channel.of(
+                        [
+                            [1,1,'DNA_6',[],[],[]],
+                            [2,1,'ELANE',[],[],[]],
+                            [3,1,'CD57',[],[],[]],
+                            [4,1,'CD45',[],[],[]],
+                        ],
+                    )
+                    """
+                }
+            }
+
+            then {
+                assertAll (
+                    {
+                        assert snapshot (
+                            path("$outputDir/registration/ashlar/TEST1.ome.tif"),
+                            path("$outputDir/segmentation/cellpose/TEST1.ome_cp_masks.tif"),
+                            CsvUtils.roundAndHashCsv("$outputDir/quantification/mcquant/cellpose/TEST1_TEST1.csv"),
+                        ).match()
+                    },
+                    { assert workflow.success }
+                )
+            }
+
         },
 
     ]
