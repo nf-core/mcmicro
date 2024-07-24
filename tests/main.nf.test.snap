@@ -87,6 +87,23 @@
         },
         "timestamp": "2024-04-23T11:52:51.734421588"
     },
+    "cycle: no illumination correction, backsub": {
+        "content": [
+            "TEST1.ome.tif:md5,9d4fca1d7ec97be3f6343eb712af9dea",
+            "TEST2.ome.tif:md5,9d4fca1d7ec97be3f6343eb712af9dea",
+            "mask_TEST1.tif:md5,c1075eb025f558fcadedc1f0d903ec15",
+            "mask_TEST2.tif:md5,c1075eb025f558fcadedc1f0d903ec15",
+            "TEST1_mask_TEST1.csv:rounded:md5,af6d1aae676ad32b008876b8be737fa7",
+            "TEST2_mask_TEST2.csv:rounded:md5,af6d1aae676ad32b008876b8be737fa7",
+            "TEST1.backsub.ome.tif:md5,469bc15d980a437f4a06128cc39d40c3",
+            "TEST2.backsub.ome.tif:md5,469bc15d980a437f4a06128cc39d40c3"
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-07-23T14:57:11.807495676"
+    },
     "cycle: multiple file ashlar input with multiple samples no correction, multiple segmentation": {
         "content": [
             "cycif-tonsil.ome.tif:md5,9d4fca1d7ec97be3f6343eb712af9dea",

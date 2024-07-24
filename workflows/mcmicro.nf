@@ -76,17 +76,22 @@ workflow MCMICRO {
     // // Run Background Correction
     // BACKSUB(ASHLAR.out.tif, ch_markers)
     //BACKSUB(ASHLAR.out.tif, [[id: "backsub"], params.marker_sheet])
-    /*
     if (params.backsub) {
-        BACKSUB(ASHLAR.out.tif, [[id:"$ASHLAR.out.tif[0]['id']"], params.marker_sheet])
+        ch_backsub_markers = ch_markersheet
+            .map {
+                it.collect{ channel_number, cycle_number, marker_name, filter, excitation, emission, exposure, background, remove -> channel_number + "," + cycle_number + "," + marker_name + "," + exposure + "," + background + "," + remove }
+            }
+            .map { ['channel_number,cycle_number,marker_name,exposure,background,remove', *it] }
+            .flatten()
+            .map { it.replace('[]', '') }
+            .collectFile(name: 'markers_backsub.csv', sort: false, newLine: true, storeDir: '/tmp')
+        //BACKSUB(ASHLAR.out.tif, [[id:"$ASHLAR.out.tif[0]['id']"], params.marker_sheet])
+        BACKSUB(ASHLAR.out.tif, [[id:"$ASHLAR.out.tif[0]['id']"], "/tmp/markers_backsub.csv"])
         ch_segmentation_input = BACKSUB.out.backsub_tif
         ch_versions = ch_versions.mix(BACKSUB.out.versions)
     } else {
-    */
         ch_segmentation_input = ASHLAR.out.tif
-    /*
     }
-    */
 
     // Run Segmentation
 
@@ -116,7 +121,7 @@ workflow MCMICRO {
     ch_mcquant_markers = ch_markersheet
         .flatMap{
             ['marker_name'] +
-            it.collect{ _1, _2, marker_name, _4, _5, _6 -> '"' + marker_name + '"' }
+            it.collect{ _1, _2, marker_name, _4, _5, _6, _7, _8, _9 -> '"' + marker_name + '"' }
         }
         .collectFile(name: 'markers.csv', sort: false, newLine: true)
 

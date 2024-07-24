@@ -24,10 +24,10 @@ nextflow_workflow {
                     )
                     input[1] = Channel.of(
                         [
-                            [1,1,'DNA_6',[],[],[]],
-                            [2,1,'ELANE',[],[],[]],
-                            [3,1,'CD57',[],[],[]],
-                            [4,1,'CD45',[],[],[]],
+                            [1,1,'DNA_6',[],[],[],[],[],[]],
+                            [2,1,'ELANE',[],[],[],[],[],[]],
+                            [3,1,'CD57',[],[],[],[],[],[]],
+                            [4,1,'CD45',[],[],[],[],[],[]],
                         ],
                     )
                     """
@@ -68,10 +68,10 @@ nextflow_workflow {
                     )
                     input[1] = Channel.of(
                         [
-                            [1,1,'DNA_6',[],[],[]],
-                            [2,1,'ELANE',[],[],[]],
-                            [3,1,'CD57',[],[],[]],
-                            [4,1,'CD45',[],[],[]],
+                            [1,1,'DNA_6',[],[],[],[],[],[]],
+                            [2,1,'ELANE',[],[],[],[],[],[]],
+                            [3,1,'CD57',[],[],[],[],[],[]],
+                            [4,1,'CD45',[],[],[],[],[],[]],
                         ],
                     )
                     """
@@ -113,10 +113,10 @@ nextflow_workflow {
                     )
                     input[1] = Channel.of(
                         [
-                            [1,1,'DNA_6',[],[],[]],
-                            [2,1,'ELANE',[],[],[]],
-                            [3,1,'CD57',[],[],[]],
-                            [4,1,'CD45',[],[],[]],
+                            [1,1,'DNA_6',[],[],[],[],[],[]],
+                            [2,1,'ELANE',[],[],[],[],[],[]],
+                            [3,1,'CD57',[],[],[],[],[],[]],
+                            [4,1,'CD45',[],[],[],[],[],[]],
                         ],
                     )
                     """
@@ -167,18 +167,18 @@ nextflow_workflow {
                     )
                     input[1] = Channel.of(
                         [
-                            [1,1,'DNA_6',[],[],[]],
-                            [2,1,'ELANE',[],[],[]],
-                            [3,1,'CD57',[],[],[]],
-                            [4,1,'CD45',[],[],[]],
-                            [5,1,'DNA_7',[],[],[]],
-                            [6,1,'ELANE7',[],[],[]],
-                            [7,1,'CD577',[],[],[]],
-                            [8,1,'CD457',[],[],[]],
-                            [9,1,'DNA_8',[],[],[]],
-                            [10,1,'ELANE8',[],[],[]],
-                            [11,1,'CD578',[],[],[]],
-                            [12,1,'CD458',[],[],[]],
+                            [1,1,'DNA_6',[],[],[],[],[],[]],
+                            [2,1,'ELANE',[],[],[],[],[],[]],
+                            [3,1,'CD57',[],[],[],[],[],[]],
+                            [4,1,'CD45',[],[],[],[],[],[]],
+                            [5,1,'DNA_7',[],[],[],[],[],[]],
+                            [6,1,'ELANE7',[],[],[],[],[],[]],
+                            [7,1,'CD577',[],[],[],[],[],[]],
+                            [8,1,'CD457',[],[],[],[],[],[]],
+                            [9,1,'DNA_8',[],[],[],[],[],[]],
+                            [10,1,'ELANE8',[],[],[],[],[],[]],
+                            [11,1,'CD578',[],[],[],[],[],[]],
+                            [12,1,'CD458',[],[],[],[],[],[]],
                         ],
                     )
                     """
@@ -235,14 +235,14 @@ nextflow_workflow {
                     )
                     input[1] = Channel.of(
                         [
-                            [1,1,'DNA_6',[],[],[]],
-                            [2,1,'ELANE',[],[],[]],
-                            [3,1,'CD57',[],[],[]],
-                            [4,1,'CD45',[],[],[]],
-                            [5,1,'DNA_7',[],[],[]],
-                            [6,1,'ELANE7',[],[],[]],
-                            [7,1,'CD577',[],[],[]],
-                            [8,1,'CD457',[],[],[]],
+                            [1,1,'DNA_6',[],[],[],[],[],[]],
+                            [2,1,'ELANE',[],[],[],[],[],[]],
+                            [3,1,'CD57',[],[],[],[],[],[]],
+                            [4,1,'CD45',[],[],[],[],[],[]],
+                            [5,1,'DNA_7',[],[],[],[],[],[]],
+                            [6,1,'ELANE7',[],[],[],[],[],[]],
+                            [7,1,'CD577',[],[],[],[],[],[]],
+                            [8,1,'CD457',[],[],[],[],[],[]],
                         ],
                     )
                     """
@@ -302,14 +302,14 @@ nextflow_workflow {
                     )
                     input[1] = Channel.of(
                         [
-                            [1,1,'DNA_6',[],[],[]],
-                            [2,1,'ELANE',[],[],[]],
-                            [3,1,'CD57',[],[],[]],
-                            [4,1,'CD45',[],[],[]],
-                            [5,1,'DNA_7',[],[],[]],
-                            [6,1,'ELANE7',[],[],[]],
-                            [7,1,'CD577',[],[],[]],
-                            [8,1,'CD457',[],[],[]],
+                            [1,1,'DNA_6',[],[],[],[],[],[]],
+                            [2,1,'ELANE',[],[],[],[],[],[]],
+                            [3,1,'CD57',[],[],[],[],[],[]],
+                            [4,1,'CD45',[],[],[],[],[],[]],
+                            [5,1,'DNA_7',[],[],[],[],[],[]],
+                            [6,1,'ELANE7',[],[],[],[],[],[]],
+                            [7,1,'CD577',[],[],[],[],[],[]],
+                            [8,1,'CD457',[],[],[],[],[],[]],
                         ],
                     )
                     """
@@ -368,18 +368,18 @@ nextflow_workflow {
                     )
                     input[1] = Channel.of(
                         [
-                            [1,1,'DNA_6',[],[],[]],
-                            [2,1,'ELANE',[],[],[]],
-                            [3,1,'CD57',[],[],[]],
-                            [4,1,'CD45',[],[],[]],
-                            [5,1,'DNA_7',[],[],[]],
-                            [6,1,'ELANE7',[],[],[]],
-                            [7,1,'CD577',[],[],[]],
-                            [8,1,'CD457',[],[],[]],
-                            [9,1,'DNA_8',[],[],[]],
-                            [10,1,'ELANE8',[],[],[]],
-                            [11,1,'CD578',[],[],[]],
-                            [12,1,'CD458',[],[],[]],
+                            [1,1,'DNA_6',[],[],[],[],[],[]],
+                            [2,1,'ELANE',[],[],[],[],[],[]],
+                            [3,1,'CD57',[],[],[],[],[],[]],
+                            [4,1,'CD45',[],[],[],[],[],[]],
+                            [5,1,'DNA_7',[],[],[],[],[],[]],
+                            [6,1,'ELANE7',[],[],[],[],[],[]],
+                            [7,1,'CD577',[],[],[],[],[],[]],
+                            [8,1,'CD457',[],[],[],[],[],[]],
+                            [9,1,'DNA_8',[],[],[],[],[],[]],
+                            [10,1,'ELANE8',[],[],[],[],[],[]],
+                            [11,1,'CD578',[],[],[],[],[],[]],
+                            [12,1,'CD458',[],[],[],[],[],[]],
                         ],
                     )
                     """
@@ -443,14 +443,14 @@ nextflow_workflow {
                     )
                     input[1] = Channel.of(
                         [
-                            [1,1,'DNA_6',[],[],[]],
-                            [2,1,'ELANE',[],[],[]],
-                            [3,1,'CD57',[],[],[]],
-                            [4,1,'CD45',[],[],[]],
-                            [5,1,'DNA_7',[],[],[]],
-                            [6,1,'ELANE7',[],[],[]],
-                            [7,1,'CD577',[],[],[]],
-                            [8,1,'CD457',[],[],[]],
+                            [1,1,'DNA_6',[],[],[],[],[],[]],
+                            [2,1,'ELANE',[],[],[],[],[],[]],
+                            [3,1,'CD57',[],[],[],[],[],[]],
+                            [4,1,'CD45',[],[],[],[],[],[]],
+                            [5,1,'DNA_7',[],[],[],[],[],[]],
+                            [6,1,'ELANE7',[],[],[],[],[],[]],
+                            [7,1,'CD577',[],[],[],[],[],[]],
+                            [8,1,'CD457',[],[],[],[],[],[]],
                         ],
                     )
                     """
@@ -498,10 +498,10 @@ nextflow_workflow {
                     )
                     input[1] = Channel.of(
                         [
-                            [1,1,'DNA_6',[],[],[]],
-                            [2,1,'ELANE',[],[],[]],
-                            [3,1,'CD57',[],[],[]],
-                            [4,1,'CD45',[],[],[]],
+                            [1,1,'DNA_6',[],[],[],[],[],[]],
+                            [2,1,'ELANE',[],[],[],[],[],[]],
+                            [3,1,'CD57',[],[],[],[],[],[]],
+                            [4,1,'CD45',[],[],[],[],[],[]],
                         ],
                     )
                     """
@@ -515,6 +515,65 @@ nextflow_workflow {
                             path("$outputDir/registration/ashlar/TEST1.ome.tif"),
                             path("$outputDir/segmentation/cellpose/TEST1.ome_cp_masks.tif"),
                             CsvUtils.roundAndHashCsv("$outputDir/quantification/mcquant/cellpose/TEST1_TEST1.csv"),
+                        ).match()
+                    },
+                    { assert workflow.success }
+                )
+            }
+
+        },
+
+        test("cycle: no illumination correction, backsub") {
+
+            when {
+                params {
+                    segmentation = "mesmer"
+                    backsub = true
+                }
+                workflow {
+                    """
+                    input[0] = Channel.of(
+                        [
+                            [id:"TEST1", cycle_number:1, channel_count:4],
+                            "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/imaging/background_subtraction/cycif_tonsil_registered.ome.tif",
+                            [],
+                            [],
+                        ],
+                        [
+                            [id:"TEST2", cycle_number:2, channel_count:4],
+                            "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/imaging/background_subtraction/cycif_tonsil_registered.ome.tif",
+                            [],
+                            [],
+                        ],
+                    )
+                    input[1] = Channel.of(
+                        [
+                            [1,1,'DNA 1',[],[],[],100,[],[]],
+                            [2,1,'Na/K ATPase',[],[],[],100,[],[]],
+                            [3,1,'CD3',[],[],[],100,[],[]],
+                            [4,1,'CD45RO',[],[],[],100,[],[]],
+                            [5,2,'DNA 2',[],[],[],100,[],'TRUE'],
+                            [6,2,'Antigen Ki67',[],[],[],100,'Na/K ATPase',[]],
+                            [7,2,'Pan-cytokeratin',[],[],[],100,'CD3',[]],
+                            [8,2,'Aortic smooth muscle actin',[],[],[],100,'CD45RO',[]]
+                        ],
+                    )
+                    """
+                }
+            }
+
+            then {
+                assertAll (
+                    {
+                        assert snapshot (
+                            path("$outputDir/registration/ashlar/TEST1.ome.tif"),
+                            path("$outputDir/registration/ashlar/TEST2.ome.tif"),
+                            path("$outputDir/segmentation/deepcell_mesmer/mask_TEST1.tif"),
+                            path("$outputDir/segmentation/deepcell_mesmer/mask_TEST2.tif"),
+                            CsvUtils.roundAndHashCsv("$outputDir/quantification/mcquant/mesmer/TEST1_mask_TEST1.csv"),
+                            CsvUtils.roundAndHashCsv("$outputDir/quantification/mcquant/mesmer/TEST2_mask_TEST2.csv"),
+                            path("$outputDir/backsub/TEST1.backsub.ome.tif"),
+                            path("$outputDir/backsub/TEST2.backsub.ome.tif"),
                         ).match()
                     },
                     { assert workflow.success }
