@@ -74,8 +74,6 @@ workflow MCMICRO {
     ch_versions = ch_versions.mix(ASHLAR.out.versions)
 
     // // Run Background Correction
-    // BACKSUB(ASHLAR.out.tif, ch_markers)
-    //BACKSUB(ASHLAR.out.tif, [[id: "backsub"], params.marker_sheet])
     if (params.backsub) {
         ch_backsub_markers = ch_markersheet
             .map {
@@ -85,7 +83,6 @@ workflow MCMICRO {
             .flatten()
             .map { it.replace('[]', '') }
             .collectFile(name: 'markers_backsub.csv', sort: false, newLine: true, storeDir: '/tmp')
-        //BACKSUB(ASHLAR.out.tif, [[id:"$ASHLAR.out.tif[0]['id']"], params.marker_sheet])
         BACKSUB(ASHLAR.out.tif, [[id:"$ASHLAR.out.tif[0]['id']"], "/tmp/markers_backsub.csv"])
         ch_segmentation_input = BACKSUB.out.backsub_tif
         ch_versions = ch_versions.mix(BACKSUB.out.versions)
