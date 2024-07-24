@@ -79,8 +79,8 @@ workflow MCMICRO {
             .map { ['channel_number,cycle_number,marker_name,exposure,background,remove', it.collect{ channel_number, cycle_number, marker_name, _1, _2, _3, exposure, background, remove -> channel_number + "," + cycle_number + "," + marker_name + "," + exposure + "," + background + "," + remove}] }
             .flatten()
             .map { it.replace('[]', '') }
-            .collectFile(name: 'markers_backsub.csv', sort: false, newLine: true, storeDir: '/tmp')
-        BACKSUB(ASHLAR.out.tif, [[id:"$ASHLAR.out.tif[0]['id']"], "/tmp/markers_backsub.csv"])
+            .collectFile(name: 'markers_backsub.csv', sort: false, newLine: true, storeDir: "${workDir}")
+        BACKSUB(ASHLAR.out.tif, [[id:"$ASHLAR.out.tif[0]['id']"], "${workDir}/markers_backsub.csv"])
         ch_segmentation_input = BACKSUB.out.backsub_tif
         ch_versions = ch_versions.mix(BACKSUB.out.versions)
     } else {
