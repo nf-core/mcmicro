@@ -76,10 +76,7 @@ workflow MCMICRO {
     // // Run Background Correction
     if (params.backsub) {
         ch_backsub_markers = ch_markersheet
-            .map {
-                it.collect{ channel_number, cycle_number, marker_name, filter, excitation, emission, exposure, background, remove -> channel_number + "," + cycle_number + "," + marker_name + "," + exposure + "," + background + "," + remove }
-            }
-            .map { ['channel_number,cycle_number,marker_name,exposure,background,remove', *it] }
+            .map { ['channel_number,cycle_number,marker_name,exposure,background,remove', it.collect{ channel_number, cycle_number, marker_name, _1, _2, _3, exposure, background, remove -> channel_number + "," + cycle_number + "," + marker_name + "," + exposure + "," + background + "," + remove}] }
             .flatten()
             .map { it.replace('[]', '') }
             .collectFile(name: 'markers_backsub.csv', sort: false, newLine: true, storeDir: '/tmp')
