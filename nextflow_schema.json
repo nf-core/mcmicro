@@ -68,7 +68,7 @@
                 },
                 "tma_dearray": {
                     "type": "boolean",
-                    "description": "Apply coreograph module to create separate images before segmentation"
+                    "description": "If the sample is a tissue microarray (TMA), set this to 'true' to generate a separate output for each tissue core for pipeline steps beginning with cell segmentation. This also tends to speed up processing and reduce RAM usage."
                 },
                 "segmentation": {
                     "type": "string",
