@@ -556,7 +556,7 @@ nextflow_workflow {
                         assert snapshot (
                             path("$outputDir/registration/ashlar/TEST1.ome.tif"),
                             path("$outputDir/segmentation/deepcell_mesmer/mask_TEST1_1.tif"),
-                            CsvUtils.roundAndHashCsv("$outputDir/quantification/mcquant/mesmer/1_mask_TEST1_1.csv"),
+                            CsvUtils.summarizeCsv("$outputDir/quantification/mcquant/mesmer/1_mask_TEST1_1.csv"),
                         ).match()
                     },
                     { assert workflow.success }

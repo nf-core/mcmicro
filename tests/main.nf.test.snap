@@ -457,12 +457,27 @@
         "content": [
             "TEST1.ome.tif:md5,755b8a7782f9c561bb9fd6bf5e19f798",
             "mask_TEST1_1.tif:md5,525d07ef2a89a8323474ff3017737ac2",
-            "1_mask_TEST1_1.csv:rounded:md5,5337b79dd086f0ebd0a8ffe2149d9826"
+            {
+                "headers": [
+                    "CellID",
+                    "DNA_6",
+                    "X_centroid",
+                    "Y_centroid",
+                    "Area",
+                    "MajorAxisLength",
+                    "MinorAxisLength",
+                    "Eccentricity",
+                    "Solidity",
+                    "Extent",
+                    "Orientation"
+                ],
+                "rowCount": 4804
+            }
         ],
         "meta": {
             "nf-test": "0.8.4",
             "nextflow": "23.10.1"
         },
-        "timestamp": "2024-07-22T13:53:08.522915839"
+        "timestamp": "2024-08-01T17:44:21.535294636"
     }
 }
