@@ -94,7 +94,7 @@ workflow MCMICRO {
         COREOGRAPH(ASHLAR.out.tif)
         COREOGRAPH.out.cores
             .transpose()
-            .map { meta, img -> [[id: meta.id + '_' + img.toString().split('/')[-1].tokenize(".")[0]], img]}
+            .map { meta, img -> [[id: meta.id + '_' + img.fileName.toString().tokenize('.')[0]], img]}
             .set { ch_segmentation_input }
     } else {
         ch_segmentation_input = ASHLAR.out.tif
