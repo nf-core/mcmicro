@@ -529,7 +529,7 @@ nextflow_workflow {
                 params {
                     segmentation = "mesmer"
                     tma_dearray = true
-
+                    pixel_size = 0.7
                 }
                 workflow {
                     """

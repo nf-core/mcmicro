@@ -78,6 +78,10 @@
                 "cellpose_model": {
                     "type": "string",
                     "description": "optional model file for cellpose segmentation"
+                },
+                "pixel_size": {
+                    "type": "number",
+                    "description": "required input when the sample is a tissue microarray (TMA). This is needed to compute the downsample factor."
                 }
             }
         },

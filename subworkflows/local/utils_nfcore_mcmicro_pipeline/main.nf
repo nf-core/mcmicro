@@ -180,6 +180,9 @@ def validateInputParameters() {
         error "You can only provide a cellpose model if you have selected cellpose as one of your segmentation methods"
     }
 
+    if (params.tma_dearray && !params.pixel_size) {
+        error "You must provide an pixel_size in microns when the sample is a tissue microarray (TMA)."
+    }
 }
 
 //
