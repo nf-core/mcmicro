@@ -81,7 +81,8 @@
                 },
                 "pixel_size": {
                     "type": "number",
-                    "description": "required input when the sample is a tissue microarray (TMA). This is needed to compute the downsample factor."
+                    "description": "Pixel width of input image data, in microns",
+                    "help_text": "You must set this parameter when enabling TMA de-arraying with the `tma_dearray` parameter. This is required for the de-arraying module to correctly process the image."
                 }
             }
         },

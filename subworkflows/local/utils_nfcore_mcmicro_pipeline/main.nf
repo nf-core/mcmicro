@@ -181,7 +181,7 @@ def validateInputParameters() {
     }
 
     if (params.tma_dearray && !params.pixel_size) {
-        error "You must provide an pixel_size in microns when the sample is a tissue microarray (TMA)."
+        error "You must also provide the pixel_size parameter (image pixel width in microns) when enabling tma_dearray."
     }
 }
 
