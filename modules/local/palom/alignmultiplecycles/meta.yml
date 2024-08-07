@@ -1,0 +1,47 @@
+name: "palom_multiplecycles"
+description: Alignment for Multiple Layers of Mosaics
+keywords:
+  - image_processing
+  - registration
+  - alignment
+tools:
+  - "palom":
+      description: "Piecewise Alignment for Layers of Mosaics. Palom started as a tool for registering whole-slide images of the same FFPE section with different IHC stainings"
+      homepage: "https://github.com/labsyspharm/palom"
+      documentation: "https://github.com/labsyspharm/palom/blob/main/README.md"
+      tool_dev_url: "https://github.com/labsyspharm/palom"
+      doi: ""
+      licence: "" ## TODO Wait for licence specification (opened issue)
+
+input:
+  - meta:
+      type: map
+      description: |
+        Groovy Map containing sample information
+        e.g. `[ id:'sample1', single_end:false ]`
+  - images:
+      type: path
+      description: List of paths to OME-TIF files, ordered by consecutive imaging cycles
+      pattern: "*.{ome.tiff,ome.tif,tif,tiff}"
+
+output:
+  - meta:
+      type: map
+      description: |
+        Groovy Map containing sample information
+        e.g. `[ id:'sample1']`
+  - versions:
+      type: file
+      description: File containing software versions
+      pattern: "versions.yml"
+  - tif:
+      type: file
+      description: Registered image
+      pattern: "*.ome.tif"
+
+authors:
+  - "@kbestak"
+  - "@gesavoigt"
+maintainers:
+  - "@kbestak"
+  - "@gesavoigt"

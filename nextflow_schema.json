@@ -69,11 +69,24 @@
                 "segmentation": {
                     "type": "string",
                     "pattern": "^((cellpose|mesmer)?,?)*(?<!,)$",
-                    "description": "comma separated list of segmentation modules to run. options are ['mesmer','cellpose']"
+                    "description": "comma separated list of segmentation modules to run. options are ['mesmer','cellpose']",
+                    "default": "mesmer"
                 },
                 "cellpose_model": {
                     "type": "string",
-                    "description": "optional model file for cellpose segmentation"
+                    "description": "optional model file for cellpose segmentation",
+                    "default": "[]"
+                },
+                "registration_method": {
+                    "type": "string",
+                    "default": "ashlar",
+                    "pattern": "^((ashlar|palom)?,?)*(?<!,)$",
+                    "description": "Registration method to be used (ashlar or palom)"
+                },
+                "palom_align_channel": {
+                    "type": "integer",
+                    "default": 0,
+                    "description": "Channel to use for image registration"
                 }
             }
         },
