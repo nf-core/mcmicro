@@ -1,0 +1,11 @@
+name: "palom_multicycle"
+channels:
+  - conda-forge
+  - bioconda
+  - defaults
+dependencies:
+  - "openslide=4.0.0"
+  - "scikit-image=0.19.3"
+  - pip
+  - pip:
+      - "palom==2024.4.1"

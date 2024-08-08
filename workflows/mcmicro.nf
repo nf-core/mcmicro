@@ -13,6 +13,7 @@ include { softwareVersionsToYAML } from '../subworkflows/nf-core/utils_nfcore_pi
 include { methodsDescriptionText } from '../subworkflows/local/utils_nfcore_mcmicro_pipeline'
 include { MULTIQC                } from '../modules/nf-core/multiqc/main'
 include { BASICPY                } from '../modules/nf-core/basicpy/main'
+include { ALIGNMULTIPLECYCLES    } from '../modules/local/palom/alignmultiplecycles/main'
 include { ASHLAR                 } from '../modules/nf-core/ashlar/main'
 include { BACKSUB                } from '../modules/nf-core/backsub/main'
 include { CELLPOSE               } from '../modules/nf-core/cellpose/main'
@@ -56,6 +57,24 @@ workflow MCMICRO {
             .dump(tag: 'ch_samplesheet (after BASICPY)')
     }
 
+    // Image registration
+    ch_registration = Channel.empty()
+
+    ch_samplesheet
+        .map{ meta, image_tiles, dfp, ffp ->
+            [[id: meta.id], [meta.cycle_number, image_tiles]]
+        }
+        // FIXME: pass groupTuple size: from samplesheet cycle count
+        .groupTuple(sort: { a, b -> a[0] <=> b[0] })
+        .map{ meta, cycles -> [meta, *cycles.collect{ it[1..-1] }.transpose()]}
+        .dump(tag: 'PALOM in')
+        | ALIGNMULTIPLECYCLES
+    if (params.registration_method.split(',').contains('palom')) {
+        ch_versions = ch_versions.mix(ALIGNMULTIPLECYCLES.out.versions)
+        ch_registration = ch_registration.mix(ALIGNMULTIPLECYCLES.out.tif)
+    }
+
+
     ch_samplesheet
         .map{ meta, image_tiles, dfp, ffp ->
             [[id: meta.id], [meta.cycle_number, image_tiles, dfp, ffp]]
@@ -72,6 +91,10 @@ workflow MCMICRO {
         }
         | ASHLAR
     ch_versions = ch_versions.mix(ASHLAR.out.versions)
+    if (params.registration_method.split(',').contains('ashlar')) {
+        ch_versions = ch_versions.mix(ASHLAR.out.versions)
+        ch_registration = ch_registration.mix(ASHLAR.out.tif)
+    }
 
     // // Run Background Correction
     // BACKSUB(ASHLAR.out.tif, ch_markers)
@@ -83,7 +106,8 @@ workflow MCMICRO {
         ch_versions = ch_versions.mix(BACKSUB.out.versions)
     } else {
     */
-        ch_segmentation_input = ASHLAR.out.tif
+        ch_registration.view()
+        ch_segmentation_input = ch_registration
     /*
     }
     */
