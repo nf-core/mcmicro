@@ -16,6 +16,7 @@ include { BASICPY                } from '../modules/nf-core/basicpy/main'
 include { ASHLAR                 } from '../modules/nf-core/ashlar/main'
 include { BACKSUB                } from '../modules/nf-core/backsub/main'
 include { CELLPOSE               } from '../modules/nf-core/cellpose/main'
+include { COREOGRAPH             } from '../modules/nf-core/coreograph/main'
 include { DEEPCELL_MESMER        } from '../modules/nf-core/deepcell/mesmer/main'
 include { MCQUANT                } from '../modules/nf-core/mcquant/main'
 include { SCIMAP_MCMICRO         } from '../modules/nf-core/scimap/mcmicro/main'
@@ -88,6 +89,17 @@ workflow MCMICRO {
     }
     */
 
+    // Run Coreograph
+    if (params.tma_dearray) {
+        COREOGRAPH(ASHLAR.out.tif)
+        COREOGRAPH.out.cores
+            .transpose()
+            .map { meta, img -> [[id: meta.id + '_' + img.fileName.toString().tokenize('.')[0]], img]}
+            .set { ch_segmentation_input }
+    } else {
+        ch_segmentation_input = ASHLAR.out.tif
+    }
+
     // Run Segmentation
 
     ch_masks = Channel.empty()
@@ -120,7 +132,7 @@ workflow MCMICRO {
         }
         .collectFile(name: 'markers.csv', sort: false, newLine: true)
 
-    ASHLAR.out.tif
+    ch_segmentation_input
         .cross(ch_masks) { it[0]['id'] }
         .map{ t_ashlar, t_mask -> [t_mask[0], t_ashlar[1], t_mask[1]] }
         .combine(ch_mcquant_markers)

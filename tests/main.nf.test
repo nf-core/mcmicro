@@ -523,5 +523,46 @@ nextflow_workflow {
 
         },
 
+        test("cycle: no illumination correction, coreograph") {
+
+            when {
+                params {
+                    segmentation = "mesmer"
+                    tma_dearray = true
+                    pixel_size = 0.7
+                }
+                workflow {
+                    """
+                    input[0] = Channel.of(
+                        [
+                            [id:"TEST1", cycle_number:1, channel_count:4],
+                            "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/imaging/core_detection/single_core_dapi.tif",
+                            [],
+                            [],
+                        ],
+                    )
+                    input[1] = Channel.of(
+                        [
+                            [1,1,'DNA_6',[],[],[]],
+                        ],
+                    )
+                    """
+                }
+            }
+
+            then {
+                assertAll (
+                    {
+                        assert snapshot (
+                            path("$outputDir/registration/ashlar/TEST1.ome.tif"),
+                            path("$outputDir/segmentation/deepcell_mesmer/mask_TEST1_1.tif"),
+                            CsvUtils.summarizeCsv("$outputDir/quantification/mcquant/mesmer/1_mask_TEST1_1.csv"),
+                        ).match()
+                    },
+                    { assert workflow.success }
+                )
+            }
+        },
+
     ]
 }
