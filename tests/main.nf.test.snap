@@ -1,7 +1,7 @@
 {
     "cycle: multiple file ashlar input no correction": {
         "content": [
-            "cycif-tonsil.ome.tif:md5,5f4165203545b7efe04ed5f4a6d5ac9d",
+            "cycif-tonsil.ome.tif:md5,c01dda923325588ea34a4fe341b17e6e",
             "mask_cycif-tonsil.tif:md5,3103759bd55b9deeb8c8a0dade798d9a",
             {
                 "headers": [
@@ -35,7 +35,7 @@
             "nf-test": "0.8.4",
             "nextflow": "24.04.4"
         },
-        "timestamp": "2024-08-19T09:56:59.706545924"
+        "timestamp": "2024-08-19T11:36:33.347266346"
     },
     "cycle: basicpy illumination correction": {
         "content": [
@@ -115,12 +115,12 @@
     },
     "cycle: multiple file ashlar input with multiple samples no correction, multiple segmentation": {
         "content": [
-            "cycif-tonsil.ome.tif:md5,9d4fca1d7ec97be3f6343eb712af9dea",
-            "cycif-tonsil2.ome.tif:md5,ea772fef41d398ffd76cbb6354266678",
+            "cycif-tonsil.ome.tif:md5,fd414b610e189f3e805c8e99f4e78c09",
+            "cycif-tonsil2.ome.tif:md5,8615100afdf8e3e24174a6d82ecaea2c",
             "mask_cycif-tonsil.tif:md5,3103759bd55b9deeb8c8a0dade798d9a",
-            "mask_cycif-tonsil2.tif:md5,cfd4ef0f19766bcc8156a0f0ab117777",
-            "cycif-tonsil.ome_cp_masks.tif:md5,88690c63ef3b695f44e5bad40b8175a3",
-            "cycif-tonsil2.ome_cp_masks.tif:md5,c4590940d460cfe34168661573cfd87d",
+            "mask_cycif-tonsil2.tif:md5,0799cd6935febaeb9e17f8a4173fe89a",
+            "cycif-tonsil.ome_cp_masks.tif:md5,203e9df55ac714ecf9951710a24b0fdb",
+            "cycif-tonsil2.ome_cp_masks.tif:md5,f0b4cebfeeaf38e4df84ccb075523461",
             {
                 "headers": [
                     "CellID",
@@ -167,18 +167,18 @@
                 ],
                 "rowCount": 2082
             },
-            "cycif-tonsil_cycif-tonsil.csv:rounded:md5,96c0754e24b8474d4c191bdff4351701",
-            "cycif-tonsil2_cycif-tonsil2.csv:rounded:md5,a53cf1c3df3ff3edfa93e1d266185701"
+            "cycif-tonsil_cycif-tonsil.csv:rounded:md5,a3f0914e9bd14e191bf88eb53b060cfa",
+            "cycif-tonsil2_cycif-tonsil2.csv:rounded:md5,0a7406a95246c5cb21ae84afa6ae4667"
         ],
         "meta": {
             "nf-test": "0.8.4",
             "nextflow": "24.04.4"
         },
-        "timestamp": "2024-08-19T09:59:20.121769085"
+        "timestamp": "2024-08-19T11:39:02.105407088"
     },
     "cycle: no illumination correction, cellpose segmentation": {
         "content": [
-            "TEST1.ome.tif:md5,ae98ac74e3c818bb26c99ba4b9c2dd51",
+            "TEST1.ome.tif:md5,988bbb2c74d47dc22a9f3ac348f53ef5",
             "TEST1.ome_cp_masks.tif:md5,47bd29c261db5fe062ee35c1b5daccc1",
             "TEST1_TEST1.csv:rounded:md5,42ecd15013bea6dbea4e0343c7b0bef7"
         ],
@@ -186,11 +186,11 @@
             "nf-test": "0.8.4",
             "nextflow": "24.04.4"
         },
-        "timestamp": "2024-08-14T13:33:05.883457083"
+        "timestamp": "2024-08-19T11:42:32.566671555"
     },
     "cycle: no illumination correction": {
         "content": [
-            "TEST1.ome.tif:md5,ae98ac74e3c818bb26c99ba4b9c2dd51",
+            "TEST1.ome.tif:md5,988bbb2c74d47dc22a9f3ac348f53ef5",
             "mask_TEST1.tif:md5,3103759bd55b9deeb8c8a0dade798d9a",
             {
                 "headers": [
@@ -216,7 +216,7 @@
             "nf-test": "0.8.4",
             "nextflow": "24.04.4"
         },
-        "timestamp": "2024-08-19T09:54:49.029179502"
+        "timestamp": "2024-08-19T11:34:20.087589463"
     },
     "cycle: multiple file ashlar input with basicpy correction": {
         "content": [
@@ -527,7 +527,7 @@
     },
     "cycle: manual illumination correction": {
         "content": [
-            "TEST1.ome.tif:md5,ae98ac74e3c818bb26c99ba4b9c2dd51",
+            "TEST1.ome.tif:md5,988bbb2c74d47dc22a9f3ac348f53ef5",
             "mask_TEST1.tif:md5,3103759bd55b9deeb8c8a0dade798d9a",
             {
                 "headers": [
@@ -553,14 +553,14 @@
             "nf-test": "0.8.4",
             "nextflow": "24.04.4"
         },
-        "timestamp": "2024-08-19T09:56:17.141863983"
+        "timestamp": "2024-08-19T11:35:51.803296091"
     },
     "cycle: multiple file ashlar input with multiple samples no correction": {
         "content": [
-            "cycif-tonsil.ome.tif:md5,9d4fca1d7ec97be3f6343eb712af9dea",
-            "cycif-tonsil2.ome.tif:md5,ea772fef41d398ffd76cbb6354266678",
+            "cycif-tonsil.ome.tif:md5,fd414b610e189f3e805c8e99f4e78c09",
+            "cycif-tonsil2.ome.tif:md5,8615100afdf8e3e24174a6d82ecaea2c",
             "mask_cycif-tonsil.tif:md5,3103759bd55b9deeb8c8a0dade798d9a",
-            "mask_cycif-tonsil2.tif:md5,cfd4ef0f19766bcc8156a0f0ab117777",
+            "mask_cycif-tonsil2.tif:md5,0799cd6935febaeb9e17f8a4173fe89a",
             {
                 "headers": [
                     "CellID",
@@ -612,11 +612,11 @@
             "nf-test": "0.8.4",
             "nextflow": "24.04.4"
         },
-        "timestamp": "2024-08-19T09:57:45.598919397"
+        "timestamp": "2024-08-19T11:37:21.994936758"
     },
     "cycle: no illumination correction, coreograph": {
         "content": [
-            "TEST1.ome.tif:md5,755b8a7782f9c561bb9fd6bf5e19f798",
+            "TEST1.ome.tif:md5,a9563710bb1c0c29798cb9e881916546",
             "mask_TEST1_1.tif:md5,88a26ad3381257a4493f1fcc67adca68",
             {
                 "headers": [
@@ -639,6 +639,6 @@
             "nf-test": "0.8.4",
             "nextflow": "24.04.4"
         },
-        "timestamp": "2024-08-14T15:23:16.323984656"
+        "timestamp": "2024-08-19T11:45:01.117904632"
     }
 }
