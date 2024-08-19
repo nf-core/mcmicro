@@ -2,14 +2,40 @@
     "cycle: multiple file ashlar input no correction": {
         "content": [
             "cycif-tonsil.ome.tif:md5,5f4165203545b7efe04ed5f4a6d5ac9d",
-            "mask_cycif-tonsil.tif:md5,c1075eb025f558fcadedc1f0d903ec15",
-            "cycif-tonsil_mask_cycif-tonsil.csv:rounded:md5,01286b0d3b0245d5ece0d279c0a5391e"
+            "mask_cycif-tonsil.tif:md5,3103759bd55b9deeb8c8a0dade798d9a",
+            {
+                "headers": [
+                    "CellID",
+                    "DNA_6",
+                    "ELANE",
+                    "CD57",
+                    "CD45",
+                    "DNA_7",
+                    "ELANE7",
+                    "CD577",
+                    "CD457",
+                    "DNA_8",
+                    "ELANE8",
+                    "CD578",
+                    "CD458",
+                    "X_centroid",
+                    "Y_centroid",
+                    "Area",
+                    "MajorAxisLength",
+                    "MinorAxisLength",
+                    "Eccentricity",
+                    "Solidity",
+                    "Extent",
+                    "Orientation"
+                ],
+                "rowCount": 2111
+            }
         ],
         "meta": {
             "nf-test": "0.8.4",
-            "nextflow": "23.10.1"
+            "nextflow": "24.04.4"
         },
-        "timestamp": "2024-04-22T16:00:36.270528511"
+        "timestamp": "2024-08-19T09:56:59.706545924"
     },
     "cycle: basicpy illumination correction": {
         "content": [
@@ -54,7 +80,7 @@
                     "Extent",
                     "Orientation"
                 ],
-                "rowCount": 311
+                "rowCount": 2111
             },
             {
                 "format": "Tagged Image File Format",
@@ -83,28 +109,72 @@
         ],
         "meta": {
             "nf-test": "0.8.4",
-            "nextflow": "23.10.1"
+            "nextflow": "24.04.4"
         },
-        "timestamp": "2024-04-23T11:52:51.734421588"
+        "timestamp": "2024-08-14T13:21:48.678353201"
     },
     "cycle: multiple file ashlar input with multiple samples no correction, multiple segmentation": {
         "content": [
             "cycif-tonsil.ome.tif:md5,9d4fca1d7ec97be3f6343eb712af9dea",
             "cycif-tonsil2.ome.tif:md5,ea772fef41d398ffd76cbb6354266678",
-            "mask_cycif-tonsil.tif:md5,c1075eb025f558fcadedc1f0d903ec15",
-            "mask_cycif-tonsil2.tif:md5,bacaeced4f2159b8b7f3b42d173f995c",
+            "mask_cycif-tonsil.tif:md5,3103759bd55b9deeb8c8a0dade798d9a",
+            "mask_cycif-tonsil2.tif:md5,cfd4ef0f19766bcc8156a0f0ab117777",
             "cycif-tonsil.ome_cp_masks.tif:md5,88690c63ef3b695f44e5bad40b8175a3",
             "cycif-tonsil2.ome_cp_masks.tif:md5,c4590940d460cfe34168661573cfd87d",
-            "cycif-tonsil_mask_cycif-tonsil.csv:rounded:md5,5b5036130a84dc31268007aaf3322917",
-            "cycif-tonsil2_mask_cycif-tonsil2.csv:rounded:md5,61eb9b30399fb29041f2d080181b6e47",
+            {
+                "headers": [
+                    "CellID",
+                    "DNA_6",
+                    "ELANE",
+                    "CD57",
+                    "CD45",
+                    "DNA_7",
+                    "ELANE7",
+                    "CD577",
+                    "CD457",
+                    "X_centroid",
+                    "Y_centroid",
+                    "Area",
+                    "MajorAxisLength",
+                    "MinorAxisLength",
+                    "Eccentricity",
+                    "Solidity",
+                    "Extent",
+                    "Orientation"
+                ],
+                "rowCount": 2111
+            },
+            {
+                "headers": [
+                    "CellID",
+                    "DNA_6",
+                    "ELANE",
+                    "CD57",
+                    "CD45",
+                    "DNA_7",
+                    "ELANE7",
+                    "CD577",
+                    "CD457",
+                    "X_centroid",
+                    "Y_centroid",
+                    "Area",
+                    "MajorAxisLength",
+                    "MinorAxisLength",
+                    "Eccentricity",
+                    "Solidity",
+                    "Extent",
+                    "Orientation"
+                ],
+                "rowCount": 2082
+            },
             "cycif-tonsil_cycif-tonsil.csv:rounded:md5,96c0754e24b8474d4c191bdff4351701",
             "cycif-tonsil2_cycif-tonsil2.csv:rounded:md5,a53cf1c3df3ff3edfa93e1d266185701"
         ],
         "meta": {
             "nf-test": "0.8.4",
-            "nextflow": "23.10.1"
+            "nextflow": "24.04.4"
         },
-        "timestamp": "2024-07-09T14:19:05.560663388"
+        "timestamp": "2024-08-19T09:59:20.121769085"
     },
     "cycle: no illumination correction, cellpose segmentation": {
         "content": [
@@ -114,9 +184,39 @@
         ],
         "meta": {
             "nf-test": "0.8.4",
-            "nextflow": "23.10.1"
+            "nextflow": "24.04.4"
         },
-        "timestamp": "2024-07-18T17:30:38.010217727"
+        "timestamp": "2024-08-14T13:33:05.883457083"
+    },
+    "cycle: no illumination correction": {
+        "content": [
+            "TEST1.ome.tif:md5,ae98ac74e3c818bb26c99ba4b9c2dd51",
+            "mask_TEST1.tif:md5,3103759bd55b9deeb8c8a0dade798d9a",
+            {
+                "headers": [
+                    "CellID",
+                    "DNA_6",
+                    "ELANE",
+                    "CD57",
+                    "CD45",
+                    "X_centroid",
+                    "Y_centroid",
+                    "Area",
+                    "MajorAxisLength",
+                    "MinorAxisLength",
+                    "Eccentricity",
+                    "Solidity",
+                    "Extent",
+                    "Orientation"
+                ],
+                "rowCount": 2111
+            }
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.04.4"
+        },
+        "timestamp": "2024-08-19T09:54:49.029179502"
     },
     "cycle: multiple file ashlar input with basicpy correction": {
         "content": [
@@ -169,7 +269,7 @@
                     "Extent",
                     "Orientation"
                 ],
-                "rowCount": 311
+                "rowCount": 2111
             },
             {
                 "format": "Tagged Image File Format",
@@ -246,21 +346,9 @@
         ],
         "meta": {
             "nf-test": "0.8.4",
-            "nextflow": "23.10.1"
+            "nextflow": "24.04.4"
         },
-        "timestamp": "2024-04-23T11:53:19.871380893"
-    },
-    "cycle: no illumination correction": {
-        "content": [
-            "TEST1.ome.tif:md5,ae98ac74e3c818bb26c99ba4b9c2dd51",
-            "mask_TEST1.tif:md5,c1075eb025f558fcadedc1f0d903ec15",
-            "TEST1_mask_TEST1.csv:rounded:md5,a7c226a3d32a94dd05356c5998eae522"
-        ],
-        "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "23.10.1"
-        },
-        "timestamp": "2024-04-22T15:58:40.245133922"
+        "timestamp": "2024-08-14T13:31:24.583251357"
     },
     "cycle: multiple file ashlar input with multiple samples and basicpy correction": {
         "content": [
@@ -300,29 +388,17 @@
                 "physicalSizeY": 1.0,
                 "physicalSizeZ": null
             },
-            "mask_cycif-tonsil2.tif:md5,bacaeced4f2159b8b7f3b42d173f995c",
             {
-                "headers": [
-                    "CellID",
-                    "DNA_6",
-                    "ELANE",
-                    "CD57",
-                    "CD45",
-                    "DNA_7",
-                    "ELANE7",
-                    "CD577",
-                    "CD457",
-                    "X_centroid",
-                    "Y_centroid",
-                    "Area",
-                    "MajorAxisLength",
-                    "MinorAxisLength",
-                    "Eccentricity",
-                    "Solidity",
-                    "Extent",
-                    "Orientation"
-                ],
-                "rowCount": 311
+                "format": "Tagged Image File Format",
+                "type": "int32",
+                "sizeX": 591,
+                "sizeY": 468,
+                "sizeZ": 1,
+                "sizeC": 1,
+                "sizeT": 1,
+                "physicalSizeX": 1.0,
+                "physicalSizeY": 1.0,
+                "physicalSizeZ": null
             },
             {
                 "headers": [
@@ -345,7 +421,30 @@
                     "Extent",
                     "Orientation"
                 ],
-                "rowCount": 297
+                "rowCount": 2111
+            },
+            {
+                "headers": [
+                    "CellID",
+                    "DNA_6",
+                    "ELANE",
+                    "CD57",
+                    "CD45",
+                    "DNA_7",
+                    "ELANE7",
+                    "CD577",
+                    "CD457",
+                    "X_centroid",
+                    "Y_centroid",
+                    "Area",
+                    "MajorAxisLength",
+                    "MinorAxisLength",
+                    "Eccentricity",
+                    "Solidity",
+                    "Extent",
+                    "Orientation"
+                ],
+                "rowCount": 2082
             },
             {
                 "format": "Tagged Image File Format",
@@ -422,41 +521,103 @@
         ],
         "meta": {
             "nf-test": "0.8.4",
-            "nextflow": "23.10.1"
+            "nextflow": "24.04.4"
         },
-        "timestamp": "2024-04-23T11:53:49.129871827"
+        "timestamp": "2024-08-19T10:01:39.136409344"
+    },
+    "cycle: manual illumination correction": {
+        "content": [
+            "TEST1.ome.tif:md5,ae98ac74e3c818bb26c99ba4b9c2dd51",
+            "mask_TEST1.tif:md5,3103759bd55b9deeb8c8a0dade798d9a",
+            {
+                "headers": [
+                    "CellID",
+                    "DNA_6",
+                    "ELANE",
+                    "CD57",
+                    "CD45",
+                    "X_centroid",
+                    "Y_centroid",
+                    "Area",
+                    "MajorAxisLength",
+                    "MinorAxisLength",
+                    "Eccentricity",
+                    "Solidity",
+                    "Extent",
+                    "Orientation"
+                ],
+                "rowCount": 2111
+            }
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.04.4"
+        },
+        "timestamp": "2024-08-19T09:56:17.141863983"
     },
     "cycle: multiple file ashlar input with multiple samples no correction": {
         "content": [
             "cycif-tonsil.ome.tif:md5,9d4fca1d7ec97be3f6343eb712af9dea",
             "cycif-tonsil2.ome.tif:md5,ea772fef41d398ffd76cbb6354266678",
-            "mask_cycif-tonsil.tif:md5,c1075eb025f558fcadedc1f0d903ec15",
-            "mask_cycif-tonsil2.tif:md5,bacaeced4f2159b8b7f3b42d173f995c",
-            "cycif-tonsil_mask_cycif-tonsil.csv:rounded:md5,5b5036130a84dc31268007aaf3322917",
-            "cycif-tonsil2_mask_cycif-tonsil2.csv:rounded:md5,61eb9b30399fb29041f2d080181b6e47"
+            "mask_cycif-tonsil.tif:md5,3103759bd55b9deeb8c8a0dade798d9a",
+            "mask_cycif-tonsil2.tif:md5,cfd4ef0f19766bcc8156a0f0ab117777",
+            {
+                "headers": [
+                    "CellID",
+                    "DNA_6",
+                    "ELANE",
+                    "CD57",
+                    "CD45",
+                    "DNA_7",
+                    "ELANE7",
+                    "CD577",
+                    "CD457",
+                    "X_centroid",
+                    "Y_centroid",
+                    "Area",
+                    "MajorAxisLength",
+                    "MinorAxisLength",
+                    "Eccentricity",
+                    "Solidity",
+                    "Extent",
+                    "Orientation"
+                ],
+                "rowCount": 2111
+            },
+            {
+                "headers": [
+                    "CellID",
+                    "DNA_6",
+                    "ELANE",
+                    "CD57",
+                    "CD45",
+                    "DNA_7",
+                    "ELANE7",
+                    "CD577",
+                    "CD457",
+                    "X_centroid",
+                    "Y_centroid",
+                    "Area",
+                    "MajorAxisLength",
+                    "MinorAxisLength",
+                    "Eccentricity",
+                    "Solidity",
+                    "Extent",
+                    "Orientation"
+                ],
+                "rowCount": 2082
+            }
         ],
         "meta": {
             "nf-test": "0.8.4",
-            "nextflow": "23.10.1"
+            "nextflow": "24.04.4"
         },
-        "timestamp": "2024-04-22T16:00:55.775911164"
-    },
-    "cycle: manual illumination correction": {
-        "content": [
-            "TEST1.ome.tif:md5,ae98ac74e3c818bb26c99ba4b9c2dd51",
-            "mask_TEST1.tif:md5,c1075eb025f558fcadedc1f0d903ec15",
-            "TEST1_mask_TEST1.csv:rounded:md5,a7c226a3d32a94dd05356c5998eae522"
-        ],
-        "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "23.10.1"
-        },
-        "timestamp": "2024-04-22T15:59:42.197064018"
+        "timestamp": "2024-08-19T09:57:45.598919397"
     },
     "cycle: no illumination correction, coreograph": {
         "content": [
             "TEST1.ome.tif:md5,755b8a7782f9c561bb9fd6bf5e19f798",
-            "mask_TEST1_1.tif:md5,525d07ef2a89a8323474ff3017737ac2",
+            "mask_TEST1_1.tif:md5,88a26ad3381257a4493f1fcc67adca68",
             {
                 "headers": [
                     "CellID",
@@ -471,13 +632,13 @@
                     "Extent",
                     "Orientation"
                 ],
-                "rowCount": 4804
+                "rowCount": 16533
             }
         ],
         "meta": {
             "nf-test": "0.8.4",
-            "nextflow": "23.10.1"
+            "nextflow": "24.04.4"
         },
-        "timestamp": "2024-08-01T17:44:21.535294636"
+        "timestamp": "2024-08-14T15:23:16.323984656"
     }
 }
