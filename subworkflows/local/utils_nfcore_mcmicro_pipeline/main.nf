@@ -221,6 +221,29 @@ def validateInputMarkersheet( markersheet_data ) {
         error("Duplicate [channel, cycle] pairs: ${dups}")
     }
 
+    // validate backsub columns if present
+    def exposure_list = markersheet_data.findResults{ _1, _2, _3, _4, _5, _6, exposure, _8, _9 -> exposure != [] ? exposure : null }
+    def background_list = markersheet_data.findResults{ _1, _2, _3, _4, _5, _6, _7, background, _9 -> background != [] ? background: null }
+    def remove_list = markersheet_data.findResults{ _1, _2, _3, _4, _5, _6, _7, _8, remove -> remove != [] ? remove : null }
+
+    if (background_list.size() == 0 && (exposure_list.size() > 0 || remove_list.size() > 0)) {
+        error("No values in background column, but values in either exposure or remove columns.  Must have background column values to perform background subtraction.")
+    } else if (background_list.size() > 0) {
+        inter_list = marker_name_list.intersect(background_list)
+        if (inter_list.size() != background_list.size()) {
+            outliers_list = background_list - inter_list
+            error('background column values must exist in the marker_name column. The following background column values do not exist in the marker_name column: ' + outliers_list)
+        }
+
+        if (exposure_list.size() == 0) {
+            error('You must have at least one value in the exposure column to perform background subtraction')
+        }
+
+        if (remove_list.size() == 0) {
+            error ('You must have at least one value in the remove column to perform background subtraction')
+        }
+    }
+
     return markersheet_data
 }
 
