@@ -74,6 +74,7 @@ workflow MCMICRO {
     ch_versions = ch_versions.mix(ASHLAR.out.versions)
 
     // Run Background Correction
+    /*
     if (params.backsub) {
         ch_backsub_markers = ch_markersheet
             .map { ['channel_number,cycle_number,marker_name,exposure,background,remove',
@@ -97,6 +98,51 @@ workflow MCMICRO {
     } else {
         ch_segmentation_input = ASHLAR.out.tif
     }
+    */
+
+    ASHLAR_OUT_BACKSUB = ch_markersheet
+        .map { it.collect{ _1, _2, _3, _4, _5, _6, exposure, background, remove -> [exposure, background, remove]} }
+        .flatten()
+        .filter { it != [] }
+        .toList()
+        .combine(ASHLAR.out.tif)
+        .map { it.size() == 2 ? [it[0] + [backsub: false], [it[1]]] : [it[-2] + [backsub: true], it[-1]] }
+
+    ch_backsub_markers = ch_markersheet
+        .map { ['channel_number,cycle_number,marker_name,exposure,background,remove',
+            it.collect{ channel_number, cycle_number, marker_name, _1, _2, _3, exposure, background, remove ->
+                channel_number + "," + cycle_number + "," + marker_name + "," + exposure + "," + background + "," + remove}] }
+        .flatten()
+        .map { it.replace('[]', '') }
+        .collectFile(name: 'markers_backsub.csv', sort: false, newLine: true)
+
+    BACKSUB_INPUT = ASHLAR_OUT_BACKSUB
+        .combine(ch_backsub_markers)
+        .dump(tag: 'BACKSUB IN')
+        .multiMap{ meta, image, marker ->
+            image: [meta, image]
+            markers: [meta, marker]
+        }
+
+    BACKSUB_INPUT_IMAGE = BACKSUB_INPUT.image
+        .branch{ meta, image ->
+            exists: meta.backsub
+                return [meta, image]
+        }
+
+    BACKSUB_INPUT_MARKERS = BACKSUB_INPUT.markers
+        .branch{ meta, markers -> 
+            exists: meta.backsub
+                return [meta, markers]
+        }
+
+    BACKSUB(BACKSUB_INPUT_IMAGE.exists, BACKSUB_INPUT_MARKERS.exists)
+
+    ch_segmentation_input = ASHLAR_OUT_BACKSUB
+        .concat(BACKSUB.out.backsub_tif)
+        .map { [it[-2], it[-1]] }
+    ch_versions = ch_versions.mix(BACKSUB.out.versions)
+
 
 
     // Run Segmentation
@@ -129,6 +175,7 @@ workflow MCMICRO {
             ['marker_name'] +
             it.collect{ _1, _2, marker_name, _4, _5, _6, _7, _8, _9 -> '"' + marker_name + '"' }
         }
+        .dump(tag: "MARKERS")
         .collectFile(name: 'markers.csv', sort: false, newLine: true)
 
     ASHLAR.out.tif
