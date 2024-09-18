@@ -109,8 +109,21 @@ workflow MCMICRO {
             exists: meta.backsub
                 return [meta, markers]
         }
-
+    
     BACKSUB(BACKSUB_INPUT_IMAGE.exists, BACKSUB_INPUT_MARKERS.exists)
+
+    /*
+    BACKSUB_INPUT_TEST = ASHLAR_OUT_BACKSUB
+        .combine(ch_backsub_markers)
+        .view()
+        .branch{ meta, image, markers -> 
+            exists: meta.backsub
+                return [[meta, image], [meta, markers]]
+        }
+    BACKSUB_INPUT_TEST.exists.view { "TEST : " + it }
+
+    BACKSUB(BACKSUB_INPUT_TEST.exists)
+    */
 
     ch_segmentation_input = ASHLAR_OUT_BACKSUB
         .concat(BACKSUB.out.backsub_tif)
