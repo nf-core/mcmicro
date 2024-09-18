@@ -528,7 +528,6 @@ nextflow_workflow {
             when {
                 params {
                     segmentation = "mesmer"
-                    backsub = true
                 }
                 workflow {
                     """

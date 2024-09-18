@@ -74,32 +74,6 @@ workflow MCMICRO {
     ch_versions = ch_versions.mix(ASHLAR.out.versions)
 
     // Run Background Correction
-    /*
-    if (params.backsub) {
-        ch_backsub_markers = ch_markersheet
-            .map { ['channel_number,cycle_number,marker_name,exposure,background,remove',
-                it.collect{ channel_number, cycle_number, marker_name, _1, _2, _3, exposure, background, remove ->
-                    channel_number + "," + cycle_number + "," + marker_name + "," + exposure + "," + background + "," + remove}] }
-            .flatten()
-            .map { it.replace('[]', '') }
-            .collectFile(name: 'markers_backsub.csv', sort: false, newLine: true)
-
-        ASHLAR.out.tif
-            .combine(ch_backsub_markers)
-            .dump(tag: 'BACKSUB IN')
-            .multiMap{ meta, image, marker ->
-                image: [meta, image]
-                markers: [meta, marker]
-            }
-            | BACKSUB
-        
-        ch_segmentation_input = BACKSUB.out.backsub_tif
-        ch_versions = ch_versions.mix(BACKSUB.out.versions)
-    } else {
-        ch_segmentation_input = ASHLAR.out.tif
-    }
-    */
-
     ASHLAR_OUT_BACKSUB = ch_markersheet
         .map { it.collect{ _1, _2, _3, _4, _5, _6, exposure, background, remove -> [exposure, background, remove]} }
         .flatten()
