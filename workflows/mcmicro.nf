@@ -109,20 +109,36 @@ workflow MCMICRO {
             exists: meta.backsub
                 return [meta, markers]
         }
-    
     BACKSUB(BACKSUB_INPUT_IMAGE.exists, BACKSUB_INPUT_MARKERS.exists)
+    
 
-    /*
+    /*  seems like this should replace the blocks (BACKSUB_INPUT, BACKSUB_INPUT_IMAGE and BACKSUB_INPUT_MARKERS) above.
+        from https://github.com/nextflow-io/nextflow/issues/1208 it seems like this should work, 
+        but as described using null fails 
+    ASHLAR_OUT_BACKSUB
+        .combine(ch_backsub_markers)
+        .dump(tag: 'BACKSUB IN')
+        .multiMap{ meta, image, marker ->
+            // image: meta.backsub ? [meta, image] : Channel.empty()
+            // markers: meta.backsub ? [meta, marker] : Channel.empty()
+            image: meta.backsub ? [meta, image] : null
+            markers: meta.backsub ? [meta, marker] : null
+            // image: meta.backsub ? [meta, image] : []
+            // markers: meta.backsub ? [meta, marker] : []
+        }
+        | BACKSUB
+    */
+
+    /*  another idea to replace the blocks (BACKSUB_INPUT, BACKSUB_INPUT_IMAGE and BACKSUB_INPUT_MARKERS) above.
+        would like to have a single branch condition return 2 channel outputs,
+        but I don't see how to do it. Is something like this possible?
     BACKSUB_INPUT_TEST = ASHLAR_OUT_BACKSUB
         .combine(ch_backsub_markers)
-        .view()
         .branch{ meta, image, markers -> 
             exists: meta.backsub
-                return [[meta, image], [meta, markers]]
+                return [[meta1, image], [meta, markers]]
         }
-    BACKSUB_INPUT_TEST.exists.view { "TEST : " + it }
-
-    BACKSUB(BACKSUB_INPUT_TEST.exists)
+        BACKSUB(BACKSUB_INPUT_TEST.exists)
     */
 
     ch_segmentation_input = ASHLAR_OUT_BACKSUB
