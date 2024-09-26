@@ -74,6 +74,10 @@
                 "cellpose_model": {
                     "type": "string",
                     "description": "optional model file for cellpose segmentation"
+                },
+                "backsub": {
+                    "type": "boolean",
+                    "description": "boolean to flag whether or not to apply background subtraction"
                 }
             }
         },

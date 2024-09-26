@@ -74,79 +74,29 @@ workflow MCMICRO {
     ch_versions = ch_versions.mix(ASHLAR.out.versions)
 
     // Run Background Correction
-    ASHLAR_OUT_BACKSUB = ch_markersheet
-        .map { it.collect{ _1, _2, _3, _4, _5, _6, exposure, background, remove -> [exposure, background, remove]} }
-        .flatten()
-        .filter { it != [] }
-        .toList()
-        .combine(ASHLAR.out.tif)
-        .map { it.size() == 2 ? [it[0] + [backsub: false], [it[1]]] : [it[-2] + [backsub: true], it[-1]] }
+    if (params.backsub) {
+        ch_backsub_markers = ch_markersheet
+            .map { ['channel_number,cycle_number,marker_name,exposure,background,remove',
+                it.collect{ channel_number, cycle_number, marker_name, _1, _2, _3, exposure, background, remove ->
+                    channel_number + "," + cycle_number + "," + marker_name + "," + exposure + "," + background + "," + remove}] }
+            .flatten()
+            .map { it.replace('[]', '') }
+            .collectFile(name: 'markers_backsub.csv', sort: false, newLine: true)
 
-    ch_backsub_markers = ch_markersheet
-        .map { ['channel_number,cycle_number,marker_name,exposure,background,remove',
-            it.collect{ channel_number, cycle_number, marker_name, _1, _2, _3, exposure, background, remove ->
-                channel_number + "," + cycle_number + "," + marker_name + "," + exposure + "," + background + "," + remove}] }
-        .flatten()
-        .map { it.replace('[]', '') }
-        .collectFile(name: 'markers_backsub.csv', sort: false, newLine: true)
-
-    BACKSUB_INPUT = ASHLAR_OUT_BACKSUB
-        .combine(ch_backsub_markers)
-        .dump(tag: 'BACKSUB IN')
-        .multiMap{ meta, image, marker ->
-            image: [meta, image]
-            markers: [meta, marker]
-        }
-
-    BACKSUB_INPUT_IMAGE = BACKSUB_INPUT.image
-        .branch{ meta, image ->
-            exists: meta.backsub
-                return [meta, image]
-        }
-
-    BACKSUB_INPUT_MARKERS = BACKSUB_INPUT.markers
-        .branch{ meta, markers -> 
-            exists: meta.backsub
-                return [meta, markers]
-        }
-    BACKSUB(BACKSUB_INPUT_IMAGE.exists, BACKSUB_INPUT_MARKERS.exists)
-    
-
-    /*  seems like this should replace the blocks (BACKSUB_INPUT, BACKSUB_INPUT_IMAGE and BACKSUB_INPUT_MARKERS) above.
-        from https://github.com/nextflow-io/nextflow/issues/1208 it seems like this should work, 
-        but as described using null fails 
-    ASHLAR_OUT_BACKSUB
-        .combine(ch_backsub_markers)
-        .dump(tag: 'BACKSUB IN')
-        .multiMap{ meta, image, marker ->
-            // image: meta.backsub ? [meta, image] : Channel.empty()
-            // markers: meta.backsub ? [meta, marker] : Channel.empty()
-            image: meta.backsub ? [meta, image] : null
-            markers: meta.backsub ? [meta, marker] : null
-            // image: meta.backsub ? [meta, image] : []
-            // markers: meta.backsub ? [meta, marker] : []
-        }
-        | BACKSUB
-    */
-
-    /*  another idea to replace the blocks (BACKSUB_INPUT, BACKSUB_INPUT_IMAGE and BACKSUB_INPUT_MARKERS) above.
-        would like to have a single branch condition return 2 channel outputs,
-        but I don't see how to do it. Is something like this possible?
-    BACKSUB_INPUT_TEST = ASHLAR_OUT_BACKSUB
-        .combine(ch_backsub_markers)
-        .branch{ meta, image, markers -> 
-            exists: meta.backsub
-                return [[meta1, image], [meta, markers]]
-        }
-        BACKSUB(BACKSUB_INPUT_TEST.exists)
-    */
-
-    ch_segmentation_input = ASHLAR_OUT_BACKSUB
-        .concat(BACKSUB.out.backsub_tif)
-        .map { [it[-2], it[-1]] }
-    ch_versions = ch_versions.mix(BACKSUB.out.versions)
-
-
+        ASHLAR.out.tif
+            .combine(ch_backsub_markers)
+            .dump(tag: 'BACKSUB IN')
+            .multiMap{ meta, image, marker ->
+                image: [meta, image]
+                markers: [meta, marker]
+            }
+            | BACKSUB
+        
+        ch_segmentation_input = BACKSUB.out.backsub_tif
+        ch_versions = ch_versions.mix(BACKSUB.out.versions)
+    } else {
+        ch_segmentation_input = ASHLAR.out.tif
+    }
 
     // Run Segmentation
 
