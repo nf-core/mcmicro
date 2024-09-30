@@ -4,13 +4,13 @@
             [
                 "versions.yml:md5,038a3138460501f8cf5dcd982b1f05aa",
                 "versions.yml:md5,a95fffe435a8977d85664177b448b52c",
-                "versions.yml:md5,d75b59bd3fab61977497f6dbe9641495"
+                "versions.yml:md5,b25dd7741700a85d5421d11318fb0e99"
             ]
         ],
         "meta": {
             "nf-test": "0.8.4",
-            "nextflow": "23.10.1"
+            "nextflow": "24.04.4"
         },
-        "timestamp": "2024-04-04T17:20:10.103428828"
+        "timestamp": "2024-08-19T11:45:40.411452684"
     }
 }

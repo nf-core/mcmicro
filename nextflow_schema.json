@@ -66,6 +66,10 @@
                     "enum": ["basicpy"],
                     "description": "input that defines type of illumination correction to be performed"
                 },
+                "tma_dearray": {
+                    "type": "boolean",
+                    "description": "If the sample is a tissue microarray (TMA), set this to 'true' to generate a separate output for each tissue core for pipeline steps beginning with cell segmentation. This also tends to speed up processing and reduce RAM usage."
+                },
                 "segmentation": {
                     "type": "string",
                     "pattern": "^((cellpose|mesmer)?,?)*(?<!,)$",
@@ -78,6 +82,11 @@
                 "backsub": {
                     "type": "boolean",
                     "description": "boolean to flag whether or not to apply background subtraction"
+                },
+                "pixel_size": {
+                    "type": "number",
+                    "description": "Pixel width of input image data, in microns",
+                    "help_text": "You must set this parameter when enabling TMA de-arraying with the `tma_dearray` parameter. This is required for the de-arraying module to correctly process the image."
                 }
             }
         },

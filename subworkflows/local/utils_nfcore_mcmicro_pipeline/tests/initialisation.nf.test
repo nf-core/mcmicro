@@ -24,5 +24,25 @@ nextflow_workflow {
 
         },
 
+        test("Error on tma_dearray without pixel_size") {
+            when {
+                params {
+                    input_cycle = "${projectDir}/assets/samplesheet-test.csv"
+                    marker_sheet = "${projectDir}/assets/markers_1_sp.csv"
+                    tma_dearray = true
+
+                }
+                workflow {
+                    """
+                    input = [false, false, false, false, [], '$outputDir', params.input_cycle, [], params.marker_sheet]
+                    """
+                }
+            }
+            then {
+                assert workflow.failed
+                assert workflow.stdout*.contains("pixel_size").any()
+            }
+        },
+
     ]
 }
