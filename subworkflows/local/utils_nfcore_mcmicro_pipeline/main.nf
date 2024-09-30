@@ -228,7 +228,7 @@ def validateInputMarkersheet( markersheet_data ) {
     def exposure_list = markersheet_data.findResults{ _1, _2, _3, _4, _5, _6, exposure, _8, _9 -> exposure ?: null }
     def background_list = markersheet_data.findResults{ _1, _2, _3, _4, _5, _6, _7, background, _9 -> background ?: null }
     def remove_list = markersheet_data.findResults{ _1, _2, _3, _4, _5, _6, _7, _8, remove -> remove ?: null }
-    
+
     if (!background_list && (exposure_list || remove_list)) {
         error("No values in background column, but values in either exposure or remove columns.  Must have background column values to perform background subtraction.")
     } else if (background_list) {

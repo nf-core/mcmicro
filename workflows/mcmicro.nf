@@ -92,7 +92,7 @@ workflow MCMICRO {
                 markers: [meta, marker]
             }
             | BACKSUB
-        
+
         ch_segmentation_input = BACKSUB.out.backsub_tif
         ch_versions = ch_versions.mix(BACKSUB.out.versions)
     } else {
