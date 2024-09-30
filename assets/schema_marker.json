@@ -36,7 +36,7 @@
                 "errorMessage": ""
             },
             "exposure": {
-                "type": "integer"
+                "type": "number"
             },
             "background": {
                 "type": "string"
