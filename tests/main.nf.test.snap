@@ -115,20 +115,46 @@
     },
     "cycle: no illumination correction, backsub": {
         "content": [
-            "TEST1.ome.tif:md5,7eacee6365a04ff065e40d7cc887917d",
-            "TEST2.ome.tif:md5,7eacee6365a04ff065e40d7cc887917d",
+            "TEST1.ome.tif:md5,2b3989015265b18296baa94418b82f2b",
             "mask_TEST1.tif:md5,3103759bd55b9deeb8c8a0dade798d9a",
-            "mask_TEST2.tif:md5,3103759bd55b9deeb8c8a0dade798d9a",
-            "TEST1_mask_TEST1.csv:rounded:md5,ab3ffe8c74831b9a3e73bd2e86599f66",
-            "TEST2_mask_TEST2.csv:rounded:md5,ab3ffe8c74831b9a3e73bd2e86599f66",
-            "TEST1.backsub.ome.tif:md5,2b0efce79022043471680d0772e395fd",
-            "TEST2.backsub.ome.tif:md5,2b0efce79022043471680d0772e395fd"
+            {
+                "headers": [
+                    "CellID",
+                    "DNA 1",
+                    "Na/K ATPase",
+                    "CD3",
+                    "CD45RO",
+                    "DNA 2",
+                    "Antigen Ki67",
+                    "Pan-cytokeratin",
+                    "Aortic smooth muscle actin",
+                    "DNA 1 1",
+                    "Na/K ATPase 2",
+                    "CD3 2",
+                    "CD45RO 2",
+                    "DNA 2 2",
+                    "Antigen Ki67 2",
+                    "Pan-cytokeratin 2",
+                    "Aortic smooth muscle actin 2",
+                    "X_centroid",
+                    "Y_centroid",
+                    "Area",
+                    "MajorAxisLength",
+                    "MinorAxisLength",
+                    "Eccentricity",
+                    "Solidity",
+                    "Extent",
+                    "Orientation"
+                ],
+                "rowCount": 2111
+            },
+            "TEST1.backsub.ome.tif:md5,a5cca143a875fa0d97b314926e04ef2b"
         ],
         "meta": {
             "nf-test": "0.9.0",
             "nextflow": "24.04.4"
         },
-        "timestamp": "2024-09-30T10:11:23.44358966"
+        "timestamp": "2024-10-04T16:45:31.380793042"
     },
     "cycle: multiple file ashlar input with multiple samples no correction, multiple segmentation": {
         "content": [

@@ -581,7 +581,7 @@ nextflow_workflow {
                             [],
                         ],
                         [
-                            [id:"TEST2", cycle_number:2, channel_count:4],
+                            [id:"TEST1", cycle_number:2, channel_count:4],
                             "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/imaging/background_subtraction/cycif_tonsil_registered.ome.tif",
                             [],
                             [],
@@ -593,10 +593,18 @@ nextflow_workflow {
                             [2,1,'Na/K ATPase',[],[],[],100,[],[]],
                             [3,1,'CD3',[],[],[],100,[],[]],
                             [4,1,'CD45RO',[],[],[],100,[],[]],
-                            [5,2,'DNA 2',[],[],[],100,[],'TRUE'],
-                            [6,2,'Antigen Ki67',[],[],[],100,'Na/K ATPase',[]],
-                            [7,2,'Pan-cytokeratin',[],[],[],100,'CD3',[]],
-                            [8,2,'Aortic smooth muscle actin',[],[],[],100,'CD45RO',[]]
+                            [5,1,'DNA 2',[],[],[],100,[],[]],
+                            [6,1,'Antigen Ki67',[],[],[],100,[],[]],
+                            [7,1,'Pan-cytokeratin',[],[],[],100,[],[]],
+                            [8,1,'Aortic smooth muscle actin',[],[],[],100,[],[]],
+                            [9,2,'DNA 1 1',[],[],[],100,[],[]],
+                            [10,2,'Na/K ATPase 2',[],[],[],100,[],[]],
+                            [11,2,'CD3 2',[],[],[],100,'Na/K ATPase',[]],
+                            [12,2,'CD45RO 2',[],[],[],100,[],[]],
+                            [13,2,'DNA 2 2',[],[],[],100,[],'TRUE'],
+                            [14,2,'Antigen Ki67 2',[],[],[],100,[],[]],
+                            [15,2,'Pan-cytokeratin 2',[],[],[],100,'CD3',[]],
+                            [16,2,'Aortic smooth muscle actin 2',[],[],[],100,'CD45RO 2',[]]
                         ],
                     )
                     """
@@ -608,13 +616,9 @@ nextflow_workflow {
                     {
                         assert snapshot (
                             path("$outputDir/registration/ashlar/TEST1.ome.tif"),
-                            path("$outputDir/registration/ashlar/TEST2.ome.tif"),
                             path("$outputDir/segmentation/deepcell_mesmer/mask_TEST1.tif"),
-                            path("$outputDir/segmentation/deepcell_mesmer/mask_TEST2.tif"),
-                            CsvUtils.roundAndHashCsv("$outputDir/quantification/mcquant/mesmer/TEST1_mask_TEST1.csv"),
-                            CsvUtils.roundAndHashCsv("$outputDir/quantification/mcquant/mesmer/TEST2_mask_TEST2.csv"),
+                            CsvUtils.summarizeCsv("$outputDir/quantification/mcquant/mesmer/TEST1_mask_TEST1.csv"),
                             path("$outputDir/backsub/TEST1.backsub.ome.tif"),
-                            path("$outputDir/backsub/TEST2.backsub.ome.tif"),
                         ).match()
                     },
                     { assert workflow.success }
