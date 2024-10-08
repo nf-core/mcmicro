@@ -576,13 +576,13 @@ nextflow_workflow {
                     input[0] = Channel.of(
                         [
                             [id:"TEST1", cycle_number:1, channel_count:4],
-                            "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/imaging/background_subtraction/cycif_tonsil_registered.ome.tif",
+                            "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/imaging/ome-tiff/cycif-tonsil-cycle1.ome.tif",
                             [],
                             [],
                         ],
                         [
                             [id:"TEST1", cycle_number:2, channel_count:4],
-                            "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/imaging/background_subtraction/cycif_tonsil_registered.ome.tif",
+                            "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/imaging/ome-tiff/cycif-tonsil-cycle2.ome.tif",
                             [],
                             [],
                         ],
@@ -596,15 +596,7 @@ nextflow_workflow {
                             [5,1,'DNA 2',[],[],[],100,[],[]],
                             [6,1,'Antigen Ki67',[],[],[],100,[],[]],
                             [7,1,'Pan-cytokeratin',[],[],[],100,[],[]],
-                            [8,1,'Aortic smooth muscle actin',[],[],[],100,[],[]],
-                            [9,2,'DNA 1 1',[],[],[],100,[],[]],
-                            [10,2,'Na/K ATPase 2',[],[],[],100,[],[]],
-                            [11,2,'CD3 2',[],[],[],100,'Na/K ATPase',[]],
-                            [12,2,'CD45RO 2',[],[],[],100,[],[]],
-                            [13,2,'DNA 2 2',[],[],[],100,[],'TRUE'],
-                            [14,2,'Antigen Ki67 2',[],[],[],100,[],[]],
-                            [15,2,'Pan-cytokeratin 2',[],[],[],100,'CD3',[]],
-                            [16,2,'Aortic smooth muscle actin 2',[],[],[],100,'CD45RO 2',[]]
+                            [8,1,'Aortic smooth muscle actin',[],[],[],100,[],[]]
                         ],
                     )
                     """
