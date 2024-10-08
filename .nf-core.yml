@@ -1,2 +1,18 @@
+bump_version: null
+lint:
+  nextflow_config:
+    - params.input
+nf_core_version: 3.0.0
+org_path: null
 repository_type: pipeline
-nf_core_version: "2.14.1"
+template:
+  author: TBD
+  description: Whole-slide multiplexed microscopy image analysis
+  force: false
+  is_nfcore: true
+  name: mcmicro
+  org: nf-core
+  outdir: .
+  skip_features: null
+  version: 2.0.0
+update: null
