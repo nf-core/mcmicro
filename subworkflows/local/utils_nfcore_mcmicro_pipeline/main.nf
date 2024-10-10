@@ -224,12 +224,35 @@ def validateInputMarkersheet( markersheet_data ) {
         error("Duplicate [channel, cycle] pairs: ${dups}")
     }
 
+    // validate backsub columns if present
+    def exposure_list = markersheet_data.findResults{ _1, _2, _3, _4, _5, _6, exposure, _8, _9 -> exposure ?: null }
+    def background_list = markersheet_data.findResults{ _1, _2, _3, _4, _5, _6, _7, background, _9 -> background ?: null }
+    def remove_list = markersheet_data.findResults{ _1, _2, _3, _4, _5, _6, _7, _8, remove -> remove ?: null }
+
+    if (!background_list && (exposure_list || remove_list)) {
+        error("No values in background column, but values in either exposure or remove columns.  Must have background column values to perform background subtraction.")
+    } else if (background_list) {
+        inter_list = marker_name_list.intersect(background_list)
+        if (inter_list.size() != background_list.size()) {
+            outliers_list = background_list - inter_list
+            error('background column values must exist in the marker_name column. The following background column values do not exist in the marker_name column: ' + outliers_list)
+        }
+
+        if (!exposure_list) {
+            error('You must have at least one value in the exposure column to perform background subtraction')
+        }
+
+        if (!remove_list) {
+            error ('You must have at least one value in the remove column to perform background subtraction')
+        }
+    }
+
     return markersheet_data
 }
 
 def validateInputSamplesheetMarkersheet ( samples, markers ) {
     def sample_cycles = samples.collect{ meta, image_tiles, dfp, ffp -> meta.cycle_number }
-    def marker_cycles = markers.collect{ channel_number, cycle_number, marker_name, filter, excitation_wavelength, emission_wavelength -> cycle_number }
+    def marker_cycles = markers.collect{ channel_number, cycle_number, marker_name, _1, _2, _3, _4, _5, _6 -> cycle_number }
 
     if (marker_cycles.unique(false) != sample_cycles.unique(false) ) {
         error("cycle_number values must match between sample and marker sheets")

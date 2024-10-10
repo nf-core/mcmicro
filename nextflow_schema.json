@@ -1,5 +1,5 @@
 {
-    "$schema": "http://json-schema.org/draft-07/schema",
+    "$schema": "https://json-schema.org/draft-07/schema",
     "$id": "https://raw.githubusercontent.com/nf-core/mcmicro/master/nextflow_schema.json",
     "title": "nf-core/mcmicro pipeline parameters",
     "description": "Whole-slide multiplexed microscopy image analysis",
@@ -78,6 +78,10 @@
                 "cellpose_model": {
                     "type": "string",
                     "description": "optional model file for cellpose segmentation"
+                },
+                "backsub": {
+                    "type": "boolean",
+                    "description": "boolean to flag whether or not to apply background subtraction"
                 },
                 "pixel_size": {
                     "type": "number",
