@@ -6,8 +6,6 @@
 
 ## Introduction
 
-<!-- TODO nf-core: Add documentation about anything specific to running your pipeline. For general topics, please point to (and add to) the main nf-core website. -->
-
 ## Samplesheet input
 
 You will need to create a samplesheet with information about the samples you would like to analyse before running the pipeline. We currently accept 2 formats for the input samplesheets. One format is one row per sample and the other is one row per sample per cycle. Use the parameter `input_sample` for one row per sample or the parameter `input_cycle` for one row per sample per cycle, to specify its location. It has to be a comma-separated file with a header row and either two (input_sample) or four (input_cycle) columns as shown in the examples below.
@@ -24,7 +22,7 @@ You will need to create a samplesheet with information about the samples you wou
 
 ### Samplesheet with one row per sample per cycle
 
-The `sample` identifier must be the same for multiple cycles of the same sample. All the files from the same sample will be run in a single run of Ashlar in the cycle order that they appear in the samplesheet. If illumination correction is requested using Basicpy each cycle will be corrected separately.
+The `sample` identifier must be the same for multiple cycles of the same sample. All the files from the same sample will be run in a single run of ashlar in the cycle order that they appear in the samplesheet. If illumination correction is requested using basicpy, each cycle will be corrected separately.
 
 ```csv title="samplesheet_cycle.csv"
 sample,cycle_number,channel_count,image_tiles
@@ -33,18 +31,18 @@ TEST1,2,10,/path/to/image/cycif-tonsil-cycle2.ome.tif
 TEST1,3,10,/path/to/image/cycif-tonsil-cycle3.ome.tif
 ```
 
-| Column          | Description                                                                 |
-| --------------- | --------------------------------------------------------------------------- |
-| `sample`        | Custom sample name.                                                         |
-| `cycle_number`  | Integer giving the cycle for the file in the current row.                   |
-| `channel_count` | Integer giving the total number of channels in the file in the current row. |
-| `image_tiles`   | Full path to the input image file.                                          |
+| Column          | Description                                                                   |
+| --------------- | ----------------------------------------------------------------------------- |
+| `sample`        | Custom sample name.                                                           |
+| `cycle_number`  | Integer value of the cycle for the file in the current row.                   |
+| `channel_count` | Integer value of the total number of channels in the file in the current row. |
+| `image_tiles`   | Full path or URL to the input image file.                                     |
 
 An [example one row per sample per cycle samplesheet](../assets/samplesheet_1_row_sample_cycle.csv) has been provided with the pipeline.
 
 ### Samplesheet with one row per sample
 
-All per-cycle image files in the `image_directory` for a given sample will be run in a single run of Ashlar. If illumination correction is requested using Basicpy each cycle will be corrected separately.
+This is similar to the above case except each row just contains a column for each `sample` name and a columnn containing a directory where all the files for a given sample are located. All per-cycle image files in the `image_directory` for a given sample will be run in a single run of ashlar. If illumination correction is requested using basicpy, each cycle will be corrected separately.
 
 ```csv title="samplesheet_sample.csv"
 sample,image_directory
@@ -58,9 +56,39 @@ TEST1,/path/to/image/directory
 
 An [example one row per sample samplesheet](../assets/samplesheet_1_row_sample.csv) has been provided with the pipeline.
 
+## Markersheet input
+
+Each row of the markersheet represents a single channel in the associated sample image. The columns `channel_number`, `cycle_number` and `marker_name` are required.
+
+```csv
+channel_number,cycle_number,marker_name
+1,1,DNA 1
+2,1,Na/K ATPase
+3,1,CD3
+4,1,CD45RO
+```
+
+| Column           | Description                                         |
+| ---------------- | --------------------------------------------------- |
+| `channel_number` | Integer identifier for the respective channel.      |
+| `cycle_number`   | Integer identifier for the image cycle.             |
+| `marker_name`    | Name of the marker for the given channel and cycle. |
+
+:::note
+`cycle_number` must match the `cycle_number` in the supplied samplesheet.
+:::
+
+### optional markersheet columns
+
+| Column                  | Description                                    |
+| ----------------------- | ---------------------------------------------- |
+| `filter`                | Microscope filter common name.                 |
+| `excitation_wavelength` | Excitation wavelength for this channel, in nm. |
+| `emission_wavelength`   | Emission wavelength for this channel, in nm.   |
+
 ## Running the pipeline
 
-# One row per sample per cycle
+### One row per sample per cycle
 
 The typical command for running the one row per sample per cycle pipeline is as follows:
 
@@ -68,7 +96,7 @@ The typical command for running the one row per sample per cycle pipeline is as 
 nextflow run nf-core/mcmicro --input_cycle ./samplesheet_cycle.csv --outdir ./results --marker_sheet markers.csv -profile docker
 ```
 
-# One row per sample
+### One row per sample
 
 The typical command for running the one row per sample pipeline is as follows:
 
@@ -103,14 +131,42 @@ nextflow run nf-core/mcmicro -profile docker -params-file params.yaml
 
 with:
 
-```yaml title="params.yaml"
-input: './samplesheet.csv'
-outdir: './results/'
-genome: 'GRCh37'
-<...>
+```yaml
+input_cycle: "samplesheet_cycle.csv"
+outdir: "./output"
+marker_sheet: "markers.csv"
 ```
 
 You can also generate such `YAML`/`JSON` files via [nf-core/launch](https://nf-co.re/launch).
+
+### Pipeline stages and associated input parameters
+
+#### Illumination Correction
+
+Illumination correction can optionally be performed before registration. It is triggered by the `--illumination` flag which can currently only be followed by the option `basicpy`. We plan on supporting other modules for illumination correction in the future.
+When `basicpy` is selected the nf-core module basicpy is run on the input image(s). Basicpy is a python package for background and shading correction of optical microscopy images. More information about it can be found on the [basicpy nf-core module website](https://nf-co.re/modules/basicpy/).
+
+#### Registration
+
+Registration is a required step of the pipeline and the only module currently supported is ashlar. Ashlar is a software package that combines multi-tile microscopy images into a high-dimensional mosaic image. More information about ashlar can be found on the [ashlar website](https://labsyspharm.github.io/ashlar/). We plan to support other modules for registration in the future.
+
+#### Background Subtraction
+
+This is an optional step that occurs immediately following registration. It is triggered by the `--backsub` flag. When this flag is selected, the module backsub is run on the output from the registration step. The backsub module performs pixel-by-pixel channel subtraction scaled by exposure times of pre-stitched tif images. More information about it can be found on the [backsub nf-core module website](https://nf-co.re/modules/backsub/).
+
+#### TMA Core Separation
+
+This is an optional step that occurs immediately following background subtration if that optional step was run or after registration if is was not. It is triggered by the `--tma_dearray` flag. When this flag is selected, the coreograph module is run on the output from either the background subtraction step or the registration step if background subtration was not performed. Coreograph separates the input image into a set of images for each of the cores. It uses UNet, a deep learning model, to identify complete/incomplete tissue cores on a tissue microarray. It has been trained on 9 TMA slides of different sizes and tissue types. More information about it can be found on the [coreograph nf-core module website](https://nf-co.re/modules/coreograph/)
+
+#### Segmentation
+
+This is a required step that follows the TMA Core Separation step. The workflow will run the deepcell_mesmer module by default, but other options are available by using the `--segmentation` flag. The flag should be followed by a single segmentation module name or a comma separated list of names to run multiple segmentation modules in parallel. The available options currently supported are `mesmer` and `cellpose`. More information about each of these modules can be found on their respective nf-core module websites: [deepcell_mesmer](https://nf-co.re/modules/deepcell_mesmer/) [cellpose](https://nf-co.re/modules/cellpose/)
+
+When `cellpose` is selected as a segmentation method you may also provide a pretrained model to the cellpose module by using the `--cellpose_model` flag followed by a full path or URL to the model file.
+
+#### Quantification
+
+This is a required step that follows segmentation. The workflow currently runs the mcquant module by default. Other quantification modules will be added as options in the future. Mcquant extracts single-cell data given a multi-channel image and a segmentation mask. More information about mcquant can be found on the [mcquant nf-core module website](https://nf-co.re/modules/mcquant/).
 
 ### Updating the pipeline
 
