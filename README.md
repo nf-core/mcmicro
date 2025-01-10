@@ -63,7 +63,7 @@ channel_number,cycle_number,marker_name
 4,1,CD45RO
 ```
 
-Each row of the markersheet represents a single channel in the associated sample image. The first column `channel_number` is an identifier for the respective channel. The second column `cycle_number` corresponds to the cycle number of the image and it must match the `cycle_number` in the supplied samplesheet. The third column `marker_name` is the name of the marker for the given channel and cycle.
+Each row of the markersheet represents a single channel in the associated sample image. The first required column `channel_number` is an identifier for the respective channel. The second required column `cycle_number` corresponds to the cycle number of the image and it must match the `cycle_number` in the supplied samplesheet. The third required column `marker_name` is the name of the marker for the given channel and cycle. You may provide the markersheet columns in any order.
 
 > [!WARNING]
 > Please provide pipeline parameters via the CLI or Nextflow `-params-file` option. Custom config files including those provided by the `-c` Nextflow option can be used to provide any configuration _**except for parameters**_; see [docs](https://nf-co.re/docs/usage/getting_started/configuration#custom-configuration-files).

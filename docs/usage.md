@@ -58,7 +58,7 @@ An [example one row per sample samplesheet](../assets/samplesheet_1_row_sample.c
 
 ## Markersheet input
 
-Each row of the markersheet represents a single channel in the associated sample image. The columns `channel_number`, `cycle_number` and `marker_name` are required.
+Each row of the markersheet represents a single channel in the associated sample image. The columns `channel_number`, `cycle_number` and `marker_name` are required. Columns may be in any order as long as the headers are present.
 
 ```csv
 channel_number,cycle_number,marker_name
