@@ -213,6 +213,20 @@ def validateInputMarkersheet( markersheet_data ) {
         }
     }
 
+
+    if (params.segmentation_recyze) {
+            // Extract segmentation_channel values
+            def segmentation_channel_list = markersheet_data.findResults{ _1, _2, _3, _4, _5, _6, _7, _8, _9, segmentation_channels -> segmentation_channels ?: null }
+            // Check if the 'segmentation_channel' column exists
+            if (segmentation_channel_list.isEmpty()) {
+                error "The 'segmentation_channel' column is missing from the markersheet or all values are null. This column is required when params.segmentation_recyze is given."
+            }
+            // Check if at least one value in the 'segmentation_channel' column is TRUE
+            def hasSegmentationChannel = segmentation_channel_list.any { it?.toString().toLowerCase() == 'true' }
+            if (!hasSegmentationChannel) {
+                error "The 'segmentation_channel' column must have at least one TRUE value when params.segmentation_recyze is given."
+            }
+        }
     // uniqueness of (channel, cycle) tuple in marker sheet
     def test_tuples = [channel_number_list, cycle_number_list].transpose()
     def dups = test_tuples.countBy{ it }.findAll{ _, count -> count > 1 }*.key
@@ -221,9 +235,9 @@ def validateInputMarkersheet( markersheet_data ) {
     }
 
     // validate backsub columns if present
-    def exposure_list = markersheet_data.findResults{ _1, _2, _3, _4, _5, _6, exposure, _8, _9 -> exposure ?: null }
-    def background_list = markersheet_data.findResults{ _1, _2, _3, _4, _5, _6, _7, background, _9 -> background ?: null }
-    def remove_list = markersheet_data.findResults{ _1, _2, _3, _4, _5, _6, _7, _8, remove -> remove ?: null }
+    def exposure_list = markersheet_data.findResults{ _1, _2, _3, _4, _5, _6, exposure, _8, _9, _10 -> exposure ?: null }
+    def background_list = markersheet_data.findResults{ _1, _2, _3, _4, _5, _6, _7, background, _9, _10 -> background ?: null }
+    def remove_list = markersheet_data.findResults{ _1, _2, _3, _4, _5, _6, _7, _8, remove, _10 -> remove ?: null }
 
     if (!background_list && (exposure_list || remove_list)) {
         error("No values in background column, but values in either exposure or remove columns.  Must have background column values to perform background subtraction.")
@@ -248,7 +262,7 @@ def validateInputMarkersheet( markersheet_data ) {
 
 def validateInputSamplesheetMarkersheet ( samples, markers ) {
     def sample_cycles = samples.collect{ meta, image_tiles, dfp, ffp -> meta.cycle_number }
-    def marker_cycles = markers.collect{ channel_number, cycle_number, marker_name, _1, _2, _3, _4, _5, _6 -> cycle_number }
+    def marker_cycles = markers.collect{ channel_number, cycle_number, marker_name, _1, _2, _3, _4, _5, _6, _7 -> cycle_number }
 
     if (marker_cycles.unique(false) != sample_cycles.unique(false) ) {
         error("cycle_number values must match between sample and marker sheets")

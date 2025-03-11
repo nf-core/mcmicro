@@ -1,0 +1,101 @@
+{
+    "exemplar - tif - stub": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.tif:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "1": [
+                    "versions.yml:md5,dbd77571d8e21146df95814f31385544"
+                ],
+                "extracted_channels": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.tif:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,dbd77571d8e21146df95814f31385544"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.2",
+            "nextflow": "24.10.5"
+        },
+        "timestamp": "2025-03-07T12:19:02.506780911"
+    },
+    "exemplar - tif - 2 channels - ASHLAR setup": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.tif:md5,a30d0f098ed8ccfa63cdaa95d89f2560"
+                    ]
+                ],
+                "1": [
+                    "versions.yml:md5,7a394d888025b1e38544241e1df21069"
+                ],
+                "extracted_channels": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.tif:md5,a30d0f098ed8ccfa63cdaa95d89f2560"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,7a394d888025b1e38544241e1df21069"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.2",
+            "nextflow": "24.10.5"
+        },
+        "timestamp": "2025-03-07T12:36:55.25820006"
+    },
+    "exemplar - tif - 1 channel - ASHLAR setup": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.tif:md5,cf1636501b5acd999a501e5e38f1abb0"
+                    ]
+                ],
+                "1": [
+                    "versions.yml:md5,7a394d888025b1e38544241e1df21069"
+                ],
+                "extracted_channels": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.tif:md5,cf1636501b5acd999a501e5e38f1abb0"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,7a394d888025b1e38544241e1df21069"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.2",
+            "nextflow": "24.10.5"
+        },
+        "timestamp": "2025-03-07T12:36:22.386840514"
+    }
+}

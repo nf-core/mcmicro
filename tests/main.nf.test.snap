@@ -385,6 +385,19 @@
         },
         "timestamp": "2024-08-14T13:31:24.583251357"
     },
+    "cycle: no illumination correction, cellpose, recyze": {
+        "content": [
+            "TEST1.ome.tif:md5,988bbb2c74d47dc22a9f3ac348f53ef5",
+            "TEST1.tif:md5,cf1636501b5acd999a501e5e38f1abb0",
+            "TEST1_cp_masks.tif:md5,1c073bdb535a0aaa5abc139081e38e91",
+            "TEST1_TEST1_cp_masks.csv:rounded:md5,2fefbee619edbe133569c1d6e91c9752"
+        ],
+        "meta": {
+            "nf-test": "0.9.2",
+            "nextflow": "24.10.5"
+        },
+        "timestamp": "2025-03-09T22:04:09.816002225"
+    },
     "cycle: multiple file ashlar input with multiple samples and basicpy correction": {
         "content": [
             {

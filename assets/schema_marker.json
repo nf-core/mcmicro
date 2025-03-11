@@ -45,6 +45,9 @@
             },
             "remove": {
                 "type": "boolean"
+            },
+            "segmentation_channel": {
+                "type": "boolean"
             }
         },
         "required": ["channel_number", "cycle_number", "marker_name"]

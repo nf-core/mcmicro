@@ -20,6 +20,7 @@ include { COREOGRAPH             } from '../modules/nf-core/coreograph/main'
 include { DEEPCELL_MESMER        } from '../modules/nf-core/deepcell/mesmer/main'
 include { SCIMAP_MCMICRO         } from '../modules/nf-core/scimap/mcmicro/main'
 include { MCQUANT                } from '../modules/nf-core/mcquant/main'
+include { ROADIE_RECYZE          } from'../modules/local/roadie/recyze/main'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -77,7 +78,7 @@ workflow MCMICRO {
     if (params.backsub) {
         ch_backsub_markers = ch_markersheet
             .map { ['channel_number,cycle_number,marker_name,exposure,background,remove',
-                it.collect{ channel_number, cycle_number, marker_name, _1, _2, _3, exposure, background, remove ->
+                it.collect{ channel_number, cycle_number, marker_name, _1, _2, _3, exposure, background, remove, _10 ->
                     channel_number + "," + cycle_number + "," + marker_name + "," + exposure + "," + background + "," + remove}] }
             .flatten()
             .map { it.replace('[]', '') }
@@ -109,11 +110,31 @@ workflow MCMICRO {
         ch_segmentation_input = post_registration
     }
 
+    ch_roadie_channels = ch_markersheet
+        .flatMap { row ->
+            row.collect { channel_number, _2, _3, _4, _5, _6, _7, _8, _9, segmentation_channel ->
+                segmentation_channel ? (channel_number - 1) : null
+            }
+        }
+
+    if (params.segmentation_recyze) {
+        ch_roadie_channels = ch_markersheet
+            .flatMap { row ->
+                row.collect { channel_number, _2, _3, _4, _5, _6, _7, _8, _9, segmentation_channel ->
+                    segmentation_channel ? (channel_number - 1) : null
+                }.findAll { it != null }
+            }.collect()
+        ROADIE_RECYZE(ch_segmentation_input, ch_roadie_channels)
+        ch_segmentation_input_extracted = ROADIE_RECYZE.out.extracted_channels
+    } else {
+        ch_segmentation_input_extracted = ch_segmentation_input
+    }
+
     // Run Segmentation
 
     ch_masks = Channel.empty()
 
-    ch_segmentation_input
+    ch_segmentation_input_extracted
         .multiMap{ meta, image ->
             img: [meta + [segmenter: 'mesmer'], image]
             membrane_img: [[:], []]
@@ -122,7 +143,7 @@ workflow MCMICRO {
     ch_masks = ch_masks.mix(DEEPCELL_MESMER.out.mask)
     ch_versions = ch_versions.mix(DEEPCELL_MESMER.out.versions)
 
-    ch_segmentation_input
+    ch_segmentation_input_extracted
         .multiMap{ meta, image ->
             image: [meta + [segmenter: 'cellpose'], image]
             model: params.cellpose_model
@@ -137,12 +158,12 @@ workflow MCMICRO {
     ch_mcquant_markers = ch_markersheet
         .flatMap{
             ['marker_name'] +
-            it.collect{ _1, _2, marker_name, _4, _5, _6, _7, _8, _9 -> '"' + marker_name + '"' }
+            it.collect{ _1, _2, marker_name, _4, _5, _6, _7, _8, _9, _10 -> '"' + marker_name + '"' }
         }
         .dump(tag: "MARKERS")
         .collectFile(name: 'markers.csv', sort: false, newLine: true)
 
-    ch_segmentation_input
+    ch_segmentation_input // using post-registration/post-TMA input
         .cross(ch_masks) { it[0]['id'] }
         .map{ t_ashlar, t_mask -> [t_mask[0], t_ashlar[1], t_mask[1]] }
         .combine(ch_mcquant_markers)

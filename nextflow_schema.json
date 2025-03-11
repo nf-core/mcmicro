@@ -75,6 +75,10 @@
                     "pattern": "^((cellpose|mesmer)?,?)*(?<!,)$",
                     "description": "comma separated list of segmentation modules to run. options are ['mesmer','cellpose']"
                 },
+                "segmentation_recyze": {
+                    "type": "boolean",
+                    "description": "Should recyze be used to extract channels specified in the markersheet's `segmentation_channel` column."
+                },
                 "cellpose_model": {
                     "type": "string",
                     "description": "optional model file for cellpose segmentation"
