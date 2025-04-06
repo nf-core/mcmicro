@@ -76,15 +76,6 @@ workflow PIPELINE_INITIALISATION {
     //
     if (input_cycle) {
         ch_samplesheet = Channel.fromList(samplesheetToList(params.input_cycle, "${projectDir}/assets/schema_input_cycle.json"))
-            .map{
-                sample, cycle_number, channel_count, image_tiles, dfp, ffp ->
-                [
-                    [id: sample, cycle_number: cycle_number, channel_count: channel_count],
-                    image_tiles,
-                    dfp,
-                    ffp
-                ]
-            }
             .dump(tag: 'ch_samplesheet (cycle)')
     } else if (input_sample) {
         ch_samplesheet = Channel.fromList(samplesheetToList(params.input_sample, "${projectDir}/assets/schema_input_sample.json"))
@@ -93,7 +84,8 @@ workflow PIPELINE_INITIALISATION {
     }
 
     ch_markersheet = Channel.fromList(samplesheetToList(params.marker_sheet, "${projectDir}/assets/schema_marker.json"))
-        .toList()
+        // Extract only the meta-maps since we mark all fields as meta.
+        .collect({ it[0] }, flat: false)
         .map{ validateInputMarkersheet(it) }
         .dump(tag: 'ch_markersheet')
 
@@ -192,24 +184,23 @@ def validateInputMarkersheet( markersheet_data ) {
     def cycle_number_list = []
 
     markersheet_data.each { row ->
-        def (channel_number, cycle_number, marker_name) = row
 
-        if (marker_name_list.contains(marker_name)) {
+        if (marker_name_list.contains(row.marker_name)) {
             error("Duplicate marker name found in marker sheet!")
         } else {
-            marker_name_list.add(marker_name)
+            marker_name_list.add(row.marker_name)
         }
 
-        if (channel_number_list && (channel_number != channel_number_list[-1] && channel_number != channel_number_list[-1] + 1)) {
+        if (channel_number_list && (row.channel_number != channel_number_list[-1] && row.channel_number != channel_number_list[-1] + 1)) {
             error("Channel_number cannot skip values and must be in order!")
         } else {
-            channel_number_list.add(channel_number)
+            channel_number_list.add(row.channel_number)
         }
 
-        if (cycle_number_list && (cycle_number != cycle_number_list[-1] && cycle_number != cycle_number_list[-1] + 1)) {
+        if (cycle_number_list && (row.cycle_number != cycle_number_list[-1] && row.cycle_number != cycle_number_list[-1] + 1)) {
             error("Cycle_number cannot skip values and must be in order!")
         } else {
-            cycle_number_list.add(cycle_number)
+            cycle_number_list.add(row.cycle_number)
         }
     }
 
@@ -221,9 +212,9 @@ def validateInputMarkersheet( markersheet_data ) {
     }
 
     // validate backsub columns if present
-    def exposure_list = markersheet_data.findResults{ _1, _2, _3, _4, _5, _6, exposure, _8, _9 -> exposure ?: null }
-    def background_list = markersheet_data.findResults{ _1, _2, _3, _4, _5, _6, _7, background, _9 -> background ?: null }
-    def remove_list = markersheet_data.findResults{ _1, _2, _3, _4, _5, _6, _7, _8, remove -> remove ?: null }
+    def exposure_list = markersheet_data.findResults{ it.exposure }
+    def background_list = markersheet_data.findResults{ it.background }
+    def remove_list = markersheet_data.findResults{ it.remove }
 
     if (!background_list && (exposure_list || remove_list)) {
         error("No values in background column, but values in either exposure or remove columns.  Must have background column values to perform background subtraction.")
@@ -248,7 +239,7 @@ def validateInputMarkersheet( markersheet_data ) {
 
 def validateInputSamplesheetMarkersheet ( samples, markers ) {
     def sample_cycles = samples.collect{ meta, image_tiles, dfp, ffp -> meta.cycle_number }
-    def marker_cycles = markers.collect{ channel_number, cycle_number, marker_name, _1, _2, _3, _4, _5, _6 -> cycle_number }
+    def marker_cycles = markers.collect{ meta -> meta.cycle_number }
 
     if (marker_cycles.unique(false) != sample_cycles.unique(false) ) {
         error("cycle_number values must match between sample and marker sheets")
@@ -269,7 +260,7 @@ def validateInputSamplesheetMarkersheet ( samples, markers ) {
 }
 
 def expandSampleRow( row ) {
-    def (sample, image_directory, dfp, ffp) = row
+    def (meta, image_directory, dfp, ffp) = row
     def files = []
 
     file(image_directory).eachFileRecurse (FileType.FILES) {
@@ -279,7 +270,7 @@ def expandSampleRow( row ) {
     }
 
     return files.withIndex(1).collect{ f, i ->
-        [[id: sample, cycle_number: i], f, dfp, ffp]
+        [meta + [cycle_number: i], f, dfp, ffp]
     }
 }
 //

@@ -10,15 +10,18 @@
             "sample": {
                 "type": "string",
                 "pattern": "^\\S+$",
-                "errorMessage": "sample name must be provided and cannot contain spaces"
+                "errorMessage": "sample name must be provided and cannot contain spaces",
+                "meta": "id"
             },
             "cycle_number": {
                 "type": "integer",
-                "errorMessage": "cycle_number must be provided. It should be 1-based, sequential and have no gaps"
+                "errorMessage": "cycle_number must be provided. It should be 1-based, sequential and have no gaps",
+                "meta": "cycle_number"
             },
             "channel_count": {
                 "type": "integer",
-                "errorMessage": "channel_count name must be provided. It should be 1-based, sequential and have no gaps"
+                "errorMessage": "channel_count name must be provided. It should be 1-based, sequential and have no gaps",
+                "meta": "channel_count"
             },
             "image_tiles": {
                 "type": "string",

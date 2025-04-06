@@ -24,10 +24,10 @@ nextflow_workflow {
                     )
                     input[1] = Channel.of(
                         [
-                            [1,1,'DNA_6',[],[],[],[],[],[]],
-                            [2,1,'ELANE',[],[],[],[],[],[]],
-                            [3,1,'CD57',[],[],[],[],[],[]],
-                            [4,1,'CD45',[],[],[],[],[],[]],
+                            [channel_number: 1, cycle_number: 1, marker_name: 'DNA_6'],
+                            [channel_number: 2, cycle_number: 1, marker_name: 'ELANE'],
+                            [channel_number: 3, cycle_number: 1, marker_name: 'CD57'],
+                            [channel_number: 4, cycle_number: 1, marker_name: 'CD45'],
                         ],
                     )
                     """
@@ -68,10 +68,10 @@ nextflow_workflow {
                     )
                     input[1] = Channel.of(
                         [
-                            [1,1,'DNA_6',[],[],[],[],[],[]],
-                            [2,1,'ELANE',[],[],[],[],[],[]],
-                            [3,1,'CD57',[],[],[],[],[],[]],
-                            [4,1,'CD45',[],[],[],[],[],[]],
+                            [channel_number: 1, cycle_number: 1, marker_name: 'DNA_6'],
+                            [channel_number: 2, cycle_number: 1, marker_name: 'ELANE'],
+                            [channel_number: 3, cycle_number: 1, marker_name: 'CD57'],
+                            [channel_number: 4, cycle_number: 1, marker_name: 'CD45'],
                         ],
                     )
                     """
@@ -113,10 +113,10 @@ nextflow_workflow {
                     )
                     input[1] = Channel.of(
                         [
-                            [1,1,'DNA_6',[],[],[],[],[],[]],
-                            [2,1,'ELANE',[],[],[],[],[],[]],
-                            [3,1,'CD57',[],[],[],[],[],[]],
-                            [4,1,'CD45',[],[],[],[],[],[]],
+                            [channel_number: 1, cycle_number: 1, marker_name: 'DNA_6'],
+                            [channel_number: 2, cycle_number: 1, marker_name: 'ELANE'],
+                            [channel_number: 3, cycle_number: 1, marker_name: 'CD57'],
+                            [channel_number: 4, cycle_number: 1, marker_name: 'CD45'],
                         ],
                     )
                     """
@@ -167,18 +167,18 @@ nextflow_workflow {
                     )
                     input[1] = Channel.of(
                         [
-                            [1,1,'DNA_6',[],[],[],[],[],[]],
-                            [2,1,'ELANE',[],[],[],[],[],[]],
-                            [3,1,'CD57',[],[],[],[],[],[]],
-                            [4,1,'CD45',[],[],[],[],[],[]],
-                            [5,1,'DNA_7',[],[],[],[],[],[]],
-                            [6,1,'ELANE7',[],[],[],[],[],[]],
-                            [7,1,'CD577',[],[],[],[],[],[]],
-                            [8,1,'CD457',[],[],[],[],[],[]],
-                            [9,1,'DNA_8',[],[],[],[],[],[]],
-                            [10,1,'ELANE8',[],[],[],[],[],[]],
-                            [11,1,'CD578',[],[],[],[],[],[]],
-                            [12,1,'CD458',[],[],[],[],[],[]],
+                            [channel_number: 1, cycle_number: 1, marker_name: 'DNA_6'],
+                            [channel_number: 2, cycle_number: 1, marker_name: 'ELANE'],
+                            [channel_number: 3, cycle_number: 1, marker_name: 'CD57'],
+                            [channel_number: 4, cycle_number: 1, marker_name: 'CD45'],
+                            [channel_number: 5, cycle_number: 2, marker_name: 'DNA_7'],
+                            [channel_number: 6, cycle_number: 2, marker_name: 'ELANE7'],
+                            [channel_number: 7, cycle_number: 2, marker_name: 'CD577'],
+                            [channel_number: 8, cycle_number: 2, marker_name: 'CD457'],
+                            [channel_number: 9, cycle_number: 3, marker_name: 'DNA_8'],
+                            [channel_number: 10, cycle_number: 3, marker_name: 'ELANE8'],
+                            [channel_number: 11, cycle_number: 3, marker_name: 'CD578'],
+                            [channel_number: 12, cycle_number: 3, marker_name: 'CD458'],
                         ],
                     )
                     """
@@ -235,14 +235,14 @@ nextflow_workflow {
                     )
                     input[1] = Channel.of(
                         [
-                            [1,1,'DNA_6',[],[],[],[],[],[]],
-                            [2,1,'ELANE',[],[],[],[],[],[]],
-                            [3,1,'CD57',[],[],[],[],[],[]],
-                            [4,1,'CD45',[],[],[],[],[],[]],
-                            [5,1,'DNA_7',[],[],[],[],[],[]],
-                            [6,1,'ELANE7',[],[],[],[],[],[]],
-                            [7,1,'CD577',[],[],[],[],[],[]],
-                            [8,1,'CD457',[],[],[],[],[],[]],
+                            [channel_number: 1, cycle_number: 1, marker_name: 'DNA_6'],
+                            [channel_number: 2, cycle_number: 1, marker_name: 'ELANE'],
+                            [channel_number: 3, cycle_number: 1, marker_name: 'CD57'],
+                            [channel_number: 4, cycle_number: 1, marker_name: 'CD45'],
+                            [channel_number: 5, cycle_number: 2, marker_name: 'DNA_7'],
+                            [channel_number: 6, cycle_number: 2, marker_name: 'ELANE7'],
+                            [channel_number: 7, cycle_number: 2, marker_name: 'CD577'],
+                            [channel_number: 8, cycle_number: 2, marker_name: 'CD457'],
                         ],
                     )
                     """
@@ -302,14 +302,14 @@ nextflow_workflow {
                     )
                     input[1] = Channel.of(
                         [
-                            [1,1,'DNA_6',[],[],[],[],[],[]],
-                            [2,1,'ELANE',[],[],[],[],[],[]],
-                            [3,1,'CD57',[],[],[],[],[],[]],
-                            [4,1,'CD45',[],[],[],[],[],[]],
-                            [5,1,'DNA_7',[],[],[],[],[],[]],
-                            [6,1,'ELANE7',[],[],[],[],[],[]],
-                            [7,1,'CD577',[],[],[],[],[],[]],
-                            [8,1,'CD457',[],[],[],[],[],[]],
+                            [channel_number: 1, cycle_number: 1, marker_name: 'DNA_6'],
+                            [channel_number: 2, cycle_number: 1, marker_name: 'ELANE'],
+                            [channel_number: 3, cycle_number: 1, marker_name: 'CD57'],
+                            [channel_number: 4, cycle_number: 1, marker_name: 'CD45'],
+                            [channel_number: 5, cycle_number: 2, marker_name: 'DNA_7'],
+                            [channel_number: 6, cycle_number: 2, marker_name: 'ELANE7'],
+                            [channel_number: 7, cycle_number: 2, marker_name: 'CD577'],
+                            [channel_number: 8, cycle_number: 2, marker_name: 'CD457'],
                         ],
                     )
                     """
@@ -368,18 +368,18 @@ nextflow_workflow {
                     )
                     input[1] = Channel.of(
                         [
-                            [1,1,'DNA_6',[],[],[],[],[],[]],
-                            [2,1,'ELANE',[],[],[],[],[],[]],
-                            [3,1,'CD57',[],[],[],[],[],[]],
-                            [4,1,'CD45',[],[],[],[],[],[]],
-                            [5,1,'DNA_7',[],[],[],[],[],[]],
-                            [6,1,'ELANE7',[],[],[],[],[],[]],
-                            [7,1,'CD577',[],[],[],[],[],[]],
-                            [8,1,'CD457',[],[],[],[],[],[]],
-                            [9,1,'DNA_8',[],[],[],[],[],[]],
-                            [10,1,'ELANE8',[],[],[],[],[],[]],
-                            [11,1,'CD578',[],[],[],[],[],[]],
-                            [12,1,'CD458',[],[],[],[],[],[]],
+                            [channel_number: 1, cycle_number: 1, marker_name: 'DNA_6'],
+                            [channel_number: 2, cycle_number: 1, marker_name: 'ELANE'],
+                            [channel_number: 3, cycle_number: 1, marker_name: 'CD57'],
+                            [channel_number: 4, cycle_number: 1, marker_name: 'CD45'],
+                            [channel_number: 5, cycle_number: 2, marker_name: 'DNA_7'],
+                            [channel_number: 6, cycle_number: 2, marker_name: 'ELANE7'],
+                            [channel_number: 7, cycle_number: 2, marker_name: 'CD577'],
+                            [channel_number: 8, cycle_number: 2, marker_name: 'CD457'],
+                            [channel_number: 9, cycle_number: 3, marker_name: 'DNA_8'],
+                            [channel_number: 10, cycle_number: 3, marker_name: 'ELANE8'],
+                            [channel_number: 11, cycle_number: 3, marker_name: 'CD578'],
+                            [channel_number: 12, cycle_number: 3, marker_name: 'CD458'],
                         ],
                     )
                     """
@@ -443,14 +443,14 @@ nextflow_workflow {
                     )
                     input[1] = Channel.of(
                         [
-                            [1,1,'DNA_6',[],[],[],[],[],[]],
-                            [2,1,'ELANE',[],[],[],[],[],[]],
-                            [3,1,'CD57',[],[],[],[],[],[]],
-                            [4,1,'CD45',[],[],[],[],[],[]],
-                            [5,1,'DNA_7',[],[],[],[],[],[]],
-                            [6,1,'ELANE7',[],[],[],[],[],[]],
-                            [7,1,'CD577',[],[],[],[],[],[]],
-                            [8,1,'CD457',[],[],[],[],[],[]],
+                            [channel_number: 1, cycle_number: 1, marker_name: 'DNA_6'],
+                            [channel_number: 2, cycle_number: 1, marker_name: 'ELANE'],
+                            [channel_number: 3, cycle_number: 1, marker_name: 'CD57'],
+                            [channel_number: 4, cycle_number: 1, marker_name: 'CD45'],
+                            [channel_number: 5, cycle_number: 2, marker_name: 'DNA_7'],
+                            [channel_number: 6, cycle_number: 2, marker_name: 'ELANE7'],
+                            [channel_number: 7, cycle_number: 2, marker_name: 'CD577'],
+                            [channel_number: 8, cycle_number: 2, marker_name: 'CD457'],
                         ],
                     )
                     """
@@ -498,10 +498,10 @@ nextflow_workflow {
                     )
                     input[1] = Channel.of(
                         [
-                            [1,1,'DNA_6',[],[],[],[],[],[]],
-                            [2,1,'ELANE',[],[],[],[],[],[]],
-                            [3,1,'CD57',[],[],[],[],[],[]],
-                            [4,1,'CD45',[],[],[],[],[],[]],
+                            [channel_number: 1, cycle_number: 1, marker_name: 'DNA_6'],
+                            [channel_number: 2, cycle_number: 1, marker_name: 'ELANE'],
+                            [channel_number: 3, cycle_number: 1, marker_name: 'CD57'],
+                            [channel_number: 4, cycle_number: 1, marker_name: 'CD45'],
                         ],
                     )
                     """
@@ -544,7 +544,7 @@ nextflow_workflow {
                     )
                     input[1] = Channel.of(
                         [
-                            [1,1,'DNA_6',[],[],[],[],[],[]],
+                            [channel_number: 1, cycle_number: 1, marker_name: 'DNA_6'],
                         ],
                     )
                     """
@@ -590,14 +590,14 @@ nextflow_workflow {
                     )
                     input[1] = Channel.of(
                         [
-                            [1,1,'DNA 1',[],[],[],100,[],[]],
-                            [2,1,'Na/K ATPase',[],[],[],100,[],[]],
-                            [3,1,'CD3',[],[],[],100,[],[]],
-                            [4,1,'CD45RO',[],[],[],100,[],[]],
-                            [5,2,'DNA 2',[],[],[],100,[],[]],
-                            [6,2,'Antigen Ki67',[],[],[],100,[],[]],
-                            [7,2,'Pan-cytokeratin',[],[],[],100,[],[]],
-                            [8,2,'Aortic smooth muscle actin',[],[],[],100,[],[]]
+                            [channel_number: 1, cycle_number: 1, marker_name: 'DNA 1', exposure: 100],
+                            [channel_number: 2, cycle_number: 1, marker_name: 'Na/K ATPase', exposure: 100],
+                            [channel_number: 3, cycle_number: 1, marker_name: 'CD3', exposure: 100],
+                            [channel_number: 4, cycle_number: 1, marker_name: 'CD45RO', exposure: 100],
+                            [channel_number: 5, cycle_number: 2, marker_name: 'DNA 2', exposure: 100],
+                            [channel_number: 6, cycle_number: 2, marker_name: 'Antigen Ki67', exposure: 100],
+                            [channel_number: 7, cycle_number: 2, marker_name: 'Pan-cytokeratin', exposure: 100],
+                            [channel_number: 8, cycle_number: 2, marker_name: 'Aortic smooth muscle actin', exposure: 100]
                         ],
                     )
                     """
