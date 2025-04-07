@@ -590,14 +590,14 @@ nextflow_workflow {
                     )
                     input[1] = Channel.of(
                         [
-                            [channel_number: 1, cycle_number: 1, marker_name: 'DNA 1', exposure: 100],
+                            [channel_number: 1, cycle_number: 1, marker_name: 'DNA 1'],
                             [channel_number: 2, cycle_number: 1, marker_name: 'Na/K ATPase', exposure: 100],
-                            [channel_number: 3, cycle_number: 1, marker_name: 'CD3', exposure: 100],
-                            [channel_number: 4, cycle_number: 1, marker_name: 'CD45RO', exposure: 100],
-                            [channel_number: 5, cycle_number: 2, marker_name: 'DNA 2', exposure: 100],
-                            [channel_number: 6, cycle_number: 2, marker_name: 'Antigen Ki67', exposure: 100],
-                            [channel_number: 7, cycle_number: 2, marker_name: 'Pan-cytokeratin', exposure: 100],
-                            [channel_number: 8, cycle_number: 2, marker_name: 'Aortic smooth muscle actin', exposure: 100]
+                            [channel_number: 3, cycle_number: 1, marker_name: 'CD3', exposure: 100, background: 'Na/K ATPase'],
+                            [channel_number: 4, cycle_number: 1, marker_name: 'CD45RO'],
+                            [channel_number: 5, cycle_number: 2, marker_name: 'DNA 2', remove: true],
+                            [channel_number: 6, cycle_number: 2, marker_name: 'Antigen Ki67'],
+                            [channel_number: 7, cycle_number: 2, marker_name: 'Pan-cytokeratin'],
+                            [channel_number: 8, cycle_number: 2, marker_name: 'Aortic smooth muscle actin']
                         ],
                     )
                     """
