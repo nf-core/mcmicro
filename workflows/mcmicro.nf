@@ -132,12 +132,15 @@ workflow MCMICRO {
 
     // Run Quantification
 
-    // Generate markers.csv for mcquant with just the marker_name column.
-    ch_mcquant_markers = ch_markersheet
-        .flatMap{
-            ['marker_name'] +
-            it.collect{ row -> '"' + row.marker_name + '"' }
-        }
+    // Generate markers.csv for mcquant with just the marker_name column, and
+    // omitting rows removed by backsub.
+    ch_mcquant_markers = Channel.of('marker_name')
+        .concat(
+            ch_markersheet
+                .flatten()
+                .filter{ row -> !row.remove }
+                .map{ row -> '"' + row.marker_name + '"' }
+        )
         .dump(tag: "MARKERS")
         .collectFile(name: 'markers.csv', sort: false, newLine: true)
 
