@@ -54,6 +54,7 @@
             "background": {
                 "type": "string",
                 "default": null,
+                "pattern": "\\S",
                 "meta": "background"
             },
             "remove": {

@@ -186,19 +186,19 @@ def validateInputMarkersheet( markersheet_data ) {
     markersheet_data.each { row ->
 
         if (marker_name_list.contains(row.marker_name)) {
-            error("Duplicate marker name found in marker sheet!")
+            error("Please check input markersheet -> duplicate marker name '${row.marker_name}'")
         } else {
             marker_name_list.add(row.marker_name)
         }
 
         if (channel_number_list && (row.channel_number != channel_number_list[-1] && row.channel_number != channel_number_list[-1] + 1)) {
-            error("Channel_number cannot skip values and must be in order!")
+            error("Please check input markersheet -> channel_number is not consecutive for marker '${row.marker_name}'")
         } else {
             channel_number_list.add(row.channel_number)
         }
 
         if (cycle_number_list && (row.cycle_number != cycle_number_list[-1] && row.cycle_number != cycle_number_list[-1] + 1)) {
-            error("Cycle_number cannot skip values and must be in order!")
+            error("Please check input markersheet -> cycle_number is not consecutive for marker '${row.marker_name}'")
         } else {
             cycle_number_list.add(row.cycle_number)
         }
@@ -208,29 +208,32 @@ def validateInputMarkersheet( markersheet_data ) {
     def test_tuples = [channel_number_list, cycle_number_list].transpose()
     def dups = test_tuples.countBy{ it }.findAll{ _, count -> count > 1 }*.key
     if (dups) {
-        error("Duplicate [channel, cycle] pairs: ${dups}")
+        error("Please check input markersheet -> duplicate [channel, cycle] pairs: ${dups}")
     }
 
-    // validate backsub columns if present
-    def exposure_list = markersheet_data.findResults{ it.exposure }
-    def background_list = markersheet_data.findResults{ it.background }
-    def remove_list = markersheet_data.findResults{ it.remove }
-
-    if (!background_list && (exposure_list || remove_list)) {
-        error("No values in background column, but values in either exposure or remove columns.  Must have background column values to perform background subtraction.")
-    } else if (background_list) {
-        inter_list = marker_name_list.intersect(background_list)
-        if (inter_list.size() != background_list.size()) {
-            outliers_list = background_list - inter_list
-            error('background column values must exist in the marker_name column. The following background column values do not exist in the marker_name column: ' + outliers_list)
+    // Validate backsub data
+    if (!params.backsub) {
+        def backsub_columns = ['exposure', 'background', 'remove']
+        if (markersheet_data*.subMap(backsub_columns)*.collect{ c, v -> v != null}.flatten().any()) {
+            log.warn("One or more of the ${backsub_columns.join('/')} columns are present in the marker sheet, but params.backsub is set to false. Subtraction will NOT be performed unless params.backsub is set to true.")
         }
-
-        if (!exposure_list) {
-            error('You must have at least one value in the exposure column to perform background subtraction')
+    } else {
+        if (markersheet_data.findResult{ it.background } == null) {
+            error("Please check input markersheet -> Backsub is enabled, but no background channels have been defined so subtraction can't proceed. Either set params.backsub=false or specify how the channel subtraction should be performed.")
         }
-
-        if (!remove_list) {
-            error ('You must have at least one value in the remove column to perform background subtraction')
+        def markers_used_as_background = markersheet_data.findResults{ it.background }.toSet()
+        markersheet_data.each { row ->
+            if (row.background) {
+                if (!row.exposure) {
+                    error("Please check input markersheet -> Missing exposure value for marker: '${row.marker_name}'")
+                }
+                if (row.background !in marker_name_list) {
+                    error("Please check input markersheet -> Unknown background '${row.background}' for marker '${row.marker_name}' (background must be the name of another marker in this sheet).")
+                }
+            }
+            if (row.marker_name in markers_used_as_background && !row.exposure) {
+                error("Please check input markersheet -> Missing exposure value for marker used as background: '${row.marker_name}'")
+            }
         }
     }
 
@@ -249,7 +252,7 @@ def validateInputSamplesheetMarkersheet ( samples, markers ) {
 
     def channel_cycle_map = samples.collect{ meta, image_tiles, dfp, ffp -> [meta.id,meta.cycle_number] }.groupBy{ it[0] }
     channel_cycle_map.each { entry ->
-        last_val = -1
+        def last_val = -1
         entry.value.collect{ it[1] }.each{ curr_val ->
             if (last_val != -1 && (curr_val > (last_val + 1) || curr_val <= last_val)) {
                 error("cycle_number values must be increasing with no gaps")
