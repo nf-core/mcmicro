@@ -214,14 +214,14 @@ def validateInputMarkersheet( markersheet_data ) {
     // Validate backsub data
     if (!params.backsub) {
         def backsub_columns = ['exposure', 'background', 'remove']
-        if (markersheet_data*.subMap(backsub_columns)*.collect{ c, v -> v != null}.flatten().any()) {
+        if (markersheet_data*.subMap(backsub_columns)*.collect{ c, v -> v != null }.flatten().any()) {
             log.warn("One or more of the ${backsub_columns.join('/')} columns are present in the marker sheet, but params.backsub is set to false. Subtraction will NOT be performed unless params.backsub is set to true.")
         }
     } else {
-        if (markersheet_data.findResult{ it.background } == null) {
+        def markers_used_as_background = markersheet_data.findResults{ it.background }.toSet()
+        if (!markers_used_as_background) {
             error("Please check input markersheet -> Backsub is enabled, but no background channels have been defined so subtraction can't proceed. Either set params.backsub=false or specify how the channel subtraction should be performed.")
         }
-        def markers_used_as_background = markersheet_data.findResults{ it.background }.toSet()
         markersheet_data.each { row ->
             if (row.background) {
                 if (!row.exposure) {
