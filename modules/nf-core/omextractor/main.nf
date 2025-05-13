@@ -2,7 +2,7 @@ process omextractor {
 	tag ""
 	label "process_single"
 
-	container "openmicroscopy/bftools"
+	container "labsyspharm/bftools"
 
 	input:
 	path(image)
