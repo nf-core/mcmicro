@@ -20,7 +20,7 @@ include { COREOGRAPH             } from '../modules/nf-core/coreograph/main'
 include { DEEPCELL_MESMER        } from '../modules/nf-core/deepcell/mesmer/main'
 include { SCIMAP_MCMICRO         } from '../modules/nf-core/scimap/mcmicro/main'
 include { MCQUANT                } from '../modules/nf-core/mcquant/main'
-
+include { OMEXTRACTOR            } from '../modules/nf-core/omextractor/main'
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     RUN MAIN WORKFLOW
@@ -34,6 +34,8 @@ workflow MCMICRO {
     ch_markersheet // channel: markersheet read in from --marker_sheet
 
     main:
+
+    meta = ch_samplesheet.map{meta, image_tiles, dfp, ffp -> image_tiles} | OMEXTRACTOR
 
     ch_versions = Channel.empty()
     ch_multiqc_files = Channel.empty()
