@@ -1,19 +1,21 @@
 nextflow_process {
 
     name "Test Process omextractor"
-    script "main.nf"
+    script "../main.nf"
+    config "./nextflow.config"
     process "omextractor"
 
-    test("Should run without failures") {
+    tag "modules"
+    tag "modules_nfcore"
+    tag "omextractor"
 
+    config "./nextflow.config"
+
+    test("Extract OME tags") {
         when {
-            params {
-                // define parameters here. Example:
-                // outdir = "tests/results"
-            }
             process {
                 """
-                input[0] = file(params.modules_testdata_base_path + "../../../exemplar-001.ome.tif", checkIfExists: true)
+                input[0] = file(params.modules_testdata_base_path + "/imaging/ome-tiff/cycif-tonsil-cycle1.ome.tif")
                 """
             }
         }

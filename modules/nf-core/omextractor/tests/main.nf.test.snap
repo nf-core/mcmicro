@@ -1,19 +1,25 @@
 {
-    "Should run without failures": {
+    "Extract OME tags": {
         "content": [
             {
                 "0": [
-                    "ome.xml:md5,ed5ee37836ecc78e05ea9ad3cd5e663d"
+                    "ome.xml:md5,b4e08d86595e773c42483343b06cd51d"
+                ],
+                "1": [
+                    "versions.yml:md5,b26b7662e5c20a67a036e658971d3363"
+                ],
+                "versions": [
+                    "versions.yml:md5,b26b7662e5c20a67a036e658971d3363"
                 ],
                 "xml": [
-                    "ome.xml:md5,ed5ee37836ecc78e05ea9ad3cd5e663d"
+                    "ome.xml:md5,b4e08d86595e773c42483343b06cd51d"
                 ]
             }
         ],
         "meta": {
             "nf-test": "0.9.2",
-            "nextflow": "23.10.1"
+            "nextflow": "25.04.1"
         },
-        "timestamp": "2025-05-13T12:24:37.428688431"
+        "timestamp": "2025-05-13T17:02:57.305632214"
     }
 }
