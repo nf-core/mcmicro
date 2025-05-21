@@ -38,7 +38,7 @@ process validateOmeXMLData {
     script:
     xml = new XmlSlurper(xmlPath)
     pixels = xml.'**'.findAll { node -> node.name() == 'Pixels' && node.@PhysicalSizeX != '' && node.@PhysicalSizeY != ''}.collect { node -> [node.@PhysicalSizeX, node.@PhysicalSizeY] }
-    if (pixels.toSet().size() != 1 || pixels[0][0].round(3) != pixels[0][1].round(3)) {
+    if (pixels.toSet().size() != 1 || (pixels[0][0] as double).round(3) != (pixels[0][1] as double).round(3)) {
        error "Found non consistent pixels sizes in images."
     }
 
@@ -68,7 +68,7 @@ process validateOmeXMLData {
           break
     }
 
-    pixel = pixel.round(3)
+    pixel = (pixel as double).round(3)
 
     pixel_datatype = xml.'**'.findAll { node -> node.name() == 'Pixels' && node.@Type}.collect { node -> node.@Type }
     if (pixels_datatype.toSet().size() != 1) {
