@@ -5,6 +5,7 @@
 */
 
 import groovy.io.FileType
+import groovy.xml.XmlSlurper
 import nextflow.Nextflow
 
 include { paramsSummaryMap       } from 'plugin/nf-schema'
