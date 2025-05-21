@@ -27,6 +27,66 @@ include { OMEXTRACTOR            } from '../modules/nf-core/omextractor/main'
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
+
+process validateOmeXMLData {
+    input:
+    path xmlPath
+    
+    output:
+    val data
+
+    script:
+    xml = new XmlSlurper(xmlPath)
+    pixels = xml.'**'.findAll { node -> node.name() == 'Pixels' && node.@PhysicalSizeX != '' && node.@PhysicalSizeY != ''}.collect { node -> [node.@PhysicalSizeX, node.@PhysicalSizeY] }
+    if (pixels.toSet().size() != 1 || pixels[0][0].round(3) != pixels[0][1].round(3)) {
+       error "Found non consistent pixels sizes in images."
+    }
+
+    n_channels = xml.'**'.findAll { node -> node.name() == 'Pixels' && node.@SizeC != '' }.collect { node -> node.@SizeC }
+    if (n_channels.toSet().size() != 1) {
+       error "Found inconsistent number of channels in images."
+    }
+
+    size_units = xml.'**'.findAll { node -> node.name() == 'Pixels' && node.@PhysicalSizeXUnit != '' && node.@PhysicalSizeYUnit != ''}.collect { node -> [node.@PhysicalSizeXUnit, node.@PhysicalSizeYUnit] }
+    if (size_units.toSet().size() != 1 || size_units.flatten().toSet().size() != 1) {
+       error "Inconsistent pixels size unit in images."
+    }
+    // TODO transform pixel size to microns
+
+    switch(size_units[0][0]){
+       case 'mm':
+          pixels = pixels[0][0] / 1000
+          break
+       case 'cm':
+          pixels = pixels[0][0] / 10000
+          break
+       case 'um':
+          pixels = pixels[0][0]
+          break
+       case 'µm':
+          pixels = pixels[0][0]
+          break
+    }
+
+    pixel = pixel.round(3)
+
+    pixel_datatype = xml.'**'.findAll { node -> node.name() == 'Pixels' && node.@Type}.collect { node -> node.@Type }
+    if (pixels_datatype.toSet().size() != 1) {
+       error "Inconsistent pixels datatype in images."
+    }
+
+    exposure_time = xml.'**'.findAll { node -> node.name() == 'Plane' && node.@ExposureTime != ''}.collect { node -> [node.@ExposureTime, node.@ExposureTimeUnit] }
+    //only needed inter cycle
+    //if (exposure_time.toSet().size() != 1) {
+    //   error "Inconsistent exposure time"
+    //}
+
+    data = ['pixelsSize': pixels[0][0], 'nChannels':n_channels[0][0], 'pixelSizeUnit':size_units[0][0], 'pixelDatatype':pixel_datatype[0][0], 'exposureTime':exposure_time]
+
+
+}
+
+
 workflow MCMICRO {
 
     take:
@@ -36,6 +96,8 @@ workflow MCMICRO {
     main:
 
     meta = ch_samplesheet.map{meta, image_tiles, dfp, ffp -> image_tiles} | OMEXTRACTOR
+
+    val_data = validateOmeXMLData(meta)  // TODO add inter meta checks and add values to samplesheet and markersheet
 
     ch_versions = Channel.empty()
     ch_multiqc_files = Channel.empty()
