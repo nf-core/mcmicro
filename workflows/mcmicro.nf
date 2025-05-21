@@ -38,17 +38,17 @@ process validateOmeXMLData {
 
     script:
     xml = new XmlSlurper(xmlPath)
-    pixels = xml.'**'.findAll { node -> node.name() == 'Pixels' && node.@PhysicalSizeX != '' && node.@PhysicalSizeY != ''}.collect { node -> [node.@PhysicalSizeX, node.@PhysicalSizeY] }
-    if (pixels.toSet().size() != 1 || (pixels[0][0] as double).round(3) != (pixels[0][1] as double).round(3)) {
+    pixels = xml.'**'.findAll { node -> node.name() == 'Pixels' && node.@PhysicalSizeX != '' && node.@PhysicalSizeY != ''}.collect { node -> [node.@PhysicalSizeX.toDouble(), node.@PhysicalSizeY.toDouble()] }
+    if (pixels.toSet().size() != 1 || (pixels[0][0]).round(3) != (pixels[0][1]).round(3)) {
        error "Found non consistent pixels sizes in images."
     }
 
-    n_channels = xml.'**'.findAll { node -> node.name() == 'Pixels' && node.@SizeC != '' }.collect { node -> node.@SizeC }
+    n_channels = xml.'**'.findAll { node -> node.name() == 'Pixels' && node.@SizeC != '' }.collect { node -> node.@SizeC.toInteger() }
     if (n_channels.toSet().size() != 1) {
        error "Found inconsistent number of channels in images."
     }
 
-    size_units = xml.'**'.findAll { node -> node.name() == 'Pixels' && node.@PhysicalSizeXUnit != '' && node.@PhysicalSizeYUnit != ''}.collect { node -> [node.@PhysicalSizeXUnit, node.@PhysicalSizeYUnit] }
+    size_units = xml.'**'.findAll { node -> node.name() == 'Pixels' && node.@PhysicalSizeXUnit != '' && node.@PhysicalSizeYUnit != ''}.collect { node -> [node.@PhysicalSizeXUnit.toString(), node.@PhysicalSizeYUnit.toString()] }
     if (size_units.toSet().size() != 1 || size_units.flatten().toSet().size() != 1) {
        error "Inconsistent pixels size unit in images."
     }
@@ -69,14 +69,14 @@ process validateOmeXMLData {
           break
     }
 
-    pixel = (pixel as double).round(3)
+    pixel = pixel.round(3)
 
-    pixel_datatype = xml.'**'.findAll { node -> node.name() == 'Pixels' && node.@Type}.collect { node -> node.@Type }
+    pixel_datatype = xml.'**'.findAll { node -> node.name() == 'Pixels' && node.@Type}.collect { node -> node.@Type.toString() }
     if (pixels_datatype.toSet().size() != 1) {
        error "Inconsistent pixels datatype in images."
     }
 
-    exposure_time = xml.'**'.findAll { node -> node.name() == 'Plane' && node.@ExposureTime != ''}.collect { node -> [node.@ExposureTime, node.@ExposureTimeUnit] }
+    exposure_time = xml.'**'.findAll { node -> node.name() == 'Plane' && node.@ExposureTime != ''}.collect { node -> [node.@ExposureTime.toDouble(), node.@ExposureTimeUnit.toString()] }
     //only needed inter cycle
     //if (exposure_time.toSet().size() != 1) {
     //   error "Inconsistent exposure time"
