@@ -5,10 +5,11 @@ process omextractor {
 	container "docker.io/labsyspharm/bftools:latest"
 
 	input:
+	val(meta)
 	path(image)
 
 	output:
-	path "ome.xml", emit: xml
+        tuple val(meta), path("ome.xml") emit: xml
 	path "versions.yml", emit: versions
 
 	when:
@@ -16,7 +17,7 @@ process omextractor {
 
 	script:
 	"""
-	showinf -omexml-only -nopix -no-upgrade $image > "ome.xml"
+	showinf -omexml-only -nopix -no-upgrade -option zeissczi.autostitch false -option zeissczi.attachments false $image > "ome.xml"
 
 	cat <<-END_VERSIONS > versions.yml
 	"${task.process}":
