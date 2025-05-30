@@ -31,10 +31,10 @@ include { OMEXTRACTOR            } from '../modules/nf-core/omextractor/main'
 
 process validateOmeXMLData {
     input:
-    path xmlPath
+    tuple val(meta), path(xmlPath)
     
     output:
-    val data
+    tuple val(meta), val(data)
 
     script:
     xml = new XmlSlurper(xmlPath)
@@ -53,21 +53,20 @@ process validateOmeXMLData {
        error "Inconsistent pixels size unit in images."
     }
     // TODO transform pixel size to microns
+    s_units = size_units[0][0]
 
-    switch(size_units[0][0]){
-       case 'mm':
-          pixels = pixels[0][0] / 1000
-          break
-       case 'cm':
-          pixels = pixels[0][0] / 10000
-          break
-       case 'um':
-          pixels = pixels[0][0]
-          break
-       case 'µm':
-          pixels = pixels[0][0]
-          break
+    if (size_units == 'mm'){
+      pixels = pixels[0][0] / 1000
     }
+    else if (s_units == 'cm'){
+      pixels = pixels[0][0] / 10000
+    }
+    else if (s_units == 'um' || s_units == 'µm'){
+      pixels = pixels[0][0]
+    }
+    else{
+      error "Invalid pixel size unit found."
+    }    
 
     pixel = pixel.round(3)
 
@@ -82,7 +81,7 @@ process validateOmeXMLData {
     //   error "Inconsistent exposure time"
     //}
 
-    data = ['pixelsSize': pixels[0][0], 'nChannels':n_channels[0][0], 'pixelSizeUnit':size_units[0][0], 'pixelDatatype':pixel_datatype[0][0], 'exposureTime':exposure_time]
+    data = ['pixelsSize': pixels[0][0], 'nChannels':n_channels[0][0], 'pixelSizeUnit':'um', 'pixelDatatype':pixel_datatype[0][0], 'exposureTime':exposure_time]
 
 
 }
@@ -96,12 +95,16 @@ workflow MCMICRO {
 
     main:
 
-    meta = ch_samplesheet.map{meta, image_tiles, dfp, ffp -> image_tiles} | OMEXTRACTOR
+    ch_samplesheet.multimap{meta, image_tiles, dfp, ffp -> meta: meta, image: image_tiles} | OMEXTRACTOR
 
-    val_data = validateOmeXMLData(meta)  // TODO add inter meta checks and add values to samplesheet and markersheet
+    val_data = validateOmeXMLData(OMEXTRACTOR.out.xml)  // TODO add inter meta checks and add values to samplesheet and markersheet
+
+    ch_samplesheet.join(val_data).map { original_meta, image_tiles, dfp, ffp, xml_data -> [xml_data + original_meta, image_tiles, dfp, ffp]}.dump(tag="ch_samplesheet (meta)").set { ch_samplesheet }
 
     ch_versions = Channel.empty()
     ch_multiqc_files = Channel.empty()
+
+    ch_versions.mix(OMEXTRACTOR.out.versions)
     //
     // MODULE: BASICPY
     //
