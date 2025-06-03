@@ -34,7 +34,7 @@ process validateOmeXMLData {
     tuple val(meta), path(xmlPath)
     
     output:
-    tuple val(meta), val(data)
+    tuple val(meta), val(sample_meta), val(marker_meta)
 
     script:
     xml = new XmlSlurper(xmlPath)
@@ -81,9 +81,8 @@ process validateOmeXMLData {
     //   error "Inconsistent exposure time"
     //}
 
-    data = ['pixelsSize': pixels[0][0], 'nChannels':n_channels[0][0], 'pixelSizeUnit':'um', 'pixelDatatype':pixel_datatype[0][0], 'exposureTime':exposure_time]
-
-
+    sample_meta = ['pixelsSize': pixels[0][0], 'nChannels':n_channels[0][0], 'pixelSizeUnit':'um', 'pixelDatatype':pixel_datatype[0][0]]
+    marker_meta = ['exposureTime':exposure_time[0], 'exposureTimeUnits':exposure_time[1]]
 }
 
 
@@ -104,7 +103,8 @@ workflow MCMICRO {
     ch_versions = Channel.empty()
     ch_multiqc_files = Channel.empty()
 
-    ch_versions.mix(OMEXTRACTOR.out.versions)
+    ch_versions = ch_versions.mix(OMEXTRACTOR.out.versions)
+
     //
     // MODULE: BASICPY
     //

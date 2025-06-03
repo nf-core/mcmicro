@@ -9,8 +9,8 @@ process omextractor {
 	path(image)
 
 	output:
-        tuple val(meta), path("ome.xml") emit: xml
-	path "versions.yml", emit: versions
+        tuple val(meta), path("ome.xml"), emit: xml
+        path "versions.yml", emit: versions
 
 	when:
 	task.ext.when == null || task.ext.when
@@ -22,6 +22,6 @@ process omextractor {
 	cat <<-END_VERSIONS > versions.yml
 	"${task.process}":
         	showinf: \$(showinf -version)
-    	END_VERSIONS
+        END_VERSIONS
 	"""
 }
