@@ -10,41 +10,57 @@
             "channel_number": {
                 "type": "integer",
                 "minimum": 1,
-                "errorMessage": "channel_number must be provided"
+                "errorMessage": "channel_number must be provided",
+                "meta": "channel_number"
             },
             "cycle_number": {
                 "type": "integer",
                 "minimum": 1,
-                "errorMessage": "cycle_number must be provided"
+                "errorMessage": "cycle_number must be provided",
+                "meta": "cycle_number"
             },
             "marker_name": {
                 "type": "string",
                 "pattern": "\\S",
-                "errorMessage": "marker_name must be provided"
+                "errorMessage": "marker_name must be provided",
+                "meta": "marker_name"
             },
             "filter": {
                 "type": "string",
+                "default": null,
                 "pattern": "\\S",
-                "errorMessage": ""
+                "errorMessage": "",
+                "meta": "filter"
             },
             "excitation_wavelength": {
                 "type": "integer",
-                "errorMessage": ""
+                "default": null,
+                "errorMessage": "",
+                "meta": "excitation_wavelength"
             },
             "emission_wavelength": {
                 "type": "integer",
-                "errorMessage": ""
+                "default": null,
+                "errorMessage": "",
+                "meta": "emission_wavelength"
             },
             "exposure": {
                 "type": "number",
+                "default": null,
                 "minimum": 0.001,
-                "errorMessage": "Exposure time must be a positive number."
+                "errorMessage": "Exposure time must be a positive number.",
+                "meta": "exposure"
             },
             "background": {
-                "type": "string"
+                "type": "string",
+                "default": null,
+                "pattern": "\\S",
+                "meta": "background"
             },
             "remove": {
-                "type": "boolean"
+                "type": "boolean",
+                "default": null,
+                "meta": "remove"
             }
         },
         "required": ["channel_number", "cycle_number", "marker_name"]
