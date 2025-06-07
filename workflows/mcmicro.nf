@@ -138,7 +138,7 @@ workflow MCMICRO {
         .concat(
             ch_markersheet
                 .flatten()
-                .filter{ row -> !row.remove }
+                .filter{ row -> !(params.backsub && row.remove) }
                 .map{ row -> '"' + row.marker_name + '"' }
         )
         .dump(tag: "MARKERS")
