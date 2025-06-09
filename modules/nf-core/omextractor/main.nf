@@ -1,15 +1,14 @@
-process omextractor {
+process OMEXTRACTOR {
 	tag ""
 	label "process_single"
 
 	container "docker.io/labsyspharm/bftools:latest"
 
 	input:
-	val(meta)
-	path(image)
+	tuple val(meta), path(image)
 
 	output:
-        tuple val(meta), path("ome.xml"), emit: xml
+        tuple val(meta), path('ome.xml'), emit: xml
         path "versions.yml", emit: versions
 
 	when:

@@ -98,14 +98,14 @@ workflow MCMICRO {
     ch_versions = Channel.empty()
     ch_multiqc_files = Channel.empty()
 
-    // ch_samplesheet.multimap{meta, image_tiles, dfp, ffp -> meta: meta, image: image_tiles} | OMEXTRACTOR
+    ch_samplesheet.map{meta, image_tiles, dfp, ffp -> [meta, image_tiles]} | OMEXTRACTOR
 
-    // val_data = validateOmeXMLData(OMEXTRACTOR.out.xml)  // TODO add inter meta checks and add values to samplesheet and markersheet
+    //val_data = validateOmeXMLData(OMEXTRACTOR.out.xml)  // TODO add inter meta checks and add values to samplesheet and markersheet
 
-    ch_samplesheet.multimap{meta, image_tiles, dfp, ffp -> meta: meta, image: image_tiles} | OMEXTRACTOR
-    ch_versions = ch_versions.mix(OMEXTRACTOR.out.versions)
+    //ch_samplesheet.multimap{meta, image_tiles, dfp, ffp -> meta: meta, image: image_tiles} | OMEXTRACTOR
+    //ch_versions = ch_versions.mix(OMEXTRACTOR.out.versions)
 
-    val_data = OMEXTRACTOR.out.xml | OMEVALIDATION
+    val_data = OMEXTRACTOR.out.xml.dump(tag:"OMEXTRACTOR") | OMEVALIDATION
 
     // ch_samplesheet.join(val_data).map { original_meta, image_tiles, dfp, ffp, xml_data -> [xml_data + original_meta, image_tiles, dfp, ffp]}.dump(tag="ch_samplesheet (meta)").set { ch_samplesheet }
     ch_samplesheet.join(val_data)
@@ -113,13 +113,9 @@ workflow MCMICRO {
          .map { original_meta, image_tiles, dfp, ffp, xml_meta, marker_data ->
                 [xml_meta + original_meta, image_tiles, dfp, ffp]
         }
-        .dump(tag="ch_samplesheet_meta")
+        .dump(tag: "ch_samplesheet_meta")
         .set { ch_samplesheet }
 
-    ch_markersheet.join(val_data)
-        .map {
-            'channel_number,cycle_number,marker_name,exposure,background,remove' ->
-        }
 
     //
     // MODULE: BASICPY

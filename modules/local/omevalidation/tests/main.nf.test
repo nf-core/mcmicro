@@ -11,12 +11,11 @@ nextflow_process {
 
     test("Validate OME tags") {
         setup {
-            run("EXTRACTION") {
-                script "../nf-core/omextractor/main.nf"
+            run("OMEXTRACTOR") {
+                script "../../../nf-core/omextractor/main.nf"
                 process {
                     """
-                    input[0] = ["id": 0]
-                    input[1] = file(params.modules_testdata_base_path + "/imaging/ome-tiff/cycif-tonsil-cycle1.ome.tif")
+                    input[0] = [["id": 0], file(params.modules_testdata_base_path + "/imaging/ome-tiff/cycif-tonsil-cycle1.ome.tif")]
                     """
                 }
             }
@@ -24,7 +23,7 @@ nextflow_process {
         when {
             process {
                 """
-                input = EXTRACTION.out.xml
+                input[0] = OMEXTRACTOR.out.xml
                 """
             }
         }

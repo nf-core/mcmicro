@@ -1,15 +1,24 @@
+import groovy.xml.XmlSlurper
 process OMEVALIDATION {
-    tag "$meta.id"
+    tag '$meta.id'
     label 'process_single'
 
     input:
-    tuple val(meta), path(xmlPath)
+    tuple val(meta), val(xmlPath)
 
     output:
     tuple val(meta), val(sample_meta), val(marker_meta)
-
+    /*
     script:
-    xml = new XmlSlurper(xmlPath)
+    """
+    echo $xmlPath
+    pwd
+    ls -al
+    """
+    */
+
+    exec:
+    xml = new XmlSlurper().parse(new File(xmlPath.toString()))
     pixels = xml.'**'.findAll { node -> node.name() == 'Pixels' && node.@PhysicalSizeX != '' && node.@PhysicalSizeY != ''}.collect { node -> [node.@PhysicalSizeX.toDouble(), node.@PhysicalSizeY.toDouble()] }
     if (pixels.toSet().size() != 1 || (pixels[0][0]).round(3) != (pixels[0][1]).round(3)) {
        error "Found non consistent pixels sizes in images."
@@ -40,24 +49,25 @@ process OMEVALIDATION {
       error "Invalid pixel size unit found."
     }
 
-    pixel = pixel.round(3)
+    pixels = pixels.round(3)
 
-    pixel_datatype = xml.'**'.findAll { node -> node.name() == 'Pixels' && node.@Type}.collect { node -> node.@Type.toString() }
-    if (pixels_datatype.toSet().size() != 1) {
+    pixel_datatype = xml.'**'.findAll { node -> node.name() == 'Pixels' && node.@Type}.collect { node -> [node.@Type.toString()] }
+    if (pixel_datatype.toSet().size() != 1) {
        error "Inconsistent pixels datatype in images."
     }
 
-    exposure_time = xml.'**'.findAll { node -> node.name() == 'Plane' && node.@ExposureTime != ''}.collect { node -> [node.@ExposureTime.toDouble(), node.@ExposureTimeUnit.toString()] }
+    exposure_time = xml.'**'.findAll { node -> node.name() == 'Plane' && node.@ExposureTime != ''}.collect { node -> [node.@ExposureTime.toDouble() ] }
+    exposure_time_units = xml.'**'.findAll { node -> node.name() == 'Plane' && node.@ExposureTimeUnit != ''}.collect { node -> [node.@ExposureTimeUnit.toString()] }
     //only needed inter cycle
     //if (exposure_time.toSet().size() != 1) {
     //   error "Inconsistent exposure time"
     //}
 
-    sample_meta = ['pixelsSize': pixel, 'nChannels':n_channels[0][0], 'pixelSizeUnit':'um', 'pixelDatatype':pixel_datatype[0][0]]
-    marker_meta = ['exposureTime':exposure_time[0], 'exposureTimeUnits':exposure_time[1]]
+    sample_meta = ['pixelsSize': pixels, 'nChannels':n_channels[0], 'pixelSizeUnit':'um', 'pixelDatatype':pixel_datatype[0][0]]
+    marker_meta = ['exposureTime':exposure_time, 'exposureTimeUnits':exposure_time_units]
 
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        omevalidation: \$(omevalidation --version)
-    END_VERSIONS
+    //cat <<-END_VERSIONS > versions.yml
+    //"${task.process}":
+    //    omevalidation: \$(omevalidation --version)
+    //END_VERSIONS
 }

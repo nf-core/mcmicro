@@ -3,13 +3,11 @@ nextflow_process {
     name "Test Process omextractor"
     script "../main.nf"
     config "./nextflow.config"
-    process "omextractor"
+    process "OMEXTRACTOR"
 
     tag "modules"
     tag "modules_nfcore"
     tag "omextractor"
-
-    config "./nextflow.config"
 
     test("Extract OME tags") {
         when {
