@@ -1,0 +1,40 @@
+// nf-core modules test omevalidation
+nextflow_process {
+
+    name "Test Process OMEVALIDATION"
+    script "../main.nf"
+    process "OMEVALIDATION"
+
+    tag "modules"
+    tag "modules_"
+    tag "omevalidation"
+
+    test("Validate OME tags") {
+        setup {
+            run("EXTRACTION") {
+                script "../nf-core/omextractor/main.nf"
+                process {
+                    """
+                    input[0] = ["id": 0]
+                    input[1] = file(params.modules_testdata_base_path + "/imaging/ome-tiff/cycif-tonsil-cycle1.ome.tif")
+                    """
+                }
+            }
+        }
+        when {
+            process {
+                """
+                input = EXTRACTION.out.xml
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(process.out).match() }
+            )
+        }
+
+    }
+}

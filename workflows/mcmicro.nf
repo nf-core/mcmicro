@@ -22,6 +22,7 @@ include { DEEPCELL_MESMER        } from '../modules/nf-core/deepcell/mesmer/main
 include { SCIMAP_MCMICRO         } from '../modules/nf-core/scimap/mcmicro/main'
 include { MCQUANT                } from '../modules/nf-core/mcquant/main'
 include { OMEXTRACTOR            } from '../modules/nf-core/omextractor/main'
+include { OMEVALIDATION          } from '../modules/local/omevalidation/main'
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     RUN MAIN WORKFLOW
@@ -32,7 +33,7 @@ include { OMEXTRACTOR            } from '../modules/nf-core/omextractor/main'
 process validateOmeXMLData {
     input:
     tuple val(meta), path(xmlPath)
-    
+
     output:
     tuple val(meta), val(sample_meta), val(marker_meta)
 
@@ -66,7 +67,7 @@ process validateOmeXMLData {
     }
     else{
       error "Invalid pixel size unit found."
-    }    
+    }
 
     pixel = pixel.round(3)
 
@@ -94,16 +95,31 @@ workflow MCMICRO {
 
     main:
 
-    ch_samplesheet.multimap{meta, image_tiles, dfp, ffp -> meta: meta, image: image_tiles} | OMEXTRACTOR
-
-    val_data = validateOmeXMLData(OMEXTRACTOR.out.xml)  // TODO add inter meta checks and add values to samplesheet and markersheet
-
-    ch_samplesheet.join(val_data).map { original_meta, image_tiles, dfp, ffp, xml_data -> [xml_data + original_meta, image_tiles, dfp, ffp]}.dump(tag="ch_samplesheet (meta)").set { ch_samplesheet }
-
     ch_versions = Channel.empty()
     ch_multiqc_files = Channel.empty()
 
+    // ch_samplesheet.multimap{meta, image_tiles, dfp, ffp -> meta: meta, image: image_tiles} | OMEXTRACTOR
+
+    // val_data = validateOmeXMLData(OMEXTRACTOR.out.xml)  // TODO add inter meta checks and add values to samplesheet and markersheet
+
+    ch_samplesheet.multimap{meta, image_tiles, dfp, ffp -> meta: meta, image: image_tiles} | OMEXTRACTOR
     ch_versions = ch_versions.mix(OMEXTRACTOR.out.versions)
+
+    val_data = OMEXTRACTOR.out.xml | OMEVALIDATION
+
+    // ch_samplesheet.join(val_data).map { original_meta, image_tiles, dfp, ffp, xml_data -> [xml_data + original_meta, image_tiles, dfp, ffp]}.dump(tag="ch_samplesheet (meta)").set { ch_samplesheet }
+    ch_samplesheet.join(val_data)
+        // .map { original_meta, image_tiles, dfp, ffp, xml_meta, xml_data, marker_data -> // i think if xml_data = originalmeta; then only original meta is used
+         .map { original_meta, image_tiles, dfp, ffp, xml_meta, marker_data ->
+                [xml_meta + original_meta, image_tiles, dfp, ffp]
+        }
+        .dump(tag="ch_samplesheet_meta")
+        .set { ch_samplesheet }
+
+    ch_markersheet.join(val_data)
+        .map {
+            'channel_number,cycle_number,marker_name,exposure,background,remove' ->
+        }
 
     //
     // MODULE: BASICPY

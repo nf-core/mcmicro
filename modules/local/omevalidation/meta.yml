@@ -1,0 +1,52 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/nf-core/modules/master/modules/meta-schema.json
+name: "omevalidation"
+## TODO nf-core: Add a description of the module and list keywords
+description: Validate OME-xml data contains correct values and parse it into sample and marker specific maps.
+keywords:
+  - Xml
+  - OME types
+  - Validation
+tools:
+  - "omevalidation":
+      ## TODO nf-core: Add a description and other details for the software below
+      description: ""
+      homepage: ""
+      documentation: ""
+      tool_dev_url: ""
+      doi: ""
+      licence:
+      identifier:
+
+## TODO nf-core: Add a description of all of the variables used as input
+input:
+  # Only when we have meta
+  - - meta:
+        type: map
+        description: |
+          Groovy Map containing sample information
+          e.g. `[ id:'sample1' ]`
+
+    ## TODO nf-core: Delete / customise this example input
+    - xml:
+        type: str
+        description: Str containing OME-xml tags from sample
+
+## TODO nf-core: Add a description of all of the variables used as output
+output:
+  - meta:
+      #Only when we have meta
+      - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. `[ id:'sample1' ]`
+      ## TODO nf-core: Delete / customise this example output
+  - data:
+          type: tuple
+          description: Combination of extracted sample and marker metadata maps.
+
+authors:
+  - "@AlexBarbera"
+maintainers:
+  - "@AlexBarbera"
