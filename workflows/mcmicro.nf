@@ -145,10 +145,9 @@ workflow MCMICRO {
     if (params.backsub) {
         ch_backsub_markers = ch_markersheet
             .map { ['channel_number,cycle_number,marker_name,exposure,background,remove',
-                it.collect{ channel_number, cycle_number, marker_name, _1, _2, _3, exposure, background, remove ->
-                    channel_number + "," + cycle_number + "," + marker_name + "," + exposure + "," + background + "," + remove}] }
+                it.collect{ it.channel_number + "," + it.cycle_number + "," + it.marker_name + "," + it.exposure + "," + it.background + "," + it.remove}] }
             .flatten()
-            .map { it.replace('[]', '') }
+            .map { it.replaceAll('(?<=,|^)null(?=,|$)', '') }
             .collectFile(name: 'markers_backsub.csv', sort: false, newLine: true)
 
         ASHLAR.out.tif
@@ -201,12 +200,15 @@ workflow MCMICRO {
 
     // Run Quantification
 
-    // Generate markers.csv for mcquant with just the marker_name column.
-    ch_mcquant_markers = ch_markersheet
-        .flatMap{
-            ['marker_name'] +
-            it.collect{ _1, _2, marker_name, _4, _5, _6, _7, _8, _9 -> '"' + marker_name + '"' }
-        }
+    // Generate markers.csv for mcquant with just the marker_name column, and
+    // omitting rows removed by backsub.
+    ch_mcquant_markers = Channel.of('marker_name')
+        .concat(
+            ch_markersheet
+                .flatten()
+                .filter{ row -> !(params.backsub && row.remove) }
+                .map{ row -> '"' + row.marker_name + '"' }
+        )
         .dump(tag: "MARKERS")
         .collectFile(name: 'markers.csv', sort: false, newLine: true)
 

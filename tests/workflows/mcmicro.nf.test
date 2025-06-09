@@ -22,10 +22,10 @@ nextflow_workflow {
                 )
                 input[1] = Channel.of(
                     [
-                        [1,1,'DNA 1',[],[],[],[],[],[]],
-                        [2,1,'Na/K ATPase',[],[],[],[],[],[]],
-                        [3,1,'CD3',[],[],[],[],[],[]],
-                        [4,1,'CD45RO',[],[],[],[],[],[]],
+                        [channel_number: 1, cycle_number: 1, marker_name: 'DNA 1'],
+                        [channel_number: 2, cycle_number: 1, marker_name: 'Na/K ATPase'],
+                        [channel_number: 3, cycle_number: 1, marker_name: 'CD3'],
+                        [channel_number: 4, cycle_number: 1, marker_name: 'CD45RO'],
                     ],
                 )
                 """
