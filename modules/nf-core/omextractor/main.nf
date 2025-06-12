@@ -1,5 +1,5 @@
 process OMEXTRACTOR {
-	tag ""
+	tag "$meta.id"
 	label "process_single"
 
 	container "docker.io/labsyspharm/bftools:latest"
