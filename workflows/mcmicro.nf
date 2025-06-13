@@ -50,20 +50,20 @@ workflow MCMICRO {
         .dump(tag: "ch_samplesheet_meta")
         .set { ch_samplesheet }
 
-    ch_markersheet.dump(tag:"markersheet")
+    ch_markersheet
         .flatten()
         .map {
             entry -> [['channel_number': entry.channel_number, 'cycle_number': entry.cycle_number], entry
             ]
-        }.dump(tag: "mapped_markersheet")
+        }.dump(tag: "markersheet_joined")
         .join(
             val_data.map {
                 meta, xml_meta, marker_meta -> marker_meta
-            }.dump(tag: "mapped_valmeta")
+            }
             .flatten()
             .map {
                 x-> [['channel_number':x.channel_number, 'cycle_number':x.cycle_number], x]
-            }
+            }.dump(tag:"OMEVAL_indexed")
         )
         .map {
             channel, orig, validated ->
@@ -81,7 +81,7 @@ workflow MCMICRO {
         .groupTuple()
         .map {
             entry -> if(entry[1].toSet().size() != 1) error "Inconsistent marker data between cycles."
-        }
+        }.dump(tag: "marker_after_check")
 
     //
     // MODULE: BASICPY
