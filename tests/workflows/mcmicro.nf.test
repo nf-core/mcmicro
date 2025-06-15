@@ -1,0 +1,43 @@
+nextflow_workflow {
+
+    name "test mcmicro workflow"
+    script "workflows/mcmicro.nf"
+    workflow "MCMICRO"
+
+    test("test 1") {
+
+        when {
+            params {
+                segmentation = "mesmer"
+            }
+            workflow {
+                """
+                input[0] = Channel.of(
+                    [
+                        [id:"TEST1", cycle_number:0, channel_count:4],
+                        "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/imaging/ome-tiff/cycif-tonsil-cycle1.ome.tif",
+                        [],
+                        [],
+                    ],
+                )
+                input[1] = Channel.of(
+                    [
+                        [channel_number: 1, cycle_number: 1, marker_name: 'DNA 1'],
+                        [channel_number: 2, cycle_number: 1, marker_name: 'Na/K ATPase'],
+                        [channel_number: 3, cycle_number: 1, marker_name: 'CD3'],
+                        [channel_number: 4, cycle_number: 1, marker_name: 'CD45RO'],
+                    ],
+                )
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success },
+                { assert snapshot(workflow.out.versions).match("versions") }
+            )
+        }
+
+    }
+}

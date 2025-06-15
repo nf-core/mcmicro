@@ -1,0 +1,44 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://raw.githubusercontent.com/nf-core/mcmicro/master/assets/schema_input_cycle.json",
+    "title": "nf-core/mcmicro pipeline - params.input_cycle schema",
+    "description": "Schema for the file provided with params.input_cycle",
+    "type": "array",
+    "items": {
+        "type": "object",
+        "properties": {
+            "sample": {
+                "type": "string",
+                "pattern": "^\\S+$",
+                "errorMessage": "sample name must be provided and cannot contain spaces",
+                "meta": "id"
+            },
+            "cycle_number": {
+                "type": "integer",
+                "errorMessage": "cycle_number must be provided. It should be 1-based, sequential and have no gaps",
+                "meta": "cycle_number"
+            },
+            "channel_count": {
+                "type": "integer",
+                "errorMessage": "channel_count name must be provided. It should be 1-based, sequential and have no gaps",
+                "meta": "channel_count"
+            },
+            "image_tiles": {
+                "type": "string",
+                "pattern": "^\\S+$",
+                "errorMessage": "Need to provide a path to a directory containing image files"
+            },
+            "dfp": {
+                "type": "string",
+                "pattern": "^\\S+$",
+                "errorMessage": "provide path to dfp illumination correction file(s) if illumination parameter is manual"
+            },
+            "ffp": {
+                "type": "string",
+                "pattern": "^\\S+$",
+                "errorMessage": "provide path to ffp illumination correction file(s) if illumination parameter is manual"
+            }
+        },
+        "required": ["sample", "cycle_number", "channel_count", "image_tiles"]
+    }
+}
