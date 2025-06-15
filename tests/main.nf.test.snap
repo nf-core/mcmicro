@@ -29,13 +29,27 @@
                     "Orientation"
                 ],
                 "rowCount": 2111
+            },
+            {
+                "ASHLAR": {
+                    "ashlar": "1.18.0"
+                },
+                "DEEPCELL_MESMER": {
+                    "deepcell_mesmer": "0.4.1"
+                },
+                "MCQUANT": {
+                    "mcquant": "1.5.4"
+                },
+                "Workflow": {
+                    "nf-core/mcmicro": "v2.0.0"
+                }
             }
         ],
         "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "24.04.4"
+            "nf-test": "0.9.2",
+            "nextflow": "24.10.5"
         },
-        "timestamp": "2024-08-19T11:36:33.347266346"
+        "timestamp": "2025-06-14T23:11:22.203114694"
     },
     "cycle: basicpy illumination correction": {
         "content": [
@@ -105,13 +119,30 @@
                 "physicalSizeX": 1.0,
                 "physicalSizeY": 1.0,
                 "physicalSizeZ": null
+            },
+            {
+                "ASHLAR": {
+                    "ashlar": "1.18.0"
+                },
+                "BASICPY": {
+                    "basicpy": "1.2.0-patch1"
+                },
+                "DEEPCELL_MESMER": {
+                    "deepcell_mesmer": "0.4.1"
+                },
+                "MCQUANT": {
+                    "mcquant": "1.5.4"
+                },
+                "Workflow": {
+                    "nf-core/mcmicro": "v2.0.0"
+                }
             }
         ],
         "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "24.04.4"
+            "nf-test": "0.9.2",
+            "nextflow": "24.10.5"
         },
-        "timestamp": "2024-08-14T13:21:48.678353201"
+        "timestamp": "2025-06-14T23:12:15.238601382"
     },
     "cycle: no illumination correction, backsub": {
         "content": [
@@ -139,13 +170,30 @@
                 ],
                 "rowCount": 2111
             },
-            "TEST1.backsub.ome.tif:md5,1be44fc5c0a60557bff3c2d0c69c2f41"
+            "TEST1.backsub.ome.tif:md5,1be44fc5c0a60557bff3c2d0c69c2f41",
+            {
+                "ASHLAR": {
+                    "ashlar": "1.18.0"
+                },
+                "BACKSUB": {
+                    "backsub": "0.3.4"
+                },
+                "DEEPCELL_MESMER": {
+                    "deepcell_mesmer": "0.4.1"
+                },
+                "MCQUANT": {
+                    "mcquant": "1.5.4"
+                },
+                "Workflow": {
+                    "nf-core/mcmicro": "v2.0.0"
+                }
+            }
         ],
         "meta": {
             "nf-test": "0.9.2",
             "nextflow": "24.10.5"
         },
-        "timestamp": "2024-10-08T12:33:35.316668616"
+        "timestamp": "2025-06-14T23:17:33.542599118"
     },
     "cycle: multiple file ashlar input with multiple samples no correction, multiple segmentation": {
         "content": [
@@ -202,25 +250,56 @@
                 "rowCount": 2082
             },
             "cycif-tonsil_cycif-tonsil.csv:rounded:md5,a3f0914e9bd14e191bf88eb53b060cfa",
-            "cycif-tonsil2_cycif-tonsil2.csv:rounded:md5,0a7406a95246c5cb21ae84afa6ae4667"
+            "cycif-tonsil2_cycif-tonsil2.csv:rounded:md5,0a7406a95246c5cb21ae84afa6ae4667",
+            {
+                "ASHLAR": {
+                    "ashlar": "1.18.0"
+                },
+                "CELLPOSE": {
+                    "cellpose": "2.1.1"
+                },
+                "DEEPCELL_MESMER": {
+                    "deepcell_mesmer": "0.4.1"
+                },
+                "MCQUANT": {
+                    "mcquant": "1.5.4"
+                },
+                "Workflow": {
+                    "nf-core/mcmicro": "v2.0.0"
+                }
+            }
         ],
         "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "24.04.4"
+            "nf-test": "0.9.2",
+            "nextflow": "24.10.5"
         },
-        "timestamp": "2024-08-19T11:39:02.105407088"
+        "timestamp": "2025-06-14T23:16:19.844334816"
     },
     "cycle: no illumination correction, cellpose segmentation": {
         "content": [
             "TEST1.ome.tif:md5,988bbb2c74d47dc22a9f3ac348f53ef5",
             "TEST1.ome_cp_masks.tif:md5,47bd29c261db5fe062ee35c1b5daccc1",
-            "TEST1_TEST1.csv:rounded:md5,42ecd15013bea6dbea4e0343c7b0bef7"
+            "TEST1_TEST1.csv:rounded:md5,42ecd15013bea6dbea4e0343c7b0bef7",
+            {
+                "ASHLAR": {
+                    "ashlar": "1.18.0"
+                },
+                "CELLPOSE": {
+                    "cellpose": "2.1.1"
+                },
+                "MCQUANT": {
+                    "mcquant": "1.5.4"
+                },
+                "Workflow": {
+                    "nf-core/mcmicro": "v2.0.0"
+                }
+            }
         ],
         "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "24.04.4"
+            "nf-test": "0.9.2",
+            "nextflow": "24.10.5"
         },
-        "timestamp": "2024-08-19T11:42:32.566671555"
+        "timestamp": "2025-06-14T23:15:18.817372826"
     },
     "cycle: no illumination correction": {
         "content": [
@@ -244,13 +323,27 @@
                     "Orientation"
                 ],
                 "rowCount": 2111
+            },
+            {
+                "ASHLAR": {
+                    "ashlar": "1.18.0"
+                },
+                "DEEPCELL_MESMER": {
+                    "deepcell_mesmer": "0.4.1"
+                },
+                "MCQUANT": {
+                    "mcquant": "1.5.4"
+                },
+                "Workflow": {
+                    "nf-core/mcmicro": "v2.0.0"
+                }
             }
         ],
         "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "24.04.4"
+            "nf-test": "0.9.2",
+            "nextflow": "24.10.5"
         },
-        "timestamp": "2024-08-19T11:34:20.087589463"
+        "timestamp": "2025-06-14T23:05:39.512593225"
     },
     "cycle: multiple file ashlar input with basicpy correction": {
         "content": [
@@ -376,13 +469,30 @@
                 "physicalSizeX": 1.0,
                 "physicalSizeY": 1.0,
                 "physicalSizeZ": null
+            },
+            {
+                "ASHLAR": {
+                    "ashlar": "1.18.0"
+                },
+                "BASICPY": {
+                    "basicpy": "1.2.0-patch1"
+                },
+                "DEEPCELL_MESMER": {
+                    "deepcell_mesmer": "0.4.1"
+                },
+                "MCQUANT": {
+                    "mcquant": "1.5.4"
+                },
+                "Workflow": {
+                    "nf-core/mcmicro": "v2.0.0"
+                }
             }
         ],
         "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "24.04.4"
+            "nf-test": "0.9.2",
+            "nextflow": "24.10.5"
         },
-        "timestamp": "2024-08-14T13:31:24.583251357"
+        "timestamp": "2025-06-14T23:16:13.79330956"
     },
     "cycle: multiple file ashlar input with multiple samples and basicpy correction": {
         "content": [
@@ -551,13 +661,30 @@
                 "physicalSizeX": 1.0,
                 "physicalSizeY": 1.0,
                 "physicalSizeZ": null
+            },
+            {
+                "ASHLAR": {
+                    "ashlar": "1.18.0"
+                },
+                "BASICPY": {
+                    "basicpy": "1.2.0-patch1"
+                },
+                "DEEPCELL_MESMER": {
+                    "deepcell_mesmer": "0.4.1"
+                },
+                "MCQUANT": {
+                    "mcquant": "1.5.4"
+                },
+                "Workflow": {
+                    "nf-core/mcmicro": "v2.0.0"
+                }
             }
         ],
         "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "24.04.4"
+            "nf-test": "0.9.2",
+            "nextflow": "24.10.5"
         },
-        "timestamp": "2024-08-19T10:01:39.136409344"
+        "timestamp": "2025-06-14T23:16:49.966803828"
     },
     "cycle: manual illumination correction": {
         "content": [
@@ -581,13 +708,27 @@
                     "Orientation"
                 ],
                 "rowCount": 2111
+            },
+            {
+                "ASHLAR": {
+                    "ashlar": "1.18.0"
+                },
+                "DEEPCELL_MESMER": {
+                    "deepcell_mesmer": "0.4.1"
+                },
+                "MCQUANT": {
+                    "mcquant": "1.5.4"
+                },
+                "Workflow": {
+                    "nf-core/mcmicro": "v2.0.0"
+                }
             }
         ],
         "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "24.04.4"
+            "nf-test": "0.9.2",
+            "nextflow": "24.10.5"
         },
-        "timestamp": "2024-08-19T11:35:51.803296091"
+        "timestamp": "2025-06-14T23:11:19.863464519"
     },
     "cycle: multiple file ashlar input with multiple samples no correction": {
         "content": [
@@ -640,13 +781,27 @@
                     "Orientation"
                 ],
                 "rowCount": 2082
+            },
+            {
+                "ASHLAR": {
+                    "ashlar": "1.18.0"
+                },
+                "DEEPCELL_MESMER": {
+                    "deepcell_mesmer": "0.4.1"
+                },
+                "MCQUANT": {
+                    "mcquant": "1.5.4"
+                },
+                "Workflow": {
+                    "nf-core/mcmicro": "v2.0.0"
+                }
             }
         ],
         "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "24.04.4"
+            "nf-test": "0.9.2",
+            "nextflow": "24.10.5"
         },
-        "timestamp": "2024-08-19T11:37:21.994936758"
+        "timestamp": "2025-06-14T23:13:33.537488516"
     },
     "cycle: no illumination correction, coreograph": {
         "content": [
@@ -667,12 +822,26 @@
                     "Orientation"
                 ],
                 "rowCount": 16533
+            },
+            {
+                "ASHLAR": {
+                    "ashlar": "1.18.0"
+                },
+                "DEEPCELL_MESMER": {
+                    "deepcell_mesmer": "0.4.1"
+                },
+                "MCQUANT": {
+                    "mcquant": "1.5.4"
+                },
+                "Workflow": {
+                    "nf-core/mcmicro": "v2.0.0"
+                }
             }
         ],
         "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "24.04.4"
+            "nf-test": "0.9.2",
+            "nextflow": "24.10.5"
         },
-        "timestamp": "2024-08-19T11:45:01.117904632"
+        "timestamp": "2025-06-14T23:18:56.746860089"
     }
 }

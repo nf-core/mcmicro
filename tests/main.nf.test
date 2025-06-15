@@ -10,6 +10,7 @@ nextflow_workflow {
 
             when {
                 params {
+                    outdir = "$outputDir"
                     segmentation = "mesmer"
                 }
                 workflow {
@@ -41,6 +42,7 @@ nextflow_workflow {
                             path("$outputDir/registration/ashlar/TEST1.ome.tif"),
                             path("$outputDir/segmentation/deepcell_mesmer/mask_TEST1.tif"),
                             CsvUtils.summarizeCsv("$outputDir/quantification/mcquant/mesmer/TEST1_mask_TEST1.csv"),
+                            removeNextflowVersion("$outputDir/pipeline_info/nf_core_mcmicro_software_mqc_versions.yml"),
                         ).match()
                     },
                     { assert workflow.success }
@@ -53,6 +55,7 @@ nextflow_workflow {
 
             when {
                 params {
+                    outdir = "$outputDir"
                     illumination = "basicpy"
                     segmentation = "mesmer"
                 }
@@ -86,7 +89,8 @@ nextflow_workflow {
                             ImageUtils.getImageMetadata("$outputDir/segmentation/deepcell_mesmer/mask_TEST1.tif"),
                             CsvUtils.summarizeCsv("$outputDir/quantification/mcquant/mesmer/TEST1_mask_TEST1.csv"),
                             ImageUtils.getImageMetadata("$outputDir/illumination_correction/basicpy/cycif-tonsil-cycle1.ome-dfp.tiff"),
-                            ImageUtils.getImageMetadata("$outputDir/illumination_correction/basicpy/cycif-tonsil-cycle1.ome-ffp.tiff")
+                            ImageUtils.getImageMetadata("$outputDir/illumination_correction/basicpy/cycif-tonsil-cycle1.ome-ffp.tiff"),
+                            removeNextflowVersion("$outputDir/pipeline_info/nf_core_mcmicro_software_mqc_versions.yml"),
                         ).match()
                     },
                     { assert workflow.success }
@@ -98,6 +102,7 @@ nextflow_workflow {
 
             when {
                 params {
+                    outdir = "$outputDir"
                     illumination = "manual"
                     segmentation = "mesmer"
                 }
@@ -129,7 +134,8 @@ nextflow_workflow {
                         assert snapshot (
                             path("$outputDir/registration/ashlar/TEST1.ome.tif"),
                             path("$outputDir/segmentation/deepcell_mesmer/mask_TEST1.tif"),
-                            CsvUtils.summarizeCsv("$outputDir/quantification/mcquant/mesmer/TEST1_mask_TEST1.csv")
+                            CsvUtils.summarizeCsv("$outputDir/quantification/mcquant/mesmer/TEST1_mask_TEST1.csv"),
+                            removeNextflowVersion("$outputDir/pipeline_info/nf_core_mcmicro_software_mqc_versions.yml"),
                         ).match()
                     },
                     { assert workflow.success }
@@ -141,6 +147,7 @@ nextflow_workflow {
 
             when {
                 params {
+                    outdir = "$outputDir"
                     segmentation = "mesmer"
                 }
                 workflow {
@@ -191,7 +198,8 @@ nextflow_workflow {
                         assert snapshot (
                             path("$outputDir/registration/ashlar/cycif-tonsil.ome.tif"),
                             path("$outputDir/segmentation/deepcell_mesmer/mask_cycif-tonsil.tif"),
-                            CsvUtils.summarizeCsv("$outputDir/quantification/mcquant/mesmer/cycif-tonsil_mask_cycif-tonsil.csv")
+                            CsvUtils.summarizeCsv("$outputDir/quantification/mcquant/mesmer/cycif-tonsil_mask_cycif-tonsil.csv"),
+                            removeNextflowVersion("$outputDir/pipeline_info/nf_core_mcmicro_software_mqc_versions.yml"),
                         ).match()
                     },
                     { assert workflow.success }
@@ -203,6 +211,7 @@ nextflow_workflow {
 
             when {
                 params {
+                    outdir = "$outputDir"
                     segmentation = "mesmer"
                 }
                 workflow {
@@ -259,6 +268,7 @@ nextflow_workflow {
                             path("$outputDir/segmentation/deepcell_mesmer/mask_cycif-tonsil2.tif"),
                             CsvUtils.summarizeCsv("$outputDir/quantification/mcquant/mesmer/cycif-tonsil_mask_cycif-tonsil.csv"),
                             CsvUtils.summarizeCsv("$outputDir/quantification/mcquant/mesmer/cycif-tonsil2_mask_cycif-tonsil2.csv"),
+                            removeNextflowVersion("$outputDir/pipeline_info/nf_core_mcmicro_software_mqc_versions.yml"),
                         ).match()
                     },
                     { assert workflow.success }
@@ -270,6 +280,7 @@ nextflow_workflow {
 
             when {
                 params {
+                    outdir = "$outputDir"
                     segmentation = "mesmer,cellpose"
                 }
                 workflow {
@@ -330,6 +341,7 @@ nextflow_workflow {
                             CsvUtils.summarizeCsv("$outputDir/quantification/mcquant/mesmer/cycif-tonsil2_mask_cycif-tonsil2.csv"),
                             CsvUtils.roundAndHashCsv("$outputDir/quantification/mcquant/cellpose/cycif-tonsil_cycif-tonsil.csv"),
                             CsvUtils.roundAndHashCsv("$outputDir/quantification/mcquant/cellpose/cycif-tonsil2_cycif-tonsil2.csv"),
+                            removeNextflowVersion("$outputDir/pipeline_info/nf_core_mcmicro_software_mqc_versions.yml"),
                         ).match()
                     },
                     { assert workflow.success }
@@ -341,6 +353,7 @@ nextflow_workflow {
 
             when {
                 params {
+                    outdir = "$outputDir"
                     illumination = "basicpy"
                     segmentation = "mesmer"
                 }
@@ -398,7 +411,8 @@ nextflow_workflow {
                             ImageUtils.getImageMetadata("$outputDir/illumination_correction/basicpy/cycif-tonsil-cycle2.ome-dfp.tiff"),
                             ImageUtils.getImageMetadata("$outputDir/illumination_correction/basicpy/cycif-tonsil-cycle2.ome-ffp.tiff"),
                             ImageUtils.getImageMetadata("$outputDir/illumination_correction/basicpy/cycif-tonsil-cycle3.ome-dfp.tiff"),
-                            ImageUtils.getImageMetadata("$outputDir/illumination_correction/basicpy/cycif-tonsil-cycle3.ome-ffp.tiff")
+                            ImageUtils.getImageMetadata("$outputDir/illumination_correction/basicpy/cycif-tonsil-cycle3.ome-ffp.tiff"),
+                            removeNextflowVersion("$outputDir/pipeline_info/nf_core_mcmicro_software_mqc_versions.yml"),
                         ).match()
                     },
                     { assert workflow.success }
@@ -410,6 +424,7 @@ nextflow_workflow {
 
             when {
                 params {
+                    outdir = "$outputDir"
                     illumination = "basicpy"
                     segmentation = "mesmer"
                 }
@@ -472,7 +487,8 @@ nextflow_workflow {
                             ImageUtils.getImageMetadata("$outputDir/illumination_correction/basicpy/cycif-tonsil-cycle2.ome-dfp.tiff"),
                             ImageUtils.getImageMetadata("$outputDir/illumination_correction/basicpy/cycif-tonsil-cycle2.ome-ffp.tiff"),
                             ImageUtils.getImageMetadata("$outputDir/illumination_correction/basicpy/cycif-tonsil-cycle3.ome-dfp.tiff"),
-                            ImageUtils.getImageMetadata("$outputDir/illumination_correction/basicpy/cycif-tonsil-cycle3.ome-ffp.tiff")
+                            ImageUtils.getImageMetadata("$outputDir/illumination_correction/basicpy/cycif-tonsil-cycle3.ome-ffp.tiff"),
+                            removeNextflowVersion("$outputDir/pipeline_info/nf_core_mcmicro_software_mqc_versions.yml"),
                         ).match()
                     },
                     { assert workflow.success }
@@ -484,6 +500,7 @@ nextflow_workflow {
 
             when {
                 params {
+                    outdir = "$outputDir"
                     segmentation = "cellpose"
                 }
                 workflow {
@@ -515,6 +532,7 @@ nextflow_workflow {
                             path("$outputDir/registration/ashlar/TEST1.ome.tif"),
                             path("$outputDir/segmentation/cellpose/TEST1.ome_cp_masks.tif"),
                             CsvUtils.roundAndHashCsv("$outputDir/quantification/mcquant/cellpose/TEST1_TEST1.csv"),
+                            removeNextflowVersion("$outputDir/pipeline_info/nf_core_mcmicro_software_mqc_versions.yml"),
                         ).match()
                     },
                     { assert workflow.success }
@@ -527,6 +545,7 @@ nextflow_workflow {
 
             when {
                 params {
+                    outdir = "$outputDir"
                     segmentation = "mesmer"
                     tma_dearray = true
                     pixel_size = 0.7
@@ -558,6 +577,7 @@ nextflow_workflow {
                             path("$outputDir/registration/ashlar/TEST1.ome.tif"),
                             path("$outputDir/segmentation/deepcell_mesmer/mask_TEST1_1.tif"),
                             CsvUtils.summarizeCsv("$outputDir/quantification/mcquant/mesmer/1_mask_TEST1_1.csv"),
+                            removeNextflowVersion("$outputDir/pipeline_info/nf_core_mcmicro_software_mqc_versions.yml"),
                         ).match()
                     },
                     { assert workflow.success }
@@ -569,6 +589,7 @@ nextflow_workflow {
 
             when {
                 params {
+                    outdir = "$outputDir"
                     segmentation = "mesmer"
                     backsub = true
                 }
@@ -612,6 +633,7 @@ nextflow_workflow {
                             path("$outputDir/segmentation/deepcell_mesmer/mask_TEST1.tif"),
                             CsvUtils.summarizeCsv("$outputDir/quantification/mcquant/mesmer/TEST1.backsub_mask_TEST1.csv"),
                             path("$outputDir/backsub/TEST1.backsub.ome.tif"),
+                            removeNextflowVersion("$outputDir/pipeline_info/nf_core_mcmicro_software_mqc_versions.yml"),
                         ).match()
                     },
                     { assert workflow.success }
