@@ -10,7 +10,7 @@ keywords:
 tools:
   - "omevalidation":
       ## TODO nf-core: Add a description and other details for the software below
-      description: ""
+      description: "Validates XML input contain valid OMEXML tags and returns them formatted for mcmicro."
       homepage: ""
       documentation: ""
       tool_dev_url: ""
@@ -41,7 +41,6 @@ output:
           description: |
             Groovy Map containing sample information
             e.g. `[ id:'sample1' ]`
-      ## TODO nf-core: Delete / customise this example output
   - data:
           type: tuple
           description: Combination of extracted sample and marker metadata maps.
