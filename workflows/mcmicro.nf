@@ -50,20 +50,64 @@ workflow MCMICRO {
         .dump(tag: "ch_samplesheet_meta")
         .set { ch_samplesheet }
 
+    c_sum = 0
+    agg = channel.empty()
+
+    ch_samplesheet
+        .map {
+            meta, image_tiles, dfp, ffp -> [meta.cycle_number, meta.channel_count]
+        }
+        .unique()
+        .toSortedList()
+        .flatMap()
+        .map {
+            cn, cc ->
+            temp = [cn, c_sum]
+            c_sum += cc
+            return temp
+        }
+        .dump(tag: "CHANNEL_DELTA_INDEX")
+        .set { agg }
+
+    // update val_data channel_number so it matches with samplesheet
+    val_data.map {
+            meta, xml_meta, marker_meta -> marker_meta
+        }
+        .flatten()
+        .map{
+            meta -> [meta.cycle_number, meta]
+        }
+        .combine(agg, by: 0)
+        .map {
+            key, meta, counter ->
+            meta.channel_number += counter
+            return meta
+        }
+        //.dump(tag:"vd")
+        .set{ val_data }
+
+    val_data  // Inter sample marker setup check
+        .map {
+            entry -> [[entry.cycle_number, entry.channel_number], entry]
+        }
+        .groupTuple()
+        .map {
+            key, values ->
+                if (values.unique().size() != 1)
+                    error "Inconsistent marker exposure data across samples."
+        }
+
+
     ch_markersheet
         .flatten()
         .map {
-            entry -> [['channel_number': entry.channel_number, 'cycle_number': entry.cycle_number], entry
-            ]
-        }.dump(tag: "markersheet_joined")
+            entry -> [['channel_number': entry.channel_number, 'cycle_number': entry.cycle_number], entry]
+        }
         .join(
-            val_data.map {
-                meta, xml_meta, marker_meta -> marker_meta
-            }
-            .flatten()
+            val_data
             .map {
                 x-> [['channel_number':x.channel_number, 'cycle_number':x.cycle_number], x]
-            }.dump(tag:"OMEVAL_indexed")
+            }
         )
         .map {
             channel, orig, validated ->
@@ -73,15 +117,7 @@ workflow MCMICRO {
         .dump(tag: "ch_markersheet_meta")
         .set { ch_markersheet }
 
-    ch_markersheet
-        .flatten()
-        .map{
-            entry -> [entry.channel_number, [entry.exposure_time, entry.channel_number]]
-        }
-        .groupTuple()
-        .map {
-            entry -> if(entry[1].toSet().size() != 1) error "Inconsistent marker data between cycles."
-        }.dump(tag: "marker_after_check")
+
 
     //
     // MODULE: BASICPY
