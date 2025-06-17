@@ -63,7 +63,8 @@ process OMEVALIDATION {
     if (size_units.toSet().size() != 1 || size_units.flatten().toSet().size() != 1) {
         error "Inconsistent pixels size unit in images."
     }
-    // TODO transform pixel size to microns
+
+    // transform pixel size to microns
     s_units = size_units[0][0]
 
     if (size_units == 'mm'){
@@ -125,7 +126,7 @@ process OMEVALIDATION {
 
     if (exposure_time.size() != n_channels[0]) {
     //only needed inter cycle
-        println exposure_time
+        //println exposure_time
         error "Inconsistent number of exposure time entries, found " + exposure_time.size() + " expected " + n_channels[0]
     }
 

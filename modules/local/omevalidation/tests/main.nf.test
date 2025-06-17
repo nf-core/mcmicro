@@ -1,4 +1,5 @@
 // nf-core modules test omevalidation
+import nextflow.*
 nextflow_process {
 
     name "Test Process OMEVALIDATION"
@@ -8,6 +9,30 @@ nextflow_process {
     tag "modules"
     tag "modules_"
     tag "omevalidation"
+
+    test("Fail on mismatch number of channels")
+        {
+            setup {
+                def xml = new XmlSlurper().parse('assets/min_omexml_meta.xml')
+                xml.Image[0].Pixels.@SizeC = 1
+
+                def PATH = groovy.util.XmlUtil.serialize(xml)
+            }
+            when {
+                process {
+                    """
+                    input[0] = Channel.of(PATH).collectFile(name: 'temp.ome.xml').map{ [[id: 'sample1'], it] }
+                    """
+                }
+            }
+
+            then {
+                assertAll(
+                    { assert process.failed },
+                    { assert process.errorReport.contains("Found inconsistent number of channels in images") }
+                )
+            }
+        }
 
     test("Validate OME tags") {
         setup {
@@ -36,4 +61,120 @@ nextflow_process {
         }
 
     }
+
+    test("Fail on single image input")
+    {
+        setup {
+            def xml = new XmlSlurper().parse('assets/min_omexml_meta.xml')
+            xml.Image[1].replaceNode {}
+            def PATH = groovy.util.XmlUtil.serialize(xml)
+        }
+        when {
+            process {
+                """
+                input[0] = Channel.of(PATH).collectFile(name: 'temp.ome.xml').map{ [[id: 'sample1'], it] }
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.failed },
+                { assert process.errorReport.contains("Single image found in OMEXML metadata") }
+            )
+        }
+    }
+
+    test("Fail on inconsistent tile size")
+    {
+        setup {
+            def xml = new XmlSlurper().parse('assets/min_omexml_meta.xml')
+            xml.Image[0].Pixels.@SizeX = 1
+            def PATH = groovy.util.XmlUtil.serialize(xml)
+        }
+        when {
+            process {
+                """
+                input[0] = Channel.of(PATH).collectFile(name: 'temp.ome.xml').map{ [[id: 'sample1'], it] }
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.failed },
+                { assert process.errorReport.contains("Inconsistent tile sizes in images") }
+            )
+        }
+    }
+
+    test("Fail on mismatch pixel size")
+    {
+        setup {
+            def xml = new XmlSlurper().parse('assets/min_omexml_meta.xml')
+            xml.Image[0].Pixels.@PhysicalSizeX = 1
+            def PATH = groovy.util.XmlUtil.serialize(xml)
+        }
+        when {
+            process {
+                """
+                input[0] = Channel.of(PATH).collectFile(name: 'temp.ome.xml').map{ [[id: 'sample1'], it] }
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.failed },
+                { assert process.errorReport.contains("non consistent pixels sizes in images") }
+            )
+        }
+    }
+
+    test("Fail on mismatch pixel size unit")
+    {
+        setup {
+            def xml = new XmlSlurper().parse('assets/min_omexml_meta.xml')
+            xml.Image[0].Pixels.@PhysicalSizeXUnit = 'km'
+            def PATH = groovy.util.XmlUtil.serialize(xml)
+        }
+        when {
+            process {
+                """
+                input[0] = Channel.of(PATH).collectFile(name: 'temp.ome.xml').map{ [[id: 'sample1'], it] }
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.failed },
+                { assert process.errorReport.contains("Invalid pixel size unit found") }
+            )
+        }
+    }
+
+    test("Fail on mismatch pixel size datatype")
+    {
+        setup {
+            def xml = new XmlSlurper().parse('assets/min_omexml_meta.xml')
+            xml.Image[0].Pixels.@PhysicalSizeXUnit = 'm'
+            def PATH = groovy.util.XmlUtil.serialize(xml)
+        }
+        when {
+            process {
+                """
+                input[0] = Channel.of(PATH).collectFile(name: 'temp.ome.xml').map{ [[id: 'sample1'], it] }
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.failed },
+                { assert process.errorReport.contains("Inconsistent pixels datatype in images") }
+            )
+        }
+    }
+
 }

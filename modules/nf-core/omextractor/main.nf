@@ -8,8 +8,8 @@ process OMEXTRACTOR {
 	tuple val(meta), path(image)
 
 	output:
-        tuple val(meta), path('ome.xml'), emit: xml
-        path "versions.yml", emit: versions
+    tuple val(meta), path('ome.xml'), emit: xml
+    path "versions.yml", emit: versions
 
 	when:
 	task.ext.when == null || task.ext.when
