@@ -10,31 +10,7 @@ nextflow_process {
     tag "modules_"
     tag "omevalidation"
 
-    test("Fail on mismatch number of channels")
-        {
-            setup {
-                def xml = new XmlSlurper().parse('assets/min_omexml_meta.xml')
-                xml.Image[0].Pixels.@SizeC = 1
-
-                def PATH = groovy.util.XmlUtil.serialize(xml)
-            }
-            when {
-                process {
-                    """
-                    input[0] = Channel.of(PATH).collectFile(name: 'temp.ome.xml').map{ [[id: 'sample1'], it] }
-                    """
-                }
-            }
-
-            then {
-                assertAll(
-                    { assert process.failed },
-                    { assert process.errorReport.contains("Found inconsistent number of channels in images") }
-                )
-            }
-        }
-
-    test("Validate OME tags") {
+    test("OME tags extraction and validation pipeline outputs expected") {
         setup {
             run("OMEXTRACTOR") {
                 script "../../../nf-core/omextractor/main.nf"
@@ -62,8 +38,7 @@ nextflow_process {
 
     }
 
-    test("Fail on single image input")
-    {
+    test("Fail on single image input") {
         setup {
             def xml = new XmlSlurper().parse('assets/min_omexml_meta.xml')
             xml.Image[1].replaceNode {}
@@ -85,8 +60,7 @@ nextflow_process {
         }
     }
 
-    test("Fail on inconsistent tile size")
-    {
+    test("Fail on inconsistent tile size") {
         setup {
             def xml = new XmlSlurper().parse('assets/min_omexml_meta.xml')
             xml.Image[0].Pixels.@SizeX = 1
@@ -108,8 +82,7 @@ nextflow_process {
         }
     }
 
-    test("Fail on mismatch pixel size")
-    {
+    test("Fail on mismatch pixel size") {
         setup {
             def xml = new XmlSlurper().parse('assets/min_omexml_meta.xml')
             xml.Image[0].Pixels.@PhysicalSizeX = 1
@@ -131,8 +104,7 @@ nextflow_process {
         }
     }
 
-    test("Fail on mismatch pixel size unit")
-    {
+    test("Fail on mismatch pixel size unit") {
         setup {
             def xml = new XmlSlurper().parse('assets/min_omexml_meta.xml')
             xml.Image[0].Pixels.@PhysicalSizeXUnit = 'km'
@@ -154,8 +126,7 @@ nextflow_process {
         }
     }
 
-    test("Fail on mismatch pixel size datatype")
-    {
+    test("Fail on mismatch pixel size datatype") {
         setup {
             def xml = new XmlSlurper().parse('assets/min_omexml_meta.xml')
             xml.Image[0].Pixels.@PhysicalSizeXUnit = 'm'
@@ -177,4 +148,26 @@ nextflow_process {
         }
     }
 
+    test("Fail on mismatch number of channels") {
+        setup {
+            def xml = new XmlSlurper().parse('assets/min_omexml_meta.xml')
+            xml.Image[0].Pixels.@SizeC = 1
+
+            def PATH = groovy.util.XmlUtil.serialize(xml)
+        }
+        when {
+            process {
+                """
+                input[0] = Channel.of(PATH).collectFile(name: 'temp.ome.xml').map{ [[id: 'sample1'], it] }
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.failed },
+                { assert process.errorReport.contains("Found inconsistent number of channels in images") }
+            )
+        }
+    }
 }
