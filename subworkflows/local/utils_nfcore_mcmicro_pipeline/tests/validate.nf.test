@@ -108,4 +108,21 @@ nextflow_function {
         }
     }
 
+    test("Error if channel numbering does not start at 1") {
+        function "validateInputMarkersheet"
+        when {
+            function {
+                """
+                input[0] = [
+                    [marker_name:"M1", cycle_number:1, channel_number:2],
+                ]
+                """
+            }
+        }
+        then {
+            assert function.failed
+            assert function.stdout*.find("channel numbering must start with 1").any()
+        }
+    }
+
 }
