@@ -183,6 +183,10 @@ def validateInputMarkersheet( markersheet_data ) {
     def channel_number_list = []
     def cycle_number_list = []
 
+    if (markersheet_data[0].channel_number != 1) {
+        error("Please check input markersheet -> channel numbering must start with 1")
+    }
+
     markersheet_data.each { row ->
 
         if (marker_name_list.contains(row.marker_name)) {
