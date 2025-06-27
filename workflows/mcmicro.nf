@@ -11,6 +11,7 @@ import nextflow.Nextflow
 include { paramsSummaryMap       } from 'plugin/nf-schema'
 include { paramsSummaryMultiqc   } from '../subworkflows/nf-core/utils_nfcore_pipeline'
 include { softwareVersionsToYAML } from '../subworkflows/nf-core/utils_nfcore_pipeline'
+include { UPDATE_FROM_OME } from '../subworkflows/local/utils_nfcore_mcmicro_pipeline'
 include { methodsDescriptionText } from '../subworkflows/local/utils_nfcore_mcmicro_pipeline'
 include { MULTIQC                } from '../modules/nf-core/multiqc/main'
 include { BASICPY                } from '../modules/nf-core/basicpy/main'
@@ -39,85 +40,13 @@ workflow MCMICRO {
     ch_versions = Channel.empty()
     ch_multiqc_files = Channel.empty()
 
-    ch_samplesheet.map{meta, image_tiles, dfp, ffp -> [meta, image_tiles]} | OMEXTRACTOR
+    metadata = UPDATE_FROM_OME(ch_samplesheet, ch_markersheet)
 
-    val_data = OMEXTRACTOR.out.xml | OMEVALIDATION
+    ch_samplesheet = metadata.samplesheet
+    ch_markersheet = metadata.markersheet
 
-    ch_samplesheet.join(val_data)
-         .map { original_meta, image_tiles, dfp, ffp, xml_meta, marker_data ->
-                [xml_meta + original_meta, image_tiles, dfp, ffp]
-        }
-        .dump(tag: "ch_samplesheet_meta")
-        .set { ch_samplesheet }
-
-    c_sum = 0
-    agg = channel.empty()
-
-    ch_samplesheet
-        .map {
-            meta, image_tiles, dfp, ffp -> [meta.cycle_number, meta.channel_count]
-        }
-        .unique()
-        .toSortedList()
-        .flatMap()
-        .map {
-            cn, cc ->
-            temp = [cn, c_sum]
-            c_sum += cc
-            return temp
-        }
-        .dump(tag: "CHANNEL_DELTA_INDEX")
-        .set { agg }
-
-    // update val_data channel_number so it matches with samplesheet
-    val_data.map {
-            meta, xml_meta, marker_meta -> marker_meta
-        }
-        .flatten()
-        .map{
-            meta -> [meta.cycle_number, meta]
-        }
-        .combine(agg, by: 0)
-        .map {
-            key, meta, counter ->
-            meta.channel_number += counter
-            return meta
-        }
-        //.dump(tag:"vd")
-        .set{ val_data }
-
-    val_data  // Inter sample marker setup check
-        .map {
-            entry -> [[entry.cycle_number, entry.channel_number], entry]
-        }
-        .groupTuple()
-        .map {
-            key, values ->
-                if (values.unique().size() != 1)
-                    error "Inconsistent marker exposure data across samples."
-        }
-
-
-    ch_markersheet
-        .flatten()
-        .map {
-            entry -> [['channel_number': entry.channel_number, 'cycle_number': entry.cycle_number], entry]
-        }
-        .join(
-            val_data
-            .map {
-                x-> [['channel_number':x.channel_number, 'cycle_number':x.cycle_number], x]
-            }
-        )
-        .map {
-            channel, orig, validated ->
-            validated + orig
-        }
-        .toList()
-        .dump(tag: "ch_markersheet_meta")
-        .set { ch_markersheet }
-
-
+    ch_samplesheet.dump(tag: "ch_samplesheet")
+    ch_markersheet.dump(tag: "ch_markersheet")
 
     //
     // MODULE: BASICPY

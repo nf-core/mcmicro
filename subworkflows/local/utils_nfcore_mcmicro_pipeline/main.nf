@@ -17,6 +17,8 @@ include { completionSummary         } from '../../nf-core/utils_nfcore_pipeline'
 include { imNotification            } from '../../nf-core/utils_nfcore_pipeline'
 include { UTILS_NFCORE_PIPELINE     } from '../../nf-core/utils_nfcore_pipeline'
 include { UTILS_NEXTFLOW_PIPELINE   } from '../../nf-core/utils_nextflow_pipeline'
+include { OMEXTRACTOR            } from '../../../modules/nf-core/omextractor/main'
+include { OMEVALIDATION          } from '../../../modules/local/omevalidation/main'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -147,6 +149,117 @@ workflow PIPELINE_COMPLETION {
         log.error "Pipeline failed. Please refer to troubleshooting docs: https://nf-co.re/docs/usage/troubleshooting"
     }
 }
+
+workflow UPDATE_FROM_OME {
+    take:
+    samplesheet
+    markersheet
+
+    main:
+    samplesheet.map{meta, image_tiles, dfp, ffp -> [meta, image_tiles]} | OMEXTRACTOR
+
+    val_data = OMEXTRACTOR.out.xml | OMEVALIDATION
+
+    samplesheet.join(val_data)
+         .map { original_meta, image_tiles, dfp, ffp, xml_meta, marker_data ->
+                [xml_meta + original_meta, image_tiles, dfp, ffp]
+        }
+        .dump(tag: "ch_samplesheet_meta")
+        .set { samplesheet_meta }
+
+    c_sum = 0
+    agg = channel.empty()
+
+    samplesheet_meta
+        .map {
+            meta, image_tiles, dfp, ffp -> [meta.cycle_number, meta.channel_count]
+        }
+        .unique()
+        .toSortedList()
+        .flatMap()
+        .map {
+            cn, cc ->
+            temp = [cn, c_sum]
+            c_sum += cc
+            return temp
+        }
+        .dump(tag: "CHANNEL_DELTA_INDEX")
+        .set { agg }
+
+    // update val_data channel_number so it matches with samplesheet
+    val_data.map {
+            meta, xml_meta, marker_meta -> marker_meta
+        }
+        .flatten()
+        .map{
+            meta -> [meta.cycle_number, meta]
+        }
+        .combine(agg, by: 0)
+        .map {
+            key, meta, counter ->
+            meta.channel_number += counter
+            return meta
+        }
+        //.dump(tag:"vd")
+        .set{ val_data }
+
+    val_data  // Inter sample marker setup check
+        .map {
+            entry -> [[entry.cycle_number, entry.channel_number], entry]
+        }
+        .groupTuple()
+        .map {
+            key, values ->
+                if (values.unique().size() != 1)
+                    error "Inconsistent marker exposure data across samples."
+        }
+
+
+    markersheet_template = //markersheet.flatten().first().keySet().collectEntries {key -> [key, null]}.toList().first().dump(tag: "template")
+    [
+        'channel_number':null, 'cycle_number':null,
+        'marker_name':null, 'filter':null,
+        'excitation_wavelength':null, 'emission_wavelength':null,
+        'exposure':null, 'background':null,
+        'remove':null
+        ]
+
+    markersheet
+        .flatten()
+        .dump(tag: "ch_markersheet_premeta")
+
+        .map {
+            entry ->
+            [['channel_number': entry.channel_number, 'cycle_number': entry.cycle_number], entry.findAll {it.value != null}]
+        }
+        .join(
+            val_data
+            .map {
+                x-> [['channel_number':x.channel_number, 'cycle_number':x.cycle_number], x]
+            }
+        )
+        .map {
+            channel, orig, validated ->
+            markersheet_template + validated + orig
+        }
+        .toList()
+        .dump(tag: "ch_markersheet_meta")
+        .set { markersheet_meta }
+
+    if (params.backsub) {
+        markersheet_meta
+            .map { entry ->
+                if (entry.exposure_time == null){
+                    error "Exposure time cannot be NULL if doing backsub"
+                }
+            }
+    }
+
+    emit:
+    samplesheet = samplesheet_meta
+    markersheet = markersheet_meta
+}
+
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

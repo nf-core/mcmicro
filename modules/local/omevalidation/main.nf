@@ -1,4 +1,5 @@
 import groovy.xml.XmlSlurper
+
 process OMEVALIDATION {
     tag "$meta.id"
     label 'process_single'
