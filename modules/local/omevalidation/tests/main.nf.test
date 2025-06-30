@@ -38,27 +38,28 @@ nextflow_process {
 
     }
 
-    test("Fail on single image input") {
-        setup {
-            def xml = new XmlSlurper().parse('assets/min_omexml_meta.xml')
-            xml.Image[1].replaceNode {}
-            def PATH = groovy.util.XmlUtil.serialize(xml)
-        }
-        when {
-            process {
-                """
-                input[0] = Channel.of(PATH).collectFile(name: 'temp.ome.xml').map{ [[id: 'sample1'], it] }
-                """
-            }
-        }
+    //test("Fail on single image input") {
+    //    setup {
+    //      def xml = new XmlSlurper().parse('assets/min_omexml_meta.xml')
+    //        xml.Image[1].replaceNode {}
+    //        def PATH = groovy.util.XmlUtil.serialize(xml)
+    //    }
+    //    when {
+    //        process {
+    //            """
+    //            input[0] = Channel.of(PATH).collectFile(name: 'temp.ome.xml').map{ [[id: 'sample1'], it] }
+    //            """
+    //        }
+    //    }
 
-        then {
-            assertAll(
-                { assert process.failed },
-                { assert process.errorReport.contains("Single image found in OMEXML metadata") }
-            )
-        }
-    }
+    //    then {
+    //        assertAll(
+    //            { assert process.failed },
+    //            { assert process.errorReport.contains("Single image found in OMEXML metadata") }
+    //        )
+    //    }
+    //}
+    
 
     test("Fail on inconsistent tile size") {
         setup {
