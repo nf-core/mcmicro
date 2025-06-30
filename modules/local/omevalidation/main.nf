@@ -19,9 +19,10 @@ process OMEVALIDATION {
 
     tile_count = xml.'**'.findAll { node -> node.name() == "Image"}.size()
 
-    if (tile_count < 2) {
-       error 'Single image found in OMEXML metadata'
-    }
+    // TODO check if pre-stiched
+    //if (tile_count < 2) {
+    //   error 'Single image found in OMEXML metadata'
+    //}
 
     tile_size = xml.'**'.findAll {
             node -> node.name() == 'Pixels' && node.@SizeX != '' && node.@SizeY != ''

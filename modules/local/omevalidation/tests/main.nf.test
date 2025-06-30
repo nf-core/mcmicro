@@ -13,7 +13,7 @@ nextflow_process {
     test("OME tags extraction and validation pipeline outputs expected") {
         setup {
             run("OMEXTRACTOR") {
-                script "modules/nf-core/omextractor/main.nf"
+                script "modules/local/omextractor/main.nf"
                 process {
                     """
                     input[0] = [["id": 0], file(params.modules_testdata_base_path + "/imaging/ome-tiff/cycif-tonsil-cycle1.ome.tif")]
