@@ -242,7 +242,9 @@ workflow UPDATE_FROM_OME {
             channel, orig, validated ->
             markersheet_template + validated + orig
         }
-        .toList()
+        .toSortedList {
+            a, b -> a.channel_number <=> b.channel_number
+        }
         .dump(tag: "ch_markersheet_meta")
         .set { markersheet_meta }
 

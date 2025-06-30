@@ -1,7 +1,7 @@
 {
     "-profile test": {
         "content": [
-            4,
+            6,
             {
                 "ASHLAR": {
                     "ashlar": "1.18.0"
@@ -25,6 +25,8 @@
                 "multiqc/multiqc_data/multiqc_software_versions.txt",
                 "multiqc/multiqc_data/multiqc_sources.txt",
                 "multiqc/multiqc_report.html",
+                "omextractor",
+                "omextractor/ome.xml",
                 "pipeline_info",
                 "pipeline_info/nf_core_mcmicro_software_mqc_versions.yml",
                 "quantification",
@@ -40,6 +42,7 @@
             ],
             [
                 "multiqc_citations.txt:md5,4c806e63a283ec1b7e78cdae3a923d4f",
+                "ome.xml:md5,b4e08d86595e773c42483343b06cd51d",
                 "TEST1.ome.tif:md5,988bbb2c74d47dc22a9f3ac348f53ef5",
                 "mask_TEST1.tif:md5,3103759bd55b9deeb8c8a0dade798d9a"
             ]
