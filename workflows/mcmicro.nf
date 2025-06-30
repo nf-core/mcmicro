@@ -22,8 +22,7 @@ include { COREOGRAPH             } from '../modules/nf-core/coreograph/main'
 include { DEEPCELL_MESMER        } from '../modules/nf-core/deepcell/mesmer/main'
 include { SCIMAP_MCMICRO         } from '../modules/nf-core/scimap/mcmicro/main'
 include { MCQUANT                } from '../modules/nf-core/mcquant/main'
-include { OMEXTRACTOR            } from '../modules/nf-core/omextractor/main'
-include { OMEVALIDATION          } from '../modules/local/omevalidation/main'
+
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     RUN MAIN WORKFLOW
@@ -41,6 +40,7 @@ workflow MCMICRO {
     ch_multiqc_files = Channel.empty()
 
     metadata = UPDATE_FROM_OME(ch_samplesheet, ch_markersheet)
+    ch_versions.mix(metadata.versions)
 
     ch_samplesheet = metadata.samplesheet
     ch_markersheet = metadata.markersheet

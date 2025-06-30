@@ -20,7 +20,7 @@ process OMEVALIDATION {
     tile_count = xml.'**'.findAll { node -> node.name() == "Image"}.size()
 
     if (tile_count < 2) {
-        error 'Single image found in OMEXML metadata'
+       error 'Single image found in OMEXML metadata'
     }
 
     tile_size = xml.'**'.findAll {

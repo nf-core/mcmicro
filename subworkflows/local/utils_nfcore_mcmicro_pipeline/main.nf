@@ -17,7 +17,7 @@ include { completionSummary         } from '../../nf-core/utils_nfcore_pipeline'
 include { imNotification            } from '../../nf-core/utils_nfcore_pipeline'
 include { UTILS_NFCORE_PIPELINE     } from '../../nf-core/utils_nfcore_pipeline'
 include { UTILS_NEXTFLOW_PIPELINE   } from '../../nf-core/utils_nextflow_pipeline'
-include { OMEXTRACTOR            } from '../../../modules/nf-core/omextractor/main'
+include { OMEXTRACTOR            } from '../../../modules/local/omextractor/main'
 include { OMEVALIDATION          } from '../../../modules/local/omevalidation/main'
 
 /*
@@ -260,6 +260,7 @@ workflow UPDATE_FROM_OME {
     emit:
     samplesheet = samplesheet_meta
     markersheet = markersheet_meta
+    versions = OMEXTRACTOR.out.versions
 }
 
 
