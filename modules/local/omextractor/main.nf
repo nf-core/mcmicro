@@ -20,7 +20,7 @@ process OMEXTRACTOR {
 
 	cat <<-END_VERSIONS > versions.yml
 	"${task.process}":
-	    showinf: \$(showinf -version | tr '\n' ' ' | tr -d ':')
+	    showinf: \$(showinf -version | head -n1 | cut -d' ' -f2)
 	END_VERSIONS
 	"""
 }
