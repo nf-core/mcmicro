@@ -203,17 +203,6 @@ workflow UPDATE_FROM_OME {
         //.dump(tag:"vd")
         .set{ val_data }
 
-    val_data  // Inter sample marker setup check
-        .map {
-            entry -> [[entry.cycle_number, entry.channel_number], entry]
-        }
-        .groupTuple()
-        .map {
-            key, values ->
-                if (values.unique().size() != 1)
-                    error "Inconsistent marker exposure data across samples."
-        }
-
 
     markersheet_template = //markersheet.flatten().first().keySet().collectEntries {key -> [key, null]}.toList().first().dump(tag: "template")
     [
@@ -247,6 +236,18 @@ workflow UPDATE_FROM_OME {
         }
         .dump(tag: "ch_markersheet_meta")
         .set { markersheet_meta }
+
+
+    markersheet_meta  // Inter sample marker setup check
+        .map {
+            entry -> [[entry.cycle_number, entry.channel_number], [entry.exposure_time, entry.exposure_time_unit]]
+        }
+        .groupTuple()
+        .map {
+            key, values ->
+                if (values.unique().size() != 1)
+                    error "Inconsistent marker exposure data across samples."
+        }
 
     if (params.backsub) {
         markersheet_meta

@@ -53,7 +53,7 @@ process OMEVALIDATION {
         }
         .collect { node -> node.@SizeC.toInteger() }
 
-    if (n_channels.toSet().size() != 1) {
+    if (n_channels.toSet().size() != 1 || n_channels[0] == 0) {
         error "Found inconsistent number of channels in images."
     }
 
@@ -126,10 +126,17 @@ process OMEVALIDATION {
             }
         }.toSet()
 
-    if (exposure_time.size() != n_channels[0]) {
-    //only needed inter cycle
-        //println exposure_time
-        error "Inconsistent number of exposure time entries, found " + exposure_time.size() + " expected " + n_channels[0]
+    if (exposure_time.size() == 0) { //Plane is optional entry
+        exposure_time = []
+
+        for(int i = 0; i < n_channels[0]; i++)
+            exposure_time.add([
+                'cycle_number': meta.cycle_number,
+                //'channel_number': (meta.cycle_number - 1)*n_channels[0] + node.@TheC.toInteger() + 1, // channels on samplesheet start at 1
+                'channel_number': i+1,
+                'exposure_time': null,
+                'exposure_time_unit': null
+            ])
     }
 
     sample_meta = [
