@@ -11,7 +11,7 @@ import nextflow.Nextflow
 include { paramsSummaryMap       } from 'plugin/nf-schema'
 include { paramsSummaryMultiqc   } from '../subworkflows/nf-core/utils_nfcore_pipeline'
 include { softwareVersionsToYAML } from '../subworkflows/nf-core/utils_nfcore_pipeline'
-include { UPDATE_FROM_OME } from '../subworkflows/local/utils_nfcore_mcmicro_pipeline'
+include { UPDATE_FROM_OME        } from '../subworkflows/local/update_from_ome'
 include { methodsDescriptionText } from '../subworkflows/local/utils_nfcore_mcmicro_pipeline'
 include { MULTIQC                } from '../modules/nf-core/multiqc/main'
 include { BASICPY                } from '../modules/nf-core/basicpy/main'
@@ -40,7 +40,7 @@ workflow MCMICRO {
     ch_multiqc_files = Channel.empty()
 
     metadata = UPDATE_FROM_OME(ch_samplesheet, ch_markersheet)
-    ch_versions.mix(metadata.versions)
+    ch_versions = ch_versions.mix(metadata.versions)
 
     ch_samplesheet = metadata.samplesheet
     ch_markersheet = metadata.markersheet

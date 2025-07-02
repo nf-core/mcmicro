@@ -109,7 +109,6 @@ process OMEVALIDATION {
             if (node.@ExposureTime == '' || node.@ExposureTimeUnit == '') {
                 return [
                     'cycle_number': meta.cycle_number,
-                    //'channel_number': (meta.cycle_number - 1)*n_channels[0] + node.@TheC.toInteger() + 1, // channels on samplesheet start at 1
                     'channel_number': node.@TheC.toInteger() + 1,
                     'exposure_time': null,
                     'exposure_time_unit': null
@@ -118,7 +117,6 @@ process OMEVALIDATION {
             else {
                 return [
                     'cycle_number': meta.cycle_number,
-                    //'channel_number': (meta.cycle_number - 1)*n_channels[0] + node.@TheC.toInteger() + 1, // channels on samplesheet start at 1
                     'channel_number': node.@TheC.toInteger() + 1,
                     'exposure_time': node.@ExposureTime.toDouble(),
                     'exposure_time_unit': node.@ExposureTimeUnit.toString()
@@ -132,7 +130,6 @@ process OMEVALIDATION {
         for(int i = 0; i < n_channels[0]; i++)
             exposure_time.add([
                 'cycle_number': meta.cycle_number,
-                //'channel_number': (meta.cycle_number - 1)*n_channels[0] + node.@TheC.toInteger() + 1, // channels on samplesheet start at 1
                 'channel_number': i+1,
                 'exposure_time': null,
                 'exposure_time_unit': null

@@ -9,9 +9,13 @@ tools:
         Suite of tools to handle several imaging protocols.
       homepage: https://www.openmicroscopy.org/bio-formats/
       documentation: https://www.openmicroscopy.org/bio-formats/
-      licence: ["GPL-3.0-or-later"]
-      identifier: biotools:multiqc
+      licence: ["GPL-2.0"]
 input:
+  - - meta:
+        type: map
+        description: |
+          Groovy Map containing sample information
+          e.g. [ id:'test' ]
   - - image:
         type: file
         description: |
