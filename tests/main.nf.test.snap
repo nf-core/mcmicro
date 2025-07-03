@@ -40,6 +40,9 @@
                 "MCQUANT": {
                     "mcquant": "1.5.4"
                 },
+                "OMEXTRACTOR": {
+                    "showinf": "8.1.1"
+                },
                 "Workflow": {
                     "nf-core/mcmicro": "v2.0.0"
                 }
@@ -133,6 +136,9 @@
                 "MCQUANT": {
                     "mcquant": "1.5.4"
                 },
+                "OMEXTRACTOR": {
+                    "showinf": "8.1.1"
+                },
                 "Workflow": {
                     "nf-core/mcmicro": "v2.0.0"
                 }
@@ -183,6 +189,9 @@
                 },
                 "MCQUANT": {
                     "mcquant": "1.5.4"
+                },
+                "OMEXTRACTOR": {
+                    "showinf": "8.1.1"
                 },
                 "Workflow": {
                     "nf-core/mcmicro": "v2.0.0"
@@ -264,6 +273,9 @@
                 "MCQUANT": {
                     "mcquant": "1.5.4"
                 },
+                "OMEXTRACTOR": {
+                    "showinf": "8.1.1"
+                },
                 "Workflow": {
                     "nf-core/mcmicro": "v2.0.0"
                 }
@@ -289,6 +301,9 @@
                 },
                 "MCQUANT": {
                     "mcquant": "1.5.4"
+                },
+                "OMEXTRACTOR": {
+                    "showinf": "8.1.1"
                 },
                 "Workflow": {
                     "nf-core/mcmicro": "v2.0.0"
@@ -333,6 +348,9 @@
                 },
                 "MCQUANT": {
                     "mcquant": "1.5.4"
+                },
+                "OMEXTRACTOR": {
+                    "showinf": "8.1.1"
                 },
                 "Workflow": {
                     "nf-core/mcmicro": "v2.0.0"
@@ -482,6 +500,9 @@
                 },
                 "MCQUANT": {
                     "mcquant": "1.5.4"
+                },
+                "OMEXTRACTOR": {
+                    "showinf": "8.1.1"
                 },
                 "Workflow": {
                     "nf-core/mcmicro": "v2.0.0"
@@ -675,6 +696,9 @@
                 "MCQUANT": {
                     "mcquant": "1.5.4"
                 },
+                "OMEXTRACTOR": {
+                    "showinf": "8.1.1"
+                },
                 "Workflow": {
                     "nf-core/mcmicro": "v2.0.0"
                 }
@@ -718,6 +742,9 @@
                 },
                 "MCQUANT": {
                     "mcquant": "1.5.4"
+                },
+                "OMEXTRACTOR": {
+                    "showinf": "8.1.1"
                 },
                 "Workflow": {
                     "nf-core/mcmicro": "v2.0.0"
@@ -792,6 +819,9 @@
                 "MCQUANT": {
                     "mcquant": "1.5.4"
                 },
+                "OMEXTRACTOR": {
+                    "showinf": "8.1.1"
+                },
                 "Workflow": {
                     "nf-core/mcmicro": "v2.0.0"
                 }
@@ -832,6 +862,9 @@
                 },
                 "MCQUANT": {
                     "mcquant": "1.5.4"
+                },
+                "OMEXTRACTOR": {
+                    "showinf": "8.1.1"
                 },
                 "Workflow": {
                     "nf-core/mcmicro": "v2.0.0"
