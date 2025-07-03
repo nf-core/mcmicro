@@ -16,7 +16,7 @@ input:
         description: |
           Groovy Map containing sample information
           e.g. [ id:'test' ]
-  - - image:
+    - image:
         type: file
         description: |
           Registration image
