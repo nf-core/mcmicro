@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<OME xmlns="http://www.openmicroscopy.org/Schemas/OME/2016-06" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.openmicroscopy.org/Schemas/OME/2016-06 http://www.openmicroscopy.org/Schemas/OME/2016-06/ome.xsd">
+   <Image ID="Image:0" Name="test_xml_min_1">
+      <InstrumentRef ID="Instrument:0"/>
+      <ObjectiveSettings ID="Objective:0"/>
+      <Pixels BigEndian="false" DimensionOrder="XYZCT" ID="Pixels:0" Interleaved="false" PhysicalSizeX="0.325" PhysicalSizeXUnit="µm" PhysicalSizeY="0.325" PhysicalSizeYUnit="µm" PhysicalSizeZ="1.0" PhysicalSizeZUnit="µm" SignificantBits="16" SizeC="4" SizeT="1" SizeX="28384" SizeY="9564" SizeZ="1" Type="uint16">
+         <Channel ID="Channel:0:0" Name="01_Nucleus_Hoechst" SamplesPerPixel="1">
+            <LightPath/>
+         </Channel>
+         <Channel ID="Channel:0:1" Name="02_AF1" SamplesPerPixel="1">
+            <LightPath/>
+         </Channel>
+         <Channel ID="Channel:0:2" Name="03_CD31_ArgoFluor515" SamplesPerPixel="1">
+            <LightPath/>
+         </Channel>
+         <Channel ID="Channel:0:3" Name="04_Ki-67_ArgoFluor555L" SamplesPerPixel="1">
+            <LightPath/>
+         </Channel>
+         <TiffData FirstC="0" FirstT="0" FirstZ="0" IFD="0" PlaneCount="4"/>
+         <Plane TheC="0" TheT="0" TheZ="0"/>
+         <Plane TheC="1" TheT="0" TheZ="0"/>
+         <Plane TheC="2" TheT="0" TheZ="0"/>
+         <Plane TheC="3" TheT="0" TheZ="0"/>
+      </Pixels>
+      <AnnotationRef ID="Annotation:Stitcher:0"/>
+   </Image>
+   <Image ID="Image:1" Name="test_xml_min_2">
+      <InstrumentRef ID="Instrument:0"/>
+      <ObjectiveSettings ID="Objective:0"/>
+      <Pixels BigEndian="false" DimensionOrder="XYZCT" ID="Pixels:1" Interleaved="false" PhysicalSizeX="0.325" PhysicalSizeXUnit="µm" PhysicalSizeY="0.325" PhysicalSizeYUnit="µm" PhysicalSizeZ="1.0" PhysicalSizeZUnit="µm" SignificantBits="16" SizeC="4" SizeT="1" SizeX="28384" SizeY="9564" SizeZ="1" Type="uint16">
+         <Channel ID="Channel:0:0" Name="01_Nucleus_Hoechst_1" SamplesPerPixel="1">
+            <LightPath/>
+         </Channel>
+         <Channel ID="Channel:0:1" Name="02_AF1_1" SamplesPerPixel="1">
+            <LightPath/>
+         </Channel>
+         <Channel ID="Channel:0:2" Name="03_CD31_ArgoFluor515_1" SamplesPerPixel="1">
+            <LightPath/>
+         </Channel>
+         <Channel ID="Channel:0:3" Name="04_Ki-67_ArgoFluor555L_1" SamplesPerPixel="1">
+            <LightPath/>
+         </Channel>
+         <TiffData FirstC="0" FirstT="0" FirstZ="0" IFD="0" PlaneCount="4"/>
+         <Plane TheC="0" TheT="0" TheZ="0"/>
+         <Plane TheC="1" TheT="0" TheZ="0"/>
+         <Plane TheC="2" TheT="0" TheZ="0"/>
+         <Plane TheC="3" TheT="0" TheZ="0"/>
+      </Pixels>
+      <AnnotationRef ID="Annotation:Stitcher:0"/>
+   </Image>
+</OME>

@@ -22,8 +22,8 @@
             "@id": "./",
             "@type": "Dataset",
             "creativeWorkStatus": "Stable",
-            "datePublished": "2025-07-08T11:38:44+00:00",
-            "description": "<h1>\n  <picture>\n    <source media=\"(prefers-color-scheme: dark)\" srcset=\"docs/images/nf-core-mcmicro_logo_dark.png\">\n    <img alt=\"nf-core/mcmicro\" src=\"docs/images/nf-core-mcmicro_logo_light.png\">\n  </picture>\n</h1>\n\n[![GitHub Actions CI Status](https://github.com/nf-core/mcmicro/actions/workflows/nf-test.yml/badge.svg)](https://github.com/nf-core/mcmicro/actions/workflows/nf-test.yml)\n[![GitHub Actions Linting Status](https://github.com/nf-core/mcmicro/actions/workflows/linting.yml/badge.svg)](https://github.com/nf-core/mcmicro/actions/workflows/linting.yml)[![AWS CI](https://img.shields.io/badge/CI%20tests-full%20size-FF9900?labelColor=000000&logo=Amazon%20AWS)](https://nf-co.re/mcmicro/results)[![Cite with Zenodo](http://img.shields.io/badge/DOI-10.5281/zenodo.XXXXXXX-1073c8?labelColor=000000)](https://doi.org/10.5281/zenodo.XXXXXXX)\n[![nf-test](https://img.shields.io/badge/unit_tests-nf--test-337ab7.svg)](https://www.nf-test.com)\n\n[![Nextflow](https://img.shields.io/badge/version-%E2%89%A524.10.5-green?style=flat&logo=nextflow&logoColor=white&color=%230DC09D&link=https%3A%2F%2Fnextflow.io)](https://www.nextflow.io/)\n[![nf-core template version](https://img.shields.io/badge/nf--core_template-3.3.2-green?style=flat&logo=nfcore&logoColor=white&color=%2324B064&link=https%3A%2F%2Fnf-co.re)](https://github.com/nf-core/tools/releases/tag/3.3.2)\n[![run with conda](http://img.shields.io/badge/run%20with-conda-3EB049?labelColor=000000&logo=anaconda)](https://docs.conda.io/en/latest/)\n[![run with docker](https://img.shields.io/badge/run%20with-docker-0db7ed?labelColor=000000&logo=docker)](https://www.docker.com/)\n[![run with singularity](https://img.shields.io/badge/run%20with-singularity-1d355c.svg?labelColor=000000)](https://sylabs.io/docs/)\n[![Launch on Seqera Platform](https://img.shields.io/badge/Launch%20%F0%9F%9A%80-Seqera%20Platform-%234256e7)](https://cloud.seqera.io/launch?pipeline=https://github.com/nf-core/mcmicro)\n\n[![Get help on Slack](http://img.shields.io/badge/slack-nf--core%20%23mcmicro-4A154B?labelColor=000000&logo=slack)](https://nfcore.slack.com/channels/mcmicro)[![Follow on Bluesky](https://img.shields.io/badge/bluesky-%40nf__core-1185fe?labelColor=000000&logo=bluesky)](https://bsky.app/profile/nf-co.re)[![Follow on Mastodon](https://img.shields.io/badge/mastodon-nf__core-6364ff?labelColor=FFFFFF&logo=mastodon)](https://mstdn.science/@nf_core)[![Watch on YouTube](http://img.shields.io/badge/youtube-nf--core-FF0000?labelColor=000000&logo=youtube)](https://www.youtube.com/c/nf-core)\n\n## Introduction\n\n**nf-core/mcmicro** is a bioinformatics pipeline that ...\n\n<!-- TODO nf-core:\n   Complete this sentence with a 2-3 sentence summary of what types of data the pipeline ingests, a brief overview of the\n   major pipeline sections and the types of output it produces. You're giving an overview to someone new\n   to nf-core here, in 15-20 seconds. For an example, see https://github.com/nf-core/rnaseq/blob/master/README.md#introduction\n-->\n\n<!-- TODO nf-core: Include a figure that guides the user through the major workflow steps. Many nf-core\n     workflows use the \"tube map\" design for that. See https://nf-co.re/docs/guidelines/graphic_design/workflow_diagrams#examples for examples.   -->\n<!-- TODO nf-core: Fill in short bullet-pointed list of the default steps in the pipeline -->1. Read QC ([`FastQC`](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/))2. Present QC for raw reads ([`MultiQC`](http://multiqc.info/))\n\n## Usage\n\n> [!NOTE]\n> If you are new to Nextflow and nf-core, please refer to [this page](https://nf-co.re/docs/usage/installation) on how to set-up Nextflow. Make sure to [test your setup](https://nf-co.re/docs/usage/introduction#how-to-run-a-pipeline) with `-profile test` before running the workflow on actual data.\n\n<!-- TODO nf-core: Describe the minimum required steps to execute the pipeline, e.g. how to prepare samplesheets.\n     Explain what rows and columns represent. For instance (please edit as appropriate):\n\nFirst, prepare a samplesheet with your input data that looks as follows:\n\n`samplesheet.csv`:\n\n```csv\nsample,fastq_1,fastq_2\nCONTROL_REP1,AEG588A1_S1_L002_R1_001.fastq.gz,AEG588A1_S1_L002_R2_001.fastq.gz\n```\n\nEach row represents a fastq file (single-end) or a pair of fastq files (paired end).\n\n-->\n\nNow, you can run the pipeline using:\n\n<!-- TODO nf-core: update the following command to include all required parameters for a minimal example -->\n\n```bash\nnextflow run nf-core/mcmicro \\\n   -profile <docker/singularity/.../institute> \\\n   --input samplesheet.csv \\\n   --outdir <OUTDIR>\n```\n\n> [!WARNING]\n> Please provide pipeline parameters via the CLI or Nextflow `-params-file` option. Custom config files including those provided by the `-c` Nextflow option can be used to provide any configuration _**except for parameters**_; see [docs](https://nf-co.re/docs/usage/getting_started/configuration#custom-configuration-files).\n\nFor more details and further functionality, please refer to the [usage documentation](https://nf-co.re/mcmicro/usage) and the [parameter documentation](https://nf-co.re/mcmicro/parameters).\n\n## Pipeline output\n\nTo see the results of an example test run with a full size dataset refer to the [results](https://nf-co.re/mcmicro/results) tab on the nf-core website pipeline page.\nFor more details about the output files and reports, please refer to the\n[output documentation](https://nf-co.re/mcmicro/output).\n\n## Credits\n\nnf-core/mcmicro was originally written by TBD.\n\nWe thank the following people for their extensive assistance in the development of this pipeline:\n\n<!-- TODO nf-core: If applicable, make list of people who have also contributed -->\n\n## Contributions and Support\n\nIf you would like to contribute to this pipeline, please see the [contributing guidelines](.github/CONTRIBUTING.md).\n\nFor further information or help, don't hesitate to get in touch on the [Slack `#mcmicro` channel](https://nfcore.slack.com/channels/mcmicro) (you can join with [this invite](https://nf-co.re/join/slack)).\n\n## Citations\n\n<!-- TODO nf-core: Add citation for pipeline after first release. Uncomment lines below and update Zenodo doi and badge at the top of this file. -->\n<!-- If you use nf-core/mcmicro for your analysis, please cite it using the following doi: [10.5281/zenodo.XXXXXX](https://doi.org/10.5281/zenodo.XXXXXX) -->\n\n<!-- TODO nf-core: Add bibliography of tools and data used in your pipeline -->\n\nAn extensive list of references for the tools used by the pipeline can be found in the [`CITATIONS.md`](CITATIONS.md) file.\n\nYou can cite the `nf-core` publication as follows:\n\n> **The nf-core framework for community-curated bioinformatics pipelines.**\n>\n> Philip Ewels, Alexander Peltzer, Sven Fillinger, Harshil Patel, Johannes Alneberg, Andreas Wilm, Maxime Ulysse Garcia, Paolo Di Tommaso & Sven Nahnsen.\n>\n> _Nat Biotechnol._ 2020 Feb 13. doi: [10.1038/s41587-020-0439-x](https://dx.doi.org/10.1038/s41587-020-0439-x).\n",
+            "datePublished": "2025-07-17T16:00:06+00:00",
+            "description": "<h1>\n  <picture>\n    <source media=\"(prefers-color-scheme: dark)\" srcset=\"docs/images/nf-core-mcmicro_logo_dark.png\">\n    <img alt=\"nf-core/mcmicro\" src=\"docs/images/nf-core-mcmicro_logo_light.png\">\n  </picture>\n</h1>\n\n[![GitHub Actions CI Status](https://github.com/nf-core/mcmicro/actions/workflows/nf-test.yml/badge.svg)](https://github.com/nf-core/mcmicro/actions/workflows/nf-test.yml)\n[![GitHub Actions Linting Status](https://github.com/nf-core/mcmicro/actions/workflows/linting.yml/badge.svg)](https://github.com/nf-core/mcmicro/actions/workflows/linting.yml)[![AWS CI](https://img.shields.io/badge/CI%20tests-full%20size-FF9900?labelColor=000000&logo=Amazon%20AWS)](https://nf-co.re/mcmicro/results)[![Cite with Zenodo](http://img.shields.io/badge/DOI-10.5281/zenodo.XXXXXXX-1073c8?labelColor=000000)](https://doi.org/10.5281/zenodo.XXXXXXX)\n[![nf-test](https://img.shields.io/badge/unit_tests-nf--test-337ab7.svg)](https://www.nf-test.com)\n\n[![Nextflow](https://img.shields.io/badge/version-%E2%89%A524.10.5-green?style=flat&logo=nextflow&logoColor=white&color=%230DC09D&link=https%3A%2F%2Fnextflow.io)](https://www.nextflow.io/)\n[![nf-core template version](https://img.shields.io/badge/nf--core_template-3.3.2-green?style=flat&logo=nfcore&logoColor=white&color=%2324B064&link=https%3A%2F%2Fnf-co.re)](https://github.com/nf-core/tools/releases/tag/3.3.2)\n[![run with conda](http://img.shields.io/badge/run%20with-conda-3EB049?labelColor=000000&logo=anaconda)](https://docs.conda.io/en/latest/)\n[![run with docker](https://img.shields.io/badge/run%20with-docker-0db7ed?labelColor=000000&logo=docker)](https://www.docker.com/)\n[![run with singularity](https://img.shields.io/badge/run%20with-singularity-1d355c.svg?labelColor=000000)](https://sylabs.io/docs/)\n[![Launch on Seqera Platform](https://img.shields.io/badge/Launch%20%F0%9F%9A%80-Seqera%20Platform-%234256e7)](https://cloud.seqera.io/launch?pipeline=https://github.com/nf-core/mcmicro)\n\n[![Get help on Slack](http://img.shields.io/badge/slack-nf--core%20%23mcmicro-4A154B?labelColor=000000&logo=slack)](https://nfcore.slack.com/channels/mcmicro)[![Follow on Bluesky](https://img.shields.io/badge/bluesky-%40nf__core-1185fe?labelColor=000000&logo=bluesky)](https://bsky.app/profile/nf-co.re)[![Follow on Mastodon](https://img.shields.io/badge/mastodon-nf__core-6364ff?labelColor=FFFFFF&logo=mastodon)](https://mstdn.science/@nf_core)[![Watch on YouTube](http://img.shields.io/badge/youtube-nf--core-FF0000?labelColor=000000&logo=youtube)](https://www.youtube.com/c/nf-core)\n\n## Introduction\n\n> [!WARNING]\n> We are currently in the process of porting the original MCMICRO to nf-core. This pipeline is therefore in active development.\n\n**nf-core/mcmicro** is a nextflow pipeline for processing highly-multiplexed imaging data, as produced by technologies such as Cycif, MIBI, CODEX, SeqIF among others.\n\nIf you want to run the original MCMICRO pipeline outside of nf-core, please see <https://mcmicro.org/>.\n\nThe nf-core/mcmicro pipeline is an end-to-end processing pipeline that transforms multi-channel whole-slide images into single-cell data. It takes samplesheet and markersheet files as input and perfoms registration, segmentation and quantification. Multiple segmentation modules are available and can be run in parallel. The pipeline can also optionally perform background and shading correction, background subtraction, and supports tissue microarrays. It returns a pre-segmentation image file, a segmentation mask image, and a cell x feature array spreadsheet.\n\n![nf-core/mcmicro metro diagram](assets/mcmicro_metro.png)\n\nThe MC in MCMICRO stands for 'Multiple Choice' and that refers to the fact that there will be multiple module options available for many steps in the pipeline. The currently supported options are provided in parentheses for required steps.\n\n1. Registration ([Ashlar](https://nf-co.re/modules/ashlar/))\n2. Segmentation ([Cellpose](https://nf-co.re/modules/cellpose/), [Mesmer](https://nf-co.re/modules/deepcell_mesmer/))\n3. Quantification ([MCQuant](https://nf-co.re/modules/mcquant/))\n\n## Usage\n\n> [!NOTE]\n> If you are new to Nextflow and nf-core, please refer to [this page](https://nf-co.re/docs/usage/installation) on how to set-up Nextflow. Make sure to [test your setup](https://nf-co.re/docs/usage/introduction#how-to-run-a-pipeline) with `-profile test` before running the workflow on actual data.\n\nFirst, prepare a samplesheet and markersheet with your input data that looks as follows:\n\n`samplesheet.csv`:\n\n```csv\nsample,cycle_number,channel_count,image_tiles\nTEST1,1,4,https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/imaging/ome-tiff/cycif-tonsil-cycle1.ome.tif\n\n```\n\nEach row of the samplesheet represents a single cycle `ome.tiff` microscopy image file. The first column `sample` is the sample identifier. It can be repeated in multiple rows for samples with multiple cycles. The second column `cycle_number` is a number corresponding to the cycle number of the image. The third column `channel_count` is a count of the number of channels in the image. The fourth column `image_tiles` is a path or URL to the input image file.\n\n`markersheet.csv`:\n\n```csv\nchannel_number,cycle_number,marker_name\n1,1,DNA 1\n2,1,Na/K ATPase\n3,1,CD3\n4,1,CD45RO\n```\n\nEach row of the markersheet represents a single channel in the associated sample image. The first column `channel_number` is an identifier for the respective channel. The second column `cycle_number` corresponds to the cycle number of the image and it must match the `cycle_number` in the supplied samplesheet. The third column `marker_name` is the name of the marker for the given channel and cycle.\n\n> [!WARNING]\n> Please provide pipeline parameters via the CLI or Nextflow `-params-file` option. Custom config files including those provided by the `-c` Nextflow option can be used to provide any configuration _**except for parameters**_; see [docs](https://nf-co.re/docs/usage/getting_started/configuration#custom-configuration-files).\n\nNow, you can run the pipeline using:\n\n```bash\nnextflow run nf-core/mcmicro \\\n   -profile <docker/singularity/.../institute> \\\n   --input_cycle samplesheet.csv \\\n   --marker_sheet markers.csv \\\n   --outdir <OUTDIR>\n```\n\nFor more details and further functionality, please refer to the [usage documentation](https://nf-co.re/mcmicro/usage) and the [parameter documentation](https://nf-co.re/mcmicro/parameters).\n\n## Pipeline output\n\nTo see the results of an example test run with a full size dataset refer to the [results](https://nf-co.re/mcmicro/results) tab on the nf-core website pipeline page.\nFor more details about the output files and reports, please refer to the\n[output documentation](https://nf-co.re/mcmicro/output).\n\n## Credits\n\nnf-core/mcmicro was written by Rob Young and Jeremy Muhlich from the Laboratory of Systems Pharmacology at Harvard Medical School. It is based on version 1.0 of mcmicro (labsyspharm/mcmicro) which was also developed there.\n\nWe thank the following people for their assistance in the development of this pipeline:\n\n- [heylf](https://github.com/heylf)\n- [Florian Wuennemann](https://github.com/FloWuenne)\n- [Phil Ewels](https://github.com/ewels)\n- [Adam Taylor](https://github.com/adamjtaylor)\n\n## Contributions and Support\n\nIf you would like to contribute to this pipeline, please see the [contributing guidelines](.github/CONTRIBUTING.md).\n\nFor further information or help, don't hesitate to get in touch on the [Slack `#mcmicro` channel](https://nfcore.slack.com/channels/mcmicro) (you can join with [this invite](https://nf-co.re/join/slack)).\n\n## Citations\n\n<!-- TODO nf-core: Add citation for pipeline after first release. Uncomment lines below and update Zenodo doi and badge at the top of this file. -->\n<!-- If you use nf-core/mcmicro for your analysis, please cite it using the following doi: [10.5281/zenodo.XXXXXX](https://doi.org/10.5281/zenodo.XXXXXX) -->\n\nIf you use nf-core/mcmicro for your analysis, please cite it using the following article: [Schapiro et al. 2022 Nat. Methods](https://www.nature.com/articles/s41592-021-01308-y)\n\nAn extensive list of references for the tools used by the pipeline can be found in the [`CITATIONS.md`](CITATIONS.md) file.\n\nYou can cite the `nf-core` publication as follows:\n\n> **The nf-core framework for community-curated bioinformatics pipelines.**\n>\n> Philip Ewels, Alexander Peltzer, Sven Fillinger, Harshil Patel, Johannes Alneberg, Andreas Wilm, Maxime Ulysse Garcia, Paolo Di Tommaso & Sven Nahnsen.\n>\n> _Nat Biotechnol._ 2020 Feb 13. doi: [10.1038/s41587-020-0439-x](https://dx.doi.org/10.1038/s41587-020-0439-x).\n",
             "hasPart": [
                 {
                     "@id": "main.nf"
@@ -42,6 +42,9 @@
                 },
                 {
                     "@id": "modules/"
+                },
+                {
+                    "@id": "modules/local/"
                 },
                 {
                     "@id": "modules/nf-core/"
@@ -99,7 +102,7 @@
             },
             "mentions": [
                 {
-                    "@id": "#937aa2be-aa29-4ada-a733-173297884327"
+                    "@id": "#e6ce5ceb-afe6-49b0-a9d7-50969f0caf81"
                 }
             ],
             "name": "nf-core/mcmicro"
@@ -121,14 +124,18 @@
         },
         {
             "@id": "main.nf",
-            "@type": ["File", "SoftwareSourceCode", "ComputationalWorkflow"],
+            "@type": [
+                "File",
+                "SoftwareSourceCode",
+                "ComputationalWorkflow"
+            ],
             "creator": [
                 {
                     "@id": "https://orcid.org/0000-0002-0811-637X"
                 }
             ],
             "dateCreated": "",
-            "dateModified": "2025-07-08T11:38:44Z",
+            "dateModified": "2025-07-17T12:00:06Z",
             "dct:conformsTo": "https://bioschemas.org/profiles/ComputationalWorkflow/1.0-RELEASE/",
             "keywords": [
                 "nf-core",
@@ -146,16 +153,25 @@
                 "stitching",
                 "tma"
             ],
-            "license": ["MIT"],
-            "name": ["nf-core/mcmicro"],
+            "license": [
+                "MIT"
+            ],
+            "name": [
+                "nf-core/mcmicro"
+            ],
             "programmingLanguage": {
                 "@id": "https://w3id.org/workflowhub/workflow-ro-crate#nextflow"
             },
             "sdPublisher": {
                 "@id": "https://nf-co.re/"
             },
-            "url": ["https://github.com/nf-core/mcmicro", "https://nf-co.re/mcmicro/2.0.0/"],
-            "version": ["2.0.0"]
+            "url": [
+                "https://github.com/nf-core/mcmicro",
+                "https://nf-co.re/mcmicro/2.0.0/"
+            ],
+            "version": [
+                "2.0.0"
+            ]
         },
         {
             "@id": "https://w3id.org/workflowhub/workflow-ro-crate#nextflow",
@@ -170,11 +186,11 @@
             "version": "!>=24.10.5"
         },
         {
-            "@id": "#937aa2be-aa29-4ada-a733-173297884327",
+            "@id": "#e6ce5ceb-afe6-49b0-a9d7-50969f0caf81",
             "@type": "TestSuite",
             "instance": [
                 {
-                    "@id": "#e9a62e4d-e368-4299-9c70-b015b07d728c"
+                    "@id": "#708094ac-82b5-4f28-8ef6-8130a63d0bbe"
                 }
             ],
             "mainEntity": {
@@ -183,7 +199,7 @@
             "name": "Test suite for nf-core/mcmicro"
         },
         {
-            "@id": "#e9a62e4d-e368-4299-9c70-b015b07d728c",
+            "@id": "#708094ac-82b5-4f28-8ef6-8130a63d0bbe",
             "@type": "TestInstance",
             "name": "GitHub Actions workflow for testing nf-core/mcmicro",
             "resource": "repos/nf-core/mcmicro/actions/workflows/nf-test.yml",
@@ -224,6 +240,11 @@
             "@id": "modules/",
             "@type": "Dataset",
             "description": "Modules used by the pipeline"
+        },
+        {
+            "@id": "modules/local/",
+            "@type": "Dataset",
+            "description": "Pipeline-specific modules"
         },
         {
             "@id": "modules/nf-core/",

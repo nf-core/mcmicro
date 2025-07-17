@@ -1,0 +1,15 @@
+Changes in module 'nf-core/cellpose'
+--- modules/nf-core/cellpose/main.nf
++++ modules/nf-core/cellpose/main.nf
+@@ -25,6 +25,9 @@
+     def model_command = model ? "--pretrained_model $model" : ""
+     def VERSION = '2.1.1'
+     """
++    export HOME=\$PWD
++    export NUMBA_CACHE_DIR=\$PWD
++    
+     cellpose \
+     --image_path $image \
+     --save_tif \
+
+************************************************************
