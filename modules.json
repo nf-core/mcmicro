@@ -24,7 +24,7 @@
                     },
                     "bftools/showinf": {
                         "branch": "master",
-                        "git_sha": "411cc7d1f068c25efdbb877f2cead5a528ad65e3",
+                        "git_sha": "8b6514c107bac9520a69aac3471f33e2ab07f269",
                         "installed_by": ["modules"]
                     },
                     "cellpose": {
