@@ -19,7 +19,7 @@ workflow UPDATE_FROM_OME {
         .set { samplesheet_meta }
 
     c_sum = 0
-    agg = channel.empty()
+    agg   = channel.empty()
 
     samplesheet_meta
         .map {
@@ -112,5 +112,5 @@ workflow UPDATE_FROM_OME {
     emit:
     samplesheet = samplesheet_meta
     markersheet = markersheet_meta
-    versions = BFTOOLS_SHOWINF.out.versions
+    versions    = BFTOOLS_SHOWINF.out.versions
 }
