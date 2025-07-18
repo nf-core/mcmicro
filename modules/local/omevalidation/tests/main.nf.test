@@ -15,8 +15,8 @@ nextflow_process {
 
     test("OME tags extraction and validation pipeline outputs expected") {
         setup {
-            run("OMEXTRACTOR") {
-                script "modules/local/omextractor/main.nf"
+            run("BFTOOLS_SHOWINF") {
+                script "modules/nf-core/bftools/showinf/main.nf"
                 process {
                     """
                     input[0] = [["id": 0], file(params.modules_testdata_base_path + "/imaging/ome-tiff/cycif-tonsil-cycle1.ome.tif")]
@@ -27,7 +27,7 @@ nextflow_process {
         when {
             process {
                 """
-                input[0] = OMEXTRACTOR.out.xml
+                input[0] = BFTOOLS_SHOWINF.out.xml
                 """
             }
         }
