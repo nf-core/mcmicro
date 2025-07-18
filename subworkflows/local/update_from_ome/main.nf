@@ -1,5 +1,5 @@
-include { OMEXTRACTOR   } from '../../../modules/local/omextractor/main'
-include { OMEVALIDATION } from '../../../modules/local/omevalidation/main'
+include { BFTOOLS_SHOWINF } from '../../../modules/nf-core/bftools/showinf/main'
+include { OMEVALIDATION   } from '../../../modules/local/omevalidation/main'
 
 workflow UPDATE_FROM_OME {
     take:
@@ -7,9 +7,9 @@ workflow UPDATE_FROM_OME {
     markersheet
 
     main:
-    samplesheet.map{meta, image_tiles, dfp, ffp -> [meta, image_tiles]} | OMEXTRACTOR
+    samplesheet.map{meta, image_tiles, dfp, ffp -> [meta, image_tiles]} | BFTOOLS_SHOWINF
 
-    val_data = OMEXTRACTOR.out.xml | OMEVALIDATION
+    val_data = BFTOOLS_SHOWINF.out.xml | OMEVALIDATION
 
     samplesheet.join(val_data)
          .map { original_meta, image_tiles, dfp, ffp, xml_meta, marker_data ->
@@ -19,7 +19,7 @@ workflow UPDATE_FROM_OME {
         .set { samplesheet_meta }
 
     c_sum = 0
-    agg = channel.empty()
+    agg   = channel.empty()
 
     samplesheet_meta
         .map {
@@ -112,5 +112,5 @@ workflow UPDATE_FROM_OME {
     emit:
     samplesheet = samplesheet_meta
     markersheet = markersheet_meta
-    versions = OMEXTRACTOR.out.versions
+    versions    = BFTOOLS_SHOWINF.out.versions
 }

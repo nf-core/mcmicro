@@ -22,6 +22,11 @@
                         "installed_by": ["modules"],
                         "patch": "modules/nf-core/basicpy/basicpy.diff"
                     },
+                    "bftools/showinf": {
+                        "branch": "master",
+                        "git_sha": "8b6514c107bac9520a69aac3471f33e2ab07f269",
+                        "installed_by": ["modules"]
+                    },
                     "cellpose": {
                         "branch": "master",
                         "git_sha": "716ef3019b66772a817b417078edce2f7b337858",
