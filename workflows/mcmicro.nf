@@ -48,6 +48,10 @@ workflow MCMICRO {
     ch_samplesheet.dump(tag: "ch_samplesheet")
     ch_markersheet.dump(tag: "ch_markersheet")
 
+    if (params.prelude) {
+        return
+    }
+
     //
     // MODULE: BASICPY
     //
