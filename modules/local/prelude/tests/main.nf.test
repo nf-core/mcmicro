@@ -1,0 +1,36 @@
+nextflow_process {
+    name "Test Process PRELUDE"
+    script "../main.nf"
+    process "PRELUDE"
+
+    tag "modules"
+    tag "modules_"
+    tag "prelude"
+
+    test("normal run") {
+        when {
+            params {
+                prelude = true
+            }
+            process {
+                """
+                 input[0] = Channel.of(
+                        [
+                            [id:"TEST1", cycle_number:1, channel_count:4],
+                            "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/imaging/ome-tiff/cycif-tonsil-cycle1.ome.tif",
+                            [],
+                            [],
+                        ],
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(process.out).match() }
+            )
+        }
+
+    }
+}

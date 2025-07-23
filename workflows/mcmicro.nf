@@ -39,18 +39,22 @@ workflow MCMICRO {
     ch_versions = Channel.empty()
     ch_multiqc_files = Channel.empty()
 
-    metadata = UPDATE_FROM_OME(ch_samplesheet, ch_markersheet)
-    ch_versions = ch_versions.mix(metadata.versions)
+    if (params.prelude) {
+        samplesheet.map{meta, image_tiles, dfp, ffp -> [meta, image_tiles]} | BFTOOLS_SHOWINF
 
-    ch_samplesheet = metadata.samplesheet
-    ch_markersheet = metadata.markersheet
+        samplesheet.map{meta, image_tiles, dfp, ffp -> [meta, samplesheet, markersheet, BFTOOLS_SHOWINF.out.xml]} | PRELUDE
+        return
+    }
+    else {
+        metadata = UPDATE_FROM_OME(ch_samplesheet, ch_markersheet)
+        ch_versions = ch_versions.mix(metadata.versions)
+
+        ch_samplesheet = metadata.samplesheet
+        ch_markersheet = metadata.markersheet
+    }
 
     ch_samplesheet.dump(tag: "ch_samplesheet")
     ch_markersheet.dump(tag: "ch_markersheet")
-
-    if (params.prelude) {
-        return
-    }
 
     //
     // MODULE: BASICPY
