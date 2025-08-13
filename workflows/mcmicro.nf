@@ -45,9 +45,9 @@ workflow MCMICRO {
         ch_samplesheet.map{meta, image_tiles, dfp, ffp -> [meta, image_tiles]} | BFTOOLS_SHOWINF
         BFTOOLS_SHOWINF.out.xml.map{ meta, xml_path -> xml_path }.set{xml}
 
-        //BFTOOLS_SHOWINF.out.xml.map { meta, xml -> [meta, ch_markersheet, ch_samplesheet, xml] } | PRELUDE
         PRELUDE(ch_markersheet, ch_samplesheet, xml)
-        versions = null
+
+        versions = null  // needs to exists to end workflow gracefully
         multiqc_report = null
         return
     }
