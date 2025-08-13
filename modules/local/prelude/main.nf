@@ -1,29 +1,26 @@
 import groovy.xml.XmlSlurper
 
-process PRELUDE {
+process SUM_XML {
     tag "$meta.id"
     label 'process_single'
 
-    exec:
-    val meta
-    val markersheet
-    val samplesheet
-    val xml
+    input:
+    val(meta)
+    val(xml)
 
     output:
-    val meta           , emit: meta
-    path output_file   , emit: summary
+    path output_file_xml, emit: output
 
     when:
     task.ext.when == null || task.ext.when
 
-    script:
-    def args = task.ext.args ?: ''
-    def prefix = task.ext.prefix ?: "summary"
+    exec:
+    def args        = task.ext.args ?: ''
+    def prefix      = task.ext.prefix ?: "summary"
 
-    def check = '\u2705'
-    def cross = '\u274C'
-    def output = [["source", "variable_name", "value", "expected", "check"]]
+    check              = '\u2705'
+    cross              = '\u274C'
+    output_xml         = [["variable_name", "value", "expected", "check"]]
 
     xml = new XmlSlurper().parse(new File(xml.toString()))
 
@@ -35,13 +32,13 @@ process PRELUDE {
         }.toSet()
 
     if (tile_size == null || tile_size[0] == null || tile_size[1] == null){
-        output.append(
-            ["xml", "SizeX|SizeY", tile_size.toString(), "Integer", cross]
+        output_xml.add(
+            ["SizeX|SizeY", tile_size.toString(), "Same Integer", cross]
         )
     }
     else{
-        output.append(
-            ["xml", "SizeX|SizeY", tile_size.toString(), "Integer", check]
+        output_xml.add(
+            ["SizeX|SizeY", tile_size.toString(), "Same Integer", check]
         )
     }
 
@@ -54,13 +51,13 @@ process PRELUDE {
 
     if (pixels == null || pixels.toSet().size() != 1 || pixels.toSet()[0][0] == null || pixels.toSet()[0][1] == null
         || (pixels[0][0]).round(3) != (pixels[0][1]).round(3)) {
-        output.append(
-            ["xml", "PhysicalSizeX|PhysicalSizeY", pixels.toString(), "Numbers that are equal within 3 DP", cross]
+        output_xml.add(
+            ["PhysicalSizeX|PhysicalSizeY", pixels.toString(), "Numbers that are equal within 3 DP", cross]
         )
     }
     else {
-        output.append(
-            ["xml", "PhysicalSizeX|PhysicalSizeY", pixels.toString(), "Numbers that are equal within 3 DP", check]
+        output_xml.add(
+            ["PhysicalSizeX|PhysicalSizeY", pixels.toString(), "Numbers that are equal within 3 DP", check]
         )
     }
 
@@ -70,13 +67,13 @@ process PRELUDE {
         .collect { node -> node.@SizeC.toInteger() }
 
     if (n_channels == null || n_channels.toSet().size() != 1 || n_channels[0] == 0) {
-        output.append(
-            ["xml", "SizeC", n_channels.toString(), "Consistent > 0 numbers", cross]
+        output_xml.add(
+            ["SizeC", n_channels.toString(), "Consistent > 0 numbers", cross]
         )
     }
     else {
-        output.append(
-            ["xml", "SizeC", n_channels.toString(), "Consistent > 0 numbers", check]
+        output_xml.add(
+            ["SizeC", n_channels.toString(), "Consistent > 0 numbers", check]
         )
     }
 
@@ -88,13 +85,13 @@ process PRELUDE {
     if (size_units == null || size_units.toSet().size() != 1 || size_units.flatten().toSet().size() != 1 ||
         size_units.flatten().toSet()[0] == null ||
         !(size_units.flatten().toSet()[0] in ["mm", "cm", "um", "µm", "reference_frame"])) {
-        output.append(
-            ["xml", "PhysicalSizeXUnit|PhysicalSizeYUnit", size_units.toString(), "Consistent units (mm, cm, um, µm, reference_frame)", cross]
+        output_xml.add(
+            ["PhysicalSizeXUnit|PhysicalSizeYUnit", size_units.toString(), "Consistent units (mm, cm, um, µm, reference_frame)", cross]
         )
     }
     else {
-        output.append(
-            ["xml", "PhysicalSizeXUnit|PhysicalSizeYUnit", size_units.toString(), "Consistent units (mm, cm, um, µm, reference_frame)", check]
+        output_xml.add(
+            ["PhysicalSizeXUnit|PhysicalSizeYUnit", size_units.toString(), "Consistent units (mm, cm, um, µm, reference_frame)", check]
         )
     }
 
@@ -104,15 +101,15 @@ process PRELUDE {
         .collect { node -> node.@Type.toString() }
 
     if (pixel_datatype == null || pixel_datatype.toSet().size() != 1 ||
-        !(pixel_datatype.toSet()[0] ==~ /[u]?(int|float)(8|16|32)(_t)?/)
+        !(pixel_datatype.toSet()[0] ==~ /[u]?int(8|16|32)|float|double/)  // There are more bit|complex|double-complex
         ) {
-        output.append(
-            ["xml", "Type", pixel_datatype.toString(), "Consistent valid datatypes (uint8, float16...)", cross]
+        output_xml.add(
+            ["Type", pixel_datatype.toString(), "Consistent valid datatypes (uint8, float16...)", cross]
         )
     }
     else {
-        output.append(
-            ["xml", "Type", pixel_datatype.toString(), "Consistent valid datatypes (uint8, float16...)", check]
+        output_xml.add(
+            ["Type", pixel_datatype.toString(), "Consistent valid datatypes (uint8, float16...)", check]
         )
     }
 
@@ -122,75 +119,57 @@ process PRELUDE {
         .collect {
             node ->
                 [
-                    'exposure_time': node.@ExposureTime.toDouble(),
-                    'exposure_time_unit': node.@ExposureTimeUnit.toString()
+                    node.@ExposureTime.toDouble(),
+                    node.@ExposureTimeUnit.toString()
                 ]
         }
         .toSet()
 
-    if (exposure_time == null || exposure_time.size() != 1 || exposure_time[0] == null || exposure_time[1] == null) {
-        output.append(
-            ["xml", "ExposureTime|ExposureTimeUnit", exposure_time.toString(),
+    if (exposure_time == null || exposure_time.size() != 1 || exposure_time[0] == null || exposure_time[1] == null || exposure_time[1] == "") {
+        output_xml.add(
+            ["ExposureTime|ExposureTimeUnit", exposure_time.toString(),
             "Consistent valid exposure time and units", cross]
         )
     }
     else {
-        output.append(
-            ["xml", "ExposureTime|ExposureTimeUnit", exposure_time.toString(),
+        output_xml.add(
+            ["ExposureTime|ExposureTimeUnit", exposure_time.toString(),
             "Consistent valid exposure time and units", check]
         )
     }
 
-    markersheet.map{
-        entry ->
-        entry.map{
+    output_file_xml = prefix + "_${meta.id}_xml_mqc.tsv"
+    def f1 = task.workDir.resolve(output_file_xml)
+    f1.text = output_xml*.join("\t").join("\n")
+}
+
+process SUM_SAMPLESHEET {
+    tag "$meta.id"
+    label 'process_single'
+
+    input:
+    val(meta)
+    val(samplesheet)
+
+    output:
+    path output_file_samplesheet, emit: output
+
+    when:
+    task.ext.when == null || task.ext.when
+
+    exec:
+    def args        = task.ext.args ?: ''
+    def prefix      = task.ext.prefix ?: "summary"
+
+    check              = '\u2705'
+    cross              = '\u274C'
+    output_samplesheet = [["row_id", "variable_name", "value", "expected", "check"]]
+    counter = 0
+    meta
+        .each {
             key, value ->
-            temp = ["markersheet", key, value, "", ""]
-
-            if (key in [
-                "channel_number",
-                "cycle_number",
-                "excitation_wavelength",
-                "emission_wavelength",
-                "exposure_time"
-            ]) {
-                temp[3] = "Number"
-                temp[4] = (value == null || !(value instanceof Number)) ? cross : check
-            }
-            else if (key in [
-                "marker_name"
-            ]){
-                temp[3] = "Uppercase marker name"
-                temp[4] = (value == null || value.toUpperCase() == value) ? cross : check
-            }
-            else if (key in [
-                "filter",
-                "exposure",
-                "background",
-                "remove"
-            ]) {
-                temp[3] = "Boolean"
-                temp[4] = (value == null || !(value instanceof Boolean)) ? cross : check
-            }
-            else if (key in ["exposure_time_unit"]) {
-                temp[3] = "Time unit"
-                temp[4] = (value == null || !(value instanceof String)) ? cross : check
-            }
-            else {
-                temp[3] = "?"
-                temp[4] = cross
-            }
-
-            output.append(temp)
-        }
-    }
-
-    samplesheet.map {
-            meta, _, _, _ -> meta
-        }
-        .map {
-            key, value ->
-            temp = ["samplesheet", key, value, "", ""]
+            temp = [counter, key, value, "", ""]
+            counter++
 
             if(key in [
                 "pixel_size",
@@ -201,7 +180,7 @@ process PRELUDE {
                 "cycle_number"
             ]) {
                 temp[3] = "Number"
-                temp[4] = (value == null || !(value instalceof Number)) ? cross : check
+                temp[4] = (value == null || !(value instanceof Number)) ? cross : check
             }
             else if (key in [
                 "pixel_size_unit",
@@ -219,25 +198,355 @@ process PRELUDE {
                 temp[4] = cross
             }
 
-            output.append(temp)
+            output_samplesheet.add(temp)
         }
 
-    def output_file = new File(${prefix}".csv")
-    output_file.withWriter {
-        w -> new CSVPrinter(w, CSVFormat.DEFAULT).printRecords(output)
+
+    output_file_samplesheet = prefix + "_${meta.id}_samplesheet_mqc.tsv"
+    def f1 = task.workDir.resolve(output_file_samplesheet)
+    f1.text = output_samplesheet*.join("\t").join("\n")
+}
+
+process SUM_MARKERSHEET {
+    tag "$meta.id"
+    label 'process_single'
+
+    input:
+    val(meta)
+    val(markersheet)
+
+    output:
+    path output_file_markersheet, emit: output
+
+    when:
+    task.ext.when == null || task.ext.when
+
+    exec:
+    def args        = task.ext.args ?: ''
+    def prefix      = task.ext.prefix ?: "summary"
+
+    check              = '\u2705'
+    cross              = '\u274C'
+    output_markersheet = [["row_id", "variable_name", "value", "expected", "check"]]
+    counter = 0
+    markersheet
+        .each { map -> map.each{ key, value ->
+                //key = it.key
+                //value = it.value
+                temp = [counter, key, value, "", ""]
+                counter++
+
+                if (key in [
+                    "channel_number",
+                    "cycle_number",
+                    "excitation_wavelength",
+                    "emission_wavelength",
+                    "exposure_time"
+                ]) {
+                    temp[3] = "Number"
+                    temp[4] = (value == null || !(value instanceof Number)) ? cross : check
+                }
+                else if (key in [
+                    "marker_name"
+                ]){
+                    temp[3] = "Uppercase marker name"
+                    temp[4] = (value == null || value.toUpperCase() != value) ? cross : check
+                }
+                else if (key in [
+                    "filter",
+                    "exposure",
+                    "background",
+                    "remove"
+                ]) {
+                    temp[3] = "Boolean"
+                    temp[4] = (value == null || !(value instanceof Boolean)) ? cross : check
+                }
+                else if (key in ["exposure_time_unit"]) {
+                    temp[3] = "Time unit"
+                    temp[4] = (value == null || !(value instanceof String)) ? cross : check
+                }
+                else {
+                    temp[3] = "?"
+                    temp[4] = cross
+                }
+
+                output_markersheet.add(temp)
+            }
+        }
+
+
+
+    output_file_markersheet = prefix + "_${meta.id}_markersheet_mqc.tsv"
+    def f1 = task.workDir.resolve(output_file_markersheet)
+    f1.text = output_markersheet*.join("\t").join("\n")
+}
+
+workflow PRELUDE {
+    take:
+    markersheet
+    samplesheet
+    xml
+
+    emit:
+    output_file_xml
+    output_file_samplesheet
+    output_file_markersheet
+
+    main:
+    samplesheet.map{meta, image_tiles, dfp, ffp -> meta}.set{meta}
+    output_file_xml = SUM_XML(meta, xml).output
+    output_file_markersheet = SUM_MARKERSHEET(meta, markersheet).output
+    output_file_samplesheet = SUM_SAMPLESHEET(meta, samplesheet).output
+}
+
+process PRELUDE2 {
+    tag "$meta.id"
+    label 'process_single'
+
+    input:
+    tuple val(meta), val(markersheet), val(samplesheet), val(xml)
+
+    output:
+    val meta                     , emit: meta
+    path output_file_xml         , emit: summary_xml
+    path output_file_samplesheet , emit: summary_samplesheet
+    path output_file_markersheet , emit: summary_markersheet
+
+    when:
+    task.ext.when == null || task.ext.when
+
+    exec:
+    def args        = task.ext.args ?: ''
+    def prefix      = task.ext.prefix ?: "summary"
+
+    check              = '\u2705'
+    cross              = '\u274C'
+    output_xml         = [["variable_name", "value", "expected", "check"]]
+    output_samplesheet = [["variable_name", "value", "expected", "check"]]
+    output_markersheet = [["variable_name", "value", "expected", "check"]]
+
+    xml = new XmlSlurper().parse(new File(xml.toString()))
+
+    tile_size = xml.'**'.findAll {
+            node -> node.name() == 'Pixels' && node.@SizeX != '' && node.@SizeY != ''
+        }
+        .collect {
+            node -> [node.@SizeX.toInteger(), node.@SizeY.toInteger()]
+        }.toSet()
+
+    if (tile_size == null || tile_size[0] == null || tile_size[1] == null){
+        output_xml.add(
+            ["SizeX|SizeY", tile_size.toString(), "Integer", cross]
+        )
     }
-    //output_file.text = output*.join(",").join(System.lineSeparator())
+    else{
+        output_xml.add(
+            ["SizeX|SizeY", tile_size.toString(), "Integer", check]
+        )
+    }
+
+    pixels = xml.'**'.findAll {
+            node -> node.name() == 'Pixels' && node.@PhysicalSizeX != '' && node.@PhysicalSizeY != ''
+        }
+        .collect {
+            node -> [node.@PhysicalSizeX.toDouble(), node.@PhysicalSizeY.toDouble()]
+        }
+
+    if (pixels == null || pixels.toSet().size() != 1 || pixels.toSet()[0][0] == null || pixels.toSet()[0][1] == null
+        || (pixels[0][0]).round(3) != (pixels[0][1]).round(3)) {
+        output_xml.add(
+            ["PhysicalSizeX|PhysicalSizeY", pixels.toString(), "Numbers that are equal within 3 DP", cross]
+        )
+    }
+    else {
+        output_xml.add(
+            ["PhysicalSizeX|PhysicalSizeY", pixels.toString(), "Numbers that are equal within 3 DP", check]
+        )
+    }
+
+    n_channels = xml.'**'.findAll {
+            node -> node.name() == 'Pixels' && node.@SizeC != ''
+        }
+        .collect { node -> node.@SizeC.toInteger() }
+
+    if (n_channels == null || n_channels.toSet().size() != 1 || n_channels[0] == 0) {
+        output_xml.add(
+            ["SizeC", n_channels.toString(), "Consistent > 0 numbers", cross]
+        )
+    }
+    else {
+        output_xml.add(
+            ["SizeC", n_channels.toString(), "Consistent > 0 numbers", check]
+        )
+    }
+
+    size_units = xml.'**'.findAll {
+            node -> node.name() == 'Pixels' && node.@PhysicalSizeXUnit != '' && node.@PhysicalSizeYUnit != ''
+        }
+        .collect { node -> [node.@PhysicalSizeXUnit.toString(), node.@PhysicalSizeYUnit.toString()] }
+
+    if (size_units == null || size_units.toSet().size() != 1 || size_units.flatten().toSet().size() != 1 ||
+        size_units.flatten().toSet()[0] == null ||
+        !(size_units.flatten().toSet()[0] in ["mm", "cm", "um", "µm", "reference_frame"])) {
+        output_xml.add(
+            ["PhysicalSizeXUnit|PhysicalSizeYUnit", size_units.toString(), "Consistent units (mm, cm, um, µm, reference_frame)", cross]
+        )
+    }
+    else {
+        output_xml.add(
+            ["PhysicalSizeXUnit|PhysicalSizeYUnit", size_units.toString(), "Consistent units (mm, cm, um, µm, reference_frame)", check]
+        )
+    }
+
+    pixel_datatype = xml.'**'.findAll {
+            node -> node.name() == 'Pixels' && node.@Type
+        }
+        .collect { node -> node.@Type.toString() }
+
+    if (pixel_datatype == null || pixel_datatype.toSet().size() != 1 ||
+        !(pixel_datatype.toSet()[0] ==~ /[u]?int(8|16|32)|float|double/)  // There are more bit|complex|double-complex
+        ) {
+        output_xml.add(
+            ["Type", pixel_datatype.toString(), "Consistent valid datatypes (uint8, float16...)", cross]
+        )
+    }
+    else {
+        output_xml.add(
+            ["Type", pixel_datatype.toString(), "Consistent valid datatypes (uint8, float16...)", check]
+        )
+    }
+
+    exposure_time = xml.'**'.findAll {
+            node -> node.name() == 'Plane'
+        }
+        .collect {
+            node ->
+                [
+                    'exposure_time': node.@ExposureTime.toDouble(),
+                    'exposure_time_unit': node.@ExposureTimeUnit.toString()
+                ]
+        }
+        .toSet()
+
+    if (exposure_time == null || exposure_time.size() != 1 || exposure_time[0] == null || exposure_time[1] == null) {
+        output_xml.add(
+            ["ExposureTime|ExposureTimeUnit", exposure_time.toString(),
+            "Consistent valid exposure time and units", cross]
+        )
+    }
+    else {
+        output_xml.add(
+            ["ExposureTime|ExposureTimeUnit", exposure_time.toString(),
+            "Consistent valid exposure time and units", check]
+        )
+    }
+/*
+    markersheet.map{
+        entry ->
+        entry.each{
+            key, value ->
+            temp = [key, value, "", ""]
+
+            if (key in [
+                "channel_number",
+                "cycle_number",
+                "excitation_wavelength",
+                "emission_wavelength",
+                "exposure_time"
+            ]) {
+                temp[2] = "Number"
+                temp[3] = (value == null || !(value instanceof Number)) ? cross : check
+            }
+            else if (key in [
+                "marker_name"
+            ]){
+                temp[2] = "Uppercase marker name"
+                temp[3] = (value == null || value.toUpperCase() == value) ? cross : check
+            }
+            else if (key in [
+                "filter",
+                "exposure",
+                "background",
+                "remove"
+            ]) {
+                temp[2] = "Boolean"
+                temp[3] = (value == null || !(value instanceof Boolean)) ? cross : check
+            }
+            else if (key in ["exposure_time_unit"]) {
+                temp[2] = "Time unit"
+                temp[3] = (value == null || !(value instanceof String)) ? cross : check
+            }
+            else {
+                temp[2] = "?"
+                temp[3] = cross
+            }
+
+            output_markersheet.add(temp)
+        }
+    }
+*/
+    samplesheet.map {
+            meta, image_tiles, dfp, ffp -> meta
+        }
+        .each {
+            key, value ->
+            temp = [key, value, "", ""]
+
+            if(key in [
+                "pixel_size",
+                "channel_count",
+                "tile_count",
+                "pixel_size_x",
+                "pixel_size_y",
+                "cycle_number"
+            ]) {
+                temp[2] = "Number"
+                temp[3] = (value == null || !(value instalceof Number)) ? cross : check
+            }
+            else if (key in [
+                "pixel_size_unit",
+                "pixel_datatype"
+            ]) {
+                temp[2] = "Unit"
+                temp[3] = (value == null || !(value instanceof String)) ? cross : check
+            }
+            else if (key in ["id"]) {
+                temp[2] = "String"
+                temp[3] = (value == null || !(value instanceof String)) ? cross : check
+            }
+            else {
+                temp[2] = "?"
+                temp[3] = cross
+            }
+
+            output_samplesheet.add(temp)
+        }
+
+
+    output_file_xml = prefix + "_${meta.id}_xml_mqc.csv"
+    output_file_markersheet = prefix + "_${meta.id}_markersheet_mqc.csv"
+    output_file_samplesheet = prefix + "_${meta.id}_samplesheet_mqc.csv"
+
+    println output_xml*.join(",").join("\n")
+    println output_markersheet*.join(",").join("\n")
+    println output_samplesheet*.join(",").join("\n")
+
+    def f1 = task.workDir.resolve(output_file_xml)
+    def f2 = task.workDir.resolve(output_file_markersheet)
+    def f3 = task.workDir.resolve(output_file_samplesheet)
+
+    f1.text = output_xml*.join(",").join("\n")
+    f2.text = output_markersheet*.join(",").join("\n")
+    f3.text = output_samplesheet*.join(",").join("\n")
+
 
     stub:
-    def args = task.ext.args ?: ''
-    def prefix = task.ext.prefix ?: "summary"
+    args = task.ext.args ?: ''
+    prefix = task.ext.prefix ?: "summary"
 
     """
-    touch "${prefix}.csv"
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        prelude: \$(prelude --version)
-    END_VERSIONS
+    touch "${prefix}_xml_mqc.csv"
+    touch "${prefix}_samplesheet_mqc.csv"
+    touch "${prefix}_markersheet_mqc.csv"
     """
 }

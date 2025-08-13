@@ -22,6 +22,8 @@ include { COREOGRAPH             } from '../modules/nf-core/coreograph/main'
 include { DEEPCELL_MESMER        } from '../modules/nf-core/deepcell/mesmer/main'
 include { SCIMAP_MCMICRO         } from '../modules/nf-core/scimap/mcmicro/main'
 include { MCQUANT                } from '../modules/nf-core/mcquant/main'
+include { BFTOOLS_SHOWINF        } from '../modules/nf-core/bftools/showinf/main'
+include { PRELUDE                } from '../modules/local/prelude/main'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -40,9 +42,13 @@ workflow MCMICRO {
     ch_multiqc_files = Channel.empty()
 
     if (params.prelude) {
-        samplesheet.map{meta, image_tiles, dfp, ffp -> [meta, image_tiles]} | BFTOOLS_SHOWINF
+        ch_samplesheet.map{meta, image_tiles, dfp, ffp -> [meta, image_tiles]} | BFTOOLS_SHOWINF
+        BFTOOLS_SHOWINF.out.xml.map{ meta, xml_path -> xml_path }.set{xml}
 
-        samplesheet.map{meta, image_tiles, dfp, ffp -> [meta, samplesheet, markersheet, BFTOOLS_SHOWINF.out.xml]} | PRELUDE
+        //BFTOOLS_SHOWINF.out.xml.map { meta, xml -> [meta, ch_markersheet, ch_samplesheet, xml] } | PRELUDE
+        PRELUDE(ch_markersheet, ch_samplesheet, xml)
+        versions = null
+        multiqc_report = null
         return
     }
     else {
