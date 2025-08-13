@@ -23,7 +23,7 @@ include { DEEPCELL_MESMER        } from '../modules/nf-core/deepcell/mesmer/main
 include { SCIMAP_MCMICRO         } from '../modules/nf-core/scimap/mcmicro/main'
 include { MCQUANT                } from '../modules/nf-core/mcquant/main'
 include { BFTOOLS_SHOWINF        } from '../modules/nf-core/bftools/showinf/main'
-include { PRELUDE                } from '../modules/local/prelude/main'
+include { PRELUDE                } from '../subworkflows/local/prelude/main'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -47,12 +47,12 @@ workflow MCMICRO {
 
         PRELUDE(ch_markersheet, ch_samplesheet, xml)
 
-        versions = null  // needs to exists to end workflow gracefully
+        versions       = null  // needs to exists to end workflow gracefully
         multiqc_report = null
         return
     }
     else {
-        metadata = UPDATE_FROM_OME(ch_samplesheet, ch_markersheet)
+        metadata    = UPDATE_FROM_OME(ch_samplesheet, ch_markersheet)
         ch_versions = ch_versions.mix(metadata.versions)
 
         ch_samplesheet = metadata.samplesheet

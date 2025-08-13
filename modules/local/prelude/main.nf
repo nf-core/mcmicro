@@ -1,6 +1,6 @@
 import groovy.xml.XmlSlurper
 
-process SUM_XML {
+process SUMMARY_XML {
     tag "$meta.id"
     label 'process_single'
 
@@ -139,11 +139,11 @@ process SUM_XML {
     }
 
     output_file_xml = prefix + "_${meta.id}_xml_mqc.tsv"
-    def f1 = task.workDir.resolve(output_file_xml)
-    f1.text = output_xml*.join("\t").join("\n")
+    def f1          = task.workDir.resolve(output_file_xml)
+    f1.text         = output_xml*.join("\t").join("\n")
 }
 
-process SUM_SAMPLESHEET {
+process SUMMARY_SAMPLESHEET {
     tag "$meta.id"
     label 'process_single'
 
@@ -164,7 +164,8 @@ process SUM_SAMPLESHEET {
     check              = '\u2705'
     cross              = '\u274C'
     output_samplesheet = [["row_id", "variable_name", "value", "expected", "check"]]
-    counter = 0
+    counter            = 0
+
     meta
         .each {
             key, value ->
@@ -201,13 +202,12 @@ process SUM_SAMPLESHEET {
             output_samplesheet.add(temp)
         }
 
-
     output_file_samplesheet = prefix + "_${meta.id}_samplesheet_mqc.tsv"
-    def f1 = task.workDir.resolve(output_file_samplesheet)
-    f1.text = output_samplesheet*.join("\t").join("\n")
+    def f1                  = task.workDir.resolve(output_file_samplesheet)
+    f1.text                 = output_samplesheet*.join("\t").join("\n")
 }
 
-process SUM_MARKERSHEET {
+process SUMMARY_MARKERSHEET {
     tag "$meta.id"
     label 'process_single'
 
@@ -230,9 +230,8 @@ process SUM_MARKERSHEET {
     output_markersheet = [["row_id", "variable_name", "value", "expected", "check"]]
     counter = 0
     markersheet
-        .each { map -> map.each{ key, value ->
-                //key = it.key
-                //value = it.value
+        .each { map ->
+            map.each{ key, value ->
                 temp = [counter, key, value, "", ""]
                 counter++
 
@@ -274,27 +273,7 @@ process SUM_MARKERSHEET {
             }
         }
 
-
-
     output_file_markersheet = prefix + "_${meta.id}_markersheet_mqc.tsv"
-    def f1 = task.workDir.resolve(output_file_markersheet)
-    f1.text = output_markersheet*.join("\t").join("\n")
-}
-
-workflow PRELUDE {
-    take:
-    markersheet
-    samplesheet
-    xml
-
-    emit:
-    output_file_xml
-    output_file_samplesheet
-    output_file_markersheet
-
-    main:
-    samplesheet.map{meta, image_tiles, dfp, ffp -> meta}.set{meta}
-    output_file_xml = SUM_XML(meta, xml).output
-    output_file_markersheet = SUM_MARKERSHEET(meta, markersheet).output
-    output_file_samplesheet = SUM_SAMPLESHEET(meta, samplesheet).output
+    def f1                  = task.workDir.resolve(output_file_markersheet)
+    f1.text                 = output_markersheet*.join("\t").join("\n")
 }
