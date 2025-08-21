@@ -143,6 +143,62 @@ process SUMMARY_XML {
     f1.text         = output_xml*.join("\t").join("\n")
 }
 
+process SUMMARY_MARKERSHEET_LITERAL {
+    tag "$meta.id"
+    label 'process_single'
+
+    input:
+    val(meta)
+    val(markersheet)
+
+    output:
+    path output_file_markersheet, emit: output
+
+    when:
+    task.ext.when == null || task.ext.when
+
+    exec:
+    def args        = task.ext.args ?: ''
+    def prefix      = task.ext.prefix ?: "summary"
+
+    output_file_markersheet = prefix + "_${meta.id}_markersheet_mqc.tsv"
+    //def f1                  = task.workDir.resolve(output_file_samplesheet)
+    //f1.text                 = meta.map {
+    output = [[
+            "channel_number",
+            "cycle_number",
+            "excitation_wavelength",
+            "emission_wavelength",
+            "exposure_time",
+            "marker_name",
+            "filter",
+            "exposure",
+            "background",
+            "remove",
+            "exposure_time_unit"]]
+
+    markersheet.each {
+        output.add([
+                        it.channel_number,
+                        it.cycle_number,
+                        it.excitation_wavelength,
+                        it.emission_wavelength,
+                        it.exposure_time,
+                        it.marker_name,
+                        it.filter,
+                        it.exposure,
+                        it.background,
+                        it.remove,
+                        it.exposure_time_unit
+                    ])
+            }
+
+    output_file_markersheet = prefix + "_${meta.id}_markersheet_mqc.tsv"
+    def f1                  = task.workDir.resolve(output_file_markersheet)
+    f1.text                 = output*.join("\t").join("\n")
+
+}
+
 process SUMMARY_SAMPLESHEET {
     tag "$meta.id"
     label 'process_single'
