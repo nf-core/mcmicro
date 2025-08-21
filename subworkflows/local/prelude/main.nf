@@ -1,6 +1,6 @@
-include { SUMMARY_XML           } from '../../../modules/local/prelude/main'
+include { SUMMARY_XML                   } from '../../../modules/local/prelude/main'
 include { SUMMARY_MARKERSHEET_LITERAL   } from '../../../modules/local/prelude/main'
-include { SUMMARY_SAMPLESHEET   } from '../../../modules/local/prelude/main'
+include { SUMMARY_SAMPLESHEET           } from '../../../modules/local/prelude/main'
 
 workflow PRELUDE {
     take:

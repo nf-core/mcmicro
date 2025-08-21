@@ -1,36 +1,55 @@
-nextflow_process {
-    name "Test Process PRELUDE"
+nextflow_workflow {
+    name "Test Workflow PRELUDE"
     script "../main.nf"
-    process "PRELUDE"
+    workflow "PRELUDE"
 
-    tag "modules"
-    tag "modules_"
-    tag "prelude"
-
-    test("normal run") {
-        when {
-            params {
-                prelude = true
+    [
+        test("normal run") {
+            setup {
+                run("BFTOOLS_SHOWINF") {
+                    script "modules/nf-core/bftools/showinf/main.nf"
+                    process {
+                        """
+                        input[0] = [["id": 0], file(params.modules_testdata_base_path + "/imaging/ome-tiff/cycif-tonsil-cycle1.ome.tif")]
+                        """
+                    }
+                }
             }
-            process {
-                """
-                 input[0] = Channel.of(
-                        [
-                            [id:"TEST1", cycle_number:1, channel_count:4],
-                            "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/imaging/ome-tiff/cycif-tonsil-cycle1.ome.tif",
-                            [],
-                            [],
-                        ],
-                """
+            when {
+                params {
+                    prelude = true
+
+                    def x = new groovy.xml.XmlSlurper().parse('assets/min_omexml_meta.xml')
+                    x.Image[0].Pixels.@SizeX = "1"
+                    savedxml = groovy.xml.XmlUtil.serialize(x)
+                }
+                workflow {
+                    """
+                     input[0] = Channel.of(
+                            [
+                                [channel_number: 1, cycle_number: 1, marker_name: 'DNA 1'],
+                                [channel_number: 2, cycle_number: 1, marker_name: 'Na/K ATPase'],
+                                [channel_number: 3, cycle_number: 1, marker_name: 'CD3'],
+                                [channel_number: 4, cycle_number: 1, marker_name: 'CD45RO'],
+                            ],)
+                     input[1] = Channel.of(
+                            [
+                                [id:"TEST1", cycle_number:1, channel_count:4],
+                                "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/imaging/ome-tiff/cycif-tonsil-cycle1.ome.tif",
+                                [],
+                                [],
+                            ],)
+                     input[2] = Channel.of(params.savedxml).collectFile(name: 'temp.ome.xml').map{it -> it}
+                    """
+                }
             }
-        }
 
-        then {
-            assertAll(
-                { assert process.success },
-                { assert snapshot(process.out).match() }
-            )
-        }
-
-    }
+            then {
+                assertAll(
+                    { assert workflow.success },
+                    { assert snapshot(workflow.out).match() }
+                )
+            }
+        },
+    ]
 }
