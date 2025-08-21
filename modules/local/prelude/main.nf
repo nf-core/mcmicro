@@ -193,7 +193,7 @@ process SUMMARY_MARKERSHEET_LITERAL {
                     ])
             }
 
-    output_file_markersheet = prefix + "_${meta.id}_markersheet_mqc.tsv"
+    output_file_markersheet = prefix + "_markersheet_mqc.tsv"
     def f1                  = task.workDir.resolve(output_file_markersheet)
     f1.text                 = output*.join("\t").join("\n")
 
