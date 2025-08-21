@@ -140,6 +140,12 @@ You can also generate such `YAML`/`JSON` files via [nf-core/launch](https://nf-c
 
 ### Pipeline stages and associated input parameters
 
+#### Summary
+We generate a MuliQC formatted report based on the extracted OME-xml data and the marker/sample sheet information so the user can debug their runs.
+This process is "mandatory" but we include the option to stop immediately after the data extraction/validation with the option `--prelude=true`.
+
+Running with `--prelude=true` is recommended as a first run to ensure all the information is available and the subsequent run is successful.
+
 #### Illumination Correction
 
 Illumination correction can optionally be performed before registration. It is triggered by the `--illumination` flag which can currently only be followed by the option `basicpy`. We plan on supporting other modules for illumination correction in the future.
