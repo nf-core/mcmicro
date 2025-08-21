@@ -141,6 +141,7 @@ You can also generate such `YAML`/`JSON` files via [nf-core/launch](https://nf-c
 ### Pipeline stages and associated input parameters
 
 #### Summary
+
 We generate a MuliQC formatted report based on the extracted OME-xml data and the marker/sample sheet information so the user can debug their runs.
 This process is "mandatory" but we include the option to stop immediately after the data extraction/validation with the option `--prelude=true`.
 

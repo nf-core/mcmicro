@@ -53,12 +53,14 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
 ```
 
 ### Summary
+
 We generate a MultiQC formatted report with the extracted OME-xml data and the marker sheet information so the user can debug their parameters.
+
 <details>
 <summary>Output files</summary>
 
-- summary_{sample_name}_samplesheet_mqc.tsv : MultiQC formatted TSV with sample's parameter validation
-- summary_{sample_name}_xml_mqc.tsv : MultiQC formatted TSV with sample's extracted OME-xml data validation
+- summary\_{sample_name}\_samplesheet_mqc.tsv : MultiQC formatted TSV with sample's parameter validation
+- summary\_{sample_name}\_xml_mqc.tsv : MultiQC formatted TSV with sample's extracted OME-xml data validation
 - summary_markersheet.tif : Markersheet as inputted by user
 
 </details>
