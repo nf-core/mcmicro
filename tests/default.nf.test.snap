@@ -1,7 +1,7 @@
 {
     "-profile test": {
         "content": [
-            6,
+            10,
             {
                 "ASHLAR": {
                     "ashlar": "1.18.0"
@@ -42,19 +42,26 @@
                 "registration/ashlar/TEST1.ome.tif",
                 "segmentation",
                 "segmentation/deepcell_mesmer",
-                "segmentation/deepcell_mesmer/mask_TEST1.tif"
+                "segmentation/deepcell_mesmer/mask_TEST1.tif",
+                "summary",
+                "summary/summary_TEST1_samplesheet_mqc.tsv",
+                "summary/summary_TEST1_xml_mqc.tsv",
+                "summary/summary_markersheet_mqc.tsv"
             ],
             [
                 "TEST1.xml:md5,b4e08d86595e773c42483343b06cd51d",
                 "multiqc_citations.txt:md5,4c806e63a283ec1b7e78cdae3a923d4f",
                 "TEST1.ome.tif:md5,988bbb2c74d47dc22a9f3ac348f53ef5",
-                "mask_TEST1.tif:md5,3103759bd55b9deeb8c8a0dade798d9a"
+                "mask_TEST1.tif:md5,3103759bd55b9deeb8c8a0dade798d9a",
+                "summary_TEST1_samplesheet_mqc.tsv:md5,4ac911fceebc7d281a4970f568ccf62c",
+                "summary_TEST1_xml_mqc.tsv:md5,bf43fc3bbc6b281cb1ac62e84febd8f4",
+                "summary_markersheet_mqc.tsv:md5,033c68ed4f5a37fcafce7ebd87d7c5c4"
             ]
         ],
         "meta": {
             "nf-test": "0.9.2",
             "nextflow": "25.04.1"
         },
-        "timestamp": "2025-07-18T11:43:42.214525062"
+        "timestamp": "2025-08-22T11:46:37.467188067"
     }
 }
