@@ -69,7 +69,7 @@ process OMEVALIDATION {
     // transform pixel size to microns
     s_units = size_units[0][0]
 
-    if (size_units == 'mm'){
+    if (s_units == 'mm'){
       pixels = pixels[0][0] / 1000
     }
     else if (s_units == 'cm'){
