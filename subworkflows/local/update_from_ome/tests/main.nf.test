@@ -20,7 +20,7 @@ nextflow_workflow {
                     """
                     input[0] = Channel.of(
                     [
-                        [id:"TEST1", cycle_number:1, channel_count:4],
+                        [id:"TEST1", cycle_number:1],
                         "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/imaging/ome-tiff/cycif-tonsil-cycle1.ome.tif",
                         [],
                         [],
@@ -53,6 +53,36 @@ nextflow_workflow {
             }
 
         },
+
+        test("Should fail on channel count mismatch between input files and markersheet") {
+            when {
+                workflow {
+                    """
+                    input[0] = Channel.of(
+                    [
+                        [id:"TEST1", cycle_number:1],
+                        "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/imaging/ome-tiff/cycif-tonsil-cycle1.ome.tif",
+                        [],
+                        [],
+                    ],
+                    )
+                    input[1] = Channel.of(
+                        [
+                            [channel_number: 1, cycle_number: 1, marker_name: 'DNA 1'],
+                            [channel_number: 2, cycle_number: 1, marker_name: 'Na/K ATPase'],
+                            [channel_number: 3, cycle_number: 1, marker_name: 'CD3'],
+                        ],
+                    )
+                    """
+                }
+            }
+            then {
+                assertAll(
+                    { assert workflow.failed },
+                    { assert workflow.errorReport.contains("Markersheet cycle/channel numbering") }
+                )
+            }
+        }
 
     ]
 }

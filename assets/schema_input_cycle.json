@@ -18,11 +18,6 @@
                 "errorMessage": "cycle_number must be provided. It should be 1-based, sequential and have no gaps",
                 "meta": "cycle_number"
             },
-            "channel_count": {
-                "type": "integer",
-                "errorMessage": "channel_count name must be provided. It should be 1-based, sequential and have no gaps",
-                "meta": "channel_count"
-            },
             "image_tiles": {
                 "type": "string",
                 "pattern": "^\\S+$",
@@ -39,6 +34,6 @@
                 "errorMessage": "provide path to ffp illumination correction file(s) if illumination parameter is manual"
             }
         },
-        "required": ["sample", "cycle_number", "channel_count", "image_tiles"]
+        "required": ["sample", "cycle_number", "image_tiles"]
     }
 }
