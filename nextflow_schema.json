@@ -83,11 +83,6 @@
                     "type": "boolean",
                     "description": "boolean to flag whether or not to apply background subtraction"
                 },
-                "pixel_size": {
-                    "type": "number",
-                    "description": "Pixel width of input image data, in microns",
-                    "help_text": "You must set this parameter when enabling TMA de-arraying with the `tma_dearray` parameter. This is required for the de-arraying module to correctly process the image."
-                },
                 "prelude": {
                     "type": "boolean",
                     "description": "Run the pipeline in prelude mode. Extracts metadata writes MultiQC table and exits.",

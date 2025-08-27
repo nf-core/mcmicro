@@ -836,7 +836,7 @@
     "cycle: no illumination correction, coreograph": {
         "content": [
             "TEST1.ome.tif:md5,a9563710bb1c0c29798cb9e881916546",
-            "mask_TEST1_1.tif:md5,88a26ad3381257a4493f1fcc67adca68",
+            "mask_TEST1_1.tif:md5,8ac7455c77e28119bbae82a0fe4e1e5d",
             {
                 "headers": [
                     "CellID",
@@ -851,7 +851,7 @@
                     "Extent",
                     "Orientation"
                 ],
-                "rowCount": 16533
+                "rowCount": 16102
             },
             {
                 "ASHLAR": {
@@ -873,8 +873,8 @@
         ],
         "meta": {
             "nf-test": "0.9.2",
-            "nextflow": "25.04.1"
+            "nextflow": "25.04.6"
         },
-        "timestamp": "2025-07-18T12:07:19.978744458"
+        "timestamp": "2025-09-03T16:00:04.053858855"
     }
 }

@@ -87,6 +87,29 @@ nextflow_process {
         }
     }
 
+    test("Fail on missing pixel size") {
+
+        when {
+            params {
+                def xml = new XmlSlurper().parse('assets/min_omexml_meta.xml')
+                xml.Image*.Pixels*.@PhysicalSizeX = ''
+                savedxml = groovy.xml.XmlUtil.serialize(xml)
+            }
+            process {
+                """
+                input[0] = Channel.of(params.savedxml).collectFile(name: 'temp.ome.xml').map{ [[id: 'sample1'], it] }
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.failed },
+                { assert process.errorReport.contains("Caused by:\n  Images are missing pixel physical size metadata") }
+            )
+        }
+    }
+
     test("Fail on mismatch pixel size") {
 
         when {
