@@ -31,11 +31,11 @@ TEST1,2,/path/to/image/cycif-tonsil-cycle2.ome.tif
 TEST1,3,/path/to/image/cycif-tonsil-cycle3.ome.tif
 ```
 
-| Column          | Description                                                                   |
-| --------------- | ----------------------------------------------------------------------------- |
-| `sample`        | Custom sample name.                                                           |
-| `cycle_number`  | Integer value of the cycle for the file in the current row.                   |
-| `image_tiles`   | Full path or URL to the input image file.                                     |
+| Column         | Description                                                 |
+| -------------- | ----------------------------------------------------------- |
+| `sample`       | Custom sample name.                                         |
+| `cycle_number` | Integer value of the cycle for the file in the current row. |
+| `image_tiles`  | Full path or URL to the input image file.                   |
 
 An [example one row per sample per cycle samplesheet](../assets/samplesheet_1_row_sample_cycle.csv) has been provided with the pipeline.
 
