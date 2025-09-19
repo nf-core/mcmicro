@@ -1,4 +1,5 @@
 nextflow_workflow {
+
     name "Test Workflow PRELUDE"
     script "../main.nf"
     workflow "PRELUDE"
@@ -16,22 +17,23 @@ nextflow_workflow {
                 }
             }
             when {
-                params {
-                    prelude = true
-
-                    def x = new groovy.xml.XmlSlurper().parse('assets/min_omexml_meta.xml')
-                    x.Image[0].Pixels.@SizeX = "1"
-                    savedxml = groovy.xml.XmlUtil.serialize(x)
-                }
                 workflow {
                     """
-                     input[0] = Channel.of(
-                            [
-                                [channel_number: 1, cycle_number: 1, marker_name: 'DNA 1'],
-                                [channel_number: 2, cycle_number: 1, marker_name: 'Na/K ATPase'],
-                                [channel_number: 3, cycle_number: 1, marker_name: 'CD3'],
-                                [channel_number: 4, cycle_number: 1, marker_name: 'CD45RO'],
-                            ],)
+                     input[0] = Channel.of([
+                                [
+                                    channel_number:1,
+                                    cycle_number:1,
+                                    marker_name:'DNA_6',
+                                    filter:null,
+                                    excitation_wavelength:null,
+                                    emission_wavelength:null,
+                                    exposure:null,
+                                    background:null,
+                                    remove:null,
+                                    exposure_time:null,
+                                    exposure_time_unit:null
+                                ],],
+                            )
                      input[1] = Channel.of(
                             [
                                 [id:"TEST1", cycle_number:1, channel_count:4],
@@ -39,7 +41,7 @@ nextflow_workflow {
                                 [],
                                 [],
                             ],)
-                     input[2] = Channel.of(params.savedxml).collectFile(name: 'temp.ome.xml').map{it -> it}
+                     input[2] = BFTOOLS_SHOWINF.out.xml
                     """
                 }
             }

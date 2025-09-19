@@ -5,8 +5,7 @@ process SUMMARY_XML {
     label 'process_single'
 
     input:
-    val(meta)
-    val(xml)
+    tuple val(meta), val(xml)
 
     output:
     path output_file_xml, emit: output
@@ -16,7 +15,7 @@ process SUMMARY_XML {
 
     exec:
     def args        = task.ext.args ?: ''
-    def prefix      = task.ext.prefix ?: "summary"
+    def prefix      = task.ext.prefix ?: "${meta.id}"
 
     check              = '\u2705'
     cross              = '\u274C'
@@ -138,7 +137,7 @@ process SUMMARY_XML {
         )
     }
 
-    output_file_xml = prefix + "_${meta.id}_xml_mqc.tsv"
+    output_file_xml = prefix + "_xml_mqc.tsv"
     def f1          = task.workDir.resolve(output_file_xml)
     f1.text         = output_xml*.join("\t").join("\n")
 }
@@ -148,8 +147,7 @@ process SUMMARY_MARKERSHEET_LITERAL {
     label 'process_single'
 
     input:
-    val(meta)
-    val(markersheet)
+    tuple val(meta), val(markersheet)
 
     output:
     path output_file_markersheet, emit: output
@@ -159,12 +157,9 @@ process SUMMARY_MARKERSHEET_LITERAL {
 
     exec:
     def args        = task.ext.args ?: ''
-    def prefix      = task.ext.prefix ?: "summary"
+    def prefix      = task.ext.prefix ?: "$meta.id"
 
-    output_file_markersheet = prefix + "_${meta.id}_markersheet_mqc.tsv"
-    //def f1                  = task.workDir.resolve(output_file_samplesheet)
-    //f1.text                 = meta.map {
-    output = [[
+    header = [
             "channel_number",
             "cycle_number",
             "excitation_wavelength",
@@ -175,28 +170,15 @@ process SUMMARY_MARKERSHEET_LITERAL {
             "exposure",
             "background",
             "remove",
-            "exposure_time_unit"]]
+            "exposure_time_unit"]
 
-    markersheet.each {
-        output.add([
-                        it.channel_number,
-                        it.cycle_number,
-                        it.excitation_wavelength,
-                        it.emission_wavelength,
-                        it.exposure_time,
-                        it.marker_name,
-                        it.filter,
-                        it.exposure,
-                        it.background,
-                        it.remove,
-                        it.exposure_time_unit
-                    ])
-            }
+    output = [header]
+
+    markersheet.collect { m -> output.add( header.collect{ h -> m[h] ?: "" } ) }
 
     output_file_markersheet = prefix + "_markersheet_mqc.tsv"
     def f1                  = task.workDir.resolve(output_file_markersheet)
     f1.text                 = output*.join("\t").join("\n")
-
 }
 
 process SUMMARY_SAMPLESHEET {
@@ -204,8 +186,7 @@ process SUMMARY_SAMPLESHEET {
     label 'process_single'
 
     input:
-    val(meta)
-    val(samplesheet)
+    tuple val(meta), val(samplesheet)
 
     output:
     path output_file_samplesheet, emit: output
@@ -215,7 +196,7 @@ process SUMMARY_SAMPLESHEET {
 
     exec:
     def args        = task.ext.args ?: ''
-    def prefix      = task.ext.prefix ?: "summary"
+    def prefix      = task.ext.prefix ?: "${meta.id}"
 
     check              = '\u2705'
     cross              = '\u274C'
@@ -258,7 +239,7 @@ process SUMMARY_SAMPLESHEET {
             output_samplesheet.add(temp)
         }
 
-    output_file_samplesheet = prefix + "_${meta.id}_samplesheet_mqc.tsv"
+    output_file_samplesheet = prefix + "_samplesheet_mqc.tsv"
     def f1                  = task.workDir.resolve(output_file_samplesheet)
     f1.text                 = output_samplesheet*.join("\t").join("\n")
 }
@@ -268,8 +249,7 @@ process SUMMARY_MARKERSHEET {
     label 'process_single'
 
     input:
-    val(meta)
-    val(markersheet)
+    tuple val(meta), val(markersheet)
 
     output:
     path output_file_markersheet, emit: output
@@ -279,7 +259,7 @@ process SUMMARY_MARKERSHEET {
 
     exec:
     def args        = task.ext.args ?: ''
-    def prefix      = task.ext.prefix ?: "summary"
+    def prefix      = task.ext.prefix ?: "${meta.id}"
 
     check              = '\u2705'
     cross              = '\u274C'
@@ -329,7 +309,7 @@ process SUMMARY_MARKERSHEET {
             }
         }
 
-    output_file_markersheet = prefix + "_${meta.id}_markersheet_mqc.tsv"
+    output_file_markersheet = prefix + "_markersheet_mqc.tsv"
     def f1                  = task.workDir.resolve(output_file_markersheet)
     f1.text                 = output_markersheet*.join("\t").join("\n")
 }

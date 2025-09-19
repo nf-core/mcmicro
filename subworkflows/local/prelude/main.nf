@@ -14,9 +14,7 @@ workflow PRELUDE {
     output_file_markersheet
 
     main:
-    samplesheet.map{meta, image_tiles, dfp, ffp -> meta}.set{meta}
-
-    output_file_xml         = SUMMARY_XML(meta, xml).output
-    output_file_markersheet = SUMMARY_MARKERSHEET_LITERAL(meta, markersheet).output
-    output_file_samplesheet = SUMMARY_SAMPLESHEET(meta, samplesheet).output
+    output_file_xml         = ( xml.map{meta, xmlpath -> [meta, xmlpath]} | SUMMARY_XML ).output
+    output_file_markersheet = SUMMARY_MARKERSHEET_LITERAL( markersheet.map{[["id": "markers"], it]} ).output
+    output_file_samplesheet = (samplesheet.map{meta, image_tiles, dfp, ffp -> [meta, samplesheet] } | SUMMARY_SAMPLESHEET).output
 }

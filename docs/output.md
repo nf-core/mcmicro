@@ -61,7 +61,7 @@ We generate a MultiQC formatted report with the extracted OME-xml data and the m
 
 - summary\_{sample_name}\_samplesheet_mqc.tsv : MultiQC formatted TSV with sample's parameter validation
 - summary\_{sample_name}\_xml_mqc.tsv : MultiQC formatted TSV with sample's extracted OME-xml data validation
-- summary_markersheet.tif : Markersheet as inputted by user
+- summary_markersheet_mqc.tsv : Formatted Markersheet in MultiQC format
 
 </details>
 

@@ -3,29 +3,29 @@
         "content": [
             {
                 "0": [
-                    "summary_TEST1_xml_mqc.tsv:md5,d643a81d2e7f0ecb5b5099ad77225afc"
+                    "0_xml_mqc.tsv:md5,bf43fc3bbc6b281cb1ac62e84febd8f4"
                 ],
                 "1": [
-                    "summary_TEST1_samplesheet_mqc.tsv:md5,4ac911fceebc7d281a4970f568ccf62c"
+                    "TEST1_samplesheet_mqc.tsv:md5,4ac911fceebc7d281a4970f568ccf62c"
                 ],
                 "2": [
-                    "summary_markersheet_mqc.tsv:md5,505384fcbfca01e935c46708ec75c537"
+                    "markers_markersheet_mqc.tsv:md5,8de635ae2c00c558e7f24e3fb74198a1"
                 ],
                 "output_file_markersheet": [
-                    "summary_markersheet_mqc.tsv:md5,505384fcbfca01e935c46708ec75c537"
+                    "markers_markersheet_mqc.tsv:md5,8de635ae2c00c558e7f24e3fb74198a1"
                 ],
                 "output_file_samplesheet": [
-                    "summary_TEST1_samplesheet_mqc.tsv:md5,4ac911fceebc7d281a4970f568ccf62c"
+                    "TEST1_samplesheet_mqc.tsv:md5,4ac911fceebc7d281a4970f568ccf62c"
                 ],
                 "output_file_xml": [
-                    "summary_TEST1_xml_mqc.tsv:md5,d643a81d2e7f0ecb5b5099ad77225afc"
+                    "0_xml_mqc.tsv:md5,bf43fc3bbc6b281cb1ac62e84febd8f4"
                 ]
             }
         ],
         "meta": {
             "nf-test": "0.9.2",
-            "nextflow": "25.04.1"
+            "nextflow": "25.04.7"
         },
-        "timestamp": "2025-08-21T17:05:26.789308663"
+        "timestamp": "2025-09-19T13:37:03.177266001"
     }
 }

@@ -4,8 +4,6 @@
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
-import groovy.io.FileType
-import groovy.xml.XmlSlurper
 import nextflow.Nextflow
 
 include { paramsSummaryMap       } from 'plugin/nf-schema'
@@ -42,13 +40,12 @@ workflow MCMICRO {
     ch_multiqc_files = Channel.empty()
 
     ch_samplesheet.map{meta, image_tiles, dfp, ffp -> [meta, image_tiles]} | BFTOOLS_SHOWINF
-    BFTOOLS_SHOWINF.out.xml.map{ meta, xml_path -> xml_path }.set{xml}
+    ch_versions = ch_versions.mix(BFTOOLS_SHOWINF.out.versions)
 
-    PRELUDE(ch_markersheet, ch_samplesheet, xml)
+    PRELUDE(ch_markersheet, ch_samplesheet, BFTOOLS_SHOWINF.out.xml)
 
     if (!params.prelude) {
-        metadata    = UPDATE_FROM_OME(ch_samplesheet, ch_markersheet)
-        ch_versions = ch_versions.mix(metadata.versions)
+        metadata    = UPDATE_FROM_OME(ch_samplesheet, ch_markersheet, BFTOOLS_SHOWINF.out.xml)
 
         ch_samplesheet = metadata.samplesheet
         ch_markersheet = metadata.markersheet
@@ -220,6 +217,10 @@ workflow MCMICRO {
         methodsDescriptionText(ch_multiqc_custom_methods_description))
 
     ch_multiqc_files = ch_multiqc_files.mix(ch_collated_versions)
+        .mix(PRELUDE.out.output_file_samplesheet)
+        .mix(PRELUDE.out.output_file_xml)
+        .mix(PRELUDE.out.output_file_markersheet)
+
     ch_multiqc_files = ch_multiqc_files.mix(
         ch_methods_description.collectFile(
             name: 'methods_description_mqc.yaml',
