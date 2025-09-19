@@ -1,4 +1,3 @@
-include { BFTOOLS_SHOWINF } from '../../../modules/nf-core/bftools/showinf/main'
 include { OMEVALIDATION   } from '../../../modules/local/omevalidation/main'
 
 workflow UPDATE_FROM_OME {
