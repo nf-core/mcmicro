@@ -143,9 +143,9 @@ You can also generate such `YAML`/`JSON` files via [nf-core/launch](https://nf-c
 #### Summary
 
 We generate a MultiQC formatted report based on the extracted OME-xml metadata and the marker/sample sheet information so the user can debug their runs.
-This step is always run, but we include the option to stop immediately after the data extraction/validation with the option `--prelude=true`.
+This step is always run, but we include the option to stop immediately after the data extraction/validation with the option `--prelude`.
 
-Running with `--prelude=true` is recommended as a first run to ensure your sample/marker sheets are complete and the required metadata is present in your image files.
+Running with `--prelude` is recommended as a first run to ensure your sample/marker sheets are complete and the required metadata is present in your image files.
 
 #### Illumination Correction
 

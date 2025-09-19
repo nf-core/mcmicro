@@ -44,6 +44,10 @@ workflow MCMICRO {
 
     PRELUDE(ch_markersheet, ch_samplesheet, BFTOOLS_SHOWINF.out.xml)
 
+    ch_multiqc_files = ch_multiqc_files.mix(PRELUDE.out.output_file_samplesheet)
+                        .mix(PRELUDE.out.output_file_xml)
+                        .mix(PRELUDE.out.output_file_markersheet)
+
     if (!params.prelude) {
         metadata    = UPDATE_FROM_OME(ch_samplesheet, ch_markersheet, BFTOOLS_SHOWINF.out.xml)
 
@@ -217,9 +221,6 @@ workflow MCMICRO {
         methodsDescriptionText(ch_multiqc_custom_methods_description))
 
     ch_multiqc_files = ch_multiqc_files.mix(ch_collated_versions)
-        .mix(PRELUDE.out.output_file_samplesheet)
-        .mix(PRELUDE.out.output_file_xml)
-        .mix(PRELUDE.out.output_file_markersheet)
 
     ch_multiqc_files = ch_multiqc_files.mix(
         ch_methods_description.collectFile(

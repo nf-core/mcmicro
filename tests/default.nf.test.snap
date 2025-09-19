@@ -59,9 +59,7 @@
                 "segmentation",
                 "segmentation/deepcell_mesmer",
                 "segmentation/deepcell_mesmer/mask_TEST1.tif",
-                [
-                    "versions.yml:md5,2153811135866cc22a3f13c74568305f"
-                ],
+                "summary",
                 "summary/TEST1_samplesheet_mqc.tsv",
                 "summary/TEST1_xml_mqc.tsv",
                 "summary/markers_markersheet_mqc.tsv"
