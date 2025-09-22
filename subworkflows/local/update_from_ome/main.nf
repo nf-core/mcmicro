@@ -1,15 +1,13 @@
-include { BFTOOLS_SHOWINF } from '../../../modules/nf-core/bftools/showinf/main'
 include { OMEVALIDATION   } from '../../../modules/local/omevalidation/main'
 
 workflow UPDATE_FROM_OME {
     take:
     samplesheet
     markersheet
+    xml
 
     main:
-    samplesheet.map{meta, image_tiles, dfp, ffp -> [meta, image_tiles]} | BFTOOLS_SHOWINF
-
-    val_data = BFTOOLS_SHOWINF.out.xml | OMEVALIDATION
+    val_data = xml.map{meta, x -> [meta, x]} | OMEVALIDATION
 
     samplesheet.join(val_data)
          .map { original_meta, image_tiles, dfp, ffp, xml_meta, marker_data ->
@@ -112,5 +110,4 @@ workflow UPDATE_FROM_OME {
     emit:
     samplesheet = samplesheet_meta
     markersheet = markersheet_meta
-    versions    = BFTOOLS_SHOWINF.out.versions
 }

@@ -1,7 +1,7 @@
 {
     "-profile test": {
         "content": [
-            6,
+            9,
             {
                 "ASHLAR": {
                     "ashlar": "1.18.0"
@@ -26,10 +26,26 @@
                 "multiqc/multiqc_data",
                 "multiqc/multiqc_data/BETA-multiqc.parquet",
                 "multiqc/multiqc_data/multiqc.log",
+                "multiqc/multiqc_data/multiqc_TEST1_samplesheet.txt",
+                "multiqc/multiqc_data/multiqc_TEST1_xml.txt",
                 "multiqc/multiqc_data/multiqc_citations.txt",
                 "multiqc/multiqc_data/multiqc_data.json",
+                "multiqc/multiqc_data/multiqc_markers_markersheet.txt",
                 "multiqc/multiqc_data/multiqc_software_versions.txt",
                 "multiqc/multiqc_data/multiqc_sources.txt",
+                "multiqc/multiqc_plots",
+                "multiqc/multiqc_plots/pdf",
+                "multiqc/multiqc_plots/pdf/TEST1_samplesheet.pdf",
+                "multiqc/multiqc_plots/pdf/TEST1_xml.pdf",
+                "multiqc/multiqc_plots/pdf/markers_markersheet.pdf",
+                "multiqc/multiqc_plots/png",
+                "multiqc/multiqc_plots/png/TEST1_samplesheet.png",
+                "multiqc/multiqc_plots/png/TEST1_xml.png",
+                "multiqc/multiqc_plots/png/markers_markersheet.png",
+                "multiqc/multiqc_plots/svg",
+                "multiqc/multiqc_plots/svg/TEST1_samplesheet.svg",
+                "multiqc/multiqc_plots/svg/TEST1_xml.svg",
+                "multiqc/multiqc_plots/svg/markers_markersheet.svg",
                 "multiqc/multiqc_report.html",
                 "pipeline_info",
                 "pipeline_info/nf_core_mcmicro_software_mqc_versions.yml",
@@ -42,19 +58,29 @@
                 "registration/ashlar/TEST1.ome.tif",
                 "segmentation",
                 "segmentation/deepcell_mesmer",
-                "segmentation/deepcell_mesmer/mask_TEST1.tif"
+                "segmentation/deepcell_mesmer/mask_TEST1.tif",
+                "summary",
+                "summary/TEST1_samplesheet_mqc.tsv",
+                "summary/TEST1_xml_mqc.tsv",
+                "summary/markers_markersheet_mqc.tsv"
             ],
             [
                 "TEST1.xml:md5,b4e08d86595e773c42483343b06cd51d",
+                "multiqc_TEST1_samplesheet.txt:md5,f592b8a5feedd2252b5d860807ecc0bd",
+                "multiqc_TEST1_xml.txt:md5,bec2bb1f488d96d79ddb00c6b3a54d44",
                 "multiqc_citations.txt:md5,4c806e63a283ec1b7e78cdae3a923d4f",
+                "multiqc_markers_markersheet.txt:md5,4cefab2c3058207af86e69d85c3f1e6d",
                 "TEST1.ome.tif:md5,988bbb2c74d47dc22a9f3ac348f53ef5",
-                "mask_TEST1.tif:md5,3103759bd55b9deeb8c8a0dade798d9a"
+                "mask_TEST1.tif:md5,3103759bd55b9deeb8c8a0dade798d9a",
+                "TEST1_samplesheet_mqc.tsv:md5,4ac911fceebc7d281a4970f568ccf62c",
+                "TEST1_xml_mqc.tsv:md5,bf43fc3bbc6b281cb1ac62e84febd8f4",
+                "markers_markersheet_mqc.tsv:md5,b302d9e7ce2a4bab3586f38d6753e368"
             ]
         ],
         "meta": {
             "nf-test": "0.9.2",
-            "nextflow": "25.04.1"
+            "nextflow": "25.04.7"
         },
-        "timestamp": "2025-07-18T11:43:42.214525062"
+        "timestamp": "2025-09-19T15:06:17.507043624"
     }
 }

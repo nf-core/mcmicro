@@ -1,16 +1,17 @@
 nextflow_workflow {
-    name "Test Workflow UPDATE_FROM_OME"
+
+    name "Test Workflow PRELUDE"
     script "../main.nf"
-    workflow "UPDATE_FROM_OME"
+    workflow "PRELUDE"
 
     [
-        test("Should extract normally on test data") {
+        test("normal run") {
             setup {
                 run("BFTOOLS_SHOWINF") {
                     script "modules/nf-core/bftools/showinf/main.nf"
                     process {
                         """
-                        input[0] = [[id: "TEST1", cycle_number:1, channel_count:4], file(params.modules_testdata_base_path + "/imaging/ome-tiff/cycif-tonsil-cycle1.ome.tif")]
+                        input[0] = [["id": 0], file(params.modules_testdata_base_path + "/imaging/ome-tiff/cycif-tonsil-cycle1.ome.tif")]
                         """
                     }
                 }
@@ -18,15 +19,7 @@ nextflow_workflow {
             when {
                 workflow {
                     """
-                    input[0] = Channel.of(
-                    [
-                        [id:"TEST1", cycle_number:1, channel_count:4],
-                        "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/imaging/ome-tiff/cycif-tonsil-cycle1.ome.tif",
-                        [],
-                        [],
-                    ],
-                    )
-                    input[1] = Channel.of([
+                     input[0] = Channel.of([
                                 [
                                     channel_number:1,
                                     cycle_number:1,
@@ -41,18 +34,24 @@ nextflow_workflow {
                                     exposure_time_unit:null
                                 ],],
                             )
-                    input[2] = BFTOOLS_SHOWINF.out.xml
+                     input[1] = Channel.of(
+                            [
+                                [id:"TEST1", cycle_number:1, channel_count:4],
+                                "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/imaging/ome-tiff/cycif-tonsil-cycle1.ome.tif",
+                                [],
+                                [],
+                            ],)
+                     input[2] = BFTOOLS_SHOWINF.out.xml
                     """
                 }
             }
+
             then {
                 assertAll(
                     { assert workflow.success },
                     { assert snapshot(workflow.out).match() }
                 )
             }
-
         },
-
     ]
 }

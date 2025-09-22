@@ -4,8 +4,6 @@
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
-import groovy.io.FileType
-import groovy.xml.XmlSlurper
 import nextflow.Nextflow
 
 include { paramsSummaryMap       } from 'plugin/nf-schema'
@@ -22,6 +20,8 @@ include { COREOGRAPH             } from '../modules/nf-core/coreograph/main'
 include { DEEPCELL_MESMER        } from '../modules/nf-core/deepcell/mesmer/main'
 include { SCIMAP_MCMICRO         } from '../modules/nf-core/scimap/mcmicro/main'
 include { MCQUANT                } from '../modules/nf-core/mcquant/main'
+include { BFTOOLS_SHOWINF        } from '../modules/nf-core/bftools/showinf/main'
+include { PRELUDE                } from '../subworkflows/local/prelude/main'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -39,141 +39,152 @@ workflow MCMICRO {
     ch_versions = Channel.empty()
     ch_multiqc_files = Channel.empty()
 
-    metadata = UPDATE_FROM_OME(ch_samplesheet, ch_markersheet)
-    ch_versions = ch_versions.mix(metadata.versions)
+    ch_samplesheet.map{meta, image_tiles, dfp, ffp -> [meta, image_tiles]} | BFTOOLS_SHOWINF
+    ch_versions = ch_versions.mix(BFTOOLS_SHOWINF.out.versions)
 
-    ch_samplesheet = metadata.samplesheet
-    ch_markersheet = metadata.markersheet
+    PRELUDE(ch_markersheet, ch_samplesheet, BFTOOLS_SHOWINF.out.xml)
 
-    ch_samplesheet.dump(tag: "ch_samplesheet")
-    ch_markersheet.dump(tag: "ch_markersheet")
+    ch_multiqc_files = ch_multiqc_files.mix(PRELUDE.out.output_file_samplesheet)
+                        .mix(PRELUDE.out.output_file_xml)
+                        .mix(PRELUDE.out.output_file_markersheet)
 
-    //
-    // MODULE: BASICPY
-    //
-    if (params.illumination == 'basicpy') {
+    if (!params.prelude) {
+        metadata    = UPDATE_FROM_OME(ch_samplesheet, ch_markersheet, BFTOOLS_SHOWINF.out.xml)
+
+        ch_samplesheet = metadata.samplesheet
+        ch_markersheet = metadata.markersheet
+
+        ch_samplesheet.dump(tag: "ch_samplesheet")
+        ch_markersheet.dump(tag: "ch_markersheet")
+
+        //
+        // MODULE: BASICPY
+        //
+        if (params.illumination == 'basicpy') {
+            ch_samplesheet
+                .map{ meta, image_tiles, dfp, ffp ->
+                    [meta.subMap('id', 'cycle_number'), image_tiles]
+                }
+                .dump(tag: 'BASICPY in')
+                | BASICPY
+            ch_versions = ch_versions.mix(BASICPY.out.versions)
+            ch_samplesheet = ch_samplesheet
+                .map{ meta, image_tiles, dfp, ffp ->
+                    [meta.subMap('id', 'cycle_number'), image_tiles]
+                }
+                .join(BASICPY.out.profiles)
+                .dump(tag: 'ch_samplesheet (after BASICPY)')
+        }
+
         ch_samplesheet
             .map{ meta, image_tiles, dfp, ffp ->
-                [meta.subMap('id', 'cycle_number'), image_tiles]
+                [[id: meta.id], [meta.cycle_number, image_tiles, dfp, ffp]]
             }
-            .dump(tag: 'BASICPY in')
-            | BASICPY
-        ch_versions = ch_versions.mix(BASICPY.out.versions)
-        ch_samplesheet = ch_samplesheet
-            .map{ meta, image_tiles, dfp, ffp ->
-                [meta.subMap('id', 'cycle_number'), image_tiles]
+            // FIXME: pass groupTuple size: from samplesheet cycle count
+            .groupTuple(sort: { a, b -> a[0] <=> b[0] })
+            .map{ meta, cycles -> [meta, *cycles.collect{ it[1..-1] }.transpose()]}
+            .dump(tag: 'ASHLAR in')
+            // flatten() handles list of empty-lists, turning it into a single empty list.
+            .multiMap{ meta, images, dfps, ffps ->
+                images: [meta, images]
+                dfps: dfps.flatten()
+                ffps: ffps.flatten()
             }
-            .join(BASICPY.out.profiles)
-            .dump(tag: 'ch_samplesheet (after BASICPY)')
-    }
+            | ASHLAR
+        ch_versions = ch_versions.mix(ASHLAR.out.versions)
 
-    ch_samplesheet
-        .map{ meta, image_tiles, dfp, ffp ->
-            [[id: meta.id], [meta.cycle_number, image_tiles, dfp, ffp]]
+        // Run Background Correction
+        if (params.backsub) {
+            ch_backsub_markers = ch_markersheet
+                .map { ['channel_number,cycle_number,marker_name,exposure,background,remove',
+                    it.collect{ it.channel_number + "," + it.cycle_number + "," + it.marker_name + "," + it.exposure + "," + it.background + "," + it.remove}] }
+                .flatten()
+                .map { it.replaceAll('(?<=,|^)null(?=,|$)', '') }
+                .collectFile(name: 'markers_backsub.csv', sort: false, newLine: true)
+
+            ASHLAR.out.tif
+                .combine(ch_backsub_markers)
+                .dump(tag: 'BACKSUB IN')
+                .multiMap{ meta, image, marker ->
+                    image: [meta, image]
+                    markers: [meta, marker]
+                }
+                | BACKSUB
+
+            post_registration = BACKSUB.out.backsub_tif
+            ch_versions = ch_versions.mix(BACKSUB.out.versions)
+        } else {
+            post_registration = ASHLAR.out.tif
         }
-        // FIXME: pass groupTuple size: from samplesheet cycle count
-        .groupTuple(sort: { a, b -> a[0] <=> b[0] })
-        .map{ meta, cycles -> [meta, *cycles.collect{ it[1..-1] }.transpose()]}
-        .dump(tag: 'ASHLAR in')
-        // flatten() handles list of empty-lists, turning it into a single empty list.
-        .multiMap{ meta, images, dfps, ffps ->
-            images: [meta, images]
-            dfps: dfps.flatten()
-            ffps: ffps.flatten()
+
+        // Run Coreograph
+        if (params.tma_dearray) {
+            COREOGRAPH(post_registration)
+            COREOGRAPH.out.cores
+                .transpose()
+                .map { meta, img -> [[id: meta.id + '_' + img.fileName.toString().tokenize('.')[0]], img]}
+                .set { ch_segmentation_input }
+        } else {
+            ch_segmentation_input = post_registration
         }
-        | ASHLAR
-    ch_versions = ch_versions.mix(ASHLAR.out.versions)
 
-    // Run Background Correction
-    if (params.backsub) {
-        ch_backsub_markers = ch_markersheet
-            .map { ['channel_number,cycle_number,marker_name,exposure,background,remove',
-                it.collect{ it.channel_number + "," + it.cycle_number + "," + it.marker_name + "," + it.exposure + "," + it.background + "," + it.remove}] }
-            .flatten()
-            .map { it.replaceAll('(?<=,|^)null(?=,|$)', '') }
-            .collectFile(name: 'markers_backsub.csv', sort: false, newLine: true)
+        // Run Segmentation
 
-        ASHLAR.out.tif
-            .combine(ch_backsub_markers)
-            .dump(tag: 'BACKSUB IN')
-            .multiMap{ meta, image, marker ->
+        ch_masks = Channel.empty()
+
+        ch_segmentation_input
+            .multiMap{ meta, image ->
+                img: [meta + [segmenter: 'mesmer'], image]
+                membrane_img: [[:], []]
+            }
+            | DEEPCELL_MESMER
+        ch_masks = ch_masks.mix(DEEPCELL_MESMER.out.mask)
+        ch_versions = ch_versions.mix(DEEPCELL_MESMER.out.versions)
+
+        ch_segmentation_input
+            .multiMap{ meta, image ->
+                image: [meta + [segmenter: 'cellpose'], image]
+                model: params.cellpose_model
+            }
+            | CELLPOSE
+        ch_masks = ch_masks.mix(CELLPOSE.out.mask)
+        ch_versions = ch_versions.mix(CELLPOSE.out.versions)
+
+        // Run Quantification
+
+        // Generate markers.csv for mcquant with just the marker_name column, and
+        // omitting rows removed by backsub.
+        ch_mcquant_markers = Channel.of('marker_name')
+            .concat(
+                ch_markersheet
+                    .flatten()
+                    .filter{ row -> !(params.backsub && row.remove) }
+                    .map{ row -> '"' + row.marker_name + '"' }
+            )
+            .dump(tag: "MARKERS")
+            .collectFile(name: 'markers.csv', sort: false, newLine: true)
+
+        ch_segmentation_input
+            .cross(ch_masks) { it[0]['id'] }
+            .map{ t_ashlar, t_mask -> [t_mask[0], t_ashlar[1], t_mask[1]] }
+            .combine(ch_mcquant_markers)
+            .dump(tag: 'MCQUANT IN')
+            .multiMap{ meta, image, mask, marker ->
                 image: [meta, image]
+                mask: [meta, mask]
                 markers: [meta, marker]
             }
-            | BACKSUB
+            | MCQUANT
 
-        post_registration = BACKSUB.out.backsub_tif
-        ch_versions = ch_versions.mix(BACKSUB.out.versions)
-    } else {
-        post_registration = ASHLAR.out.tif
+        ch_versions = ch_versions.mix(MCQUANT.out.versions)
+
+        /*
+        // // Run Reporting
+        SCIMAP_MCMICRO(MCQUANT.out.csv)
+        ch_versions = ch_versions.mix(SCIMAP_MCMICRO.out.versions)
+        */
+
     }
-
-    // Run Coreograph
-    if (params.tma_dearray) {
-        COREOGRAPH(post_registration)
-        COREOGRAPH.out.cores
-            .transpose()
-            .map { meta, img -> [[id: meta.id + '_' + img.fileName.toString().tokenize('.')[0]], img]}
-            .set { ch_segmentation_input }
-    } else {
-        ch_segmentation_input = post_registration
-    }
-
-    // Run Segmentation
-
-    ch_masks = Channel.empty()
-
-    ch_segmentation_input
-        .multiMap{ meta, image ->
-            img: [meta + [segmenter: 'mesmer'], image]
-            membrane_img: [[:], []]
-        }
-        | DEEPCELL_MESMER
-    ch_masks = ch_masks.mix(DEEPCELL_MESMER.out.mask)
-    ch_versions = ch_versions.mix(DEEPCELL_MESMER.out.versions)
-
-    ch_segmentation_input
-        .multiMap{ meta, image ->
-            image: [meta + [segmenter: 'cellpose'], image]
-            model: params.cellpose_model
-        }
-        | CELLPOSE
-    ch_masks = ch_masks.mix(CELLPOSE.out.mask)
-    ch_versions = ch_versions.mix(CELLPOSE.out.versions)
-
-    // Run Quantification
-
-    // Generate markers.csv for mcquant with just the marker_name column, and
-    // omitting rows removed by backsub.
-    ch_mcquant_markers = Channel.of('marker_name')
-        .concat(
-            ch_markersheet
-                .flatten()
-                .filter{ row -> !(params.backsub && row.remove) }
-                .map{ row -> '"' + row.marker_name + '"' }
-        )
-        .dump(tag: "MARKERS")
-        .collectFile(name: 'markers.csv', sort: false, newLine: true)
-
-    ch_segmentation_input
-        .cross(ch_masks) { it[0]['id'] }
-        .map{ t_ashlar, t_mask -> [t_mask[0], t_ashlar[1], t_mask[1]] }
-        .combine(ch_mcquant_markers)
-        .dump(tag: 'MCQUANT IN')
-        .multiMap{ meta, image, mask, marker ->
-            image: [meta, image]
-            mask: [meta, mask]
-            markers: [meta, marker]
-        }
-        | MCQUANT
-
-    ch_versions = ch_versions.mix(MCQUANT.out.versions)
-
-    /*
-    // // Run Reporting
-    SCIMAP_MCMICRO(MCQUANT.out.csv)
-    ch_versions = ch_versions.mix(SCIMAP_MCMICRO.out.versions)
-    */
 
     //
     // Collate and save software versions
@@ -210,6 +221,7 @@ workflow MCMICRO {
         methodsDescriptionText(ch_multiqc_custom_methods_description))
 
     ch_multiqc_files = ch_multiqc_files.mix(ch_collated_versions)
+
     ch_multiqc_files = ch_multiqc_files.mix(
         ch_methods_description.collectFile(
             name: 'methods_description_mqc.yaml',

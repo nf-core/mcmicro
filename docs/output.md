@@ -11,6 +11,7 @@ The directories listed below will be created in the results directory after the 
 The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes data using the following steps:
 
 - [Directory Structure](#directory-structure)
+- [Summary](#summary)
 - [Illumination Correction](#illumination-correction)
   - [BaSiCPy](#basicpy)
 - [Registration](#registration)
@@ -30,6 +31,7 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
 
 ```
 {outdir}
+├── summary
 ├── backsub
 ├── illumination_correction
 │   └── basicpy
@@ -49,6 +51,19 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
     └── masks
 
 ```
+
+### Summary
+
+We generate a MultiQC formatted report with the extracted OME-xml data and the marker sheet information so the user can debug their parameters.
+
+<details>
+<summary>Output files</summary>
+
+- summary\_{sample_name}\_samplesheet_mqc.tsv : MultiQC formatted TSV with sample's parameter validation
+- summary\_{sample_name}\_xml_mqc.tsv : MultiQC formatted TSV with sample's extracted OME-xml data validation
+- summary_markersheet_mqc.tsv : Formatted Markersheet in MultiQC format
+
+</details>
 
 ### Illumination Correction
 
