@@ -15,7 +15,7 @@ process SUMMARY_XML {
 
     exec:
     def args        = task.ext.args ?: ''
-    def prefix      = task.ext.prefix ?: "${meta.id}"
+    def prefix      = task.ext.prefix ?: "${meta.id}_${meta.cycle_number}"
 
     check              = '\u2705'
     cross              = '\u274C'
@@ -157,7 +157,7 @@ process SUMMARY_MARKERSHEET_LITERAL {
 
     exec:
     def args        = task.ext.args ?: ''
-    def prefix      = task.ext.prefix ?: "$meta.id"
+    def prefix      = task.ext.prefix ?: "${meta.id}"
 
     header = [
             "channel_number",
@@ -196,7 +196,7 @@ process SUMMARY_SAMPLESHEET {
 
     exec:
     def args        = task.ext.args ?: ''
-    def prefix      = task.ext.prefix ?: "${meta.id}"
+    def prefix      = task.ext.prefix ?: "${meta.id}_${meta.cycle_number}"
 
     check              = '\u2705'
     cross              = '\u274C'
