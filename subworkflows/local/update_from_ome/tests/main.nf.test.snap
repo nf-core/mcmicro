@@ -29,7 +29,46 @@
                         {
                             "channel_number": 1,
                             "cycle_number": 1,
-                            "marker_name": "DNA_6",
+                            "marker_name": "DNA 1",
+                            "filter": null,
+                            "excitation_wavelength": null,
+                            "emission_wavelength": null,
+                            "exposure": null,
+                            "background": null,
+                            "remove": null,
+                            "exposure_time": null,
+                            "exposure_time_unit": null
+                        },
+                        {
+                            "channel_number": 2,
+                            "cycle_number": 1,
+                            "marker_name": "Na/K ATPase",
+                            "filter": null,
+                            "excitation_wavelength": null,
+                            "emission_wavelength": null,
+                            "exposure": null,
+                            "background": null,
+                            "remove": null,
+                            "exposure_time": null,
+                            "exposure_time_unit": null
+                        },
+                        {
+                            "channel_number": 3,
+                            "cycle_number": 1,
+                            "marker_name": "CD3",
+                            "filter": null,
+                            "excitation_wavelength": null,
+                            "emission_wavelength": null,
+                            "exposure": null,
+                            "background": null,
+                            "remove": null,
+                            "exposure_time": null,
+                            "exposure_time_unit": null
+                        },
+                        {
+                            "channel_number": 4,
+                            "cycle_number": 1,
+                            "marker_name": "CD45RO",
                             "filter": null,
                             "excitation_wavelength": null,
                             "emission_wavelength": null,
@@ -46,7 +85,46 @@
                         {
                             "channel_number": 1,
                             "cycle_number": 1,
-                            "marker_name": "DNA_6",
+                            "marker_name": "DNA 1",
+                            "filter": null,
+                            "excitation_wavelength": null,
+                            "emission_wavelength": null,
+                            "exposure": null,
+                            "background": null,
+                            "remove": null,
+                            "exposure_time": null,
+                            "exposure_time_unit": null
+                        },
+                        {
+                            "channel_number": 2,
+                            "cycle_number": 1,
+                            "marker_name": "Na/K ATPase",
+                            "filter": null,
+                            "excitation_wavelength": null,
+                            "emission_wavelength": null,
+                            "exposure": null,
+                            "background": null,
+                            "remove": null,
+                            "exposure_time": null,
+                            "exposure_time_unit": null
+                        },
+                        {
+                            "channel_number": 3,
+                            "cycle_number": 1,
+                            "marker_name": "CD3",
+                            "filter": null,
+                            "excitation_wavelength": null,
+                            "emission_wavelength": null,
+                            "exposure": null,
+                            "background": null,
+                            "remove": null,
+                            "exposure_time": null,
+                            "exposure_time_unit": null
+                        },
+                        {
+                            "channel_number": 4,
+                            "cycle_number": 1,
+                            "marker_name": "CD45RO",
                             "filter": null,
                             "excitation_wavelength": null,
                             "emission_wavelength": null,
@@ -86,6 +164,6 @@
             "nf-test": "0.9.2",
             "nextflow": "25.04.7"
         },
-        "timestamp": "2025-09-19T14:56:06.975763413"
+        "timestamp": "2025-09-23T16:14:08.592064061"
     }
 }

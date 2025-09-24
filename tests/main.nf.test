@@ -17,7 +17,7 @@ nextflow_workflow {
                     """
                     input[0] = Channel.of(
                         [
-                            [id:"TEST1", cycle_number:1, channel_count:4],
+                            [id:"TEST1", cycle_number:1],
                             "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/imaging/ome-tiff/cycif-tonsil-cycle1.ome.tif",
                             [],
                             [],
@@ -63,7 +63,7 @@ nextflow_workflow {
                     """
                     input[0] = Channel.of(
                         [
-                            [id:"TEST1", cycle_number:1, channel_count:4],
+                            [id:"TEST1", cycle_number:1],
                             "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/imaging/ome-tiff/cycif-tonsil-cycle1.ome.tif",
                             [],
                             [],
@@ -110,7 +110,7 @@ nextflow_workflow {
                     """
                     input[0] = Channel.of(
                         [
-                            [id:"TEST1", cycle_number:1, channel_count:4],
+                            [id:"TEST1", cycle_number:1],
                             "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/imaging/ome-tiff/cycif-tonsil-cycle1.ome.tif",
                             "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/imaging/ome-tiff/cycif-tonsil-dfp.ome.tif",
                             "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/imaging/ome-tiff/cycif-tonsil-ffp.ome.tif",
@@ -154,19 +154,19 @@ nextflow_workflow {
                     """
                     input[0] = Channel.of(
                         [
-                            [id:"cycif-tonsil", cycle_number:1, channel_count:4],
+                            [id:"cycif-tonsil", cycle_number:1],
                             "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/imaging/ome-tiff/cycif-tonsil-cycle1.ome.tif",
                             [],
                             [],
                         ],
                         [
-                            [id:"cycif-tonsil", cycle_number:2, channel_count:4],
+                            [id:"cycif-tonsil", cycle_number:2],
                             "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/imaging/ome-tiff/cycif-tonsil-cycle2.ome.tif",
                             [],
                             [],
                         ],
                         [
-                            [id:"cycif-tonsil", cycle_number:3, channel_count:4],
+                            [id:"cycif-tonsil", cycle_number:3],
                             "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/imaging/ome-tiff/cycif-tonsil-cycle3.ome.tif",
                             [],
                             [],
@@ -218,25 +218,25 @@ nextflow_workflow {
                     """
                     input[0] = Channel.of(
                         [
-                            [id:"cycif-tonsil", cycle_number:1, channel_count:4],
+                            [id:"cycif-tonsil", cycle_number:1],
                             "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/imaging/ome-tiff/cycif-tonsil-cycle1.ome.tif",
                             [],
                             [],
                         ],
                         [
-                            [id:"cycif-tonsil", cycle_number:2, channel_count:4],
+                            [id:"cycif-tonsil", cycle_number:2],
                             "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/imaging/ome-tiff/cycif-tonsil-cycle2.ome.tif",
                             [],
                             [],
                         ],
                         [
-                            [id:"cycif-tonsil2", cycle_number:1, channel_count:4],
+                            [id:"cycif-tonsil2", cycle_number:1],
                             "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/imaging/ome-tiff/cycif-tonsil-cycle2.ome.tif",
                             [],
                             [],
                         ],
                         [
-                            [id:"cycif-tonsil2", cycle_number:2, channel_count:4],
+                            [id:"cycif-tonsil2", cycle_number:2],
                             "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/imaging/ome-tiff/cycif-tonsil-cycle3.ome.tif",
                             [],
                             [],
@@ -287,25 +287,25 @@ nextflow_workflow {
                     """
                     input[0] = Channel.of(
                         [
-                            [id:"cycif-tonsil", cycle_number:1, channel_count:4],
+                            [id:"cycif-tonsil", cycle_number:1],
                             "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/imaging/ome-tiff/cycif-tonsil-cycle1.ome.tif",
                             [],
                             [],
                         ],
                         [
-                            [id:"cycif-tonsil", cycle_number:2, channel_count:4],
+                            [id:"cycif-tonsil", cycle_number:2],
                             "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/imaging/ome-tiff/cycif-tonsil-cycle2.ome.tif",
                             [],
                             [],
                         ],
                         [
-                            [id:"cycif-tonsil2", cycle_number:1, channel_count:4],
+                            [id:"cycif-tonsil2", cycle_number:1],
                             "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/imaging/ome-tiff/cycif-tonsil-cycle2.ome.tif",
                             [],
                             [],
                         ],
                         [
-                            [id:"cycif-tonsil2", cycle_number:2, channel_count:4],
+                            [id:"cycif-tonsil2", cycle_number:2],
                             "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/imaging/ome-tiff/cycif-tonsil-cycle3.ome.tif",
                             [],
                             [],
@@ -361,19 +361,19 @@ nextflow_workflow {
                     """
                     input[0] = Channel.of(
                         [
-                            [id:"cycif-tonsil", cycle_number:1, channel_count:4],
+                            [id:"cycif-tonsil", cycle_number:1],
                             "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/imaging/ome-tiff/cycif-tonsil-cycle1.ome.tif",
                             [],
                             [],
                         ],
                         [
-                            [id:"cycif-tonsil", cycle_number:2, channel_count:4],
+                            [id:"cycif-tonsil", cycle_number:2],
                             "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/imaging/ome-tiff/cycif-tonsil-cycle2.ome.tif",
                             [],
                             [],
                         ],
                         [
-                            [id:"cycif-tonsil", cycle_number:3, channel_count:4],
+                            [id:"cycif-tonsil", cycle_number:3],
                             "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/imaging/ome-tiff/cycif-tonsil-cycle3.ome.tif",
                             [],
                             [],
@@ -432,25 +432,25 @@ nextflow_workflow {
                     """
                     input[0] = Channel.of(
                         [
-                            [id:"cycif-tonsil", cycle_number:1, channel_count:4],
+                            [id:"cycif-tonsil", cycle_number:1],
                             "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/imaging/ome-tiff/cycif-tonsil-cycle1.ome.tif",
                             [],
                             [],
                         ],
                         [
-                            [id:"cycif-tonsil", cycle_number:2, channel_count:4],
+                            [id:"cycif-tonsil", cycle_number:2],
                             "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/imaging/ome-tiff/cycif-tonsil-cycle2.ome.tif",
                             [],
                             [],
                         ],
                         [
-                            [id:"cycif-tonsil2", cycle_number:1, channel_count:4],
+                            [id:"cycif-tonsil2", cycle_number:1],
                             "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/imaging/ome-tiff/cycif-tonsil-cycle2.ome.tif",
                             [],
                             [],
                         ],
                         [
-                            [id:"cycif-tonsil2", cycle_number:2, channel_count:4],
+                            [id:"cycif-tonsil2", cycle_number:2],
                             "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/imaging/ome-tiff/cycif-tonsil-cycle3.ome.tif",
                             [],
                             [],
@@ -507,7 +507,7 @@ nextflow_workflow {
                     """
                     input[0] = Channel.of(
                         [
-                            [id:"TEST1", cycle_number:1, channel_count:4],
+                            [id:"TEST1", cycle_number:1],
                             "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/imaging/ome-tiff/cycif-tonsil-cycle1.ome.tif",
                             [],
                             [],
@@ -548,14 +548,13 @@ nextflow_workflow {
                     outdir = "$outputDir"
                     segmentation = "mesmer"
                     tma_dearray = true
-                    pixel_size = 0.7
                     check_conda_channels = false
                 }
                 workflow {
                     """
                     input[0] = Channel.of(
                         [
-                            [id:"TEST1", cycle_number:1, channel_count:4],
+                            [id:"TEST1", cycle_number:1],
                             "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/imaging/core_detection/single_core_dapi.tif",
                             [],
                             [],
@@ -597,13 +596,13 @@ nextflow_workflow {
                     """
                     input[0] = Channel.of(
                         [
-                            [id:"TEST1", cycle_number:1, channel_count:4],
+                            [id:"TEST1", cycle_number:1],
                             "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/imaging/ome-tiff/cycif-tonsil-cycle1.ome.tif",
                             [],
                             [],
                         ],
                         [
-                            [id:"TEST1", cycle_number:2, channel_count:4],
+                            [id:"TEST1", cycle_number:2],
                             "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/imaging/ome-tiff/cycif-tonsil-cycle2.ome.tif",
                             [],
                             [],

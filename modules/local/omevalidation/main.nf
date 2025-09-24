@@ -44,6 +44,9 @@ process OMEVALIDATION {
             node -> [node.@PhysicalSizeX.toDouble(), node.@PhysicalSizeY.toDouble()]
         }
 
+    if (pixels.size() == 0) {
+        error 'Images are missing pixel physical size metadata.'
+    }
     if (pixels.toSet().size() != 1 || (pixels[0][0]).round(3) != (pixels[0][1]).round(3)) {
         error "Found non consistent pixels sizes in images."
     }
@@ -69,7 +72,7 @@ process OMEVALIDATION {
     // transform pixel size to microns
     s_units = size_units[0][0]
 
-    if (size_units == 'mm'){
+    if (s_units == 'mm'){
       pixels = pixels[0][0] / 1000
     }
     else if (s_units == 'cm'){

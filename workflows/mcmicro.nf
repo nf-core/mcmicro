@@ -62,23 +62,19 @@ workflow MCMICRO {
         //
         if (params.illumination == 'basicpy') {
             ch_samplesheet
-                .map{ meta, image_tiles, dfp, ffp ->
-                    [meta.subMap('id', 'cycle_number'), image_tiles]
-                }
+                .map{ meta, image_tiles, dfp, ffp -> [meta, image_tiles] }
                 .dump(tag: 'BASICPY in')
                 | BASICPY
             ch_versions = ch_versions.mix(BASICPY.out.versions)
             ch_samplesheet = ch_samplesheet
-                .map{ meta, image_tiles, dfp, ffp ->
-                    [meta.subMap('id', 'cycle_number'), image_tiles]
-                }
+                .map{ meta, image_tiles, dfp, ffp -> [meta, image_tiles] }
                 .join(BASICPY.out.profiles)
                 .dump(tag: 'ch_samplesheet (after BASICPY)')
         }
 
         ch_samplesheet
             .map{ meta, image_tiles, dfp, ffp ->
-                [[id: meta.id], [meta.cycle_number, image_tiles, dfp, ffp]]
+                [meta.subMap('id', 'pixel_size'), [meta.cycle_number, image_tiles, dfp, ffp]]
             }
             // FIXME: pass groupTuple size: from samplesheet cycle count
             .groupTuple(sort: { a, b -> a[0] <=> b[0] })
@@ -122,7 +118,7 @@ workflow MCMICRO {
             COREOGRAPH(post_registration)
             COREOGRAPH.out.cores
                 .transpose()
-                .map { meta, img -> [[id: meta.id + '_' + img.fileName.toString().tokenize('.')[0]], img]}
+                .map { meta, img -> [meta + [id: meta.id + '_' + img.fileName.toString().tokenize('.')[0]], img]}
                 .set { ch_segmentation_input }
         } else {
             ch_segmentation_input = post_registration

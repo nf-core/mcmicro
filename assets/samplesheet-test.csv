@@ -1,2 +1,2 @@
-sample,cycle_number,channel_count,image_tiles
-TEST1,1,4,https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/imaging/ome-tiff/cycif-tonsil-cycle1.ome.tif
+sample,cycle_number,image_tiles
+TEST1,1,https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/imaging/ome-tiff/cycif-tonsil-cycle1.ome.tif

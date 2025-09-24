@@ -47,12 +47,12 @@ First, prepare a samplesheet and markersheet with your input data that looks as 
 `samplesheet.csv`:
 
 ```csv
-sample,cycle_number,channel_count,image_tiles
-TEST1,1,4,https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/imaging/ome-tiff/cycif-tonsil-cycle1.ome.tif
+sample,cycle_number,image_tiles
+TEST1,1,https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/imaging/ome-tiff/cycif-tonsil-cycle1.ome.tif
 
 ```
 
-Each row of the samplesheet represents a single cycle `ome.tiff` microscopy image file. The first column `sample` is the sample identifier. It can be repeated in multiple rows for samples with multiple cycles. The second column `cycle_number` is a number corresponding to the cycle number of the image. The third column `channel_count` is a count of the number of channels in the image. The fourth column `image_tiles` is a path or URL to the input image file.
+Each row of the samplesheet represents a single cycle `ome.tiff` microscopy image file. The first column `sample` is the sample identifier. It can be repeated in multiple rows for samples with multiple cycles. The second column `cycle_number` is a number corresponding to the cycle number of the image. The third column `image_tiles` is a path or URL to the input image file.
 
 `markersheet.csv`:
 

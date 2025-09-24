@@ -125,4 +125,70 @@ nextflow_function {
         }
     }
 
+    test("Error if samplesheet and markersheet have different total cycle counts") {
+        function "validateInputSamplesheetMarkersheet"
+        when {
+            function {
+                """
+                input[0] = [
+                    [[id:"S1", cycle_number:1], [], [], []],
+                    [[id:"S1", cycle_number:2], [], [], []],
+                ]
+                input[1] = [
+                    [marker_name:"M1", cycle_number:1, channel_number:1],
+                ]
+                """
+            }
+        }
+        then {
+            assert function.failed
+            assert function.stdout*.find("cycle_number values must match").any()
+        }
+    }
+
+    test("Error if cycle numbering is not sequential in samplesheet") {
+        function "validateInputSamplesheetMarkersheet"
+        when {
+            function {
+                """
+                input[0] = [
+                    [[id:"S1", cycle_number:2], [], [], []],
+                    [[id:"S1", cycle_number:1], [], [], []],
+                ]
+                input[1] = [
+                    [marker_name:"M1", cycle_number:1, channel_number:1],
+                    [marker_name:"M2", cycle_number:2, channel_number:1],
+                ]
+                """
+            }
+        }
+        then {
+            assert function.failed
+            assert function.stdout*.find("cycle_number values must be increasing").any()
+        }
+    }
+
+    test("Error if samples are missing cycles in samplesheet") {
+        function "validateInputSamplesheetMarkersheet"
+        when {
+            function {
+                """
+                input[0] = [
+                    [[id:"S1", cycle_number:1], [], [], []],
+                    [[id:"S1", cycle_number:2], [], [], []],
+                    [[id:"S2", cycle_number:1], [], [], []],
+                ]
+                input[1] = [
+                    [marker_name:"M1", cycle_number:1, channel_number:1],
+                    [marker_name:"M2", cycle_number:2, channel_number:1],
+                ]
+                """
+            }
+        }
+        then {
+            assert function.failed
+            assert function.stdout*.find("Missing cycles for sample").any()
+        }
+    }
+
 }

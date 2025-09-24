@@ -37,7 +37,7 @@ workflow UPDATE_FROM_OME {
 
     // update val_data channel_number so it matches with samplesheet
     val_data.map {
-            meta, xml_meta, marker_meta -> marker_meta
+            meta, xml_meta, marker_meta -> marker_meta.collect{ meta.subMap('id') + it }
         }
         .flatten()
         .map{
@@ -49,9 +49,8 @@ workflow UPDATE_FROM_OME {
             meta.channel_number += counter
             return meta
         }
-        //.dump(tag:"vd")
-        .set{ val_data }
-
+        .dump(tag:'val_data_markers')
+        .set{ val_data_markers }
 
     markersheet_template = //markersheet.flatten().first().keySet().collectEntries {key -> [key, null]}.toList().first().dump(tag: "template")
     [
@@ -64,25 +63,26 @@ workflow UPDATE_FROM_OME {
 
     markersheet
         .flatten()
+        .combine(samplesheet_meta.map{ it[0].subMap('id') }.unique())
+        .map{ it[0] + it[1] }
         .dump(tag: "ch_markersheet_premeta")
-
-        .map {
-            entry ->
-            [entry.subMap('channel_number', 'cycle_number'), entry.findAll {it.value != null}]
-        }
+        .map{ e -> [e.subMap('id', 'channel_number', 'cycle_number'), e.findAll{ it.value != null }] }
         .join(
-            val_data
-            .map {
-                x-> [x.subMap('channel_number', 'cycle_number'), x]
-            }
+            val_data_markers.map{ x -> [x.subMap('id', 'channel_number', 'cycle_number'), x] },
+            remainder: true
         )
-        .map {
-            channel, orig, validated ->
-            markersheet_template + validated + orig
+        .map{ it.drop(1) }
+        .dump(tag:'ch_markersheet_mismatch_check')
+        .map{ e ->
+            if (e.any{ it == null }) {
+                error('Markersheet cycle/channel numbering does not match image file metadata')
+            }
+            e
         }
-        .toSortedList {
-            a, b -> a.channel_number <=> b.channel_number
-        }
+        .map{ orig, validated ->  markersheet_template + validated + orig }
+        .map{ meta -> meta - meta.subMap('id') }
+        .unique()
+        .toSortedList { a, b -> a.channel_number <=> b.channel_number }
         .dump(tag: "ch_markersheet_meta")
         .set { markersheet_meta }
 

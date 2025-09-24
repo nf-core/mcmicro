@@ -167,10 +167,6 @@ def validateInputParameters() {
     if (params.cellpose_model && !segmentation_list.contains('cellpose')) {
         error "You can only provide a cellpose model if you have selected cellpose as one of your segmentation methods"
     }
-
-    if (params.tma_dearray && !params.pixel_size) {
-        error "You must also provide the pixel_size parameter (image pixel width in microns) when enabling tma_dearray."
-    }
 }
 
 //
@@ -248,20 +244,24 @@ def validateInputSamplesheetMarkersheet ( samples, markers ) {
     def sample_cycles = samples.collect{ meta, image_tiles, dfp, ffp -> meta.cycle_number }
     def marker_cycles = markers.collect{ meta -> meta.cycle_number }
 
-    if (marker_cycles.unique(false) != sample_cycles.unique(false) ) {
+    if (marker_cycles.toSet() != sample_cycles.toSet() ) {
         error("cycle_number values must match between sample and marker sheets")
     }
 
     // TODO: should the following test be in a separate validateInputSamplesheet() function?
 
+    def num_cycles = sample_cycles.toSet().max()
     def channel_cycle_map = samples.collect{ meta, image_tiles, dfp, ffp -> [meta.id,meta.cycle_number] }.groupBy{ it[0] }
     channel_cycle_map.each { entry ->
-        def last_val = -1
+        def last_val = 0
         entry.value.collect{ it[1] }.each{ curr_val ->
-            if (last_val != -1 && (curr_val > (last_val + 1) || curr_val <= last_val)) {
+            if (curr_val != last_val + 1) {
                 error("cycle_number values must be increasing with no gaps")
             }
             last_val = curr_val
+        }
+        if (last_val != num_cycles) {
+            error("Please cheek input samplesheet -> Missing cycles for sample: '${entry.key}' (expected ${num_cycles} cycles)")
         }
     }
 }

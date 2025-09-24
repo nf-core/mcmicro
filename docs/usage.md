@@ -25,18 +25,17 @@ You will need to create a samplesheet with information about the samples you wou
 The `sample` identifier must be the same for multiple cycles of the same sample. All the files from the same sample will be run in a single run of ashlar in the cycle order that they appear in the samplesheet. If illumination correction is requested using basicpy, each cycle will be corrected separately.
 
 ```csv title="samplesheet_cycle.csv"
-sample,cycle_number,channel_count,image_tiles
-TEST1,1,10,/path/to/image/cycif-tonsil-cycle1.ome.tif
-TEST1,2,10,/path/to/image/cycif-tonsil-cycle2.ome.tif
-TEST1,3,10,/path/to/image/cycif-tonsil-cycle3.ome.tif
+sample,cycle_number,image_tiles
+TEST1,1,/path/to/image/cycif-tonsil-cycle1.ome.tif
+TEST1,2,/path/to/image/cycif-tonsil-cycle2.ome.tif
+TEST1,3,/path/to/image/cycif-tonsil-cycle3.ome.tif
 ```
 
-| Column          | Description                                                                   |
-| --------------- | ----------------------------------------------------------------------------- |
-| `sample`        | Custom sample name.                                                           |
-| `cycle_number`  | Integer value of the cycle for the file in the current row.                   |
-| `channel_count` | Integer value of the total number of channels in the file in the current row. |
-| `image_tiles`   | Full path or URL to the input image file.                                     |
+| Column         | Description                                                 |
+| -------------- | ----------------------------------------------------------- |
+| `sample`       | Custom sample name.                                         |
+| `cycle_number` | Integer value of the cycle for the file in the current row. |
+| `image_tiles`  | Full path or URL to the input image file.                   |
 
 An [example one row per sample per cycle samplesheet](../assets/samplesheet_1_row_sample_cycle.csv) has been provided with the pipeline.
 
