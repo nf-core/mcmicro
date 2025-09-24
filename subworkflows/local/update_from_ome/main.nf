@@ -37,7 +37,7 @@ workflow UPDATE_FROM_OME {
 
     // update val_data channel_number so it matches with samplesheet
     val_data.map {
-            meta, xml_meta, marker_meta -> marker_meta.collect{ meta.subMap("id") + it }
+            meta, xml_meta, marker_meta -> marker_meta.collect{ meta.subMap('id') + it }
         }
         .flatten()
         .map{
@@ -49,7 +49,7 @@ workflow UPDATE_FROM_OME {
             meta.channel_number += counter
             return meta
         }
-        .dump(tag:"val_data_markers")
+        .dump(tag:'val_data_markers')
         .set{ val_data_markers }
 
     markersheet_template = //markersheet.flatten().first().keySet().collectEntries {key -> [key, null]}.toList().first().dump(tag: "template")
@@ -63,7 +63,7 @@ workflow UPDATE_FROM_OME {
 
     markersheet
         .flatten()
-        .combine(samplesheet_meta.map{ it[0].subMap("id") }.unique())
+        .combine(samplesheet_meta.map{ it[0].subMap('id') }.unique())
         .map{ it[0] + it[1] }
         .dump(tag: "ch_markersheet_premeta")
         .map{ e -> [e.subMap('id', 'channel_number', 'cycle_number'), e.findAll{ it.value != null }] }
@@ -72,10 +72,10 @@ workflow UPDATE_FROM_OME {
             remainder: true
         )
         .map{ it.drop(1) }
-        .dump(tag:"ch_markersheet_mismatch_check")
+        .dump(tag:'ch_markersheet_mismatch_check')
         .map{ e ->
             if (e.any{ it == null }) {
-                error("Markersheet cycle/channel numbering does not match image file metadata")
+                error('Markersheet cycle/channel numbering does not match image file metadata')
             }
             e
         }

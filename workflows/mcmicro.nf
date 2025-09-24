@@ -74,7 +74,7 @@ workflow MCMICRO {
 
         ch_samplesheet
             .map{ meta, image_tiles, dfp, ffp ->
-                [meta.subMap("id", "pixel_size"), [meta.cycle_number, image_tiles, dfp, ffp]]
+                [meta.subMap('id', 'pixel_size'), [meta.cycle_number, image_tiles, dfp, ffp]]
             }
             // FIXME: pass groupTuple size: from samplesheet cycle count
             .groupTuple(sort: { a, b -> a[0] <=> b[0] })

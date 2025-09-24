@@ -45,7 +45,7 @@ process OMEVALIDATION {
         }
 
     if (pixels.size() == 0) {
-        error "Images are missing pixel physical size metadata."
+        error 'Images are missing pixel physical size metadata.'
     }
     if (pixels.toSet().size() != 1 || (pixels[0][0]).round(3) != (pixels[0][1]).round(3)) {
         error "Found non consistent pixels sizes in images."
