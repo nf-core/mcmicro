@@ -11,7 +11,7 @@ nextflow_workflow {
                     script "modules/nf-core/bftools/showinf/main.nf"
                     process {
                         """
-                        input[0] = [["id": 0], file(params.modules_testdata_base_path + "/imaging/ome-tiff/cycif-tonsil-cycle1.ome.tif")]
+                        input[0] = [["id": "TEST1", cycle_number:1], file(params.modules_testdata_base_path + "/imaging/ome-tiff/cycif-tonsil-cycle1.ome.tif")]
                         """
                     }
                 }
