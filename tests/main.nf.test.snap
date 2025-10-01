@@ -128,7 +128,7 @@
                     "ashlar": "1.18.0"
                 },
                 "BASICPY": {
-                    "basicpy": "1.2.0-patch1"
+                    "basicpy": "1.2.0"
                 },
                 "BFTOOLS_SHOWINF": {
                     "showinf": "8.0.0"
@@ -146,9 +146,9 @@
         ],
         "meta": {
             "nf-test": "0.9.2",
-            "nextflow": "25.04.1"
+            "nextflow": "25.04.7"
         },
-        "timestamp": "2025-07-18T11:50:27.545331617"
+        "timestamp": "2025-09-26T13:23:53.632560789"
     },
     "cycle: no illumination correction, backsub": {
         "content": [
@@ -176,13 +176,24 @@
                 ],
                 "rowCount": 2111
             },
-            "TEST1.backsub.ome.tif:md5,1be44fc5c0a60557bff3c2d0c69c2f41",
+            {
+                "format": "OME-TIFF",
+                "type": "uint16",
+                "sizeX": 591,
+                "sizeY": 470,
+                "sizeZ": 1,
+                "sizeC": 7,
+                "sizeT": 1,
+                "physicalSizeX": 0.65,
+                "physicalSizeY": 0.65,
+                "physicalSizeZ": null
+            },
             {
                 "ASHLAR": {
                     "ashlar": "1.18.0"
                 },
                 "BACKSUB": {
-                    "backsub": "0.3.4"
+                    "backsub": "0.4.1"
                 },
                 "BFTOOLS_SHOWINF": {
                     "showinf": "8.0.0"
@@ -200,9 +211,9 @@
         ],
         "meta": {
             "nf-test": "0.9.2",
-            "nextflow": "25.04.1"
+            "nextflow": "25.04.7"
         },
-        "timestamp": "2025-07-18T12:07:51.605509268"
+        "timestamp": "2025-10-01T13:19:26.619256164"
     },
     "cycle: multiple file ashlar input with multiple samples no correction, multiple segmentation": {
         "content": [
@@ -210,8 +221,8 @@
             "cycif-tonsil2.ome.tif:md5,8615100afdf8e3e24174a6d82ecaea2c",
             "mask_cycif-tonsil.tif:md5,3103759bd55b9deeb8c8a0dade798d9a",
             "mask_cycif-tonsil2.tif:md5,0799cd6935febaeb9e17f8a4173fe89a",
-            "cycif-tonsil.ome_cp_masks.tif:md5,203e9df55ac714ecf9951710a24b0fdb",
-            "cycif-tonsil2.ome_cp_masks.tif:md5,f0b4cebfeeaf38e4df84ccb075523461",
+            "cycif-tonsil.ome_cp_masks.tif:md5,d00841c96b28338f34748fa9af422f2b",
+            "cycif-tonsil2.ome_cp_masks.tif:md5,c7570f17e8e05208cc3f507cb7c13615",
             {
                 "headers": [
                     "CellID",
@@ -258,8 +269,8 @@
                 ],
                 "rowCount": 2082
             },
-            "cycif-tonsil_cycif-tonsil.csv:rounded:md5,a3f0914e9bd14e191bf88eb53b060cfa",
-            "cycif-tonsil2_cycif-tonsil2.csv:rounded:md5,0a7406a95246c5cb21ae84afa6ae4667",
+            "cycif-tonsil_cycif-tonsil.csv:rounded:md5,caf85194a268b27087f598a1ef432dec",
+            "cycif-tonsil2_cycif-tonsil2.csv:rounded:md5,8872bfc032718d36835c26c82e30fbca",
             {
                 "ASHLAR": {
                     "ashlar": "1.18.0"
@@ -268,7 +279,7 @@
                     "showinf": "8.0.0"
                 },
                 "CELLPOSE": {
-                    "cellpose": "2.1.1"
+                    "cellpose": "3.0.1"
                 },
                 "DEEPCELL_MESMER": {
                     "deepcell_mesmer": "0.4.1"
@@ -283,15 +294,15 @@
         ],
         "meta": {
             "nf-test": "0.9.2",
-            "nextflow": "25.04.1"
+            "nextflow": "25.04.7"
         },
-        "timestamp": "2025-07-18T11:52:37.738241125"
+        "timestamp": "2025-09-26T15:30:25.913390498"
     },
     "cycle: no illumination correction, cellpose segmentation": {
         "content": [
             "TEST1.ome.tif:md5,988bbb2c74d47dc22a9f3ac348f53ef5",
-            "TEST1.ome_cp_masks.tif:md5,47bd29c261db5fe062ee35c1b5daccc1",
-            "TEST1_TEST1.csv:rounded:md5,42ecd15013bea6dbea4e0343c7b0bef7",
+            "TEST1.ome_cp_masks.tif:md5,8be9df24026a226d492d42290f6c33e4",
+            "TEST1_TEST1.csv:rounded:md5,317298961ca46badf998cc8564c9138d",
             {
                 "ASHLAR": {
                     "ashlar": "1.18.0"
@@ -300,7 +311,7 @@
                     "showinf": "8.0.0"
                 },
                 "CELLPOSE": {
-                    "cellpose": "2.1.1"
+                    "cellpose": "3.0.1"
                 },
                 "MCQUANT": {
                     "mcquant": "1.5.4"
@@ -312,9 +323,9 @@
         ],
         "meta": {
             "nf-test": "0.9.2",
-            "nextflow": "25.04.1"
+            "nextflow": "25.04.7"
         },
-        "timestamp": "2025-07-18T12:06:10.199909565"
+        "timestamp": "2025-09-26T15:34:18.712470614"
     },
     "cycle: no illumination correction": {
         "content": [
@@ -493,7 +504,7 @@
                     "ashlar": "1.18.0"
                 },
                 "BASICPY": {
-                    "basicpy": "1.2.0-patch1"
+                    "basicpy": "1.2.0"
                 },
                 "BFTOOLS_SHOWINF": {
                     "showinf": "8.0.0"
@@ -511,9 +522,9 @@
         ],
         "meta": {
             "nf-test": "0.9.2",
-            "nextflow": "25.04.1"
+            "nextflow": "25.04.7"
         },
-        "timestamp": "2025-07-18T11:59:03.444983717"
+        "timestamp": "2025-09-26T13:31:34.579386269"
     },
     "cycle: multiple file ashlar input with multiple samples and basicpy correction": {
         "content": [
@@ -688,7 +699,7 @@
                     "ashlar": "1.18.0"
                 },
                 "BASICPY": {
-                    "basicpy": "1.2.0-patch1"
+                    "basicpy": "1.2.0"
                 },
                 "BFTOOLS_SHOWINF": {
                     "showinf": "8.0.0"
@@ -706,9 +717,9 @@
         ],
         "meta": {
             "nf-test": "0.9.2",
-            "nextflow": "25.04.1"
+            "nextflow": "25.04.7"
         },
-        "timestamp": "2025-07-18T12:05:45.812480442"
+        "timestamp": "2025-09-26T13:53:30.817863804"
     },
     "cycle: manual illumination correction": {
         "content": [
