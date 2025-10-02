@@ -16,6 +16,7 @@ include { BASICPY                } from '../modules/nf-core/basicpy/main'
 include { ASHLAR                 } from '../modules/nf-core/ashlar/main'
 include { BACKSUB                } from '../modules/nf-core/backsub/main'
 include { CELLPOSE               } from '../modules/nf-core/cellpose/main'
+include { MCCELLPOSE             } from '../modules/local/mccellpose/main'
 include { COREOGRAPH             } from '../modules/nf-core/coreograph/main'
 include { DEEPCELL_MESMER        } from '../modules/nf-core/deepcell/mesmer/main'
 include { SCIMAP_MCMICRO         } from '../modules/nf-core/scimap/mcmicro/main'
@@ -145,6 +146,14 @@ workflow MCMICRO {
             | CELLPOSE
         ch_masks = ch_masks.mix(CELLPOSE.out.mask)
         ch_versions = ch_versions.mix(CELLPOSE.out.versions)
+
+        ch_segmentation_input
+            .multiMap{ meta, image ->
+                image: [meta + [segmenter: 'mccellpose'], image]
+            }
+            | MCCELLPOSE
+        ch_masks = ch_masks.mix(MCCELLPOSE.out.mask)
+        ch_versions = ch_versions.mix(MCCELLPOSE.out.versions)
 
         // Run Quantification
 

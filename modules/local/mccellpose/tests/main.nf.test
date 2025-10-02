@@ -1,0 +1,62 @@
+nextflow_process {
+
+    name "Test Process MCCELLPOSE"
+    script "../main.nf"
+    process "MCCELLPOSE"
+
+    tag "modules"
+    tag "modules_local"
+    tag "mccellpose"
+
+    test("mccellpose defaults") {
+
+        when {
+            process {
+                """
+                input[0] = [
+                    [ id:'test' ],
+                    file(params.modules_testdata_base_path + 'imaging/segmentation/cycif_tonsil_registered.ome.tif', checkIfExists: true),
+                ]
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(
+                    process.out.mask[0][0],
+                    file(process.out.mask[0][1]).name,
+                    file(process.out.mask[0][1]).length() > 90_000,
+                    process.out.versions
+                ).match() }
+            )
+        }
+
+    }
+
+    test("mccellpose defaults - stub") {
+
+        options "-stub"
+
+        when {
+            process {
+                """
+                input[0] = [
+                    [ id:'test' ],
+                    file(params.modules_testdata_base_path + 'imaging/segmentation/cycif_tonsil_registered.ome.tif', checkIfExists: true),
+                ]
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(process.out).match() }
+            )
+        }
+
+    }
+
+}
