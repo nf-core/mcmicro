@@ -11,20 +11,20 @@ process OMEVALIDATION {
     tuple val(meta), val(sample_meta), val(marker_meta)
 
     exec:
-    xml = new XmlSlurper().parse(new File(xmlPath.toString()))
+    def xml = new XmlSlurper().parse(new File(xmlPath.toString()))
 
     /*
     SAMPLESHEET DATA ----------------------------------------------------------------------------------------------
     */
 
-    tile_count = xml.'**'.findAll { node -> node.name() == "Image"}.size()
+    def tile_count = xml.'**'.findAll { node -> node.name() == "Image"}.size()
 
     // TODO check if pre-stiched
     //if (tile_count < 2) {
     //   error 'Single image found in OMEXML metadata'
     //}
 
-    tile_size = xml.'**'.findAll {
+    def tile_size = xml.'**'.findAll {
             node -> node.name() == 'Pixels' && node.@SizeX != '' && node.@SizeY != ''
         }
         .collect {
@@ -37,7 +37,7 @@ process OMEVALIDATION {
 
     tile_size = tile_size[0]
 
-    pixels = xml.'**'.findAll {
+    def pixels = xml.'**'.findAll {
             node -> node.name() == 'Pixels' && node.@PhysicalSizeX != '' && node.@PhysicalSizeY != ''
         }
         .collect {
@@ -51,7 +51,7 @@ process OMEVALIDATION {
         error "Found non consistent pixels sizes in images."
     }
 
-    n_channels = xml.'**'.findAll {
+    def n_channels = xml.'**'.findAll {
             node -> node.name() == 'Pixels' && node.@SizeC != ''
         }
         .collect { node -> node.@SizeC.toInteger() }
@@ -60,7 +60,7 @@ process OMEVALIDATION {
         error "Found inconsistent number of channels in images."
     }
 
-    size_units = xml.'**'.findAll {
+    def size_units = xml.'**'.findAll {
             node -> node.name() == 'Pixels' && node.@PhysicalSizeXUnit != '' && node.@PhysicalSizeYUnit != ''
         }
         .collect { node -> [node.@PhysicalSizeXUnit.toString(), node.@PhysicalSizeYUnit.toString()] }
@@ -70,7 +70,7 @@ process OMEVALIDATION {
     }
 
     // transform pixel size to microns
-    s_units = size_units[0][0]
+    def s_units = size_units[0][0]
 
     if (s_units == 'mm'){
       pixels = pixels[0][0] / 1000
@@ -87,7 +87,7 @@ process OMEVALIDATION {
 
     pixels = pixels.round(3)
 
-    pixel_datatype = xml.'**'.findAll {
+    def pixel_datatype = xml.'**'.findAll {
             node -> node.name() == 'Pixels' && node.@Type
         }
         .collect { node -> node.@Type.toString() }
@@ -104,7 +104,7 @@ process OMEVALIDATION {
     this needs to have channel specific data stored along so we can merge it reliably downstream
     */
 
-    exposure_time = xml.'**'.findAll {
+    def exposure_time = xml.'**'.findAll {
             node -> node.name() == 'Plane'
         }
         .collect {
