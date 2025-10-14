@@ -9,7 +9,7 @@ nextflow_workflow {
         when {
             params {
                 outdir = "$outputDir"
-                segmentation = "mesmer"
+                segmentation = "mccellpose"
             }
             workflow {
                 """
@@ -47,7 +47,7 @@ nextflow_workflow {
         when {
             params {
                 outdir = "$outputDir"
-                segmentation = "mesmer"
+                segmentation = "mccellpose"
                 prelude = true
             }
             workflow {

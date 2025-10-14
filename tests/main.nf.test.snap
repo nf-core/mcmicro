@@ -2,7 +2,18 @@
     "cycle: multiple file ashlar input no correction": {
         "content": [
             "cycif-tonsil.ome.tif:md5,c01dda923325588ea34a4fe341b17e6e",
-            "mask_cycif-tonsil.tif:md5,3103759bd55b9deeb8c8a0dade798d9a",
+            {
+                "format": "OME-TIFF",
+                "type": "uint32",
+                "sizeX": 591,
+                "sizeY": 470,
+                "sizeZ": 1,
+                "sizeC": 1,
+                "sizeT": 1,
+                "physicalSizeX": null,
+                "physicalSizeY": null,
+                "physicalSizeZ": null
+            },
             {
                 "headers": [
                     "CellID",
@@ -28,7 +39,7 @@
                     "Extent",
                     "Orientation"
                 ],
-                "rowCount": 2111
+                "rowCount": "Is between 2100 and 2150"
             },
             {
                 "ASHLAR": {
@@ -37,8 +48,9 @@
                 "BFTOOLS_SHOWINF": {
                     "showinf": "8.0.0"
                 },
-                "DEEPCELL_MESMER": {
-                    "deepcell_mesmer": "0.4.1"
+                "MCCELLPOSE": {
+                    "mccellpose": "1.0.1",
+                    "cellpose": "4.0.7"
                 },
                 "MCQUANT": {
                     "mcquant": "1.5.4"
@@ -50,9 +62,9 @@
         ],
         "meta": {
             "nf-test": "0.9.2",
-            "nextflow": "25.04.1"
+            "nextflow": "25.04.7"
         },
-        "timestamp": "2025-07-18T11:51:19.289891764"
+        "timestamp": "2025-10-14T17:02:37.038139765"
     },
     "cycle: basicpy illumination correction": {
         "content": [
@@ -69,15 +81,15 @@
                 "physicalSizeZ": null
             },
             {
-                "format": "Tagged Image File Format",
-                "type": "int32",
+                "format": "OME-TIFF",
+                "type": "uint32",
                 "sizeX": 591,
                 "sizeY": 470,
                 "sizeZ": 1,
                 "sizeC": 1,
                 "sizeT": 1,
-                "physicalSizeX": 1.0,
-                "physicalSizeY": 1.0,
+                "physicalSizeX": null,
+                "physicalSizeY": null,
                 "physicalSizeZ": null
             },
             {
@@ -97,7 +109,7 @@
                     "Extent",
                     "Orientation"
                 ],
-                "rowCount": 2111
+                "rowCount": "Is between 2100 and 2150"
             },
             {
                 "format": "Tagged Image File Format",
@@ -133,8 +145,9 @@
                 "BFTOOLS_SHOWINF": {
                     "showinf": "8.0.0"
                 },
-                "DEEPCELL_MESMER": {
-                    "deepcell_mesmer": "0.4.1"
+                "MCCELLPOSE": {
+                    "mccellpose": "1.0.1",
+                    "cellpose": "4.0.7"
                 },
                 "MCQUANT": {
                     "mcquant": "1.5.4"
@@ -148,7 +161,7 @@
             "nf-test": "0.9.2",
             "nextflow": "25.04.7"
         },
-        "timestamp": "2025-09-26T13:23:53.632560789"
+        "timestamp": "2025-10-14T17:01:34.479559377"
     },
     "cycle: no illumination correction, backsub": {
         "content": [
@@ -330,7 +343,18 @@
     "cycle: no illumination correction": {
         "content": [
             "TEST1.ome.tif:md5,988bbb2c74d47dc22a9f3ac348f53ef5",
-            "mask_TEST1.tif:md5,3103759bd55b9deeb8c8a0dade798d9a",
+            {
+                "format": "OME-TIFF",
+                "type": "uint32",
+                "sizeX": 591,
+                "sizeY": 470,
+                "sizeZ": 1,
+                "sizeC": 1,
+                "sizeT": 1,
+                "physicalSizeX": null,
+                "physicalSizeY": null,
+                "physicalSizeZ": null
+            },
             {
                 "headers": [
                     "CellID",
@@ -348,7 +372,7 @@
                     "Extent",
                     "Orientation"
                 ],
-                "rowCount": 2111
+                "rowCount": "Is between 2100 and 2150"
             },
             {
                 "ASHLAR": {
@@ -357,8 +381,9 @@
                 "BFTOOLS_SHOWINF": {
                     "showinf": "8.0.0"
                 },
-                "DEEPCELL_MESMER": {
-                    "deepcell_mesmer": "0.4.1"
+                "MCCELLPOSE": {
+                    "mccellpose": "1.0.1",
+                    "cellpose": "4.0.7"
                 },
                 "MCQUANT": {
                     "mcquant": "1.5.4"
@@ -370,9 +395,9 @@
         ],
         "meta": {
             "nf-test": "0.9.2",
-            "nextflow": "25.04.1"
+            "nextflow": "25.04.7"
         },
-        "timestamp": "2025-07-18T11:44:07.880608456"
+        "timestamp": "2025-10-14T16:59:43.540145553"
     },
     "cycle: multiple file ashlar input with basicpy correction": {
         "content": [
@@ -724,7 +749,18 @@
     "cycle: manual illumination correction": {
         "content": [
             "TEST1.ome.tif:md5,988bbb2c74d47dc22a9f3ac348f53ef5",
-            "mask_TEST1.tif:md5,3103759bd55b9deeb8c8a0dade798d9a",
+            {
+                "format": "OME-TIFF",
+                "type": "uint32",
+                "sizeX": 591,
+                "sizeY": 470,
+                "sizeZ": 1,
+                "sizeC": 1,
+                "sizeT": 1,
+                "physicalSizeX": null,
+                "physicalSizeY": null,
+                "physicalSizeZ": null
+            },
             {
                 "headers": [
                     "CellID",
@@ -742,7 +778,7 @@
                     "Extent",
                     "Orientation"
                 ],
-                "rowCount": 2111
+                "rowCount": "Is between 2100 and 2150"
             },
             {
                 "ASHLAR": {
@@ -751,8 +787,9 @@
                 "BFTOOLS_SHOWINF": {
                     "showinf": "8.0.0"
                 },
-                "DEEPCELL_MESMER": {
-                    "deepcell_mesmer": "0.4.1"
+                "MCCELLPOSE": {
+                    "mccellpose": "1.0.1",
+                    "cellpose": "4.0.7"
                 },
                 "MCQUANT": {
                     "mcquant": "1.5.4"
@@ -764,16 +801,16 @@
         ],
         "meta": {
             "nf-test": "0.9.2",
-            "nextflow": "25.04.1"
+            "nextflow": "25.04.7"
         },
-        "timestamp": "2025-07-18T11:50:53.104718819"
+        "timestamp": "2025-10-14T17:02:05.012435072"
     },
     "cycle: multiple file ashlar input with multiple samples no correction": {
         "content": [
             "cycif-tonsil.ome.tif:md5,fd414b610e189f3e805c8e99f4e78c09",
             "cycif-tonsil2.ome.tif:md5,8615100afdf8e3e24174a6d82ecaea2c",
-            "mask_cycif-tonsil.tif:md5,3103759bd55b9deeb8c8a0dade798d9a",
-            "mask_cycif-tonsil2.tif:md5,0799cd6935febaeb9e17f8a4173fe89a",
+            "cycif-tonsil_mask_cell.ome.tif:md5,594d34dbb43e5e4c68a59840938eff67",
+            "cycif-tonsil2_mask_cell.ome.tif:md5,3527b457e024d66e77c68ba9f45eacae",
             {
                 "headers": [
                     "CellID",
@@ -795,7 +832,7 @@
                     "Extent",
                     "Orientation"
                 ],
-                "rowCount": 2111
+                "rowCount": "Is between 2100 and 2150"
             },
             {
                 "headers": [
@@ -818,7 +855,7 @@
                     "Extent",
                     "Orientation"
                 ],
-                "rowCount": 2082
+                "rowCount": "Is between 2100 and 2150"
             },
             {
                 "ASHLAR": {
@@ -827,8 +864,9 @@
                 "BFTOOLS_SHOWINF": {
                     "showinf": "8.0.0"
                 },
-                "DEEPCELL_MESMER": {
-                    "deepcell_mesmer": "0.4.1"
+                "MCCELLPOSE": {
+                    "mccellpose": "1.0.1",
+                    "cellpose": "4.0.7"
                 },
                 "MCQUANT": {
                     "mcquant": "1.5.4"
@@ -840,9 +878,9 @@
         ],
         "meta": {
             "nf-test": "0.9.2",
-            "nextflow": "25.04.1"
+            "nextflow": "25.04.7"
         },
-        "timestamp": "2025-07-18T11:51:46.523578952"
+        "timestamp": "2025-10-14T17:03:10.994560012"
     },
     "cycle: no illumination correction, coreograph": {
         "content": [
