@@ -17,13 +17,13 @@ process SUMMARY_XML {
     def args        = task.ext.args ?: ''
     def prefix      = task.ext.prefix ?: "${meta.id}_${meta.cycle_number}"
 
-    check              = '\u2705'
-    cross              = '\u274C'
-    output_xml         = [["variable_name", "value", "expected", "check"]]
+    def check              = '\u2705'
+    def cross              = '\u274C'
+    def output_xml         = [["variable_name", "value", "expected", "check"]]
 
-    xml = new XmlSlurper().parse(new File(xml.toString()))
+    def xs = new XmlSlurper().parse(new File(xml.toString()))
 
-    tile_size = xml.'**'.findAll {
+    def tile_size = xs.'**'.findAll {
             node -> node.name() == 'Pixels' && node.@SizeX != '' && node.@SizeY != ''
         }
         .collect {
@@ -41,7 +41,7 @@ process SUMMARY_XML {
         )
     }
 
-    pixels = xml.'**'.findAll {
+    def pixels = xs.'**'.findAll {
             node -> node.name() == 'Pixels' && node.@PhysicalSizeX != '' && node.@PhysicalSizeY != ''
         }
         .collect {
@@ -60,7 +60,7 @@ process SUMMARY_XML {
         )
     }
 
-    n_channels = xml.'**'.findAll {
+    def n_channels = xs.'**'.findAll {
             node -> node.name() == 'Pixels' && node.@SizeC != ''
         }
         .collect { node -> node.@SizeC.toInteger() }
@@ -76,7 +76,7 @@ process SUMMARY_XML {
         )
     }
 
-    size_units = xml.'**'.findAll {
+    def size_units = xs.'**'.findAll {
             node -> node.name() == 'Pixels' && node.@PhysicalSizeXUnit != '' && node.@PhysicalSizeYUnit != ''
         }
         .collect { node -> [node.@PhysicalSizeXUnit.toString(), node.@PhysicalSizeYUnit.toString()] }
@@ -94,7 +94,7 @@ process SUMMARY_XML {
         )
     }
 
-    pixel_datatype = xml.'**'.findAll {
+    def pixel_datatype = xs.'**'.findAll {
             node -> node.name() == 'Pixels' && node.@Type
         }
         .collect { node -> node.@Type.toString() }
@@ -112,7 +112,7 @@ process SUMMARY_XML {
         )
     }
 
-    exposure_time = xml.'**'.findAll {
+    def exposure_time = xs.'**'.findAll {
             node -> node.name() == 'Plane'
         }
         .collect {
@@ -159,7 +159,7 @@ process SUMMARY_MARKERSHEET_LITERAL {
     def args        = task.ext.args ?: ''
     def prefix      = task.ext.prefix ?: "${meta.id}"
 
-    header = [
+    def header = [
             "channel_number",
             "cycle_number",
             "excitation_wavelength",
@@ -172,7 +172,7 @@ process SUMMARY_MARKERSHEET_LITERAL {
             "remove",
             "exposure_time_unit"]
 
-    output = [header]
+    def output = [header]
 
     markersheet.collect { m -> output.add( header.collect{ h -> m[h] ?: "" } ) }
 
@@ -198,10 +198,10 @@ process SUMMARY_SAMPLESHEET {
     def args        = task.ext.args ?: ''
     def prefix      = task.ext.prefix ?: "${meta.id}_${meta.cycle_number}"
 
-    check              = '\u2705'
-    cross              = '\u274C'
-    output_samplesheet = [["row_id", "variable_name", "value", "expected", "check"]]
-    counter            = 0
+    def check              = '\u2705'
+    def cross              = '\u274C'
+    def output_samplesheet = [["row_id", "variable_name", "value", "expected", "check"]]
+    def counter            = 0
 
     meta
         .each {
@@ -261,10 +261,10 @@ process SUMMARY_MARKERSHEET {
     def args        = task.ext.args ?: ''
     def prefix      = task.ext.prefix ?: "${meta.id}"
 
-    check              = '\u2705'
-    cross              = '\u274C'
-    output_markersheet = [["row_id", "variable_name", "value", "expected", "check"]]
-    counter = 0
+    def check              = '\u2705'
+    def cross              = '\u274C'
+    def output_markersheet = [["row_id", "variable_name", "value", "expected", "check"]]
+    def counter = 0
     markersheet
         .each { map ->
             map.each{ key, value ->
