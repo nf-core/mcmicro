@@ -3,7 +3,7 @@ process MCCELLPOSE {
     label 'process_low'
     label 'process_gpu'
 
-    container "docker.io/labsyspharm/mccellpose:1.0.1"
+    container "docker.io/labsyspharm/mccellpose:1.0.2"
 
     input:
     tuple val(meta), path(image)

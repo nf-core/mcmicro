@@ -7,14 +7,14 @@
             "test_mask_cell.ome.tif",
             true,
             [
-                "versions.yml:md5,2b745936fe50d82f5eaba93f25934abe"
+                "versions.yml:md5,eb9216687202137e6cc716621b335a15"
             ]
         ],
         "meta": {
             "nf-test": "0.9.2",
             "nextflow": "25.04.7"
         },
-        "timestamp": "2025-10-13T17:47:13.18424089"
+        "timestamp": "2025-10-15T01:14:13.744937505"
     },
     "mccellpose defaults - stub": {
         "content": [
@@ -28,7 +28,7 @@
                     ]
                 ],
                 "1": [
-                    "versions.yml:md5,2b745936fe50d82f5eaba93f25934abe"
+                    "versions.yml:md5,eb9216687202137e6cc716621b335a15"
                 ],
                 "mask": [
                     [
@@ -39,7 +39,7 @@
                     ]
                 ],
                 "versions": [
-                    "versions.yml:md5,2b745936fe50d82f5eaba93f25934abe"
+                    "versions.yml:md5,eb9216687202137e6cc716621b335a15"
                 ]
             }
         ],
@@ -47,6 +47,6 @@
             "nf-test": "0.9.2",
             "nextflow": "25.04.7"
         },
-        "timestamp": "2025-10-13T17:47:21.72366162"
+        "timestamp": "2025-10-15T01:14:42.372202235"
     }
 }
