@@ -132,7 +132,7 @@ We generate a MultiQC formatted report with the extracted OME-xml data and the m
 <details>
 <summary>Output files</summary>
 
-- {sample_name}_mask_cell.ome.tif : labelled mask output from cellpose in OME-TIFF format
+- {sample_name}\_mask_cell.ome.tif : labelled mask output from cellpose in OME-TIFF format
 
 </details>
 
