@@ -19,8 +19,8 @@ nextflow_pipeline {
             def stable_path = getAllFilesFromDir(
                 params.outdir,
                 ignore: [
-                    'quantification/mcquant/mccellpose/TEST1_TEST1_mask_cell.csv',
-                    'segmentation/mccellpose/TEST1_mask_cell.ome.tif',
+                    'quantification/mcquant/mccellpose/TEST1.csv',
+                    'segmentation/mccellpose/TEST1_mask.ome.tif',
                 ],
                 ignoreFile: 'tests/.nftignore',
             )

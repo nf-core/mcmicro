@@ -4,7 +4,7 @@
             {
                 "id": "test"
             },
-            "test_mask_cell.ome.tif",
+            "test_mask.ome.tif",
             true,
             [
                 "versions.yml:md5,eb9216687202137e6cc716621b335a15"
@@ -12,9 +12,9 @@
         ],
         "meta": {
             "nf-test": "0.9.2",
-            "nextflow": "25.04.7"
+            "nextflow": "25.04.8"
         },
-        "timestamp": "2025-10-15T01:14:13.744937505"
+        "timestamp": "2025-10-17T12:11:43.716345772"
     },
     "mccellpose defaults - stub": {
         "content": [
