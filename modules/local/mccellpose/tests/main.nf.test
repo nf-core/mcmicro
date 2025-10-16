@@ -26,6 +26,10 @@ nextflow_process {
                 { assert process.success },
                 { assert snapshot(
                     process.out.mask[0][0],
+                    // The tool is slightly unstable with respect to how many cells it detects on
+                    // the same image with repeated runs, so we can't snapshot the actual mask file
+                    // content. Instead we snapshot the filename and whether the file is big enough
+                    // to be sure it detected an acceptable number of cells.
                     file(process.out.mask[0][1]).name,
                     file(process.out.mask[0][1]).length() > 90_000,
                     process.out.versions
