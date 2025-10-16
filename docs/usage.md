@@ -165,7 +165,7 @@ This is an optional step that occurs immediately following background subtration
 
 #### Segmentation
 
-This is a required step that follows the TMA Core Separation step. The workflow will run the deepcell_mesmer module by default, but other options are available by using the `--segmentation` flag. The flag should be followed by a single segmentation module name or a comma separated list of names to run multiple segmentation modules in parallel. The available options currently supported are `mesmer` and `cellpose`. More information about each of these modules can be found on their respective nf-core module websites: [deepcell_mesmer](https://nf-co.re/modules/deepcell_mesmer/) [cellpose](https://nf-co.re/modules/cellpose/)
+This is a required step that follows the TMA Core Separation step. The workflow will run the mccellpose module by default, but other options are available by using the `--segmentation` flag. The flag should be followed by a single segmentation module name or a comma separated list of names to run multiple segmentation modules in parallel. The available options currently supported are `mccellpose`, `cellpose`, and `mesmer`. More information about each of these modules can be found on their respective nf-core module websites: [cellpose](https://nf-co.re/modules/cellpose/) [deepcell_mesmer](https://nf-co.re/modules/deepcell_mesmer/). (mccellpose is an alternative interface to cellpose that uses much less RAM and should be preferred in most cases)
 
 When `cellpose` is selected as a segmentation method you may also provide a pretrained model to the cellpose module by using the `--cellpose_model` flag followed by a full path or URL to the model file.
 

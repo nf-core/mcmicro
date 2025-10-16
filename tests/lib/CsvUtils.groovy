@@ -40,6 +40,19 @@ static Map summarizeCsv(String path) {
     ]
 }
 
+// Map.collectEntries helper for use with summarizeCsv when rowCount is unstable
+// but still within a consistent range.
+static Closure checkRowCount(int min, int max) {
+    return {
+        k, v -> {
+            if (k == 'rowCount') {
+                v = v >= min & v <= max ? "Is between ${min} and ${max}" : "Outside given range"
+            }
+            [k, v]
+        }
+    }
+}
+
 // Parse and round floating point values to the specified number of decimal
 // digits of precision. Pass other strings through untouched.
 static String roundIfDouble(String value, int precision) {

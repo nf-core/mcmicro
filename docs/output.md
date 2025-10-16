@@ -21,8 +21,9 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
 - [TMA Core Separation](#tma-core-separation)
   - [Coreograph](#coreograph)
 - [Segmentation](#segmentation)
-  - [Mesmer](#mesmer)
+  - [Mccellpose](#mccellpose)
   - [Cellpose](#cellpose)
+  - [Mesmer](#mesmer)
 - [Quantification](#quantification)
 - [MultiQC](#multiqc) - Aggregate report describing results and QC from the whole pipeline
 - [Pipeline information](#pipeline-information) - Report metrics generated during the workflow execution
@@ -123,6 +124,17 @@ We generate a MultiQC formatted report with the extracted OME-xml data and the m
 </details>
 
 ### Segmentation
+
+#### Mccellpose
+
+[Mccellpose] A RAM-efficient wrapper around Cellpose (see below).
+
+<details>
+<summary>Output files</summary>
+
+- {sample_name}\_mask_cell.ome.tif : labelled mask output from cellpose in OME-TIFF format
+
+</details>
 
 #### Cellpose
 

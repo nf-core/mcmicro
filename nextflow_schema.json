@@ -72,8 +72,8 @@
                 },
                 "segmentation": {
                     "type": "string",
-                    "pattern": "^((cellpose|mesmer)?,?)*(?<!,)$",
-                    "description": "comma separated list of segmentation modules to run. options are ['mesmer','cellpose']"
+                    "pattern": "^((mccellpose|cellpose|mesmer)?,?)*(?<!,)$",
+                    "description": "comma separated list of segmentation modules to run. options are ['mccellpose','cellpose','mesmer']"
                 },
                 "cellpose_model": {
                     "type": "string",
