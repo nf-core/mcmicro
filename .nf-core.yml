@@ -1,9 +1,12 @@
 lint:
+  files_exist:
+    - conf/igenomes.config
+    - conf/igenomes_ignored.config
   files_unchanged:
     - .gitignore
   nextflow_config:
     - params.input
-nf_core_version: 3.3.2
+nf_core_version: 3.4.1
 repository_type: pipeline
 template:
   author: TBD
