@@ -6,58 +6,101 @@
 
 ## Introduction
 
-<!-- TODO nf-core: Add documentation about anything specific to running your pipeline. For general topics, please point to (and add to) the main nf-core website. -->
-
 ## Samplesheet input
 
-You will need to create a samplesheet with information about the samples you would like to analyse before running the pipeline. Use this parameter to specify its location. It has to be a comma-separated file with 3 columns, and a header row as shown in the examples below.
+You will need to create a samplesheet with information about the samples you would like to analyse before running the pipeline. We currently accept 2 formats for the input samplesheets. One format is one row per sample and the other is one row per sample per cycle. Use the parameter `input_sample` for one row per sample or the parameter `input_cycle` for one row per sample per cycle, to specify its location. It has to be a comma-separated file with a header row and either two (input_sample) or four (input_cycle) columns as shown in the examples below.
 
 ```bash
---input '[path to samplesheet file]'
+--input_cycle '[path to one row per sample per cycle samplesheet file]'
 ```
 
-### Multiple runs of the same sample
+**OR**
 
-The `sample` identifiers have to be the same when you have re-sequenced the same sample more than once e.g. to increase sequencing depth. The pipeline will concatenate the raw reads before performing any downstream analysis. Below is an example for the same sample sequenced across 3 lanes:
-
-```csv title="samplesheet.csv"
-sample,fastq_1,fastq_2
-CONTROL_REP1,AEG588A1_S1_L002_R1_001.fastq.gz,AEG588A1_S1_L002_R2_001.fastq.gz
-CONTROL_REP1,AEG588A1_S1_L003_R1_001.fastq.gz,AEG588A1_S1_L003_R2_001.fastq.gz
-CONTROL_REP1,AEG588A1_S1_L004_R1_001.fastq.gz,AEG588A1_S1_L004_R2_001.fastq.gz
+```bash
+--input_sample '[path to one row per sample samplesheet file]'
 ```
 
-### Full samplesheet
+### Samplesheet with one row per sample per cycle
 
-The pipeline will auto-detect whether a sample is single- or paired-end using the information provided in the samplesheet. The samplesheet can have as many columns as you desire, however, there is a strict requirement for the first 3 columns to match those defined in the table below.
+The `sample` identifier must be the same for multiple cycles of the same sample. All the files from the same sample will be run in a single run of ashlar in the cycle order that they appear in the samplesheet. If illumination correction is requested using basicpy, each cycle will be corrected separately.
 
-A final samplesheet file consisting of both single- and paired-end data may look something like the one below. This is for 6 samples, where `TREATMENT_REP3` has been sequenced twice.
-
-```csv title="samplesheet.csv"
-sample,fastq_1,fastq_2
-CONTROL_REP1,AEG588A1_S1_L002_R1_001.fastq.gz,AEG588A1_S1_L002_R2_001.fastq.gz
-CONTROL_REP2,AEG588A2_S2_L002_R1_001.fastq.gz,AEG588A2_S2_L002_R2_001.fastq.gz
-CONTROL_REP3,AEG588A3_S3_L002_R1_001.fastq.gz,AEG588A3_S3_L002_R2_001.fastq.gz
-TREATMENT_REP1,AEG588A4_S4_L003_R1_001.fastq.gz,
-TREATMENT_REP2,AEG588A5_S5_L003_R1_001.fastq.gz,
-TREATMENT_REP3,AEG588A6_S6_L003_R1_001.fastq.gz,
-TREATMENT_REP3,AEG588A6_S6_L004_R1_001.fastq.gz,
+```csv title="samplesheet_cycle.csv"
+sample,cycle_number,image_tiles
+TEST1,1,/path/to/image/cycif-tonsil-cycle1.ome.tif
+TEST1,2,/path/to/image/cycif-tonsil-cycle2.ome.tif
+TEST1,3,/path/to/image/cycif-tonsil-cycle3.ome.tif
 ```
 
-| Column    | Description                                                                                                                                                                            |
-| --------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `sample`  | Custom sample name. This entry will be identical for multiple sequencing libraries/runs from the same sample. Spaces in sample names are automatically converted to underscores (`_`). |
-| `fastq_1` | Full path to FastQ file for Illumina short reads 1. File has to be gzipped and have the extension ".fastq.gz" or ".fq.gz".                                                             |
-| `fastq_2` | Full path to FastQ file for Illumina short reads 2. File has to be gzipped and have the extension ".fastq.gz" or ".fq.gz".                                                             |
+| Column         | Description                                                 |
+| -------------- | ----------------------------------------------------------- |
+| `sample`       | Custom sample name.                                         |
+| `cycle_number` | Integer value of the cycle for the file in the current row. |
+| `image_tiles`  | Full path or URL to the input image file.                   |
 
-An [example samplesheet](../assets/samplesheet.csv) has been provided with the pipeline.
+An [example one row per sample per cycle samplesheet](../assets/samplesheet_1_row_sample_cycle.csv) has been provided with the pipeline.
+
+### Samplesheet with one row per sample
+
+This is similar to the above case except each row just contains a column for each `sample` name and a columnn containing a directory where all the files for a given sample are located. All per-cycle image files in the `image_directory` for a given sample will be run in a single run of ashlar. If illumination correction is requested using basicpy, each cycle will be corrected separately.
+
+```csv title="samplesheet_sample.csv"
+sample,image_directory
+TEST1,/path/to/image/directory
+```
+
+| Column            | Description                                          |
+| ----------------- | ---------------------------------------------------- |
+| `sample`          | Custom sample name.                                  |
+| `image_directory` | Full path to directory containing input image files. |
+
+An [example one row per sample samplesheet](../assets/samplesheet_1_row_sample.csv) has been provided with the pipeline.
+
+## Markersheet input
+
+Each row of the markersheet represents a single channel in the associated sample image. The columns `channel_number`, `cycle_number` and `marker_name` are required.
+
+```csv
+channel_number,cycle_number,marker_name
+1,1,DNA 1
+2,1,Na/K ATPase
+3,1,CD3
+4,1,CD45RO
+```
+
+| Column           | Description                                         |
+| ---------------- | --------------------------------------------------- |
+| `channel_number` | Integer identifier for the respective channel.      |
+| `cycle_number`   | Integer identifier for the image cycle.             |
+| `marker_name`    | Name of the marker for the given channel and cycle. |
+
+:::note
+`cycle_number` must match the `cycle_number` in the supplied samplesheet.
+:::
+
+### optional markersheet columns
+
+| Column                  | Description                                    |
+| ----------------------- | ---------------------------------------------- |
+| `filter`                | Microscope filter common name.                 |
+| `excitation_wavelength` | Excitation wavelength for this channel, in nm. |
+| `emission_wavelength`   | Emission wavelength for this channel, in nm.   |
 
 ## Running the pipeline
 
-The typical command for running the pipeline is as follows:
+### One row per sample per cycle
+
+The typical command for running the one row per sample per cycle pipeline is as follows:
 
 ```bash
-nextflow run nf-core/mcmicro --input ./samplesheet.csv --outdir ./results --genome GRCh37 -profile docker
+nextflow run nf-core/mcmicro --input_cycle ./samplesheet_cycle.csv --outdir ./results --marker_sheet markers.csv -profile docker
+```
+
+### One row per sample
+
+The typical command for running the one row per sample pipeline is as follows:
+
+```bash
+nextflow run nf-core/mcmicro --input_sample ./samplesheet_sample.csv --outdir ./results --marker_sheet markers.csv -profile docker
 ```
 
 This will launch the pipeline with the `docker` configuration profile. See below for more information about profiles.
@@ -86,14 +129,49 @@ nextflow run nf-core/mcmicro -profile docker -params-file params.yaml
 
 with:
 
-```yaml title="params.yaml"
-input: './samplesheet.csv'
-outdir: './results/'
-genome: 'GRCh37'
-<...>
+```yaml
+input_cycle: "samplesheet_cycle.csv"
+outdir: "./output"
+marker_sheet: "markers.csv"
 ```
 
 You can also generate such `YAML`/`JSON` files via [nf-core/launch](https://nf-co.re/launch).
+
+### Pipeline stages and associated input parameters
+
+#### Summary
+
+We generate a MultiQC formatted report based on the extracted OME-xml metadata and the marker/sample sheet information so the user can debug their runs.
+This step is always run, but we include the option to stop immediately after the data extraction/validation with the option `--prelude`.
+
+Running with `--prelude` is recommended as a first run to ensure your sample/marker sheets are complete and the required metadata is present in your image files.
+
+#### Illumination Correction
+
+Illumination correction can optionally be performed before registration. It is triggered by the `--illumination` flag which can currently only be followed by the option `basicpy`. We plan on supporting other modules for illumination correction in the future.
+When `basicpy` is selected the nf-core module basicpy is run on the input image(s). Basicpy is a python package for background and shading correction of optical microscopy images. More information about it can be found on the [basicpy nf-core module website](https://nf-co.re/modules/basicpy/).
+
+#### Registration
+
+Registration is a required step of the pipeline and the only module currently supported is ashlar. Ashlar is a software package that combines multi-tile microscopy images into a high-dimensional mosaic image. More information about ashlar can be found on the [ashlar website](https://labsyspharm.github.io/ashlar/). We plan to support other modules for registration in the future.
+
+#### Background Subtraction
+
+This is an optional step that occurs immediately following registration. It is triggered by the `--backsub` flag. When this flag is selected, the module backsub is run on the output from the registration step. The backsub module performs pixel-by-pixel channel subtraction scaled by exposure times of pre-stitched tif images. More information about it can be found on the [backsub nf-core module website](https://nf-co.re/modules/backsub/).
+
+#### TMA Core Separation
+
+This is an optional step that occurs immediately following background subtration if that optional step was run or after registration if is was not. It is triggered by the `--tma_dearray` flag. When this flag is selected, the coreograph module is run on the output from either the background subtraction step or the registration step if background subtration was not performed. Coreograph separates the input image into a set of images for each of the cores. It uses UNet, a deep learning model, to identify complete/incomplete tissue cores on a tissue microarray. It has been trained on 9 TMA slides of different sizes and tissue types. More information about it can be found on the [coreograph nf-core module website](https://nf-co.re/modules/coreograph/)
+
+#### Segmentation
+
+This is a required step that follows the TMA Core Separation step. The workflow will run the mccellpose module by default, but other options are available by using the `--segmentation` flag. The flag should be followed by a single segmentation module name or a comma separated list of names to run multiple segmentation modules in parallel. The available options currently supported are `mccellpose`, `cellpose`, and `mesmer`. More information about each of these modules can be found on their respective nf-core module websites: [cellpose](https://nf-co.re/modules/cellpose/) [deepcell_mesmer](https://nf-co.re/modules/deepcell_mesmer/). (mccellpose is an alternative interface to cellpose that uses much less RAM and should be preferred in most cases)
+
+When `cellpose` is selected as a segmentation method you may also provide a pretrained model to the cellpose module by using the `--cellpose_model` flag followed by a full path or URL to the model file.
+
+#### Quantification
+
+This is a required step that follows segmentation. The workflow currently runs the mcquant module by default. Other quantification modules will be added as options in the future. Mcquant extracts single-cell data given a multi-channel image and a segmentation mask. More information about mcquant can be found on the [mcquant nf-core module website](https://nf-co.re/modules/mcquant/).
 
 ### Updating the pipeline
 
