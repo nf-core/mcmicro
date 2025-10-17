@@ -1,7 +1,7 @@
 import groovy.xml.XmlSlurper
 
 process SUMMARY_XML {
-    tag "$meta.id"
+    tag "${meta.id}_${cycle_number}"
     label 'process_single'
 
     input:
