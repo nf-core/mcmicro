@@ -41,7 +41,7 @@ process MCCELLPOSE {
     stub:
     def prefix = task.ext.prefix ?: "${meta.id}"
     """
-    touch ${prefix}_mask_cell.ome.tif
+    touch ${prefix}_mask.ome.tif
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
