@@ -1,7 +1,6 @@
 {
     "-profile test": {
         "content": [
-            9,
             {
                 "ASHLAR": {
                     "ashlar": "1.18.0"
@@ -80,8 +79,8 @@
         ],
         "meta": {
             "nf-test": "0.9.2",
-            "nextflow": "25.04.7"
+            "nextflow": "25.04.8"
         },
-        "timestamp": "2025-10-16T10:47:18.144996282"
+        "timestamp": "2025-10-17T11:23:13.364946883"
     }
 }

@@ -66,7 +66,10 @@ workflow {
         params.outdir,
         params.input_cycle,
         params.input_sample,
-        params.marker_sheet
+        params.marker_sheet,
+        params.help,
+        params.help_full,
+        params.show_hidden
     )
 
     //

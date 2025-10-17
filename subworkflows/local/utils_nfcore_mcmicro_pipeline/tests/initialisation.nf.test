@@ -14,7 +14,7 @@ nextflow_workflow {
                 }
                 workflow {
                     """
-                    input = [false, false, false, [], '$outputDir', params.input_cycle, [], params.marker_sheet]
+                    input = [false, false, false, [], '$outputDir', params.input_cycle, [], params.marker_sheet, false, false, false]
                     """
                 }
             }
