@@ -132,7 +132,7 @@ We generate a MultiQC formatted report with the extracted OME-xml data and the m
 <details>
 <summary>Output files</summary>
 
-- {sample_name}\_mask_cell.ome.tif : labelled mask output from cellpose in OME-TIFF format
+- {sample_name}\_mask.ome.tif : labelled mask output from cellpose in OME-TIFF format
 
 </details>
 
@@ -143,7 +143,7 @@ We generate a MultiQC formatted report with the extracted OME-xml data and the m
 <details>
 <summary>Output files</summary>
 
-- {sample_name}.ome_cp_masks.tif : labelled mask output from cellpose in tif format
+- {sample_name}\_mask.tif : labelled mask output from cellpose in tif format
 
 </details>
 
@@ -154,7 +154,7 @@ We generate a MultiQC formatted report with the extracted OME-xml data and the m
 <details>
 <summary>Output files</summary>
 
-- mask\_{sample_name}.tif : File containing the mask.
+- {sample_name}\_mask.tif : File containing the mask.
 
 </details>
 
@@ -167,7 +167,7 @@ We generate a MultiQC formatted report with the extracted OME-xml data and the m
 <details>
 <summary>Output files</summary>
 
-- \*.csv : Single-cell feature table for all selected segmenters, for each segmented cell compartment.
+- {segmenter}/{sample_name}.csv : Single-cell feature table for all selected segmenters.
 
 </details>
 
