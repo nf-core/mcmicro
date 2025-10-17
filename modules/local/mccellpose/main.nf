@@ -9,8 +9,8 @@ process MCCELLPOSE {
     tuple val(meta), path(image)
 
     output:
-    tuple val(meta), path("*_mask*.ome.tif"), emit: mask
-    path "versions.yml"                      , emit: versions
+    tuple val(meta), path("*_mask.ome.tif"), emit: mask
+    path "versions.yml"                    , emit: versions
 
     when:
     task.ext.when == null || task.ext.when
