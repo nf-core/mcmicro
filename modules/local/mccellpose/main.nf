@@ -9,8 +9,8 @@ process MCCELLPOSE {
     tuple val(meta), path(image)
 
     output:
-    tuple val(meta), path("*_mask_*.ome.tif"), emit: mask
-    path "versions.yml"                      , emit: versions
+    tuple val(meta), path("*_mask.ome.tif"), emit: mask
+    path "versions.yml"                    , emit: versions
 
     when:
     task.ext.when == null || task.ext.when
@@ -25,7 +25,7 @@ process MCCELLPOSE {
 
     mccellpose \
         --input $image \
-        --output-cell ${prefix}_mask_cell.ome.tif \
+        --output-cell ${prefix}_mask.ome.tif \
         --channel 1 \
         --expand-size 2 \
         $gpu_args \
@@ -41,7 +41,7 @@ process MCCELLPOSE {
     stub:
     def prefix = task.ext.prefix ?: "${meta.id}"
     """
-    touch ${prefix}_mask_cell.ome.tif
+    touch ${prefix}_mask.ome.tif
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

@@ -53,13 +53,13 @@
                 "quantification",
                 "quantification/mcquant",
                 "quantification/mcquant/mccellpose",
-                "quantification/mcquant/mccellpose/TEST1_TEST1_mask_cell.csv",
+                "quantification/mcquant/mccellpose/TEST1.csv",
                 "registration",
                 "registration/ashlar",
                 "registration/ashlar/TEST1.ome.tif",
                 "segmentation",
                 "segmentation/mccellpose",
-                "segmentation/mccellpose/TEST1_mask_cell.ome.tif",
+                "segmentation/mccellpose/TEST1_mask.ome.tif",
                 "summary",
                 "summary/TEST1_1_samplesheet_mqc.tsv",
                 "summary/TEST1_1_xml_mqc.tsv",
@@ -81,6 +81,6 @@
             "nf-test": "0.9.2",
             "nextflow": "25.04.8"
         },
-        "timestamp": "2025-10-17T11:23:13.364946883"
+        "timestamp": "2025-10-17T11:29:56.714074101"
     }
 }
