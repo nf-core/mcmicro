@@ -8,11 +8,6 @@ workflow PRELUDE {
     samplesheet
     xml
 
-    emit:
-    output_file_xml         = ch_output_xml
-    output_file_samplesheet = ch_output_samplesheet
-    output_file_markersheet = ch_output_markersheet
-
     main:
     ch_output_xml           = ( xml.map {
                                     meta, xmlpath -> [meta, xmlpath]
@@ -26,4 +21,9 @@ workflow PRELUDE {
                                     meta, image_tiles, dfp, ffp ->
                                     [meta, [image_tiles, dfp, ffp]]
                                     } | SUMMARY_SAMPLESHEET).output
+
+    emit:
+    output_file_xml         = ch_output_xml
+    output_file_samplesheet = ch_output_samplesheet
+    output_file_markersheet = ch_output_markersheet
 }
