@@ -8,7 +8,7 @@ process SUMMARY_XML {
     tuple val(meta), val(xml)
 
     output:
-    path "*.xml", emit: output
+    path "*.tsv", emit: output
 
     when:
     task.ext.when == null || task.ext.when
