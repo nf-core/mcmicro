@@ -8,7 +8,7 @@ process SUMMARY_XML {
     tuple val(meta), val(xml)
 
     output:
-    path output_file_xml, emit: output
+    path "*.tsv", emit: output
 
     when:
     task.ext.when == null || task.ext.when
@@ -137,9 +137,9 @@ process SUMMARY_XML {
         )
     }
 
-    output_file_xml = prefix + "_xml_mqc.tsv"
-    def f1          = task.workDir.resolve(output_file_xml)
-    f1.text         = output_xml*.join("\t").join("\n")
+    def output_filename = prefix + "_xml_mqc.tsv"
+    def f1              = task.workDir.resolve(output_filename)
+    f1.text             = output_xml*.join("\t").join("\n")
 }
 
 process SUMMARY_MARKERSHEET_LITERAL {
@@ -150,7 +150,7 @@ process SUMMARY_MARKERSHEET_LITERAL {
     tuple val(meta), val(markersheet)
 
     output:
-    path output_file_markersheet, emit: output
+    path "*.tsv", emit: output
 
     when:
     task.ext.when == null || task.ext.when
@@ -176,9 +176,9 @@ process SUMMARY_MARKERSHEET_LITERAL {
 
     markersheet.collect { m -> output.add( header.collect{ h -> m[h] ?: "" } ) }
 
-    output_file_markersheet = prefix + "_markersheet_mqc.tsv"
-    def f1                  = task.workDir.resolve(output_file_markersheet)
-    f1.text                 = output*.join("\t").join("\n")
+    def output_filename = prefix + "_markersheet_mqc.tsv"
+    def f1              = task.workDir.resolve(output_filename)
+    f1.text             = output*.join("\t").join("\n")
 }
 
 process SUMMARY_SAMPLESHEET {
@@ -189,7 +189,7 @@ process SUMMARY_SAMPLESHEET {
     tuple val(meta), val(samplesheet)
 
     output:
-    path output_file_samplesheet, emit: output
+    path "*.tsv", emit: output
 
     when:
     task.ext.when == null || task.ext.when
@@ -239,9 +239,9 @@ process SUMMARY_SAMPLESHEET {
             output_samplesheet.add(temp)
         }
 
-    output_file_samplesheet = prefix + "_samplesheet_mqc.tsv"
-    def f1                  = task.workDir.resolve(output_file_samplesheet)
-    f1.text                 = output_samplesheet*.join("\t").join("\n")
+    def output_filename = prefix + "_samplesheet_mqc.tsv"
+    def f1              = task.workDir.resolve(output_filename)
+    f1.text             = output_samplesheet*.join("\t").join("\n")
 }
 
 process SUMMARY_MARKERSHEET {
@@ -252,7 +252,7 @@ process SUMMARY_MARKERSHEET {
     tuple val(meta), val(markersheet)
 
     output:
-    path output_file_markersheet, emit: output
+    path "*.tsv", emit: output
 
     when:
     task.ext.when == null || task.ext.when
@@ -309,7 +309,7 @@ process SUMMARY_MARKERSHEET {
             }
         }
 
-    output_file_markersheet = prefix + "_markersheet_mqc.tsv"
-    def f1                  = task.workDir.resolve(output_file_markersheet)
-    f1.text                 = output_markersheet*.join("\t").join("\n")
+    def output_filename = prefix + "_markersheet_mqc.tsv"
+    def f1              = task.workDir.resolve(output_filename)
+    f1.text             = output_markersheet*.join("\t").join("\n")
 }
