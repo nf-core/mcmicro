@@ -5,7 +5,7 @@ process SUMMARY_XML {
     label 'process_single'
 
     input:
-    tuple val(meta), val(xml)
+    tuple val(meta), path(xml)
 
     output:
     path "*.tsv", emit: output
@@ -13,15 +13,17 @@ process SUMMARY_XML {
     when:
     task.ext.when == null || task.ext.when
 
-    exec:
-    def args        = task.ext.args ?: ''
-    def prefix      = task.ext.prefix ?: "${meta.id}_${meta.cycle_number}"
+    script:
+    def prefix = task.ext.prefix ?: "${meta.id}_${meta.cycle_number}"
+    """
+    #!/usr/bin/env groovy
+    import groovy.xml.XmlSlurper
 
     def check              = '\u2705'
     def cross              = '\u274C'
     def output_xml         = [["variable_name", "value", "expected", "check"]]
 
-    def xs = new XmlSlurper().parse(new File(xml.toString()))
+    def xs = new XmlSlurper().parse(new File("${xml}"))
 
     def tile_size = xs.'**'.findAll {
             node -> node.name() == 'Pixels' && node.@SizeX != '' && node.@SizeY != ''
@@ -137,9 +139,9 @@ process SUMMARY_XML {
         )
     }
 
-    def output_filename = prefix + "_xml_mqc.tsv"
-    def f1              = task.workDir.resolve(output_filename)
-    f1.text             = output_xml*.join("\t").join("\n")
+    def output_filename = "${prefix}_xml_mqc.tsv"
+    new File(output_filename).text = output_xml*.join("\\t").join("\\n")
+    """
 }
 
 process SUMMARY_MARKERSHEET_LITERAL {
