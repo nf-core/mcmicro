@@ -5,7 +5,7 @@ process SUMMARY_XML {
     label 'process_single'
 
     input:
-    tuple val(meta), path(xml)
+    tuple val(meta), val(xml)
 
     output:
     path "*.tsv", emit: output
@@ -21,7 +21,7 @@ process SUMMARY_XML {
     def cross              = '\u274C'
     def output_xml         = [["variable_name", "value", "expected", "check"]]
 
-    def xs = new XmlSlurper().parse(xml.toFile())
+    def xs = new XmlSlurper().parse(new File(xml.toString()))
 
     def tile_size = xs.'**'.findAll {
             node -> node.name() == 'Pixels' && node.@SizeX != '' && node.@SizeY != ''
