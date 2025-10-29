@@ -1,4 +1,5 @@
 include { OMEVALIDATION   } from '../../../modules/local/omevalidation/main'
+import groovy.json.JsonSlurper
 
 workflow UPDATE_FROM_OME {
     take:
@@ -7,7 +8,14 @@ workflow UPDATE_FROM_OME {
     xml
 
     main:
-    val_data = xml.map{meta, x -> [meta, x]} | OMEVALIDATION
+    val_data = xml.map{meta, x -> [meta, x]}
+        | OMEVALIDATION
+        | map { meta, sample_json, marker_json ->
+            def jsonSlurper = new JsonSlurper()
+            def sample_meta = jsonSlurper.parse(sample_json)
+            def marker_meta = jsonSlurper.parse(marker_json)
+            [meta, sample_meta, marker_meta]
+        }
 
     samplesheet.join(val_data)
          .map { original_meta, image_tiles, dfp, ffp, xml_meta, marker_data ->
