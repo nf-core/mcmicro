@@ -3,7 +3,7 @@ import groovy.xml.XmlSlurper
 process SUMMARY_XML {
     tag "${meta.id}_${meta.cycle_number}"
     label 'process_single'
-    container 'docker.io/groovy:noble'
+    container 'community.wave.seqera.io/library/groovy:4_0_24--bd5a0401545c33a6'
 
     input:
     tuple val(meta), path(xml)
