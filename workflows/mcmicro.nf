@@ -78,7 +78,7 @@ workflow MCMICRO {
                 [meta.subMap('id', 'pixel_size'), [meta.cycle_number, image_tiles, dfp, ffp]]
             }
             // FIXME: pass groupTuple size: from samplesheet cycle count
-            .groupTuple(sort: { a, b -> a[0] <=> b[0] })
+            .groupTuple(sort: { a, b -> a[0] <=> b[0] } )
             .map{ meta, cycles -> [meta, *cycles.collect{ it[1..-1] }.transpose()]}
             .dump(tag: 'ASHLAR in')
             // flatten() handles list of empty-lists, turning it into a single empty list.
