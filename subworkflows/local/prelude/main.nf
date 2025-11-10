@@ -8,22 +8,22 @@ workflow PRELUDE {
     samplesheet
     xml
 
-    emit:
-    output_file_xml
-    output_file_samplesheet
-    output_file_markersheet
-
     main:
-    output_file_xml         = ( xml.map {
+    ch_output_xml         = ( xml.map {
                                     meta, xmlpath -> [meta, xmlpath]
                                     } | SUMMARY_XML ).output
 
-    output_file_markersheet = ( markersheet.map {
+    ch_output_markersheet = ( markersheet.map {
                                     [["id": "markers"], it]
                                     } | SUMMARY_MARKERSHEET_LITERAL ).output
 
-    output_file_samplesheet = ( samplesheet.map {
+    ch_output_samplesheet = ( samplesheet.map {
                                     meta, image_tiles, dfp, ffp ->
                                     [meta, [image_tiles, dfp, ffp]]
                                     } | SUMMARY_SAMPLESHEET).output
+
+    emit:
+    output_file_xml         = ch_output_xml
+    output_file_samplesheet = ch_output_samplesheet
+    output_file_markersheet = ch_output_markersheet
 }
