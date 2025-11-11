@@ -16,5 +16,4 @@ Changes in 'cellpose/main.nf':
 'modules/nf-core/cellpose/tests/nextflow_wflows.config' is unchanged
 'modules/nf-core/cellpose/tests/main.nf.test' is unchanged
 'modules/nf-core/cellpose/tests/main.nf.test.snap' is unchanged
-'modules/nf-core/cellpose/tests/tags.yml' is unchanged
 ************************************************************

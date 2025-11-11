@@ -7,9 +7,8 @@
                 "nf-core": {
                     "ashlar": {
                         "branch": "master",
-                        "git_sha": "41dfa3f7c0ffabb96a6a813fe321c6d1cc5b6e46",
-                        "installed_by": ["modules"],
-                        "patch": "modules/nf-core/ashlar/ashlar.diff"
+                        "git_sha": "c7c25b6367249f37c2f99bbab52e7f8c9df6e9c3",
+                        "installed_by": ["modules"]
                     },
                     "backsub": {
                         "branch": "master",
@@ -18,18 +17,17 @@
                     },
                     "basicpy": {
                         "branch": "master",
-                        "git_sha": "42d613466453a287bce51f061bb79f1cb9fa3654",
-                        "installed_by": ["modules"],
-                        "patch": "modules/nf-core/basicpy/basicpy.diff"
+                        "git_sha": "4e691789141fc390aae59a33a42586d443927299",
+                        "installed_by": ["modules"]
                     },
                     "bftools/showinf": {
                         "branch": "master",
-                        "git_sha": "8b6514c107bac9520a69aac3471f33e2ab07f269",
+                        "git_sha": "ad5a4dc77c6e2e7263c726f10ae44a518857f756",
                         "installed_by": ["modules"]
                     },
                     "cellpose": {
                         "branch": "master",
-                        "git_sha": "5bca12d66725b17a486edc24d1d2381d4170da25",
+                        "git_sha": "05954dab2ff481bcb999f24455da29a5828af08d",
                         "installed_by": ["modules"],
                         "patch": "modules/nf-core/cellpose/cellpose.diff"
                     },
@@ -60,7 +58,7 @@
                     },
                     "multiqc": {
                         "branch": "master",
-                        "git_sha": "e10b76ca0c66213581bec2833e30d31f239dec0b",
+                        "git_sha": "af27af1be706e6a2bb8fe454175b0cdf77f47b49",
                         "installed_by": ["modules"]
                     },
                     "scimap/mcmicro": {
