@@ -1,11 +1,14 @@
 import groovy.xml.XmlSlurper
 
+
 process SUMMARY_XML {
     tag "${meta.id}_${meta.cycle_number}"
     label 'process_single'
 
+    container "quay.io/biocontainers/python:3.13"
+
     input:
-    tuple val(meta), val(xml)
+    tuple val(meta), path(xml)
 
     output:
     path "*.tsv", emit: output
@@ -13,133 +16,142 @@ process SUMMARY_XML {
     when:
     task.ext.when == null || task.ext.when
 
-    exec:
-    def args        = task.ext.args ?: ''
-    def prefix      = task.ext.prefix ?: "${meta.id}_${meta.cycle_number}"
+    script:
+    def prefix = task.ext.prefix ?: "${meta.id}_${meta.cycle_number}"
+    """
+#! /usr/local/bin/python
+import xml.etree.ElementTree as ET
 
-    def check              = '\u2705'
-    def cross              = '\u274C'
-    def output_xml         = [["variable_name", "value", "expected", "check"]]
+def elementInTagConsistent(node, tag, attribute):
+  if len(node.findall('.//{*}' + tag)) != len(node.findall('.//{*}' + tag + "[@{}]".format(attribute))):
+    return False  # some elements missing tag
 
-    def xs = new XmlSlurper().parse(new File(xml.toString()))
+  if len(set([e.attrib[attribute] for e in node.findall('.//{*}' + tag + "[@{}]".format(attribute))])) != 1:
+    return False  # different values
+  return True
 
-    def tile_size = xs.'**'.findAll {
-            node -> node.name() == 'Pixels' && node.@SizeX != '' && node.@SizeY != ''
-        }
-        .collect {
-            node -> [node.@SizeX.toInteger(), node.@SizeY.toInteger()]
-        }.toSet()
+def getAllValuesFromAttrib(node, tag, attribute):
+  return str([e.attrib[attribute] if attribute in e.attrib else '' for e in node.findall('.//{*}' + tag)])
 
-    if (tile_size == null || tile_size[0] == null || tile_size[1] == null){
-        output_xml.add(
-            ["SizeX|SizeY", tile_size.toString(), "Same Integer", cross]
-        )
-    }
-    else{
-        output_xml.add(
-            ["SizeX|SizeY", tile_size.toString(), "Same Integer", check]
-        )
-    }
+def getAllValuesFrom2Attrib(node, tag, attribute1, attribute2):
+  return str([
+  [e.attrib[attribute1] if attribute1 in e.attrib else '', e.attrib[attribute2] if attribute2 in e.attrib else '']
+  for e in node.findall('.//{*}' + tag)
+  ])
 
-    def pixels = xs.'**'.findAll {
-            node -> node.name() == 'Pixels' && node.@PhysicalSizeX != '' && node.@PhysicalSizeY != ''
-        }
-        .collect {
-            node -> [node.@PhysicalSizeX.toDouble(), node.@PhysicalSizeY.toDouble()]
-        }
+check = '\u2705'
+cross = '\u274C'
+res = None
 
-    if (pixels == null || pixels.toSet().size() != 1 || pixels.toSet()[0][0] == null || pixels.toSet()[0][1] == null
-        || (pixels[0][0]).round(3) != (pixels[0][1]).round(3)) {
-        output_xml.add(
-            ["PhysicalSizeX|PhysicalSizeY", pixels.toString(), "Numbers that are equal within 3 DP", cross]
-        )
-    }
-    else {
-        output_xml.add(
-            ["PhysicalSizeX|PhysicalSizeY", pixels.toString(), "Numbers that are equal within 3 DP", check]
-        )
-    }
+data = [["variable_name", "value", "expected", "check"]]
 
-    def n_channels = xs.'**'.findAll {
-            node -> node.name() == 'Pixels' && node.@SizeC != ''
-        }
-        .collect { node -> node.@SizeC.toInteger() }
+root = ET.parse('${xml}').getroot()
 
-    if (n_channels == null || n_channels.toSet().size() != 1 || n_channels[0] == 0) {
-        output_xml.add(
-            ["SizeC", n_channels.toString(), "Consistent > 0 numbers", cross]
-        )
-    }
-    else {
-        output_xml.add(
-            ["SizeC", n_channels.toString(), "Consistent > 0 numbers", check]
-        )
-    }
+if not elementInTagConsistent(root, 'Pixels', 'SizeX') or not elementInTagConsistent(root, 'Pixels', 'SizeY') or \
+root.findall('.//{*}Pixels[@SizeX]')[0].attrib['SizeX'] != root.findall('.//{*}Pixels[@SizeY]')[0].attrib['SizeY']:
+  res = cross
+else:
+  res = check
+data.append(
+  [
+    'SizeX|SizeY',
+    getAllValuesFrom2Attrib(root, 'Pixels', 'SizeX', 'SizeY'),
+    'Same Integer',
+    res
+  ]
+)
 
-    def size_units = xs.'**'.findAll {
-            node -> node.name() == 'Pixels' && node.@PhysicalSizeXUnit != '' && node.@PhysicalSizeYUnit != ''
-        }
-        .collect { node -> [node.@PhysicalSizeXUnit.toString(), node.@PhysicalSizeYUnit.toString()] }
+if not elementInTagConsistent(root, 'Pixels', 'PhysicalSizeX') or \
+not elementInTagConsistent(root, 'Pixels', 'PhysicalSizeY') or \
+int(float(root.findall('.//{*}Pixels[@PhysicalSizeX]')[0].attrib['PhysicalSizeX']) * 1000) != \
+int(float(root.findall('.//{*}Pixels[@PhysicalSizeY]')[0].attrib['PhysicalSizeY']) * 1000):
+  res = cross
+else:
+  res = check
 
-    if (size_units == null || size_units.toSet().size() != 1 || size_units.flatten().toSet().size() != 1 ||
-        size_units.flatten().toSet()[0] == null ||
-        !(size_units.flatten().toSet()[0] in ["mm", "cm", "um", "µm", "reference_frame"])) {
-        output_xml.add(
-            ["PhysicalSizeXUnit|PhysicalSizeYUnit", size_units.toString(), "Consistent units (mm, cm, um, µm, reference_frame)", cross]
-        )
-    }
-    else {
-        output_xml.add(
-            ["PhysicalSizeXUnit|PhysicalSizeYUnit", size_units.toString(), "Consistent units (mm, cm, um, µm, reference_frame)", check]
-        )
-    }
+data.append(
+  [
+  "PhysicalSizeX|PhysicalSizeY",
+  getAllValuesFrom2Attrib(root, 'Pixels', 'PhysicalSizeX', 'PhysicalSizeY'),
+  "Numbers that are equal within 3 DP",
+  res
+  ]
+)
 
-    def pixel_datatype = xs.'**'.findAll {
-            node -> node.name() == 'Pixels' && node.@Type
-        }
-        .collect { node -> node.@Type.toString() }
+if not elementInTagConsistent(root, 'Pixels', 'SizeC') or \
+root.findall('.//{*}Pixels[@SizeC]')[0].attrib['SizeC'] == 0:
+  res = cross
+else:
+  res = check
 
-    if (pixel_datatype == null || pixel_datatype.toSet().size() != 1 ||
-        !(pixel_datatype.toSet()[0] ==~ /[u]?int(8|16|32)|float|double/)  // There are more bit|complex|double-complex
-        ) {
-        output_xml.add(
-            ["Type", pixel_datatype.toString(), "Consistent valid datatypes (uint8, float16...)", cross]
-        )
-    }
-    else {
-        output_xml.add(
-            ["Type", pixel_datatype.toString(), "Consistent valid datatypes (uint8, float16...)", check]
-        )
-    }
+data.append(
+  [
+    'SizeC',
+    getAllValuesFromAttrib(root, 'Pixels', 'SizeC'),
+    'Consistent > 0 numbers',
+    res
+  ]
+)
 
-    def exposure_time = xs.'**'.findAll {
-            node -> node.name() == 'Plane'
-        }
-        .collect {
-            node ->
-                [
-                    node.@ExposureTime.toDouble(),
-                    node.@ExposureTimeUnit.toString()
-                ]
-        }
-        .toSet()
+valid_physical_units = ["mm", "cm", "um", "µm", "reference_frame"]
 
-    if (exposure_time == null || exposure_time.size() != 1 || exposure_time[0] == null || exposure_time[1] == null || exposure_time[1] == "") {
-        output_xml.add(
-            ["ExposureTime|ExposureTimeUnit", exposure_time.toString(),
-            "Consistent valid exposure time and units", cross]
-        )
-    }
-    else {
-        output_xml.add(
-            ["ExposureTime|ExposureTimeUnit", exposure_time.toString(),
-            "Consistent valid exposure time and units", check]
-        )
-    }
+if not elementInTagConsistent(root, 'Pixels', 'PhysicalSizeXUnit') or \
+not elementInTagConsistent(root, 'Pixels', 'PhysicalSizeYUnit') or \
+root.findall('.//{*}Pixels[@PhysicalSizeXUnit]')[0].attrib['PhysicalSizeX'] != \
+root.findall('.//{*}Pixels[@PhysicalSizeYUnit]')[0].attrib['PhysicalSizeY'] or \
+root.findall('.//{*}Pixels[@PhysicalSizeXUnit]')[0].attrib['PhysicalSizeX'] not in valid_physical_units:
+  res = cross
+else:
+  res = check
 
-    def output_file_xml = prefix + "_xml_mqc.tsv"
-    def f1              = task.workDir.resolve(output_file_xml)
-    f1.text             = output_xml*.join("\t").join("\n")
+data.append(
+[
+  "PhysicalSizeXUnit|PhysicalSizeYUnit",
+  getAllValuesFrom2Attrib(root, 'Pixels', 'PhysicalSizeXUnit', 'PhysicalSizeYUnit'),
+  "Consistent units (mm, cm, um, µm, reference_frame)",
+  res
+]
+)
+
+valid_datatypes = ['uint8', 'uint16', 'uint32', 'int8', 'int16', 'int32', 'float', 'double']
+
+if not elementInTagConsistent(root, 'Pixels', 'Type') or \
+root.findall('.//{*}Pixels[@Type]')[0].attrib['Type'] not in valid_datatypes:
+  res = cross
+else:
+  res = check
+
+data.append(
+[
+  "Type",
+  getAllValuesFromAttrib(root, 'Pixels', 'Type'),
+  "Consistent valid datatypes (uint8, float16...)",
+  res
+]
+)
+
+if not elementInTagConsistent(root, 'Plane', 'ExposureTime') or \
+not elementInTagConsistent(root, 'Plane', 'ExposureTimeUnit'):
+  res = cross
+else:
+  res = check
+
+data.append(
+[
+  "ExposureTime|ExposureTimeUnit",
+  getAllValuesFrom2Attrib(root, 'Plane', 'ExposureTime', 'ExposureTimeUnit'),
+  "Consistent valid exposure time and units",
+  res
+]
+)
+
+print(data)
+
+with open("${prefix}" + "_xml_mqc.tsv", 'w') as f:
+  f.write(
+    '\\n'.join(['\\t'.join(x) for x in data])
+  )
+    """
 }
 
 process SUMMARY_MARKERSHEET_LITERAL {
