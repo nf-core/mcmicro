@@ -1,7 +1,7 @@
 import groovy.xml.XmlSlurper
 
 process OMEVALIDATION {
-    tag "$meta.id"
+    tag "${meta.id}_${meta.cycle_number}"
     label 'process_single'
 
     input:

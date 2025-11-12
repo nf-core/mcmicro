@@ -194,7 +194,7 @@ process SUMMARY_MARKERSHEET_LITERAL {
 }
 
 process SUMMARY_SAMPLESHEET {
-    tag "$meta.id"
+    tag "${meta.id}_${meta.cycle_number}"
     label 'process_single'
 
     input:
