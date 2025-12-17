@@ -1,0 +1,92 @@
+nextflow_workflow {
+    name "Test Workflow UPDATE_FROM_OME"
+    script "../main.nf"
+    workflow "UPDATE_FROM_OME"
+
+    [
+        test("Should extract normally on test data") {
+            setup {
+                run("BFTOOLS_SHOWINF") {
+                    script "modules/nf-core/bftools/showinf/main.nf"
+                    process {
+                        """
+                        input[0] = [[id: "TEST1", cycle_number:1], file(params.modules_testdata_base_path + "/imaging/ome-tiff/cycif-tonsil-cycle1.ome.tif")]
+                        """
+                    }
+                }
+            }
+            when {
+                workflow {
+                    """
+                    input[0] = Channel.of(
+                    [
+                        [id:"TEST1", cycle_number:1],
+                        "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/imaging/ome-tiff/cycif-tonsil-cycle1.ome.tif",
+                        [],
+                        [],
+                    ],
+                    )
+                    input[1] = Channel.of(
+                        [
+                            [channel_number: 1, cycle_number: 1, marker_name: 'DNA 1'],
+                            [channel_number: 2, cycle_number: 1, marker_name: 'Na/K ATPase'],
+                            [channel_number: 3, cycle_number: 1, marker_name: 'CD3'],
+                            [channel_number: 4, cycle_number: 1, marker_name: 'CD45RO'],
+                        ],
+                    )
+                    input[2] = BFTOOLS_SHOWINF.out.xml
+                    """
+                }
+            }
+            then {
+                assertAll(
+                    { assert workflow.success },
+                    { assert snapshot(workflow.out).match() }
+                )
+            }
+
+        },
+
+        test("Should fail on channel count mismatch between input files and markersheet") {
+            setup {
+                run("BFTOOLS_SHOWINF") {
+                    script "modules/nf-core/bftools/showinf/main.nf"
+                    process {
+                        """
+                        input[0] = [[id: "TEST1", cycle_number:1], file(params.modules_testdata_base_path + "/imaging/ome-tiff/cycif-tonsil-cycle1.ome.tif")]
+                        """
+                    }
+                }
+            }
+            when {
+                workflow {
+                    """
+                    input[0] = Channel.of(
+                    [
+                        [id:"TEST1", cycle_number:1],
+                        "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/imaging/ome-tiff/cycif-tonsil-cycle1.ome.tif",
+                        [],
+                        [],
+                    ],
+                    )
+                    input[1] = Channel.of(
+                        [
+                            [channel_number: 1, cycle_number: 1, marker_name: 'DNA 1'],
+                            [channel_number: 2, cycle_number: 1, marker_name: 'Na/K ATPase'],
+                            [channel_number: 3, cycle_number: 1, marker_name: 'CD3'],
+                        ],
+                    )
+                    input[2] = BFTOOLS_SHOWINF.out.xml
+                    """
+                }
+            }
+            then {
+                assertAll(
+                    { assert workflow.failed },
+                    { assert workflow.errorReport.contains("Markersheet cycle/channel numbering") }
+                )
+            }
+        }
+
+    ]
+}

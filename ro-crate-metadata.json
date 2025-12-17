@@ -44,6 +44,9 @@
                     "@id": "modules/"
                 },
                 {
+                    "@id": "modules/local/"
+                },
+                {
                     "@id": "modules/nf-core/"
                 },
                 {
@@ -121,10 +124,20 @@
         },
         {
             "@id": "main.nf",
-            "@type": ["File", "SoftwareSourceCode", "ComputationalWorkflow"],
+            "@type": [
+                "File",
+                "SoftwareSourceCode",
+                "ComputationalWorkflow"
+            ],
             "creator": [
                 {
                     "@id": "https://orcid.org/0000-0002-0811-637X"
+                },
+                {
+                    "@id": "#flowuenne@gmail.com"
+                },
+                {
+                    "@id": "#kbestak@gmail.com"
                 }
             ],
             "dateCreated": "",
@@ -146,16 +159,36 @@
                 "stitching",
                 "tma"
             ],
-            "license": ["MIT"],
-            "name": ["nf-core/mcmicro"],
+            "license": [
+                "MIT"
+            ],
+            "maintainer": [
+                {
+                    "@id": "https://orcid.org/0000-0002-0811-637X"
+                },
+                {
+                    "@id": "#flowuenne@gmail.com"
+                },
+                {
+                    "@id": "#kbestak@gmail.com"
+                }
+            ],
+            "name": [
+                "nf-core/mcmicro"
+            ],
             "programmingLanguage": {
                 "@id": "https://w3id.org/workflowhub/workflow-ro-crate#nextflow"
             },
             "sdPublisher": {
                 "@id": "https://nf-co.re/"
             },
-            "url": ["https://github.com/nf-core/mcmicro", "https://nf-co.re/mcmicro/2.0.0/"],
-            "version": ["2.0.0"]
+            "url": [
+                "https://github.com/nf-core/mcmicro",
+                "https://nf-co.re/mcmicro/2.0.0/"
+            ],
+            "version": [
+                "2.0.0"
+            ]
         },
         {
             "@id": "https://w3id.org/workflowhub/workflow-ro-crate#nextflow",
@@ -224,6 +257,11 @@
             "@id": "modules/",
             "@type": "Dataset",
             "description": "Modules used by the pipeline"
+        },
+        {
+            "@id": "modules/local/",
+            "@type": "Dataset",
+            "description": "Pipeline-specific modules"
         },
         {
             "@id": "modules/nf-core/",
@@ -316,6 +354,18 @@
             "@type": "Person",
             "email": "jmuhlich@bitflood.org",
             "name": "Jeremy Muhlich"
+        },
+        {
+            "@id": "#flowuenne@gmail.com",
+            "@type": "Person",
+            "email": "flowuenne@gmail.com",
+            "name": "Florian Wuennemann"
+        },
+        {
+            "@id": "#kbestak@gmail.com",
+            "@type": "Person",
+            "email": "kbestak@gmail.com",
+            "name": "Kre\u0161imir Be\u0161tak"
         }
     ]
 }
