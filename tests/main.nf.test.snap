@@ -995,7 +995,18 @@
     "cycle: no illumination correction, coreograph": {
         "content": [
             "TEST1.ome.tif:md5,a9563710bb1c0c29798cb9e881916546",
-            "TEST1_1_mask.tif:md5,8ac7455c77e28119bbae82a0fe4e1e5d",
+            {
+                "format": "Tagged Image File Format",
+                "type": "int32",
+                "sizeX": 2507,
+                "sizeY": 2696,
+                "sizeZ": 1,
+                "sizeC": 1,
+                "sizeT": 1,
+                "physicalSizeX": 1.0,
+                "physicalSizeY": 1.0,
+                "physicalSizeZ": null
+            },
             {
                 "headers": [
                     "CellID",
@@ -1032,8 +1043,8 @@
         ],
         "meta": {
             "nf-test": "0.9.2",
-            "nextflow": "25.04.8"
+            "nextflow": "25.10.2"
         },
-        "timestamp": "2025-10-17T12:00:09.971276258"
+        "timestamp": "2026-01-15T11:32:28.42846203"
     }
 }
