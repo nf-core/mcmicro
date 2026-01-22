@@ -17,7 +17,7 @@
                     },
                     "basicpy": {
                         "branch": "master",
-                        "git_sha": "4e691789141fc390aae59a33a42586d443927299",
+                        "git_sha": "a46512fa589fa87fdb602523dee55309c9e84f4d",
                         "installed_by": ["modules"]
                     },
                     "bftools/showinf": {
