@@ -90,8 +90,8 @@ nextflow_workflow {
                             ImageUtils.getImageMetadata("$outputDir/segmentation/mccellpose/TEST1_mask.ome.tif"),
                             CsvUtils.summarizeCsv("$outputDir/quantification/mcquant/mccellpose/TEST1.csv")
                                 .collectEntries(CsvUtils.checkRowCount(2100, 2150)),
-                            ImageUtils.getImageMetadata("$outputDir/illumination_correction/basicpy/cycif-tonsil-cycle1.ome-dfp.tiff"),
-                            ImageUtils.getImageMetadata("$outputDir/illumination_correction/basicpy/cycif-tonsil-cycle1.ome-ffp.tiff"),
+                            ImageUtils.getImageMetadata("$outputDir/illumination_correction/basicpy/TEST1_1-dfp.ome.tif"),
+                            ImageUtils.getImageMetadata("$outputDir/illumination_correction/basicpy/TEST1_1-ffp.ome.tif"),
                             removeNextflowVersion("$outputDir/pipeline_info/nf_core_mcmicro_software_mqc_versions.yml"),
                         ).match()
                     },
@@ -419,12 +419,12 @@ nextflow_workflow {
                             ImageUtils.getImageMetadata("$outputDir/segmentation/mccellpose/cycif-tonsil_mask.ome.tif"),
                             CsvUtils.summarizeCsv("$outputDir/quantification/mcquant/mccellpose/cycif-tonsil.csv")
                                 .collectEntries(CsvUtils.checkRowCount(2100, 2150)),
-                            ImageUtils.getImageMetadata("$outputDir/illumination_correction/basicpy/cycif-tonsil-cycle1.ome-dfp.tiff"),
-                            ImageUtils.getImageMetadata("$outputDir/illumination_correction/basicpy/cycif-tonsil-cycle1.ome-ffp.tiff"),
-                            ImageUtils.getImageMetadata("$outputDir/illumination_correction/basicpy/cycif-tonsil-cycle2.ome-dfp.tiff"),
-                            ImageUtils.getImageMetadata("$outputDir/illumination_correction/basicpy/cycif-tonsil-cycle2.ome-ffp.tiff"),
-                            ImageUtils.getImageMetadata("$outputDir/illumination_correction/basicpy/cycif-tonsil-cycle3.ome-dfp.tiff"),
-                            ImageUtils.getImageMetadata("$outputDir/illumination_correction/basicpy/cycif-tonsil-cycle3.ome-ffp.tiff"),
+                            ImageUtils.getImageMetadata("$outputDir/illumination_correction/basicpy/cycif-tonsil_1-dfp.ome.tif"),
+                            ImageUtils.getImageMetadata("$outputDir/illumination_correction/basicpy/cycif-tonsil_1-ffp.ome.tif"),
+                            ImageUtils.getImageMetadata("$outputDir/illumination_correction/basicpy/cycif-tonsil_2-dfp.ome.tif"),
+                            ImageUtils.getImageMetadata("$outputDir/illumination_correction/basicpy/cycif-tonsil_2-ffp.ome.tif"),
+                            ImageUtils.getImageMetadata("$outputDir/illumination_correction/basicpy/cycif-tonsil_3-dfp.ome.tif"),
+                            ImageUtils.getImageMetadata("$outputDir/illumination_correction/basicpy/cycif-tonsil_3-ffp.ome.tif"),
                             removeNextflowVersion("$outputDir/pipeline_info/nf_core_mcmicro_software_mqc_versions.yml"),
                         ).match()
                     },
@@ -497,12 +497,14 @@ nextflow_workflow {
                                 .collectEntries(CsvUtils.checkRowCount(2100, 2150)),
                             CsvUtils.summarizeCsv("$outputDir/quantification/mcquant/mccellpose/cycif-tonsil2.csv")
                                 .collectEntries(CsvUtils.checkRowCount(2100, 2150)),
-                            ImageUtils.getImageMetadata("$outputDir/illumination_correction/basicpy/cycif-tonsil-cycle1.ome-dfp.tiff"),
-                            ImageUtils.getImageMetadata("$outputDir/illumination_correction/basicpy/cycif-tonsil-cycle1.ome-ffp.tiff"),
-                            ImageUtils.getImageMetadata("$outputDir/illumination_correction/basicpy/cycif-tonsil-cycle2.ome-dfp.tiff"),
-                            ImageUtils.getImageMetadata("$outputDir/illumination_correction/basicpy/cycif-tonsil-cycle2.ome-ffp.tiff"),
-                            ImageUtils.getImageMetadata("$outputDir/illumination_correction/basicpy/cycif-tonsil-cycle3.ome-dfp.tiff"),
-                            ImageUtils.getImageMetadata("$outputDir/illumination_correction/basicpy/cycif-tonsil-cycle3.ome-ffp.tiff"),
+                            ImageUtils.getImageMetadata("$outputDir/illumination_correction/basicpy/cycif-tonsil_1-dfp.ome.tif"),
+                            ImageUtils.getImageMetadata("$outputDir/illumination_correction/basicpy/cycif-tonsil_1-ffp.ome.tif"),
+                            ImageUtils.getImageMetadata("$outputDir/illumination_correction/basicpy/cycif-tonsil_2-dfp.ome.tif"),
+                            ImageUtils.getImageMetadata("$outputDir/illumination_correction/basicpy/cycif-tonsil_2-ffp.ome.tif"),
+                            ImageUtils.getImageMetadata("$outputDir/illumination_correction/basicpy/cycif-tonsil2_1-dfp.ome.tif"),
+                            ImageUtils.getImageMetadata("$outputDir/illumination_correction/basicpy/cycif-tonsil2_1-ffp.ome.tif"),
+                            ImageUtils.getImageMetadata("$outputDir/illumination_correction/basicpy/cycif-tonsil2_2-dfp.ome.tif"),
+                            ImageUtils.getImageMetadata("$outputDir/illumination_correction/basicpy/cycif-tonsil2_2-ffp.ome.tif"),
                             removeNextflowVersion("$outputDir/pipeline_info/nf_core_mcmicro_software_mqc_versions.yml"),
                         ).match()
                     },
@@ -589,7 +591,7 @@ nextflow_workflow {
                     {
                         assert snapshot (
                             path("$outputDir/registration/ashlar/TEST1.ome.tif"),
-                            path("$outputDir/segmentation/deepcell_mesmer/TEST1_1_mask.tif"),
+                            ImageUtils.getImageMetadata("$outputDir/segmentation/deepcell_mesmer/TEST1_1_mask.tif"),
                             CsvUtils.summarizeCsv("$outputDir/quantification/mcquant/mesmer/1_TEST1_1_mask.csv"),
                             removeNextflowVersion("$outputDir/pipeline_info/nf_core_mcmicro_software_mqc_versions.yml"),
                         ).match()

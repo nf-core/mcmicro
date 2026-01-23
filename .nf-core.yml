@@ -6,6 +6,8 @@ lint:
     - .gitignore
   nextflow_config:
     - params.input
+  template_strings:
+    - assets/mcmicro_metro.pdf
 nf_core_version: 3.5.1
 repository_type: pipeline
 template:
