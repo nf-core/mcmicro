@@ -591,7 +591,7 @@ nextflow_workflow {
                     {
                         assert snapshot (
                             path("$outputDir/registration/ashlar/TEST1.ome.tif"),
-                            path("$outputDir/segmentation/deepcell_mesmer/TEST1_1_mask.tif"),
+                            ImageUtils.getImageMetadata("$outputDir/segmentation/deepcell_mesmer/TEST1_1_mask.tif"),
                             CsvUtils.summarizeCsv("$outputDir/quantification/mcquant/mesmer/1_TEST1_1_mask.csv"),
                             removeNextflowVersion("$outputDir/pipeline_info/nf_core_mcmicro_software_mqc_versions.yml"),
                         ).match()
