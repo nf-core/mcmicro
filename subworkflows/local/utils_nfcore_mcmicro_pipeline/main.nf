@@ -42,7 +42,7 @@ workflow PIPELINE_INITIALISATION {
 
     main:
 
-    ch_versions = Channel.empty()
+    ch_versions = channel.empty()
 
     //
     // Print version and exit if required and dump pipeline parameters to JSON file
@@ -67,7 +67,7 @@ workflow PIPELINE_INITIALISATION {
 \033[0;35m  nf-core/mcmicro ${workflow.manifest.version}\033[0m
 -\033[2m----------------------------------------------------\033[0m-
 """
-    after_text = """${workflow.manifest.doi ? "\n* The pipeline\n" : ""}${workflow.manifest.doi.tokenize(",").collect { "    https://doi.org/${it.trim().replace('https://doi.org/','')}"}.join("\n")}${workflow.manifest.doi ? "\n" : ""}
+    after_text = """${workflow.manifest.doi ? "\n* The pipeline\n" : ""}${workflow.manifest.doi.tokenize(",").collect { doi -> "    https://doi.org/${doi.trim().replace('https://doi.org/','')}"}.join("\n")}${workflow.manifest.doi ? "\n" : ""}
 * The nf-core framework
     https://doi.org/10.1038/s41587-020-0439-x
 
@@ -104,15 +104,15 @@ workflow PIPELINE_INITIALISATION {
     // Create channel from input file provided through params.input_cycle or .input_sample
     //
     if (input_cycle) {
-        ch_samplesheet = Channel.fromList(samplesheetToList(params.input_cycle, "${projectDir}/assets/schema_input_cycle.json"))
+        ch_samplesheet = channel.fromList(samplesheetToList(params.input_cycle, "${projectDir}/assets/schema_input_cycle.json"))
             .dump(tag: 'ch_samplesheet (cycle)')
     } else if (input_sample) {
-        ch_samplesheet = Channel.fromList(samplesheetToList(params.input_sample, "${projectDir}/assets/schema_input_sample.json"))
+        ch_samplesheet = channel.fromList(samplesheetToList(params.input_sample, "${projectDir}/assets/schema_input_sample.json"))
             .flatMap { expandSampleRow(it) }
             .dump(tag: 'ch_samplesheet (sample)')
     }
 
-    ch_markersheet = Channel.fromList(samplesheetToList(params.marker_sheet, "${projectDir}/assets/schema_marker.json"))
+    ch_markersheet = channel.fromList(samplesheetToList(params.marker_sheet, "${projectDir}/assets/schema_marker.json"))
         // Extract only the meta-maps since we mark all fields as meta.
         .collect({ it[0] }, flat: false)
         .map{ validateInputMarkersheet(it) }
