@@ -10,10 +10,6 @@
 
 ## Pipeline tools
 
-- [BaSiCPy](https://basicpy.readthedocs.io/en/stable/)
-
-  > Peng, T., Thorn, K., Schroeder, T., Wang, L., Theis, F. J., Marr, C., Navab, N. A BaSiC Tool for Background and Shading Correction of Optical Microscopy Images. Nature Communication 2017 June 08; 8(1):14836. doi: [10.1038/ncomms14836](http://doi.org/10.1038/ncomms14836).
-
 - [ASHLAR](https://labsyspharm.github.io/ashlar/)
 
   > Muhlich, J. L., Chen, Y., Yapp, C., Russell, D., Santagata, S., Sorger, P. K. Stitching and registering highly multiplexed whole-slide images of tissues and tumors using ASHLAR. Bioinformatics 2022 October; 38(19):4613–4621. doi: [10.1093/bioinformatics/btac544](https://doi.org/10.1093/bioinformatics/btac544).
@@ -22,29 +18,37 @@
 
   > Schapiro, D., Sokolov, A., Yapp, C. et al. MCMICRO: a scalable, modular image-processing pipeline for multiplexed tissue imaging. Nat Methods 2022; 19:311–315. doi: [10.1038/s41592-021-01308-y](https://doi.org/10.1038/s41592-021-01308-y)
 
-- [Coreograph](https://github.com/HMS-IDAC/UNetCoreograph)
+- [BaSiCPy](https://basicpy.readthedocs.io/en/stable/)
 
-  > Schapiro, D., Sokolov, A., Yapp, C. et al. MCMICRO: a scalable, modular image-processing pipeline for multiplexed tissue imaging. Nat Methods 2022; 19:311–315. doi: [10.1038/s41592-021-01308-y](https://doi.org/10.1038/s41592-021-01308-y)
+  > Peng, T., Thorn, K., Schroeder, T., Wang, L., Theis, F. J., Marr, C., Navab, N. A BaSiC Tool for Background and Shading Correction of Optical Microscopy Images. Nature Communication 2017 June 08; 8(1):14836. doi: [10.1038/ncomms14836](http://doi.org/10.1038/ncomms14836).
+
+- [Bioformats](https://www.openmicroscopy.org/bio-formats/)
+
+  > Linkert M, Rueden CT, Allan C, Burel JM, Moore W, Patterson A, Loranger B, Moore J, Neves C, MacDonald D, Tarkowska A, Sticco C, Hill E, Rossner M, Eliceiri KW, Swedlow JR. Metadata matters: access to image data in the real world. J Cell Biol. 2010 May 31;189(5):777–782. doi: [10.1083/jcb.201004104](https://doi.org/10.1083/jcb.201004104)
 
 - [Cellpose](https://cellpose.readthedocs.io/en/latest/index.html)
 
   > Pachitariu, M., Stringer, C. Cellpose 2.0: how to train your own model. Nat Methods 2022; 19:1634–1641. doi: [10.1038/s41592-022-01663-4](https://doi.org/10.1038/s41592-022-01663-4)
 
-- [Mesmer](https://deepcell.readthedocs.io/en/master/)
+- [Coreograph](https://github.com/HMS-IDAC/UNetCoreograph)
 
-  > Greenwald, N.F., Miller, G., Moen, E. et al. Whole-cell segmentation of tissue images with human-level performance using large-scale data annotation and deep learning. Nat Biotechnol 2022; 40:555–565. doi: [10.1038/s41587-021-01094-0](https://doi.org/10.1038/s41587-021-01094-0)
+  > Schapiro, D., Sokolov, A., Yapp, C. et al. MCMICRO: a scalable, modular image-processing pipeline for multiplexed tissue imaging. Nat Methods 2022; 19:311–315. doi: [10.1038/s41592-021-01308-y](https://doi.org/10.1038/s41592-021-01308-y)
 
 - [MCQuant](https://github.com/labsyspharm/quantification)
 
   > Schapiro, D., Sokolov, A., Yapp, C. et al. MCMICRO: a scalable, modular image-processing pipeline for multiplexed tissue imaging. Nat Methods 2022; 19:311–315. doi: [10.1038/s41592-021-01308-y](https://doi.org/10.1038/s41592-021-01308-y)
 
-- [SciMap](https://scimap.xyz/)
+- [Mesmer](https://deepcell.readthedocs.io/en/master/)
 
-  > Nirmal et al. SCIMAP: A Python Toolkit for Integrated Spatial Analysis of Multiplexed Imaging Data. Journal of Open Source Software 2024; 9(97):6604, doi: [10.21105/joss.06604](https://doi.org/10.21105/joss.06604)
+  > Greenwald, N.F., Miller, G., Moen, E. et al. Whole-cell segmentation of tissue images with human-level performance using large-scale data annotation and deep learning. Nat Biotechnol 2022; 40:555–565. doi: [10.1038/s41587-021-01094-0](https://doi.org/10.1038/s41587-021-01094-0)
 
 - [MultiQC](https://pubmed.ncbi.nlm.nih.gov/27312411/)
 
   > Ewels P, Magnusson M, Lundin S, Käller M. MultiQC: summarize analysis results for multiple tools and samples in a single report. Bioinformatics. 2016 Oct 1;32(19):3047-8. doi: 10.1093/bioinformatics/btw354. Epub 2016 Jun 16. PubMed PMID: 27312411; PubMed Central PMCID: PMC5039924.
+
+- [SciMap](https://scimap.xyz/)
+
+  > Nirmal et al. SCIMAP: A Python Toolkit for Integrated Spatial Analysis of Multiplexed Imaging Data. Journal of Open Source Software 2024; 9(97):6604, doi: [10.21105/joss.06604](https://doi.org/10.21105/joss.06604)
 
 ## Software packaging/containerisation tools
 
