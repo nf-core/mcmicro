@@ -5,7 +5,7 @@ process OMEVALIDATION {
     label 'process_single'
 
     input:
-    tuple val(meta), val(xmlPath)
+    tuple val(meta), path(xmlPath)
 
     output:
     tuple val(meta), val(sample_meta), val(marker_meta)
