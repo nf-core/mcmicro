@@ -11,7 +11,7 @@ process OMEVALIDATION {
     tuple val(meta), val(sample_meta), val(marker_meta)
 
     exec:
-    def xml = new XmlSlurper().parseText(file(xmlPath.toString()).text)
+    def xml = new XmlSlurper().parseText(file(xmlPath.toUriString()).text)
 
     /*
     SAMPLESHEET DATA ----------------------------------------------------------------------------------------------
