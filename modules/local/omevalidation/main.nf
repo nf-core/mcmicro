@@ -5,13 +5,13 @@ process OMEVALIDATION {
     label 'process_single'
 
     input:
-    tuple val(meta), path(xmlPath)
+    tuple val(meta), val(xmlPath)
 
     output:
     tuple val(meta), val(sample_meta), val(marker_meta)
 
     exec:
-    def xml = new XmlSlurper().parse(new File(xmlPath.toString()))
+    def xml = new XmlSlurper().parseText(file(xmlPath.toString()).text)
 
     /*
     SAMPLESHEET DATA ----------------------------------------------------------------------------------------------
