@@ -126,34 +126,42 @@ workflow MCMICRO {
         }
 
         // Run Segmentation
+        // Each segmenter is conditionally invoked based on params.segmentation to avoid
+        // input validation errors on AWS Batch when the process would be skipped by ext.when
 
         ch_masks = channel.empty()
 
-        ch_segmentation_input
-            .multiMap{ meta, image ->
-                img: [meta + [segmenter: 'mesmer'], image]
-                membrane_img: [[:], []]
-            }
-            | DEEPCELL_MESMER
-        ch_masks = ch_masks.mix(DEEPCELL_MESMER.out.mask)
-        ch_versions = ch_versions.mix(DEEPCELL_MESMER.out.versions)
+        if (params.segmentation?.split(',')?.contains('mesmer')) {
+            ch_segmentation_input
+                .multiMap{ meta, image ->
+                    img: [meta + [segmenter: 'mesmer'], image]
+                    membrane_img: [[:], []]
+                }
+                | DEEPCELL_MESMER
+            ch_masks = ch_masks.mix(DEEPCELL_MESMER.out.mask)
+            ch_versions = ch_versions.mix(DEEPCELL_MESMER.out.versions)
+        }
 
-        ch_segmentation_input
-            .multiMap{ meta, image ->
-                image: [meta + [segmenter: 'cellpose'], image]
-                model: params.cellpose_model
-            }
-            | CELLPOSE
-        ch_masks = ch_masks.mix(CELLPOSE.out.mask)
-        ch_versions = ch_versions.mix(CELLPOSE.out.versions)
+        if (params.segmentation?.split(',')?.contains('cellpose')) {
+            ch_segmentation_input
+                .multiMap{ meta, image ->
+                    image: [meta + [segmenter: 'cellpose'], image]
+                    model: params.cellpose_model
+                }
+                | CELLPOSE
+            ch_masks = ch_masks.mix(CELLPOSE.out.mask)
+            ch_versions = ch_versions.mix(CELLPOSE.out.versions)
+        }
 
-        ch_segmentation_input
-            .multiMap{ meta, image ->
-                image: [meta + [segmenter: 'mccellpose'], image]
-            }
-            | MCCELLPOSE
-        ch_masks = ch_masks.mix(MCCELLPOSE.out.mask)
-        ch_versions = ch_versions.mix(MCCELLPOSE.out.versions)
+        if (params.segmentation?.split(',')?.contains('mccellpose')) {
+            ch_segmentation_input
+                .multiMap{ meta, image ->
+                    image: [meta + [segmenter: 'mccellpose'], image]
+                }
+                | MCCELLPOSE
+            ch_masks = ch_masks.mix(MCCELLPOSE.out.mask)
+            ch_versions = ch_versions.mix(MCCELLPOSE.out.versions)
+        }
 
         // Run Quantification
 
