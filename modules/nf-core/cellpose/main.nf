@@ -1,6 +1,7 @@
 process CELLPOSE {
     tag "$meta.id"
     label 'process_medium'
+    label 'process_gpu'
 
     container "docker.io/biocontainers/cellpose:3.0.1_cv1"
 

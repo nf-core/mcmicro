@@ -1,6 +1,7 @@
 process DEEPCELL_MESMER {
     tag "$meta.id"
     label 'process_low'
+    label 'process_gpu'
 
     container "nf-core/deepcell_mesmer:0.4.1_noentry"
 
