@@ -4,8 +4,6 @@
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
-import nextflow.Nextflow
-
 include { paramsSummaryMap       } from 'plugin/nf-schema'
 include { paramsSummaryMultiqc   } from '../subworkflows/nf-core/utils_nfcore_pipeline'
 include { softwareVersionsToYAML } from '../subworkflows/nf-core/utils_nfcore_pipeline'
@@ -182,12 +180,6 @@ workflow MCMICRO {
             | MCQUANT
 
         ch_versions = ch_versions.mix(MCQUANT.out.versions)
-
-        /*
-        // // Run Reporting
-        SCIMAP_MCMICRO(MCQUANT.out.csv)
-        ch_versions = ch_versions.mix(SCIMAP_MCMICRO.out.versions)
-        */
 
     }
 
