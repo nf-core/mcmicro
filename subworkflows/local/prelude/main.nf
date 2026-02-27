@@ -9,6 +9,14 @@ workflow PRELUDE {
     xml
 
     main:
+
+    if (workflow.stubRun) {
+        output_file_xml         = Channel.of([])
+        output_file_samplesheet = Channel.of([])
+        output_file_markersheet = Channel.of([])
+        return
+    }
+
     ch_output_xml         = ( xml.map {
                                     meta, xmlpath -> [meta, xmlpath]
                                     } | SUMMARY_XML ).output
