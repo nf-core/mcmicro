@@ -7,6 +7,11 @@ workflow UPDATE_FROM_OME {
     xml
 
     main:
+
+    if (workflow.stubRun) {
+        return
+    }
+
     val_data = xml.map{meta, x -> [meta, x]} | OMEVALIDATION
 
     samplesheet.join(val_data)
