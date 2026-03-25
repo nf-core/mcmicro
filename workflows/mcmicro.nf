@@ -37,25 +37,36 @@ workflow MCMICRO {
     main:
     ch_versions = channel.empty()
     ch_multiqc_files = channel.empty()
+    has_errors = false
+    n_errors = 0
 
     ch_samplesheet.map{meta, image_tiles, dfp, ffp -> [meta, image_tiles]} | BFTOOLS_SHOWINF
     ch_versions = ch_versions.mix(BFTOOLS_SHOWINF.out.versions)
 
-    PRELUDE(ch_markersheet, ch_samplesheet, BFTOOLS_SHOWINF.out.xml)
+    metadata    = UPDATE_FROM_OME(ch_samplesheet, ch_markersheet, BFTOOLS_SHOWINF.out.xml)
 
-    ch_multiqc_files = ch_multiqc_files.mix(PRELUDE.out.output_file_samplesheet)
-                        .mix(PRELUDE.out.output_file_xml)
-                        .mix(PRELUDE.out.output_file_markersheet)
+    ch_samplesheet = metadata.samplesheet
+    ch_markersheet = metadata.markersheet
+
+    ch_samplesheet.dump(tag: "ch_samplesheet")
+    ch_markersheet.dump(tag: "ch_markersheet")
+
+    summaries = PRELUDE(ch_markersheet, ch_samplesheet, BFTOOLS_SHOWINF.out.xml)
+
+    ch_multiqc_files = ch_multiqc_files.mix(summaries.output_file_mixed_matrix_summary)
+
+    ch_n_errors = summaries.output_file_error_merged.map{
+            meta, errors -> return tuple([meta['id'], meta['cycle_number']], errors.readLines().size() == 1)
+        }.dump(tag:"METAHASNOERRORS")
+
+    ch_samplesheet.map{it -> [[it[0]["id"], it[0]["cycle_number"]], it]}
+        .join(ch_n_errors)
+        .filter{ it[1] }
+        .map { key, sample, errors -> sample }.dump(tag:"DELERRORS")
+        .set{ ch_samplesheet }
+
 
     if (!params.prelude) {
-        metadata    = UPDATE_FROM_OME(ch_samplesheet, ch_markersheet, BFTOOLS_SHOWINF.out.xml)
-
-        ch_samplesheet = metadata.samplesheet
-        ch_markersheet = metadata.markersheet
-
-        ch_samplesheet.dump(tag: "ch_samplesheet")
-        ch_markersheet.dump(tag: "ch_markersheet")
-
         //
         // MODULE: BASICPY
         //
@@ -252,6 +263,8 @@ workflow MCMICRO {
         [],
         []
     )
+
+    ch_n_errors.map{ if (!it[1]) error "QC Error found" }
 
     emit:
     multiqc_report = MULTIQC.out.report.toList() // channel: /path/to/multiqc_report.html

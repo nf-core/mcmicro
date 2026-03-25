@@ -78,12 +78,15 @@ workflow UPDATE_FROM_OME {
         )
         .map{ it.drop(1) }
         .dump(tag:'ch_markersheet_mismatch_check')
+        /*
         .map{ e ->
             if (e.any{ it == null }) {
                 error('Markersheet cycle/channel numbering does not match image file metadata')
             }
             e
         }
+        */
+        .filter{ e -> !e.any{it == null}} // ignore errors, will be caught in PRELUDE
         .map{ orig, validated ->  markersheet_template + validated + orig }
         .map{ meta -> meta - meta.subMap('id') }
         .unique()
@@ -91,7 +94,7 @@ workflow UPDATE_FROM_OME {
         .dump(tag: "ch_markersheet_meta")
         .set { markersheet_meta }
 
-
+    /*
     markersheet_meta  // Inter sample marker setup check
         .map {
             entry -> [[entry.cycle_number, entry.channel_number], [entry.exposure_time, entry.exposure_time_unit]]
@@ -102,6 +105,7 @@ workflow UPDATE_FROM_OME {
                 if (values.unique().size() != 1)
                     error "Inconsistent marker exposure data across samples."
         }
+    */
 
     if (params.backsub) {
         markersheet_meta

@@ -46,7 +46,7 @@ nextflow_workflow {
             }
 
         },
-
+        /*
         test("Should fail on channel count mismatch between input files and markersheet") {
             setup {
                 run("BFTOOLS_SHOWINF") {
@@ -87,6 +87,6 @@ nextflow_workflow {
                 )
             }
         }
-
+    */
     ]
 }

@@ -4,54 +4,102 @@ nextflow_workflow {
     script "../main.nf"
     workflow "PRELUDE"
 
-    [
-        test("normal run") {
-            setup {
-                run("BFTOOLS_SHOWINF") {
-                    script "modules/nf-core/bftools/showinf/main.nf"
-                    process {
-                        """
-                        input[0] = [["id": "TEST1", cycle_number:1], file(params.modules_testdata_base_path + "/imaging/ome-tiff/cycif-tonsil-cycle1.ome.tif")]
-                        """
-                    }
+    test("normal run") {
+        setup {
+            run("BFTOOLS_SHOWINF") {
+                script "modules/nf-core/bftools/showinf/main.nf"
+                process {
+                    """
+                    input[0] = [["id": "TEST1", cycle_number:1], file(params.modules_testdata_base_path + "/imaging/ome-tiff/cycif-tonsil-cycle1.ome.tif")]
+                    """
                 }
             }
-            when {
-                workflow {
-                    """
-                     input[0] = Channel.of([
-                                [
-                                    channel_number:1,
-                                    cycle_number:1,
-                                    marker_name:'DNA_6',
-                                    filter:null,
-                                    excitation_wavelength:null,
-                                    emission_wavelength:null,
-                                    exposure:null,
-                                    background:null,
-                                    remove:null,
-                                    exposure_time:null,
-                                    exposure_time_unit:null
-                                ],],
-                            )
-                     input[1] = Channel.of(
+        }
+        when {
+            workflow {
+                """
+                 input[0] = Channel.of([
                             [
-                                [id:"TEST1", cycle_number:1, channel_count:4],
-                                "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/imaging/ome-tiff/cycif-tonsil-cycle1.ome.tif",
-                                [],
-                                [],
-                            ],)
-                     input[2] = BFTOOLS_SHOWINF.out.xml
-                    """
-                }
+                                channel_number:1,
+                                cycle_number:1,
+                                marker_name:'DNA_6',
+                                filter:null,
+                                excitation_wavelength:null,
+                                emission_wavelength:null,
+                                exposure:null,
+                                background:null,
+                                remove:null,
+                                exposure_time:null,
+                                exposure_time_unit:null
+                            ],],
+                        )
+                 input[1] = Channel.of(
+                        [
+                            [id:"TEST1", cycle_number:1, channel_count:4],
+                            "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/imaging/ome-tiff/cycif-tonsil-cycle1.ome.tif",
+                            [],
+                            [],
+                        ],)
+                 input[2] = BFTOOLS_SHOWINF.out.xml
+                """
             }
+        }
 
-            then {
-                assertAll(
-                    { assert workflow.success },
-                    { assert snapshot(workflow.out).match() }
-                )
+        then {
+            assertAll(
+                { assert workflow.success },
+                { assert snapshot(workflow.out).match() }
+            )
+        }
+    }
+
+    test("Invalid xml parameters - must have errors") {
+        when {
+            workflow {
+                """
+                 input[0] = Channel.of([
+                            [
+                                channel_number:1,
+                                cycle_number:1,
+                                marker_name:'DNA_6',
+                                filter:null,
+                                excitation_wavelength:null,
+                                emission_wavelength:null,
+                                exposure:null,
+                                background:null,
+                                remove:null,
+                                exposure_time:null,
+                                exposure_time_unit:null
+                            ],],
+                        )
+                 input[1] = Channel.of(
+                        [
+                            [id:"TEST1", cycle_number:1, channel_count:4],
+                            "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/imaging/ome-tiff/cycif-tonsil-cycle1.ome.tif",
+                            [],
+                            [],
+                        ],)
+
+                 input[2] = Channel.of(
+                        [
+                            ['id':'test1', 'cycle_number': 1],
+                            "${projectDir}/assets/omexml_meta_all_wrong.xml",
+                        ],)
+                """
             }
-        },
-    ]
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success },
+                { assert file(workflow.out.output_file_error_merged.get(0).get(1)).exists() },
+                { assert file(workflow.out.output_file_error_merged.get(0).get(1)).readLines().any{ it.contains("SizeX") }},
+                { assert file(workflow.out.output_file_error_merged.get(0).get(1)).readLines().any{ it.contains("SizeY") }},
+                { assert file(workflow.out.output_file_error_merged.get(0).get(1)).readLines().any{ it.contains("PhysicalSizeX") }},
+                { assert file(workflow.out.output_file_error_merged.get(0).get(1)).readLines().any{ it.contains("PhysicalSizeY") }},
+                { assert file(workflow.out.output_file_error_merged.get(0).get(1)).readLines().any{ it.contains("PhysicalSizeXUnit") }},
+                { assert file(workflow.out.output_file_error_merged.get(0).get(1)).readLines().any{ it.contains("PhysicalSizeYUnit") }}
+            )
+        }
+    }
 }

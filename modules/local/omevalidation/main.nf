@@ -30,11 +30,11 @@ process OMEVALIDATION {
         .collect {
             node -> [node.@SizeX.toInteger(), node.@SizeY.toInteger()]
         }.toSet()
-
+    /*
     if (tile_size.size() != 1) {
         error "Inconsistent tile sizes in images."
     }
-
+    */
     tile_size = tile_size[0]
 
     def pixels = xml.'**'.findAll {
@@ -43,32 +43,32 @@ process OMEVALIDATION {
         .collect {
             node -> [node.@PhysicalSizeX.toDouble(), node.@PhysicalSizeY.toDouble()]
         }
-
+    /*
     if (pixels.size() == 0) {
         error 'Images are missing pixel physical size metadata.'
     }
     if (pixels.toSet().size() != 1 || (pixels[0][0]).round(3) != (pixels[0][1]).round(3)) {
         error "Found non consistent pixels sizes in images."
     }
-
+    */
     def n_channels = xml.'**'.findAll {
             node -> node.name() == 'Pixels' && node.@SizeC != ''
         }
         .collect { node -> node.@SizeC.toInteger() }
-
+    /*
     if (n_channels.toSet().size() != 1 || n_channels[0] == 0) {
         error "Found inconsistent number of channels in images."
     }
-
+    */
     def size_units = xml.'**'.findAll {
             node -> node.name() == 'Pixels' && node.@PhysicalSizeXUnit != '' && node.@PhysicalSizeYUnit != ''
         }
         .collect { node -> [node.@PhysicalSizeXUnit.toString(), node.@PhysicalSizeYUnit.toString()] }
-
+    /*
     if (size_units.toSet().size() != 1 || size_units.flatten().toSet().size() != 1) {
         error "Inconsistent pixels size unit in images."
     }
-
+    */
     // transform pixel size to microns
     def s_units = size_units[0][0]
 
@@ -82,7 +82,8 @@ process OMEVALIDATION {
       pixels = pixels[0][0]
     }
     else{
-        error "Invalid pixel size unit found."
+        //error "Invalid pixel size unit found."
+      pixels = pixels[0][0]
     }
 
     pixels = pixels.round(3)
@@ -92,11 +93,11 @@ process OMEVALIDATION {
         }
         .collect { node -> node.@Type.toString() }
         .toSet()
-
+    /*
     if (pixel_datatype.size() != 1) {
         error "Inconsistent pixels datatype in images."
     }
-
+    */
     pixel_datatype = pixel_datatype[0]
 
     /*

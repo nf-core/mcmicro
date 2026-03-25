@@ -17,10 +17,10 @@
             <LightPath/>
          </Channel>
          <TiffData FirstC="0" FirstT="0" FirstZ="0" IFD="0" PlaneCount="4"/>
-         <Plane TheC="0" TheT="0" TheZ="0"/>
-         <Plane TheC="1" TheT="0" TheZ="0"/>
-         <Plane TheC="2" TheT="0" TheZ="0"/>
-         <Plane TheC="3" TheT="0" TheZ="0"/>
+         <Plane TheC="0" TheT="0" TheZ="0" ExposureTime="1" ExposureTimeUnits="s"/>
+         <Plane TheC="1" TheT="0" TheZ="0" ExposureTime="1" ExposureTimeUnits="s"/>
+         <Plane TheC="2" TheT="0" TheZ="0" ExposureTime="3" ExposureTimeUnits="s"/>
+         <Plane TheC="3" TheT="0" TheZ="0" ExposureTime="4" ExposureTimeUnits="s"/>
       </Pixels>
       <AnnotationRef ID="Annotation:Stitcher:0"/>
    </Image>
@@ -41,10 +41,10 @@
             <LightPath/>
          </Channel>
          <TiffData FirstC="0" FirstT="0" FirstZ="0" IFD="0" PlaneCount="4"/>
-         <Plane TheC="0" TheT="0" TheZ="0"/>
-         <Plane TheC="1" TheT="0" TheZ="0"/>
-         <Plane TheC="2" TheT="0" TheZ="0"/>
-         <Plane TheC="3" TheT="0" TheZ="0"/>
+         <Plane TheC="0" TheT="0" TheZ="0" ExposureTime="1" ExposureTimeUnits="s"/>
+         <Plane TheC="1" TheT="0" TheZ="0" ExposureTime="2" ExposureTimeUnits="s"/>
+         <Plane TheC="2" TheT="0" TheZ="0" ExposureTime="3" ExposureTimeUnits="s"/>
+         <Plane TheC="3" TheT="0" TheZ="0" ExposureTime="4" ExposureTimeUnits="s"/>
       </Pixels>
       <AnnotationRef ID="Annotation:Stitcher:0"/>
    </Image>
