@@ -121,7 +121,6 @@ nextflow_workflow {
         then {
             assertAll(
                 { assert workflow.failed },
-                //{ assert workflow.exitStatus == 0 },
                 { assert workflow.errorReport.contains("QC Error found") }
             )
         }

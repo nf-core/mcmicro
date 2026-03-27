@@ -11,7 +11,6 @@ def pipeline():
     output_markersheet = [["row_id", "variable_name", "value", "expected", "check"]]
     counter = 0
 
-    #markersheet = pandas.read_json(StringIO(sys.argv[1]))
     markersheet = pandas.read_json(sys.argv[1])
 
     for index, row in markersheet.iterrows():

@@ -44,8 +44,7 @@ def pipeline():
     root = ET.parse(sys.argv[1]).getroot()
 
     if not elementInTagConsistent(root, 'Pixels', 'SizeX') or \
-            not elementInTagConsistent(root, 'Pixels', 'SizeY'): #  or \
-            #root.findall('.//{*}Pixels[@SizeX]')[0].attrib['SizeX'] != root.findall('.//{*}Pixels[@SizeY]')[0].attrib['SizeY']:
+            not elementInTagConsistent(root, 'Pixels', 'SizeY'):
         res = cross
     else:
         res = check

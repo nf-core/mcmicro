@@ -68,7 +68,6 @@ def pipeline():
                        "Consistent intra sample values",
                        warning,
                        ""])
-        #errors.extend(extract_errors(data, "ExposureTime", is_cycle=True))
 
     if check_consistency_cycle(data, "ExposureTimeUnit"):
         output.append(["ExposureTimeUnit", "Consistent intra sample values", check, ""])
@@ -77,7 +76,6 @@ def pipeline():
                        "Consistent intra sample values",
                        warning,
                        ""])
-        #errors.extend(extract_errors(data, "ExposureTimeUnit", is_cycle=True))
 
     if check_consistency(data, "SizeX"):
         output.append(["SizeX", "Consistent intra sample values", check, ""])

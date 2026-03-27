@@ -29,7 +29,6 @@ workflow PRELUDE {
                                     return [meta, f]
                                     } | PRELUDE_SUMMARY_SAMPLESHEET ).output
 
-    //ch_output_merged_xml  = PRELUDE_MULTI_SUMMARY(xml.map{meta, xmlpath -> meta}.first(), ch_output_xml.variables.map{meta, files -> files})
     ch_output_merged_xml  = ch_output_xml.variables | PRELUDE_MULTI_SUMMARY
 
     ch_output_mixed_matrix_summary  = PRELUDE_MULTI_MATRIX_SUMMARY(
