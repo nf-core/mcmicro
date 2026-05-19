@@ -10,8 +10,8 @@ process PRELUDE_SUMMARY_MARKERSHEET {
     tuple val(meta), path(markersheet)
 
     output:
-    tuple val(meta), path("*.tsv"), emit: output
-    tuple val("${task.process}"), val("summary_markersheet"), eval("python --version"), topic: versions, emit: versions_summarymarker
+    tuple val(meta), path("*.tsv")                                                    , emit: output
+    tuple val("${task.process}"), val("summary_markersheet"), eval("python --version"), emit: versions_summarymarker, topic: versions
 
     when:
     task.ext.when == null || task.ext.when

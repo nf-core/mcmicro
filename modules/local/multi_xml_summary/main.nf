@@ -1,5 +1,5 @@
 process PRELUDE_MULTI_SUMMARY {
-    tag "$meta.id"
+    tag "multi_xml_summary"
     label 'process_single'
 
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
@@ -7,11 +7,12 @@ process PRELUDE_MULTI_SUMMARY {
         'biocontainers/pandas:2.2.1' }"
 
     input:
-    tuple val(meta), path(xmls)
+    val(meta)
+    path(xmls)
 
     output:
-    path "*_mqc.tsv"                                                            , emit: output_mqc
-    tuple val(meta), path("*_errors.tsv")                                                         , emit: output_errors
+    path "*_mqc.tsv"                                                                             , emit: output_mqc
+    tuple val(meta), path("*_errors.tsv")                                                        , emit: output_errors
     tuple val("${task.process}"), val("multi_summary"), eval("python --version"), topic: versions, emit: versions_multisummary
 
     when:

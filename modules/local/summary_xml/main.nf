@@ -12,7 +12,7 @@ process PRELUDE_SUMMARY_XML {
     output:
     tuple val(meta), path("*_xml_mqc.tsv")                                    , emit: output
     tuple val(meta), path("*_variables.tsv")                                  , emit: variables
-    tuple val("${task.process}"), val("summary_xml"), eval("python --version"), topic: versions, emit: versions_summaryxml
+    tuple val("${task.process}"), val("summary_xml"), eval("python --version"), emit: versions_summaryxml, topic: versions
 
     when:
     task.ext.when == null || task.ext.when

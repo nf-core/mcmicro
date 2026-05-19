@@ -29,16 +29,20 @@ workflow PRELUDE {
                                     return [meta, f]
                                     } | PRELUDE_SUMMARY_SAMPLESHEET ).output
 
-    ch_output_merged_xml  = ch_output_xml.variables | PRELUDE_MULTI_SUMMARY
+    ch_output_merged_xml  = PRELUDE_MULTI_SUMMARY([], ch_output_xml.variables.map{
+                                                        meta, file -> file
+                                                        }
+                                                        .collect()
+                                                        .dump(tag:"ch_output_xml.variables"))
 
     ch_output_mixed_matrix_summary  = PRELUDE_MULTI_MATRIX_SUMMARY(
                                 ch_output_samplesheet.map{
                                     meta, files -> files
-                                },
+                                    }.collect().dump(tag: "prelude_samplesheet"),
                                 ch_output_xml.output.map{
                                     meta, files -> files
-                                },
-                                ch_output_merged_xml.output_mqc
+                                    }.collect().dump(tag: "prelude_xml"),
+                                ch_output_merged_xml.output_mqc.collect().dump(tag: "prelude_multi_xml")
                                 )
 
 

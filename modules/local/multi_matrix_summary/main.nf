@@ -13,7 +13,7 @@ process PRELUDE_MULTI_MATRIX_SUMMARY {
 
     output:
     path("*_mqc.tsv")                                                         , emit: output
-    tuple val("${task.process}"), val("summary_xml"), eval("python --version"), topic: versions, emit: versions_summarymatrix
+    tuple val("${task.process}"), val("summary_xml"), eval("python --version"), emit: versions_summarymatrix, topic: versions
 
     when:
     task.ext.when == null || task.ext.when

@@ -11,7 +11,7 @@ process PRELUDE_SUMMARY_SAMPLESHEET {
 
     output:
     tuple val(meta), path("*.tsv"), emit: output
-    tuple val("${task.process}"), val("summary_samplesheet"), eval("python --version"), topic: versions, emit: versions_summarysample
+    tuple val("${task.process}"), val("summary_samplesheet"), eval("python --version"), emit: versions_summarysample, topic: versions
 
     when:
     task.ext.when == null || task.ext.when
