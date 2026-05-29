@@ -55,13 +55,13 @@ workflow MCMICRO {
 
     ch_multiqc_files = ch_multiqc_files.mix(summaries.output_file_mixed_matrix_summary)
 
-    ch_n_errors = summaries.output_file_error_merged.map{
+    ch_has_no_errors = summaries.output_file_error_merged.map{
             meta, errors -> return tuple([meta['id'], meta['cycle_number']], errors.readLines().size() == 1)
         }.dump(tag:"METAHASNOERRORS")
 
     ch_samplesheet.dump(tag:"SampleBeforeFiltering")
-    .combine(ch_n_errors.map{meta, error -> error})
-    .filter{ meta, image_tiles, dfp, ffp, error -> error && !params.prelude}
+    .combine(ch_has_no_errors.map{meta, has_no_error -> has_no_error})
+    .filter{ meta, image_tiles, dfp, ffp, has_no_error -> has_no_error && !params.prelude}
     .map{meta, image_tiles, dfp, ffp, error -> [meta, image_tiles, dfp, ffp]}.dump(tag:"SampleAfterFiltering")
     .set{ch_samplesheet}
 
@@ -262,7 +262,7 @@ workflow MCMICRO {
         []
     )
 
-    ch_n_errors.map{ if (!it[1]) error "QC Error found" }
+    ch_has_no_errors.map{ if (!it[1]) error "QC Error found" }
 
     emit:
     multiqc_report = MULTIQC.out.report.toList() // channel: /path/to/multiqc_report.html
