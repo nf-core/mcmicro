@@ -55,6 +55,21 @@
                 "MCQUANT": {
                     "mcquant": "1.5.4"
                 },
+                "PRELUDE_MULTI_MATRIX_SUMMARY": {
+                    "summary_xml": "Python 3.12.3"
+                },
+                "PRELUDE_MULTI_SUMMARY": {
+                    "multi_summary": "Python 3.12.3"
+                },
+                "PRELUDE_SUMMARY_MARKERSHEET": {
+                    "summary_markersheet": "Python 3.12.3"
+                },
+                "PRELUDE_SUMMARY_SAMPLESHEET": {
+                    "summary_samplesheet": "Python 3.12.3"
+                },
+                "PRELUDE_SUMMARY_XML": {
+                    "summary_xml": "Python 3.12.3"
+                },
                 "Workflow": {
                     "nf-core/mcmicro": "v2.0.0"
                 }
@@ -62,9 +77,9 @@
         ],
         "meta": {
             "nf-test": "0.9.2",
-            "nextflow": "25.10.0"
+            "nextflow": "25.04.7"
         },
-        "timestamp": "2026-01-08T15:00:17.214510046"
+        "timestamp": "2026-03-11T16:24:07.727334167"
     },
     "cycle: basicpy illumination correction": {
         "content": [
@@ -152,6 +167,21 @@
                 "MCQUANT": {
                     "mcquant": "1.5.4"
                 },
+                "PRELUDE_MULTI_MATRIX_SUMMARY": {
+                    "summary_xml": "Python 3.12.3"
+                },
+                "PRELUDE_MULTI_SUMMARY": {
+                    "multi_summary": "Python 3.12.3"
+                },
+                "PRELUDE_SUMMARY_MARKERSHEET": {
+                    "summary_markersheet": "Python 3.12.3"
+                },
+                "PRELUDE_SUMMARY_SAMPLESHEET": {
+                    "summary_samplesheet": "Python 3.12.3"
+                },
+                "PRELUDE_SUMMARY_XML": {
+                    "summary_xml": "Python 3.12.3"
+                },
                 "Workflow": {
                     "nf-core/mcmicro": "v2.0.0"
                 }
@@ -159,9 +189,9 @@
         ],
         "meta": {
             "nf-test": "0.9.2",
-            "nextflow": "25.10.0"
+            "nextflow": "25.04.7"
         },
-        "timestamp": "2026-01-09T14:27:23.150169284"
+        "timestamp": "2026-03-11T16:16:45.119627968"
     },
     "cycle: no illumination correction, backsub": {
         "content": [
@@ -229,6 +259,21 @@
                 "MCQUANT": {
                     "mcquant": "1.5.4"
                 },
+                "PRELUDE_MULTI_MATRIX_SUMMARY": {
+                    "summary_xml": "Python 3.12.3"
+                },
+                "PRELUDE_MULTI_SUMMARY": {
+                    "multi_summary": "Python 3.12.3"
+                },
+                "PRELUDE_SUMMARY_MARKERSHEET": {
+                    "summary_markersheet": "Python 3.12.3"
+                },
+                "PRELUDE_SUMMARY_SAMPLESHEET": {
+                    "summary_samplesheet": "Python 3.12.3"
+                },
+                "PRELUDE_SUMMARY_XML": {
+                    "summary_xml": "Python 3.12.3"
+                },
                 "Workflow": {
                     "nf-core/mcmicro": "v2.0.0"
                 }
@@ -236,9 +281,9 @@
         ],
         "meta": {
             "nf-test": "0.9.2",
-            "nextflow": "25.10.0"
+            "nextflow": "25.04.7"
         },
-        "timestamp": "2026-01-08T15:24:57.842049588"
+        "timestamp": "2026-03-11T16:48:38.252979023"
     },
     "cycle: multiple file ashlar input with multiple samples no correction, multiple segmentation": {
         "content": [
@@ -386,6 +431,21 @@
                 "MCQUANT": {
                     "mcquant": "1.5.4"
                 },
+                "PRELUDE_MULTI_MATRIX_SUMMARY": {
+                    "summary_xml": "Python 3.12.3"
+                },
+                "PRELUDE_MULTI_SUMMARY": {
+                    "multi_summary": "Python 3.12.3"
+                },
+                "PRELUDE_SUMMARY_MARKERSHEET": {
+                    "summary_markersheet": "Python 3.12.3"
+                },
+                "PRELUDE_SUMMARY_SAMPLESHEET": {
+                    "summary_samplesheet": "Python 3.12.3"
+                },
+                "PRELUDE_SUMMARY_XML": {
+                    "summary_xml": "Python 3.12.3"
+                },
                 "Workflow": {
                     "nf-core/mcmicro": "v2.0.0"
                 }
@@ -393,9 +453,9 @@
         ],
         "meta": {
             "nf-test": "0.9.2",
-            "nextflow": "25.10.0"
+            "nextflow": "25.04.7"
         },
-        "timestamp": "2026-01-08T15:10:42.904644041"
+        "timestamp": "2026-03-11T16:34:16.637121705"
     },
     "cycle: no illumination correction, cellpose segmentation": {
         "content": [
@@ -415,6 +475,21 @@
                 "MCQUANT": {
                     "mcquant": "1.5.4"
                 },
+                "PRELUDE_MULTI_MATRIX_SUMMARY": {
+                    "summary_xml": "Python 3.12.3"
+                },
+                "PRELUDE_MULTI_SUMMARY": {
+                    "multi_summary": "Python 3.12.3"
+                },
+                "PRELUDE_SUMMARY_MARKERSHEET": {
+                    "summary_markersheet": "Python 3.12.3"
+                },
+                "PRELUDE_SUMMARY_SAMPLESHEET": {
+                    "summary_samplesheet": "Python 3.12.3"
+                },
+                "PRELUDE_SUMMARY_XML": {
+                    "summary_xml": "Python 3.12.3"
+                },
                 "Workflow": {
                     "nf-core/mcmicro": "v2.0.0"
                 }
@@ -422,9 +497,9 @@
         ],
         "meta": {
             "nf-test": "0.9.2",
-            "nextflow": "25.04.8"
+            "nextflow": "25.04.7"
         },
-        "timestamp": "2025-10-17T11:46:16.312979697"
+        "timestamp": "2026-03-11T16:43:45.764586343"
     },
     "cycle: no illumination correction": {
         "content": [
@@ -474,6 +549,21 @@
                 "MCQUANT": {
                     "mcquant": "1.5.4"
                 },
+                "PRELUDE_MULTI_MATRIX_SUMMARY": {
+                    "summary_xml": "Python 3.12.3"
+                },
+                "PRELUDE_MULTI_SUMMARY": {
+                    "multi_summary": "Python 3.12.3"
+                },
+                "PRELUDE_SUMMARY_MARKERSHEET": {
+                    "summary_markersheet": "Python 3.12.3"
+                },
+                "PRELUDE_SUMMARY_SAMPLESHEET": {
+                    "summary_samplesheet": "Python 3.12.3"
+                },
+                "PRELUDE_SUMMARY_XML": {
+                    "summary_xml": "Python 3.12.3"
+                },
                 "Workflow": {
                     "nf-core/mcmicro": "v2.0.0"
                 }
@@ -481,9 +571,9 @@
         ],
         "meta": {
             "nf-test": "0.9.2",
-            "nextflow": "25.10.0"
+            "nextflow": "25.04.7"
         },
-        "timestamp": "2026-01-08T14:49:09.506977454"
+        "timestamp": "2026-03-11T16:12:59.358033137"
     },
     "cycle: multiple file ashlar input with basicpy correction": {
         "content": [
@@ -627,6 +717,21 @@
                 "MCQUANT": {
                     "mcquant": "1.5.4"
                 },
+                "PRELUDE_MULTI_MATRIX_SUMMARY": {
+                    "summary_xml": "Python 3.12.3"
+                },
+                "PRELUDE_MULTI_SUMMARY": {
+                    "multi_summary": "Python 3.12.3"
+                },
+                "PRELUDE_SUMMARY_MARKERSHEET": {
+                    "summary_markersheet": "Python 3.12.3"
+                },
+                "PRELUDE_SUMMARY_SAMPLESHEET": {
+                    "summary_samplesheet": "Python 3.12.3"
+                },
+                "PRELUDE_SUMMARY_XML": {
+                    "summary_xml": "Python 3.12.3"
+                },
                 "Workflow": {
                     "nf-core/mcmicro": "v2.0.0"
                 }
@@ -634,9 +739,9 @@
         ],
         "meta": {
             "nf-test": "0.9.2",
-            "nextflow": "25.10.0"
+            "nextflow": "25.04.7"
         },
-        "timestamp": "2026-01-09T14:48:49.947305201"
+        "timestamp": "2026-03-11T16:38:09.531552068"
     },
     "cycle: multiple file ashlar input with multiple samples and basicpy correction": {
         "content": [
@@ -847,6 +952,21 @@
                 "MCQUANT": {
                     "mcquant": "1.5.4"
                 },
+                "PRELUDE_MULTI_MATRIX_SUMMARY": {
+                    "summary_xml": "Python 3.12.3"
+                },
+                "PRELUDE_MULTI_SUMMARY": {
+                    "multi_summary": "Python 3.12.3"
+                },
+                "PRELUDE_SUMMARY_MARKERSHEET": {
+                    "summary_markersheet": "Python 3.12.3"
+                },
+                "PRELUDE_SUMMARY_SAMPLESHEET": {
+                    "summary_samplesheet": "Python 3.12.3"
+                },
+                "PRELUDE_SUMMARY_XML": {
+                    "summary_xml": "Python 3.12.3"
+                },
                 "Workflow": {
                     "nf-core/mcmicro": "v2.0.0"
                 }
@@ -854,9 +974,9 @@
         ],
         "meta": {
             "nf-test": "0.9.2",
-            "nextflow": "25.10.0"
+            "nextflow": "25.04.7"
         },
-        "timestamp": "2026-01-09T16:03:49.674709913"
+        "timestamp": "2026-03-11T16:43:23.079455581"
     },
     "cycle: manual illumination correction": {
         "content": [
@@ -906,6 +1026,21 @@
                 "MCQUANT": {
                     "mcquant": "1.5.4"
                 },
+                "PRELUDE_MULTI_MATRIX_SUMMARY": {
+                    "summary_xml": "Python 3.12.3"
+                },
+                "PRELUDE_MULTI_SUMMARY": {
+                    "multi_summary": "Python 3.12.3"
+                },
+                "PRELUDE_SUMMARY_MARKERSHEET": {
+                    "summary_markersheet": "Python 3.12.3"
+                },
+                "PRELUDE_SUMMARY_SAMPLESHEET": {
+                    "summary_samplesheet": "Python 3.12.3"
+                },
+                "PRELUDE_SUMMARY_XML": {
+                    "summary_xml": "Python 3.12.3"
+                },
                 "Workflow": {
                     "nf-core/mcmicro": "v2.0.0"
                 }
@@ -913,9 +1048,9 @@
         ],
         "meta": {
             "nf-test": "0.9.2",
-            "nextflow": "25.10.0"
+            "nextflow": "25.04.7"
         },
-        "timestamp": "2026-01-08T14:56:36.68521919"
+        "timestamp": "2026-03-11T16:20:28.299894438"
     },
     "cycle: multiple file ashlar input with multiple samples no correction": {
         "content": [
@@ -1005,6 +1140,21 @@
                 "MCQUANT": {
                     "mcquant": "1.5.4"
                 },
+                "PRELUDE_MULTI_MATRIX_SUMMARY": {
+                    "summary_xml": "Python 3.12.3"
+                },
+                "PRELUDE_MULTI_SUMMARY": {
+                    "multi_summary": "Python 3.12.3"
+                },
+                "PRELUDE_SUMMARY_MARKERSHEET": {
+                    "summary_markersheet": "Python 3.12.3"
+                },
+                "PRELUDE_SUMMARY_SAMPLESHEET": {
+                    "summary_samplesheet": "Python 3.12.3"
+                },
+                "PRELUDE_SUMMARY_XML": {
+                    "summary_xml": "Python 3.12.3"
+                },
                 "Workflow": {
                     "nf-core/mcmicro": "v2.0.0"
                 }
@@ -1012,9 +1162,9 @@
         ],
         "meta": {
             "nf-test": "0.9.2",
-            "nextflow": "25.10.0"
+            "nextflow": "25.04.7"
         },
-        "timestamp": "2026-01-08T15:05:29.189931271"
+        "timestamp": "2026-03-11T16:29:10.493444234"
     },
     "cycle: no illumination correction, coreograph": {
         "content": [
@@ -1060,6 +1210,21 @@
                 "MCQUANT": {
                     "mcquant": "1.5.4"
                 },
+                "PRELUDE_MULTI_MATRIX_SUMMARY": {
+                    "summary_xml": "Python 3.12.3"
+                },
+                "PRELUDE_MULTI_SUMMARY": {
+                    "multi_summary": "Python 3.12.3"
+                },
+                "PRELUDE_SUMMARY_MARKERSHEET": {
+                    "summary_markersheet": "Python 3.12.3"
+                },
+                "PRELUDE_SUMMARY_SAMPLESHEET": {
+                    "summary_samplesheet": "Python 3.12.3"
+                },
+                "PRELUDE_SUMMARY_XML": {
+                    "summary_xml": "Python 3.12.3"
+                },
                 "Workflow": {
                     "nf-core/mcmicro": "v2.0.0"
                 }
@@ -1067,8 +1232,8 @@
         ],
         "meta": {
             "nf-test": "0.9.2",
-            "nextflow": "25.10.2"
+            "nextflow": "25.04.7"
         },
-        "timestamp": "2026-01-15T11:32:28.42846203"
+        "timestamp": "2026-03-11T16:44:51.275962857"
     }
 }
