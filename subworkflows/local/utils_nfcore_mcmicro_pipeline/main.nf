@@ -7,7 +7,6 @@
     IMPORT FUNCTIONS / MODULES / SUBWORKFLOWS
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
-import groovy.io.FileType
 
 include { UTILS_NFSCHEMA_PLUGIN     } from '../../nf-core/utils_nfschema_plugin'
 include { paramsSummaryMap          } from 'plugin/nf-schema'
@@ -196,7 +195,7 @@ def validateInputParameters() {
         error "You must specify either input_sample or input_cycle."
     }
 
-    if (params.cellpose_model && !segmentation_list.contains('cellpose')) {
+    if (params.cellpose_model && !params.segmentation.split(',').any{ it.equalsIgnoreCase("cellpose") }) {
         error "You can only provide a cellpose model if you have selected cellpose as one of your segmentation methods"
     }
 }
@@ -238,7 +237,7 @@ def validateInputMarkersheet( markersheet_data ) {
 
     // uniqueness of (channel, cycle) tuple in marker sheet
     def test_tuples = [channel_number_list, cycle_number_list].transpose()
-    def dups = test_tuples.countBy{ it }.findAll{ _, count -> count > 1 }*.key
+    def dups = test_tuples.countBy{ it }.findAll{ unused, count -> count > 1 }*.key
     if (dups) {
         error("Please check input markersheet -> duplicate [channel, cycle] pairs: ${dups}")
     }
@@ -302,7 +301,7 @@ def expandSampleRow( row ) {
     def (meta, image_directory, dfp, ffp) = row
     def files = []
 
-    file(image_directory).eachFileRecurse (FileType.FILES) {
+    file(image_directory).eachFileRecurse (groovy.io.FileType.FILES) {
         if(it.toString().endsWith(".ome.tif")){
             files << file(it)
         }

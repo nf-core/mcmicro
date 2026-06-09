@@ -17,14 +17,14 @@ workflow PRELUDE {
 
     ch_output_markersheet = ( markersheet.map {
                                     it ->
-                                    def f = file("$it".md5() + ".json")
+                                    def f = file("$it".md5().toString() + ".json")
                                     f.write(new groovy.json.JsonBuilder(it).toString())
                                     return [["id": "markers"], f]
                                     } | PRELUDE_SUMMARY_MARKERSHEET ).output
 
     ch_output_samplesheet = ( samplesheet.map {
                                     meta, image_tiles, dfp, ffp ->
-                                    def f = file("$meta".md5() + ".json")
+                                    def f = file("$meta".md5().toString() + ".json")
                                     f.write(new groovy.json.JsonBuilder(meta).toString())
                                     return [meta, f]
                                     } | PRELUDE_SUMMARY_SAMPLESHEET ).output

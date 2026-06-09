@@ -39,7 +39,6 @@ workflow MCMICRO {
     outdir
 
     main:
-
     def ch_versions = channel.empty()
     def ch_multiqc_files = channel.empty()
     ch_versions = channel.empty()
@@ -91,7 +90,7 @@ workflow MCMICRO {
         }
         // FIXME: pass groupTuple size: from samplesheet cycle count
         .groupTuple(sort: { a, b -> a[0] <=> b[0] } )
-        .map{ meta, cycles -> [meta, *cycles.collect{ it[1..-1] }.transpose()]}
+        .map{ meta, cycles -> [meta] + cycles.collect{ it[1..-1] }.transpose()}
         .dump(tag: 'ASHLAR in')
         // flatten() handles list of empty-lists, turning it into a single empty list.
         .multiMap{ meta, images, dfps, ffps ->
@@ -193,7 +192,8 @@ workflow MCMICRO {
         }
         | MCQUANT
 
-    ch_versions = ch_versions.mix(MCQUANT.out.versions)
+    //now using topic version for mcquant
+    //ch_versions = ch_versions.mix(MCQUANT.out.versions)
 
 
 
@@ -220,7 +220,7 @@ workflow MCMICRO {
     def ch_collated_versions = softwareVersionsToYAML(ch_versions.mix(topic_versions.versions_file))
         .mix(topic_versions_string)
         .collectFile(
-            storeDir: "${outdir}/pipeline_info",
+            storeDir: "${params.outdir}/pipeline_info",
             name: 'nf_core_'  +  'mcmicro_software_'  + 'mqc_'  + 'versions.yml',
             sort: true,
             newLine: true

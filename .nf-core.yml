@@ -8,6 +8,7 @@ lint:
     - params.input
   template_strings:
     - assets/mcmicro_metro.pdf
+  container_configs: False
 nf_core_version: 4.0.2
 repository_type: pipeline
 template:

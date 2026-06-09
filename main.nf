@@ -41,12 +41,11 @@ workflow NFCORE_MCMICRO {
     //
     MCMICRO (
         samplesheet,
-        markersheet
-        samplesheet,
+        markersheet,
         params.multiqc_config,
         params.multiqc_logo,
         params.multiqc_methods_description,
-        params.outdir,
+        params.outdir
     )
     emit:
     multiqc_report = MCMICRO.out.multiqc_report // channel: /path/to/multiqc_report.html

@@ -31,6 +31,10 @@ nextflow_workflow {
                             [channel_number: 4, cycle_number: 1, marker_name: 'CD45'],
                         ],
                     )
+                    input[2] = ''
+                    input[3] = ''
+                    input[4] = ''
+                    input[5] = '$outputDir'
                     """
                 }
             }
@@ -78,6 +82,10 @@ nextflow_workflow {
                             [channel_number: 4, cycle_number: 1, marker_name: 'CD45'],
                         ],
                     )
+                    input[2] = ''
+                    input[3] = ''
+                    input[4] = ''
+                    input[5] = '$outputDir'
                     """
                 }
             }
@@ -126,6 +134,10 @@ nextflow_workflow {
                             [channel_number: 4, cycle_number: 1, marker_name: 'CD45'],
                         ],
                     )
+                    input[2] = ''
+                    input[3] = ''
+                    input[4] = ''
+                    input[5] = '$outputDir'
                     """
                 }
             }
@@ -191,6 +203,10 @@ nextflow_workflow {
                             [channel_number: 12, cycle_number: 3, marker_name: 'CD458'],
                         ],
                     )
+                    input[2] = ''
+                    input[3] = ''
+                    input[4] = ''
+                    input[5] = '$outputDir'
                     """
                 }
             }
@@ -258,6 +274,10 @@ nextflow_workflow {
                             [channel_number: 8, cycle_number: 2, marker_name: 'CD457'],
                         ],
                     )
+                    input[2] = ''
+                    input[3] = ''
+                    input[4] = ''
+                    input[5] = '$outputDir'
                     """
                 }
             }
@@ -329,6 +349,10 @@ nextflow_workflow {
                             [channel_number: 8, cycle_number: 2, marker_name: 'CD457'],
                         ],
                     )
+                    input[2] = ''
+                    input[3] = ''
+                    input[4] = ''
+                    input[5] = '$outputDir'
                     """
                 }
             }
@@ -407,6 +431,10 @@ nextflow_workflow {
                             [channel_number: 12, cycle_number: 3, marker_name: 'CD458'],
                         ],
                     )
+                    input[2] = ''
+                    input[3] = ''
+                    input[4] = ''
+                    input[5] = '$outputDir'
                     """
                 }
             }
@@ -481,6 +509,10 @@ nextflow_workflow {
                             [channel_number: 8, cycle_number: 2, marker_name: 'CD457'],
                         ],
                     )
+                    input[2] = ''
+                    input[3] = ''
+                    input[4] = ''
+                    input[5] = '$outputDir'
                     """
                 }
             }
@@ -538,6 +570,10 @@ nextflow_workflow {
                             [channel_number: 4, cycle_number: 1, marker_name: 'CD45'],
                         ],
                     )
+                    input[2] = ''
+                    input[3] = ''
+                    input[4] = ''
+                    input[5] = '$outputDir'
                     """
                 }
             }
@@ -582,6 +618,10 @@ nextflow_workflow {
                             [channel_number: 1, cycle_number: 1, marker_name: 'DNA_6'],
                         ],
                     )
+                    input[2] = ''
+                    input[3] = ''
+                    input[4] = ''
+                    input[5] = '$outputDir'
                     """
                 }
             }
@@ -637,6 +677,10 @@ nextflow_workflow {
                             [channel_number: 8, cycle_number: 2, marker_name: 'Aortic smooth muscle actin']
                         ],
                     )
+                    input[2] = ''
+                    input[3] = ''
+                    input[4] = ''
+                    input[5] = '$outputDir'
                     """
                 }
             }
