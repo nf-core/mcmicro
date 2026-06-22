@@ -40,6 +40,9 @@ jobs:
     steps:
       - name: Install Nextflow
         uses: nf-core/setup-nextflow@v2
+        # FIXME remove this once we merge PR 153 so we are strict-syntax-compliant
+        with:
+          version: 25.10.5
 
       - name: Disk space cleanup
         uses: jlumbroso/free-disk-space@54081f138730dfa15788a46383842cd2f914a1be # v1.3.1
