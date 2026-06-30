@@ -6,58 +6,101 @@
 
 ## Introduction
 
-<!-- TODO nf-core: Add documentation about anything specific to running your pipeline. For general topics, please point to (and add to) the main nf-core website. -->
-
 ## Samplesheet input
 
-You will need to create a samplesheet with information about the samples you would like to analyse before running the pipeline. Use this parameter to specify its location. It has to be a comma-separated file with 3 columns, and a header row as shown in the examples below.
+You will need to create a samplesheet with information about the samples you would like to analyse before running the pipeline. We currently accept 2 formats for the input samplesheets. One format is one row per sample and the other is one row per sample per cycle. Use the parameter `input_sample` for one row per sample or the parameter `input_cycle` for one row per sample per cycle, to specify its location. It has to be a comma-separated file with a header row and either two (input_sample) or four (input_cycle) columns as shown in the examples below.
 
 ```bash
---input '[path to samplesheet file]'
+--input_cycle '[path to one row per sample per cycle samplesheet file]'
 ```
 
-### Multiple runs of the same sample
+**OR**
 
-The `sample` identifiers have to be the same when you have re-sequenced the same sample more than once e.g. to increase sequencing depth. The pipeline will concatenate the raw reads before performing any downstream analysis. Below is an example for the same sample sequenced across 3 lanes:
-
-```console
-sample,fastq_1,fastq_2
-CONTROL_REP1,AEG588A1_S1_L002_R1_001.fastq.gz,AEG588A1_S1_L002_R2_001.fastq.gz
-CONTROL_REP1,AEG588A1_S1_L003_R1_001.fastq.gz,AEG588A1_S1_L003_R2_001.fastq.gz
-CONTROL_REP1,AEG588A1_S1_L004_R1_001.fastq.gz,AEG588A1_S1_L004_R2_001.fastq.gz
+```bash
+--input_sample '[path to one row per sample samplesheet file]'
 ```
 
-### Full samplesheet
+### Samplesheet with one row per sample per cycle
 
-The pipeline will auto-detect whether a sample is single- or paired-end using the information provided in the samplesheet. The samplesheet can have as many columns as you desire, however, there is a strict requirement for the first 3 columns to match those defined in the table below.
+The `sample` identifier must be the same for multiple cycles of the same sample. All the files from the same sample will be run in a single run of ashlar in the cycle order that they appear in the samplesheet. If illumination correction is requested using basicpy, each cycle will be corrected separately.
 
-A final samplesheet file consisting of both single- and paired-end data may look something like the one below. This is for 6 samples, where `TREATMENT_REP3` has been sequenced twice.
-
-```console
-sample,fastq_1,fastq_2
-CONTROL_REP1,AEG588A1_S1_L002_R1_001.fastq.gz,AEG588A1_S1_L002_R2_001.fastq.gz
-CONTROL_REP2,AEG588A2_S2_L002_R1_001.fastq.gz,AEG588A2_S2_L002_R2_001.fastq.gz
-CONTROL_REP3,AEG588A3_S3_L002_R1_001.fastq.gz,AEG588A3_S3_L002_R2_001.fastq.gz
-TREATMENT_REP1,AEG588A4_S4_L003_R1_001.fastq.gz,
-TREATMENT_REP2,AEG588A5_S5_L003_R1_001.fastq.gz,
-TREATMENT_REP3,AEG588A6_S6_L003_R1_001.fastq.gz,
-TREATMENT_REP3,AEG588A6_S6_L004_R1_001.fastq.gz,
+```csv title="samplesheet_cycle.csv"
+sample,cycle_number,image_tiles
+TEST1,1,/path/to/image/cycif-tonsil-cycle1.ome.tif
+TEST1,2,/path/to/image/cycif-tonsil-cycle2.ome.tif
+TEST1,3,/path/to/image/cycif-tonsil-cycle3.ome.tif
 ```
 
-| Column    | Description                                                                                                                                                                            |
-| --------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `sample`  | Custom sample name. This entry will be identical for multiple sequencing libraries/runs from the same sample. Spaces in sample names are automatically converted to underscores (`_`). |
-| `fastq_1` | Full path to FastQ file for Illumina short reads 1. File has to be gzipped and have the extension ".fastq.gz" or ".fq.gz".                                                             |
-| `fastq_2` | Full path to FastQ file for Illumina short reads 2. File has to be gzipped and have the extension ".fastq.gz" or ".fq.gz".                                                             |
+| Column         | Description                                                 |
+| -------------- | ----------------------------------------------------------- |
+| `sample`       | Custom sample name.                                         |
+| `cycle_number` | Integer value of the cycle for the file in the current row. |
+| `image_tiles`  | Full path or URL to the input image file.                   |
 
-An [example samplesheet](../assets/samplesheet.csv) has been provided with the pipeline.
+An [example one row per sample per cycle samplesheet](../assets/samplesheet_1_row_sample_cycle.csv) has been provided with the pipeline.
+
+### Samplesheet with one row per sample
+
+This is similar to the above case except each row just contains a column for each `sample` name and a columnn containing a directory where all the files for a given sample are located. All per-cycle image files in the `image_directory` for a given sample will be run in a single run of ashlar. If illumination correction is requested using basicpy, each cycle will be corrected separately.
+
+```csv title="samplesheet_sample.csv"
+sample,image_directory
+TEST1,/path/to/image/directory
+```
+
+| Column            | Description                                          |
+| ----------------- | ---------------------------------------------------- |
+| `sample`          | Custom sample name.                                  |
+| `image_directory` | Full path to directory containing input image files. |
+
+An [example one row per sample samplesheet](../assets/samplesheet_1_row_sample.csv) has been provided with the pipeline.
+
+## Markersheet input
+
+Each row of the markersheet represents a single channel in the associated sample image. The columns `channel_number`, `cycle_number` and `marker_name` are required.
+
+```csv
+channel_number,cycle_number,marker_name
+1,1,DNA 1
+2,1,Na/K ATPase
+3,1,CD3
+4,1,CD45RO
+```
+
+| Column           | Description                                         |
+| ---------------- | --------------------------------------------------- |
+| `channel_number` | Integer identifier for the respective channel.      |
+| `cycle_number`   | Integer identifier for the image cycle.             |
+| `marker_name`    | Name of the marker for the given channel and cycle. |
+
+:::note
+`cycle_number` must match the `cycle_number` in the supplied samplesheet.
+:::
+
+### optional markersheet columns
+
+| Column                  | Description                                    |
+| ----------------------- | ---------------------------------------------- |
+| `filter`                | Microscope filter common name.                 |
+| `excitation_wavelength` | Excitation wavelength for this channel, in nm. |
+| `emission_wavelength`   | Emission wavelength for this channel, in nm.   |
 
 ## Running the pipeline
 
-The typical command for running the pipeline is as follows:
+### One row per sample per cycle
+
+The typical command for running the one row per sample per cycle pipeline is as follows:
 
 ```bash
-nextflow run nf-core/mcmicro --input samplesheet.csv --outdir <OUTDIR> --genome GRCh37 -profile docker
+nextflow run nf-core/mcmicro --input_cycle ./samplesheet_cycle.csv --outdir ./results --marker_sheet markers.csv -profile docker
+```
+
+### One row per sample
+
+The typical command for running the one row per sample pipeline is as follows:
+
+```bash
+nextflow run nf-core/mcmicro --input_sample ./samplesheet_sample.csv --outdir ./results --marker_sheet markers.csv -profile docker
 ```
 
 This will launch the pipeline with the `docker` configuration profile. See below for more information about profiles.
@@ -75,24 +118,60 @@ If you wish to repeatedly use the same parameters for multiple runs, rather than
 
 Pipeline settings can be provided in a `yaml` or `json` file via `-params-file <file>`.
 
-> ⚠️ Do not use `-c <file>` to specify parameters as this will result in errors. Custom config files specified with `-c` must only be used for [tuning process resource specifications](https://nf-co.re/docs/usage/configuration#tuning-workflow-resources), other infrastructural tweaks (such as output directories), or module arguments (args).
-> The above pipeline run specified with a params file in yaml format:
+> [!WARNING]
+> Do not use `-c <file>` to specify parameters as this will result in errors. Custom config files specified with `-c` must only be used for [tuning process resource specifications](https://nf-co.re/docs/usage/configuration#tuning-workflow-resources), other infrastructural tweaks (such as output directories), or module arguments (args).
+
+The above pipeline run specified with a params file in yaml format:
 
 ```bash
 nextflow run nf-core/mcmicro -profile docker -params-file params.yaml
 ```
 
-with `params.yaml` containing:
+with:
 
 ```yaml
-input: './samplesheet.csv'
-outdir: './results/'
-genome: 'GRCh37'
-input: 'data'
-<...>
+input_cycle: "samplesheet_cycle.csv"
+outdir: "./output"
+marker_sheet: "markers.csv"
 ```
 
 You can also generate such `YAML`/`JSON` files via [nf-core/launch](https://nf-co.re/launch).
+
+### Pipeline stages and associated input parameters
+
+#### Summary
+
+We generate a MultiQC formatted report based on the extracted OME-xml metadata and the marker/sample sheet information so the user can debug their runs.
+This step is always run, but we include the option to stop immediately after the data extraction/validation with the option `--prelude`.
+
+Running with `--prelude` is recommended as a first run to ensure your sample/marker sheets are complete and the required metadata is present in your image files.
+
+#### Illumination Correction
+
+Illumination correction can optionally be performed before registration. It is triggered by the `--illumination` flag which can currently only be followed by the option `basicpy`. We plan on supporting other modules for illumination correction in the future.
+When `basicpy` is selected the nf-core module basicpy is run on the input image(s). Basicpy is a python package for background and shading correction of optical microscopy images. More information about it can be found on the [basicpy nf-core module website](https://nf-co.re/modules/basicpy/).
+
+#### Registration
+
+Registration is a required step of the pipeline and the only module currently supported is ashlar. Ashlar is a software package that combines multi-tile microscopy images into a high-dimensional mosaic image. More information about ashlar can be found on the [ashlar website](https://labsyspharm.github.io/ashlar/). We plan to support other modules for registration in the future.
+
+#### Background Subtraction
+
+This is an optional step that occurs immediately following registration. It is triggered by the `--backsub` flag. When this flag is selected, the module backsub is run on the output from the registration step. The backsub module performs pixel-by-pixel channel subtraction scaled by exposure times of pre-stitched tif images. More information about it can be found on the [backsub nf-core module website](https://nf-co.re/modules/backsub/).
+
+#### TMA Core Separation
+
+This is an optional step that occurs immediately following background subtration if that optional step was run or after registration if is was not. It is triggered by the `--tma_dearray` flag. When this flag is selected, the coreograph module is run on the output from either the background subtraction step or the registration step if background subtration was not performed. Coreograph separates the input image into a set of images for each of the cores. It uses UNet, a deep learning model, to identify complete/incomplete tissue cores on a tissue microarray. It has been trained on 9 TMA slides of different sizes and tissue types. More information about it can be found on the [coreograph nf-core module website](https://nf-co.re/modules/coreograph/)
+
+#### Segmentation
+
+This is a required step that follows Registration (or the optional Background Subtraction and TMA Core Separation steps if enabled). The workflow will run the mccellpose module by default, but other options are available by using the `--segmentation` flag. The flag should be followed by a single segmentation module name or a comma separated list of names to run multiple segmentation modules in parallel. The available options currently supported are `mccellpose`, `cellpose`, and `mesmer`. More information about each of these modules can be found on their respective nf-core module websites: [cellpose](https://nf-co.re/modules/cellpose/) [deepcell_mesmer](https://nf-co.re/modules/deepcell_mesmer/). (mccellpose is an alternative interface to cellpose that uses much less RAM and should be preferred in most cases)
+
+When `cellpose` is selected as a segmentation method you may also provide a pretrained model to the cellpose module by using the `--cellpose_model` flag followed by a full path or URL to the model file.
+
+#### Quantification
+
+This is a required step that follows segmentation. The workflow currently runs the mcquant module by default. Other quantification modules will be added as options in the future. Mcquant extracts single-cell data given a multi-channel image and a segmentation mask. More information about mcquant can be found on the [mcquant nf-core module website](https://nf-co.re/modules/mcquant/).
 
 ### Updating the pipeline
 
@@ -104,19 +183,21 @@ nextflow pull nf-core/mcmicro
 
 ### Reproducibility
 
-It is a good idea to specify a pipeline version when running the pipeline on your data. This ensures that a specific version of the pipeline code and software are used when you run your pipeline. If you keep using the same tag, you'll be running the same version of the pipeline, even if there have been changes to the code since.
+It is a good idea to specify the pipeline version when running the pipeline on your data. This ensures that a specific version of the pipeline code and software are used when you run your pipeline. If you keep using the same tag, you'll be running the same version of the pipeline, even if there have been changes to the code since.
 
 First, go to the [nf-core/mcmicro releases page](https://github.com/nf-core/mcmicro/releases) and find the latest pipeline version - numeric only (eg. `1.3.1`). Then specify this when running the pipeline with `-r` (one hyphen) - eg. `-r 1.3.1`. Of course, you can switch to another version by changing the number after the `-r` flag.
 
 This version number will be logged in reports when you run the pipeline, so that you'll know what you used when you look back in the future. For example, at the bottom of the MultiQC reports.
 
-To further assist in reproducbility, you can use share and re-use [parameter files](#running-the-pipeline) to repeat pipeline runs with the same settings without having to write out a command with every single parameter.
+To further assist in reproducibility, you can use share and reuse [parameter files](#running-the-pipeline) to repeat pipeline runs with the same settings without having to write out a command with every single parameter.
 
-> 💡 If you wish to share such profile (such as upload as supplementary material for academic publications), make sure to NOT include cluster specific paths to files, nor institutional specific profiles.
+> [!TIP]
+> If you wish to share such profile (such as upload as supplementary material for academic publications), make sure to NOT include cluster specific paths to files, nor institutional specific profiles.
 
 ## Core Nextflow arguments
 
-> **NB:** These options are part of Nextflow and use a _single_ hyphen (pipeline parameters use a double-hyphen).
+> [!NOTE]
+> These options are part of Nextflow and use a _single_ hyphen (pipeline parameters use a double-hyphen)
 
 ### `-profile`
 
@@ -124,14 +205,15 @@ Use this parameter to choose a configuration profile. Profiles can give configur
 
 Several generic profiles are bundled with the pipeline which instruct the pipeline to use software packaged using different methods (Docker, Singularity, Podman, Shifter, Charliecloud, Apptainer, Conda) - see below.
 
+> [!IMPORTANT]
 > We highly recommend the use of Docker or Singularity containers for full pipeline reproducibility, however when this is not possible, Conda is also supported.
 
-The pipeline also dynamically loads configurations from [https://github.com/nf-core/configs](https://github.com/nf-core/configs) when it runs, making multiple config profiles for various institutional clusters available at run time. For more information and to see if your system is available in these configs please see the [nf-core/configs documentation](https://github.com/nf-core/configs#documentation).
+The pipeline also dynamically loads configurations from [https://github.com/nf-core/configs](https://github.com/nf-core/configs) when it runs, making multiple config profiles for various institutional clusters available at run time. For more information and to check if your system is supported, please see the [nf-core/configs documentation](https://github.com/nf-core/configs#documentation).
 
 Note that multiple profiles can be loaded, for example: `-profile test,docker` - the order of arguments is important!
 They are loaded in sequence, so later profiles can overwrite earlier profiles.
 
-If `-profile` is not specified, the pipeline will run locally and expect all software to be installed and available on the `PATH`. This is _not_ recommended, since it can lead to different results on different machines dependent on the computer enviroment.
+If `-profile` is not specified, the pipeline will run locally and expect all software to be installed and available on the `PATH`. This is _not_ recommended, since it can lead to different results on different machines dependent on the computer environment.
 
 - `test`
   - A profile with a complete configuration for automated testing
@@ -145,9 +227,11 @@ If `-profile` is not specified, the pipeline will run locally and expect all sof
 - `shifter`
   - A generic configuration profile to be used with [Shifter](https://nersc.gitlab.io/development/shifter/how-to-use/)
 - `charliecloud`
-  - A generic configuration profile to be used with [Charliecloud](https://hpc.github.io/charliecloud/)
+  - A generic configuration profile to be used with [Charliecloud](https://charliecloud.io/)
 - `apptainer`
   - A generic configuration profile to be used with [Apptainer](https://apptainer.org/)
+- `wave`
+  - A generic configuration profile to enable [Wave](https://seqera.io/wave/) containers. Use together with one of the above (requires Nextflow ` 24.03.0-edge` or later).
 - `conda`
   - A generic configuration profile to be used with [Conda](https://conda.io/docs/). Please only use Conda as a last resort i.e. when it's not possible to run the pipeline with Docker, Singularity, Podman, Shifter, Charliecloud, or Apptainer.
 
@@ -165,13 +249,13 @@ Specify the path to a specific config file (this is a core Nextflow command). Se
 
 ### Resource requests
 
-Whilst the default requirements set within the pipeline will hopefully work for most people and with most input data, you may find that you want to customise the compute resources that the pipeline requests. Each step in the pipeline has a default set of requirements for number of CPUs, memory and time. For most of the steps in the pipeline, if the job exits with any of the error codes specified [here](https://github.com/nf-core/rnaseq/blob/4c27ef5610c87db00c3c5a3eed10b1d161abf575/conf/base.config#L18) it will automatically be resubmitted with higher requests (2 x original, then 3 x original). If it still fails after the third attempt then the pipeline execution is stopped.
+Whilst the default requirements set within the pipeline will hopefully work for most people and with most input data, you may find that you want to customise the compute resources that the pipeline requests. Each step in the pipeline has a default set of requirements for number of CPUs, memory and time. For most of the pipeline steps, if the job exits with any of the error codes specified [here](https://github.com/nf-core/rnaseq/blob/4c27ef5610c87db00c3c5a3eed10b1d161abf575/conf/base.config#L18) it will automatically be resubmitted with higher resources request (2 x original, then 3 x original). If it still fails after the third attempt then the pipeline execution is stopped.
 
 To change the resource requests, please see the [max resources](https://nf-co.re/docs/usage/configuration#max-resources) and [tuning workflow resources](https://nf-co.re/docs/usage/configuration#tuning-workflow-resources) section of the nf-core website.
 
 ### Custom Containers
 
-In some cases you may wish to change which container or conda environment a step of the pipeline uses for a particular tool. By default nf-core pipelines use containers and software from the [biocontainers](https://biocontainers.pro/) or [bioconda](https://bioconda.github.io/) projects. However in some cases the pipeline specified version maybe out of date.
+In some cases, you may wish to change the container or conda environment used by a pipeline steps for a particular tool. By default, nf-core pipelines use containers and software from the [biocontainers](https://biocontainers.pro/) or [bioconda](https://bioconda.github.io/) projects. However, in some cases the pipeline specified version maybe out of date.
 
 To use a different container from the default container or conda environment specified in a pipeline, please see the [updating tool versions](https://nf-co.re/docs/usage/configuration#updating-tool-versions) section of the nf-core website.
 
@@ -188,14 +272,6 @@ In most cases, you will only need to create a custom config as a one-off but if 
 See the main [Nextflow documentation](https://www.nextflow.io/docs/latest/config.html) for more information about creating your own configuration files.
 
 If you have any questions or issues please send us a message on [Slack](https://nf-co.re/join/slack) on the [`#configs` channel](https://nfcore.slack.com/channels/configs).
-
-## Azure Resource Requests
-
-To be used with the `azurebatch` profile by specifying the `-profile azurebatch`.
-We recommend providing a compute `params.vm_type` of `Standard_D16_v3` VMs by default but these options can be changed if required.
-
-Note that the choice of VM size depends on your quota and the overall workload during the analysis.
-For a thorough list, please refer the [Azure Sizes for virtual machines in Azure](https://docs.microsoft.com/en-us/azure/virtual-machines/sizes).
 
 ## Running in the background
 

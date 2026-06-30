@@ -6,38 +6,176 @@ This document describes the output produced by the pipeline. Most of the plots a
 
 The directories listed below will be created in the results directory after the pipeline has finished. All paths are relative to the top-level results directory.
 
-<!-- TODO nf-core: Write this documentation describing your workflow's output -->
-
 ## Pipeline overview
 
 The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes data using the following steps:
 
-- [FastQC](#fastqc) - Raw read QC
+- [Directory Structure](#directory-structure)
+- [Summary](#summary)
+- [Illumination Correction](#illumination-correction)
+  - [BaSiCPy](#basicpy)
+- [Registration](#registration)
+  - [ASHLAR](#ashlar)
+- [Background Subtraction](#background-subtraction)
+  - [Backsub](#backsub)
+- [TMA Core Separation](#tma-core-separation)
+  - [Coreograph](#coreograph)
+- [Segmentation](#segmentation)
+  - [Mccellpose](#mccellpose)
+  - [Cellpose](#cellpose)
+  - [Mesmer](#mesmer)
+- [Quantification](#quantification)
 - [MultiQC](#multiqc) - Aggregate report describing results and QC from the whole pipeline
 - [Pipeline information](#pipeline-information) - Report metrics generated during the workflow execution
 
-### FastQC
+### Directory Structure
 
-<details markdown="1">
+```
+{outdir}
+├── summary
+├── backsub
+├── illumination_correction
+│   └── basicpy
+├── multiqc
+│   ├── multiqc_data
+│   ├── multiqc_plots
+│   └── multiqc_report.html
+├── pipeline_info
+├── quantification
+│   └── mcquant
+│       └── {segmentation module}
+├── registration
+│   └── ashlar
+├── segmentation
+│   └── {segmentation module}
+└── tma_dearray
+    └── masks
+
+```
+
+### Summary
+
+We generate a MultiQC formatted report with the extracted OME-xml data and the marker sheet information so the user can debug their parameters.
+
+<details>
 <summary>Output files</summary>
 
-- `fastqc/`
-  - `*_fastqc.html`: FastQC report containing quality metrics.
-  - `*_fastqc.zip`: Zip archive containing the FastQC report, tab-delimited data file and plot images.
+- summary\_{sample_name}\_samplesheet_mqc.tsv : MultiQC formatted TSV with sample's parameter validation
+- summary\_{sample_name}\_xml_mqc.tsv : MultiQC formatted TSV with sample's extracted OME-xml data validation
+- summary_markersheet_mqc.tsv : Formatted Markersheet in MultiQC format
 
 </details>
 
-[FastQC](http://www.bioinformatics.babraham.ac.uk/projects/fastqc/) gives general quality metrics about your sequenced reads. It provides information about the quality score distribution across your reads, per base sequence content (%A/T/G/C), adapter contamination and overrepresented sequences. For further reading and documentation see the [FastQC help pages](http://www.bioinformatics.babraham.ac.uk/projects/fastqc/Help/).
+### Illumination Correction
 
-![MultiQC - FastQC sequence counts plot](images/mqc_fastqc_counts.png)
+#### BaSiCPy
 
-![MultiQC - FastQC mean quality scores plot](images/mqc_fastqc_quality.png)
+[BaSiCPy](https://nf-co.re/modules/basicpy/) is a python package for background and shading correction of optical microscopy images. It is developed based on the Matlab version of BaSiC tool with major improvements in the algorithm.
 
-![MultiQC - FastQC adapter content plot](images/mqc_fastqc_adapter.png)
+<details>
+<summary>Output files</summary>
 
-> **NB:** The FastQC plots displayed in the MultiQC report shows _untrimmed_ reads. They may contain adapter sequence and potentially regions with low quality.
+- {sample_name}-dfp.tif : Tiff fields for dark field illumination correction
+- {sample_name}-ffp.tif : Tiff fields for flat field illumination correction
+
+</details>
+
+### Registration
+
+#### ASHLAR
+
+[ASHLAR](https://nf-co.re/modules/ashlar/) combines multi-tile microscopy images into a high-dimensional mosaic image.
+
+<details>
+<summary>Output files</summary>
+
+- {sample_name}.ome.tif : A pyramidal, tiled OME-TIFF file created from input images.
+
+</details>
+
+### Background Subtraction
+
+#### Backsub
+
+[Backsub](https://nf-co.re/modules/backsub/) performs a pixel-by-pixel channel subtraction scaled by exposure times of pre-stitched tif images.
+
+<details>
+<summary>Output files</summary>
+
+- markers_bs.csv : Marker file adjusted to match the background corrected image
+- .backsub.ome.tif : Background corrected pyramidal ome.tif
+
+</details>
+
+### TMA Core Separation
+
+#### Coreograph
+
+[Coreograph](https://nf-co.re/modules/coreograph/) uses UNet, a deep learning model, to identify complete/incomplete tissue cores on a tissue microarray. It has been trained on 9 TMA slides of different sizes and tissue types.
+
+<details>
+<summary>Output files</summary>
+
+- {core_number}.tif : Individual cropped tissue core images
+- centroidsY-X.txt : A text file listing centroids of each core in format Y, X
+- masks/{core_number}\_mask.tif : Binary mask image for each tissue core
+- TMA_MAP.tif : A TMA map showing core number labels and mask outlines
+
+</details>
+
+### Segmentation
+
+#### Mccellpose
+
+[Mccellpose] A RAM-efficient wrapper around Cellpose (see below).
+
+<details>
+<summary>Output files</summary>
+
+- {sample_name}\_mask.ome.tif : labelled mask output from cellpose in OME-TIFF format
+
+</details>
+
+#### Cellpose
+
+[Cellpose](https://nf-co.re/modules/cellpose/) segments cells in images
+
+<details>
+<summary>Output files</summary>
+
+- {sample_name}\_mask.tif : labelled mask output from cellpose in tif format
+
+</details>
+
+#### Mesmer
+
+[Mesmer](https://nf-co.re/modules/deepcell_mesmer/) segmentation for whole-cell
+
+<details>
+<summary>Output files</summary>
+
+- {sample_name}\_mask.tif : File containing the mask.
+
+</details>
+
+### Quantification
+
+#### Mcquant
+
+[Mcquant](https://nf-co.re/modules/mcquant/) extracts single-cell data given a multi-channel image and a segmentation mask.
+
+<details>
+<summary>Output files</summary>
+
+- {segmenter}/{sample_name}.csv : Single-cell feature table for all selected segmenters.
+
+</details>
+
+### Quality Control
 
 ### MultiQC
+
+Aggregate report describing results and QC from the whole pipeline
 
 <details markdown="1">
 <summary>Output files</summary>
@@ -55,6 +193,8 @@ Results generated by MultiQC collate pipeline QC from supported tools e.g. FastQ
 
 ### Pipeline information
 
+Report metrics generated during the workflow execution
+
 <details markdown="1">
 <summary>Output files</summary>
 
@@ -62,6 +202,7 @@ Results generated by MultiQC collate pipeline QC from supported tools e.g. FastQ
   - Reports generated by Nextflow: `execution_report.html`, `execution_timeline.html`, `execution_trace.txt` and `pipeline_dag.dot`/`pipeline_dag.svg`.
   - Reports generated by the pipeline: `pipeline_report.html`, `pipeline_report.txt` and `software_versions.yml`. The `pipeline_report*` files will only be present if the `--email` / `--email_on_fail` parameter's are used when running the pipeline.
   - Reformatted samplesheet files used as input to the pipeline: `samplesheet.valid.csv`.
+  - Parameters used by the pipeline run: `params.json`.
 
 </details>
 
