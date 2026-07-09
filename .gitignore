@@ -9,3 +9,4 @@ testing*
 .nf-test.log
 .nf-test/
 null/
+.lineage/

@@ -1,5 +1,3 @@
-import groovy.xml.XmlSlurper
-
 process OMEVALIDATION {
     tag "${meta.id}_${meta.cycle_number}"
     label 'process_single'
@@ -11,7 +9,7 @@ process OMEVALIDATION {
     tuple val(meta), val(sample_meta), val(marker_meta)
 
     exec:
-    def xml = new XmlSlurper().parseText(file(xmlPath.toUriString()).text)
+    def xml = new groovy.xml.XmlSlurper().parseText(file(xmlPath.toUriString()).text)
 
     /*
     SAMPLESHEET DATA ----------------------------------------------------------------------------------------------
@@ -25,30 +23,30 @@ process OMEVALIDATION {
     //}
 
     def tile_size = xml.'**'.findAll {
-            node -> node.name() == 'Pixels' && node.@SizeX != '' && node.@SizeY != ''
+            node -> node.name() == 'Pixels' && node['@SizeX'] != '' && node['@SizeY'] != ''
         }
         .collect {
-            node -> [node.@SizeX.toInteger(), node.@SizeY.toInteger()]
+            node -> [node['@SizeX'].toInteger(), node['@SizeY'].toInteger()]
         }.toSet()
 
     tile_size = tile_size[0]
 
     def pixels = xml.'**'.findAll {
-            node -> node.name() == 'Pixels' && node.@PhysicalSizeX != '' && node.@PhysicalSizeY != ''
+            node -> node.name() == 'Pixels' && node['@PhysicalSizeX'] != '' && node['@PhysicalSizeY'] != ''
         }
         .collect {
-            node -> [node.@PhysicalSizeX.toDouble(), node.@PhysicalSizeY.toDouble()]
+            node -> [node['@PhysicalSizeX'].toDouble(), node['@PhysicalSizeY'].toDouble()]
         }
 
     def n_channels = xml.'**'.findAll {
-            node -> node.name() == 'Pixels' && node.@SizeC != ''
+            node -> node.name() == 'Pixels' && node['@SizeC'] != ''
         }
-        .collect { node -> node.@SizeC.toInteger() }
+        .collect { node -> node['@SizeC'].toInteger() }
 
     def size_units = xml.'**'.findAll {
-            node -> node.name() == 'Pixels' && node.@PhysicalSizeXUnit != '' && node.@PhysicalSizeYUnit != ''
+            node -> node.name() == 'Pixels' && node['@PhysicalSizeXUnit'] != '' && node['@PhysicalSizeYUnit'] != ''
         }
-        .collect { node -> [node.@PhysicalSizeXUnit.toString(), node.@PhysicalSizeYUnit.toString()] }
+        .collect { node -> [node['PhysicalSizeXUnit'].toString(), node['@PhysicalSizeYUnit'].toString()] }
 
     // transform pixel size to microns
     def s_units = size_units[0][0]
@@ -69,9 +67,9 @@ process OMEVALIDATION {
     pixels = pixels.round(3)
 
     def pixel_datatype = xml.'**'.findAll {
-            node -> node.name() == 'Pixels' && node.@Type
+            node -> node.name() == 'Pixels' && node['@Type']
         }
-        .collect { node -> node.@Type.toString() }
+        .collect { node -> node['@Type'].toString() }
         .toSet()
 
     pixel_datatype = pixel_datatype[0]
@@ -86,10 +84,10 @@ process OMEVALIDATION {
         }
         .collect {
             node ->
-            if (node.@ExposureTime == '' || node.@ExposureTimeUnit == '') {
+            if (node['@ExposureTime'] == '' || node['@ExposureTimeUnit'] == '') {
                 return [
                     'cycle_number': meta.cycle_number,
-                    'channel_number': node.@TheC.toInteger() + 1,
+                    'channel_number': node['@TheC'].toInteger() + 1,
                     'exposure_time': null,
                     'exposure_time_unit': null
                 ]
@@ -97,9 +95,9 @@ process OMEVALIDATION {
             else {
                 return [
                     'cycle_number': meta.cycle_number,
-                    'channel_number': node.@TheC.toInteger() + 1,
-                    'exposure_time': node.@ExposureTime.toDouble(),
-                    'exposure_time_unit': node.@ExposureTimeUnit.toString()
+                    'channel_number': node['@TheC'].toInteger() + 1,
+                    'exposure_time': node['@ExposureTime'].toDouble(),
+                    'exposure_time_unit': node['@ExposureTimeUnit'].toString()
                 ]
             }
         }.toSet()
@@ -107,13 +105,24 @@ process OMEVALIDATION {
     if (exposure_time.size() == 0) { //Plane is optional entry
         exposure_time = []
 
-        for(int i = 0; i < n_channels[0]; i++)
+        (1..n_channels[0]).each{
+            number ->
+            exposure_time.add([
+                    'cycle_number': meta.cycle_number,
+                    'channel_number': number,
+                    'exposure_time': null,
+                    'exposure_time_unit': null
+                ])
+        }
+        /*
+        for(i = 0; i < n_channels[0]; i++)
             exposure_time.add([
                 'cycle_number': meta.cycle_number,
                 'channel_number': i+1,
                 'exposure_time': null,
                 'exposure_time_unit': null
             ])
+            */
     }
 
     sample_meta = [

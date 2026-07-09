@@ -8,7 +8,8 @@ lint:
     - params.input
   template_strings:
     - assets/mcmicro_metro.pdf
-nf_core_version: 3.5.1
+  container_configs: False
+nf_core_version: 4.0.2
 repository_type: pipeline
 template:
   author: Alex Barberá Mourelle, Robert Young and Jeremy Muhlich
