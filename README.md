@@ -7,7 +7,7 @@
 
 [![Open in GitHub Codespaces](https://img.shields.io/badge/Open_In_GitHub_Codespaces-black?labelColor=grey&logo=github)](https://github.com/codespaces/new/nf-core/mcmicro)
 [![GitHub Actions CI Status](https://github.com/nf-core/mcmicro/actions/workflows/nf-test.yml/badge.svg)](https://github.com/nf-core/mcmicro/actions/workflows/nf-test.yml)
-[![GitHub Actions Linting Status](https://github.com/nf-core/mcmicro/actions/workflows/linting.yml/badge.svg)](https://github.com/nf-core/mcmicro/actions/workflows/linting.yml)[![AWS CI](https://img.shields.io/badge/CI%20tests-full%20size-FF9900?labelColor=000000&logo=Amazon%20AWS)](https://nf-co.re/mcmicro/results)[![Cite with Zenodo](http://img.shields.io/badge/DOI-10.5281/zenodo.XXXXXXX-1073c8?labelColor=000000)](https://doi.org/10.5281/zenodo.XXXXXXX)
+[![GitHub Actions Linting Status](https://github.com/nf-core/mcmicro/actions/workflows/linting.yml/badge.svg)](https://github.com/nf-core/mcmicro/actions/workflows/linting.yml)[![AWS CI](https://img.shields.io/badge/CI%20tests-full%20size-FF9900?labelColor=000000&logo=Amazon%20AWS)](https://nf-co.re/mcmicro/results)[![Cite with Zenodo](http://img.shields.io/badge/DOI-10.5281/zenodo.21109886-1073c8?labelColor=000000)](https://doi.org/10.5281/zenodo.21109886)
 [![nf-test](https://img.shields.io/badge/unit_tests-nf--test-337ab7.svg)](https://www.nf-test.com)
 
 [![Nextflow](https://img.shields.io/badge/version-%E2%89%A525.10.4-green?style=flat&logo=nextflow&logoColor=white&color=%230DC09D&link=https%3A%2F%2Fnextflow.io)](https://www.nextflow.io/)
@@ -110,8 +110,7 @@ For further information or help, don't hesitate to get in touch on the [Slack `#
 
 ## Citations
 
-<!-- TODO nf-core: Add citation for pipeline after first release. Uncomment lines below and update Zenodo doi and badge at the top of this file. -->
-<!-- If you use nf-core/mcmicro for your analysis, please cite it using the following doi: [10.5281/zenodo.XXXXXX](https://doi.org/10.5281/zenodo.XXXXXX) -->
+If you use nf-core/mcmicro for your analysis, please cite it using the following doi: [10.5281/zenodo.21109886](https://doi.org/10.5281/zenodo.21109886)
 
 If you use nf-core/mcmicro for your analysis, please cite it using the following article: [Schapiro et al. 2022 Nat. Methods](https://www.nature.com/articles/s41592-021-01308-y)
 

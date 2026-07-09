@@ -12,7 +12,7 @@ lint:
 nf_core_version: 4.0.2
 repository_type: pipeline
 template:
-  author: TBD
+  author: Alex Barberá Mourelle, Robert Young and Jeremy Muhlich
   description: Whole-slide multiplexed microscopy image analysis
   force: false
   is_nfcore: true
