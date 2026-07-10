@@ -1,13 +1,12 @@
 process CELLPOSE {
     tag "$meta.id"
     label 'process_medium'
-    label 'process_gpu'
 
     container "docker.io/biocontainers/cellpose:3.0.1_cv1"
 
     input:
     tuple val(meta), path(image)
-    path(model, stageAs: '?/*')
+    path(model)
 
     output:
     tuple val(meta), path("*masks.tif") ,   emit: mask
