@@ -140,31 +140,37 @@ workflow MCMICRO {
 
     ch_masks = channel.empty()
 
-    ch_segmentation_input
-        .multiMap{ meta, image ->
-            img: [meta + [segmenter: 'mesmer'], image]
-            membrane_img: [[:], []]
-        }
-        | DEEPCELL_MESMER
-    ch_masks = ch_masks.mix(DEEPCELL_MESMER.out.mask)
-    ch_versions = ch_versions.mix(DEEPCELL_MESMER.out.versions)
+    if (params.segmentation?.split(',')?.contains('mesmer')) {
+        ch_segmentation_input
+            .multiMap{ meta, image ->
+                img: [meta + [segmenter: 'mesmer'], image]
+                membrane_img: [[:], []]
+            }
+            | DEEPCELL_MESMER
+        ch_masks = ch_masks.mix(DEEPCELL_MESMER.out.mask)
+        ch_versions = ch_versions.mix(DEEPCELL_MESMER.out.versions)
+    }
 
-    ch_segmentation_input
-        .multiMap{ meta, image ->
-            image: [meta + [segmenter: 'cellpose'], image]
-            model: params.cellpose_model
-        }
-        | CELLPOSE
-    ch_masks = ch_masks.mix(CELLPOSE.out.mask)
-    ch_versions = ch_versions.mix(CELLPOSE.out.versions)
+    if (params.segmentation?.split(',')?.contains('cellpose')) {
+        ch_cellpose_image = ch_segmentation_input
+            .map{ meta, image -> [meta + [segmenter: 'cellpose'], image] }
+        ch_cellpose_model = params.cellpose_model
+            ? Channel.fromPath(params.cellpose_model, checkIfExists: true)
+            : Channel.value([])
+        CELLPOSE(ch_cellpose_image, ch_cellpose_model)
+        ch_masks = ch_masks.mix(CELLPOSE.out.mask)
+        ch_versions = ch_versions.mix(CELLPOSE.out.versions)
+    }
 
-    ch_segmentation_input
-        .multiMap{ meta, image ->
-            image: [meta + [segmenter: 'mccellpose'], image]
-        }
-        | MCCELLPOSE
-    ch_masks = ch_masks.mix(MCCELLPOSE.out.mask)
-    ch_versions = ch_versions.mix(MCCELLPOSE.out.versions)
+    if (params.segmentation?.split(',')?.contains('mccellpose')) {
+        ch_segmentation_input
+            .multiMap{ meta, image ->
+                image: [meta + [segmenter: 'mccellpose'], image]
+            }
+            | MCCELLPOSE
+        ch_masks = ch_masks.mix(MCCELLPOSE.out.mask)
+        ch_versions = ch_versions.mix(MCCELLPOSE.out.versions)
+    }
 
     // Run Quantification
 
@@ -191,11 +197,6 @@ workflow MCMICRO {
             markers: [meta, marker]
         }
         | MCQUANT
-
-    //now using topic version for mcquant
-    //ch_versions = ch_versions.mix(MCQUANT.out.versions)
-
-
 
     //
     // Collate and save software versions
