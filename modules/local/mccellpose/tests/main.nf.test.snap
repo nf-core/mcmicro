@@ -2,7 +2,8 @@
     "mccellpose defaults": {
         "content": [
             {
-                "id": "test"
+                "id": "test",
+                "pixel_size": 0.65
             },
             "test_mask.ome.tif",
             true,
@@ -10,11 +11,11 @@
                 "versions.yml:md5,e5dfb454e70555894c82d9d7376f7ea1"
             ]
         ],
+        "timestamp": "2026-07-10T13:02:53.110213479",
         "meta": {
-            "nf-test": "0.9.2",
-            "nextflow": "25.10.0"
-        },
-        "timestamp": "2026-01-08T14:39:40.797531026"
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.2"
+        }
     },
     "mccellpose defaults - stub": {
         "content": [
@@ -43,10 +44,10 @@
                 ]
             }
         ],
+        "timestamp": "2026-01-08T14:39:50.713818162",
         "meta": {
             "nf-test": "0.9.2",
             "nextflow": "25.10.0"
-        },
-        "timestamp": "2026-01-08T14:39:50.713818162"
+        }
     }
 }
