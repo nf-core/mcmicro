@@ -6,13 +6,13 @@ tests, which require a listable directory.
 
 */
 process DIR_COMBINE {
+    publishDir enabled: { false }
     input:
     tuple val(meta), path(f)
 
     output:
     tuple val(meta), path("combined")
 
-    publishDir enabled: false
 
     script:
     def relPaths = f.collect{ "'../$it'" }.join(' ')

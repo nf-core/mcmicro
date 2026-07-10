@@ -29,6 +29,10 @@ nextflow_workflow {
                         [channel_number: 4, cycle_number: 1, marker_name: 'CD45RO'],
                     ],
                 )
+                input[2] = ''
+                input[3] = ''
+                input[4] = ''
+                input[5] = '$outputDir'
                 """
             }
         }
@@ -68,6 +72,10 @@ nextflow_workflow {
                         [channel_number: 4, cycle_number: 1, marker_name: 'CD45RO'],
                     ],
                 )
+                input[2] = ''
+                input[3] = ''
+                input[4] = ''
+                input[5] = '$outputDir'
                 """
             }
         }
@@ -75,9 +83,58 @@ nextflow_workflow {
         then {
             assertAll(
                 { assert workflow.success },
-                { assert workflow.out.versions.size() == 1} //showinf
+                { assert workflow.out.versions.size() == 1 }
             )
         }
 
+    }
+
+    test("Invalid xml parameters - must fail") {
+        when {
+            params {
+                prelude = true
+            }
+            workflow {
+                """
+                 input[0] = Channel.of(
+                    [
+                        [id:"TEST1", cycle_number:1, channel_count:4],
+                        "${projectDir}/assets/test.bad.ome.tiff",
+                        [],
+                        [],
+                    ],
+                    [
+                        [id:"TEST1", cycle_number:2, channel_count:4],
+                        "${projectDir}/assets/test.bad.ome.tiff",
+                        [],
+                        [],
+                    ],
+                )
+                input[1] = Channel.of(
+                    [
+                        [channel_number: 1, cycle_number: 1, marker_name: 'DNA 1'],
+                        [channel_number: 2, cycle_number: 1, marker_name: 'Na/K ATPase'],
+                        [channel_number: 3, cycle_number: 1, marker_name: 'CD3'],
+                        [channel_number: 4, cycle_number: 1, marker_name: 'CD45RO'],
+                        [channel_number: 5, cycle_number: 2, marker_name: 'DNA 11'],
+                        [channel_number: 6, cycle_number: 2, marker_name: 'Na/K ATPase1'],
+                        [channel_number: 7, cycle_number: 2, marker_name: 'CD31'],
+                        [channel_number: 8, cycle_number: 2, marker_name: 'CD45RO1'],
+                    ],
+                )
+                input[2] = ''
+                input[3] = ''
+                input[4] = ''
+                input[5] = '$outputDir'
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.failed },
+                { assert workflow.errorReport.contains("QC Error found") }
+            )
+        }
     }
 }
