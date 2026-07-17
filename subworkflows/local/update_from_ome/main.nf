@@ -16,8 +16,7 @@ workflow UPDATE_FROM_OME {
         .dump(tag: "ch_samplesheet_meta")
         .set { samplesheet_meta }
 
-    c_sum = 0
-    agg   = channel.empty()
+    agg = channel.empty()
 
     samplesheet_meta
         .map {
@@ -25,13 +24,24 @@ workflow UPDATE_FROM_OME {
         }
         .unique()
         .toSortedList()
-        .flatMap()
-        .map {
-            cn, cc ->
-            temp = [cn, c_sum]
-            c_sum += cc
-            return temp
+        .map { pairs ->
+            // Samples must agree on the channel count of a given cycle, otherwise a single
+            // shared markers.csv cannot describe every image and MCQUANT will later fail with
+            // an opaque "number of channels doesn't match" error. Catch it here instead.
+            pairs.groupBy { it[0] }.each { cycle, entries ->
+                def counts = entries.collect { it[1] }.unique()
+                if (counts.size() != 1) {
+                    error "Samples disagree on the channel count for cycle ${cycle} (found ${counts}). " +
+                          "A shared markers.csv cannot be built across images with different channel layouts."
+                }
+            }
+            // Cumulative per-cycle offset so each cycle's channels are numbered contiguously
+            // across the stacked image. Computed inside a single map so it does not rely on
+            // downstream operators preserving order.
+            def c_sum = 0
+            pairs.collect { cn, cc -> def temp = [cn, c_sum]; c_sum += cc; temp }
         }
+        .flatMap()
         .dump(tag: "CHANNEL_DELTA_INDEX")
         .set { agg }
 
@@ -81,31 +91,48 @@ workflow UPDATE_FROM_OME {
         }
         .map{ orig, validated ->  markersheet_template + validated + orig }
         .map{ meta -> meta - meta.subMap('id') }
-        .unique()
-        .toSortedList { a, b -> a.channel_number <=> b.channel_number }
-        .dump(tag: "ch_markersheet_meta")
-        .set { markersheet_meta }
-
-
-    markersheet_meta  // Inter sample marker setup check
-        .map {
-            entry -> [[entry.cycle_number, entry.channel_number], [entry.exposure_time, entry.exposure_time_unit]]
-        }
+        // Collapse the per-sample rows down to one shared row per channel. Deduplicating on
+        // the whole map (the previous `.unique()`) leaves duplicates whenever samples differ
+        // in any per-sample field (e.g. exposure time), inflating markers.csv beyond the image
+        // channel count (nf-core/mcmicro#165). Group on the channel identity instead.
+        .map{ meta -> [[meta.cycle_number, meta.channel_number], meta] }
         .groupTuple()
-        .map {
-            key, values ->
-                if (values.unique().size() != 1)
-                    error "Inconsistent marker exposure data across samples."
-        }
-
-    if (params.backsub) {
-        markersheet_meta
-            .map { entry ->
-                if (entry.exposure_time == null){
-                    error "Exposure time cannot be NULL if doing backsub"
+        .map{ key, rows ->
+            def (cycle_number, channel_number) = key
+            // Per-sample-varying fields are allowed to differ; ignore them when checking that
+            // samples agree on the actual marker definition for this channel.
+            def per_sample_fields = ['exposure_time', 'exposure_time_unit']
+            def core = rows.collect{ it - it.subMap(per_sample_fields) }.unique()
+            if (core.size() != 1) {
+                error "Samples disagree on the marker definition for cycle ${cycle_number}, " +
+                      "channel ${channel_number}: ${core}."
+            }
+            if (params.backsub) {
+                def exposures = rows.collect{ [it.exposure_time, it.exposure_time_unit] }.unique()
+                if (exposures.size() != 1) {
+                    error "Samples report inconsistent exposure for cycle ${cycle_number}, " +
+                          "channel ${channel_number} (${exposures}); required for background subtraction."
+                }
+                if (rows.any{ it.exposure_time == null }) {
+                    error "Exposure time cannot be null for cycle ${cycle_number}, " +
+                          "channel ${channel_number} when doing backsub."
                 }
             }
-    }
+            rows.first()
+        }
+        .toSortedList { a, b -> a.channel_number <=> b.channel_number }
+        .map { rows ->
+            // Defense in depth: the shared markers.csv must have exactly one contiguously
+            // numbered row per image channel, or MCQUANT will reject it downstream.
+            def channels = rows.collect { it.channel_number }
+            if (channels != (1..rows.size()).toList()) {
+                error "Constructed markers.csv has ${rows.size()} rows numbered ${channels}; " +
+                      "expected a contiguous 1..N with one row per image channel."
+            }
+            rows
+        }
+        .dump(tag: "ch_markersheet_meta")
+        .set { markersheet_meta }
 
     emit:
     samplesheet = samplesheet_meta
