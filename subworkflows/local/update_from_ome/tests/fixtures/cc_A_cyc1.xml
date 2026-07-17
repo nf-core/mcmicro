@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<OME xmlns="http://www.openmicroscopy.org/Schemas/OME/2016-06">
+  <Image ID="Image:0" Name="img">
+    <Pixels ID="Pixels:0" DimensionOrder="XYCZT" Type="uint16"
+            SizeX="1024" SizeY="1024" SizeC="2" SizeZ="1" SizeT="1"
+            PhysicalSizeX="0.325" PhysicalSizeXUnit="um"
+            PhysicalSizeY="0.325" PhysicalSizeYUnit="um"
+            BigEndian="false" Interleaved="false" SignificantBits="16">
+      <Plane TheC="0" TheZ="0" TheT="0" ExposureTime="1.0" ExposureTimeUnit="s"/><Plane TheC="1" TheZ="0" TheT="0" ExposureTime="1.0" ExposureTimeUnit="s"/>
+    </Pixels>
+  </Image>
+</OME>

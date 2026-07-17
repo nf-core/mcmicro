@@ -86,6 +86,81 @@ nextflow_workflow {
                     { assert workflow.errorReport.contains("Markersheet cycle/channel numbering") }
                 )
             }
+        },
+
+        // Regression test for nf-core/mcmicro#165: when samples were imaged with different
+        // exposure times, the shared markers.csv used to be inflated with duplicate rows
+        // (44 -> 64 in the reported case), causing MCQUANT to abort. It must instead collapse
+        // to one row per image channel.
+        test("Should not duplicate markers when samples differ in exposure time") {
+            when {
+                workflow {
+                    """
+                    def fx = "\${projectDir}/subworkflows/local/update_from_ome/tests/fixtures"
+                    // Two samples (A, B), two cycles, two channels; B reports different
+                    // exposure times than A for the same channels.
+                    input[0] = Channel.of(
+                        [[id:'A', cycle_number:1], 'tiles', [], []],
+                        [[id:'A', cycle_number:2], 'tiles', [], []],
+                        [[id:'B', cycle_number:1], 'tiles', [], []],
+                        [[id:'B', cycle_number:2], 'tiles', [], []],
+                    )
+                    input[1] = Channel.value([
+                        [channel_number: 1, cycle_number: 1, marker_name: 'DNA1'],
+                        [channel_number: 2, cycle_number: 1, marker_name: 'CD3'],
+                        [channel_number: 3, cycle_number: 2, marker_name: 'DNA2'],
+                        [channel_number: 4, cycle_number: 2, marker_name: 'CD8'],
+                    ])
+                    input[2] = Channel.of(
+                        [[id:'A', cycle_number:1], file("\${fx}/exp_A_cyc1.xml")],
+                        [[id:'A', cycle_number:2], file("\${fx}/exp_A_cyc2.xml")],
+                        [[id:'B', cycle_number:1], file("\${fx}/exp_B_cyc1.xml")],
+                        [[id:'B', cycle_number:2], file("\${fx}/exp_B_cyc2.xml")],
+                    )
+                    """
+                }
+            }
+            then {
+                assertAll(
+                    { assert workflow.success },
+                    // Exactly one row per image channel, contiguously numbered - not inflated.
+                    { assert workflow.out.markersheet[0].size() == 4 },
+                    { assert workflow.out.markersheet[0].collect { it.channel_number } == [1, 2, 3, 4] },
+                    { assert workflow.out.markersheet[0].collect { it.marker_name } == ['DNA1', 'CD3', 'DNA2', 'CD8'] },
+                )
+            }
+        },
+
+        // Regression test for nf-core/mcmicro#165: samples that disagree on a cycle's channel
+        // count cannot share one markers.csv. This must fail with a clear message instead of
+        // silently producing an inflated sheet.
+        test("Should fail clearly when samples disagree on channel count") {
+            when {
+                workflow {
+                    """
+                    def fx = "\${projectDir}/subworkflows/local/update_from_ome/tests/fixtures"
+                    // Sample A cycle 1 has 2 channels; sample B cycle 1 has 3.
+                    input[0] = Channel.of(
+                        [[id:'A', cycle_number:1], 'tiles', [], []],
+                        [[id:'B', cycle_number:1], 'tiles', [], []],
+                    )
+                    input[1] = Channel.value([
+                        [channel_number: 1, cycle_number: 1, marker_name: 'DNA1'],
+                        [channel_number: 2, cycle_number: 1, marker_name: 'CD3'],
+                    ])
+                    input[2] = Channel.of(
+                        [[id:'A', cycle_number:1], file("\${fx}/cc_A_cyc1.xml")],
+                        [[id:'B', cycle_number:1], file("\${fx}/cc_B_cyc1.xml")],
+                    )
+                    """
+                }
+            }
+            then {
+                assertAll(
+                    { assert workflow.failed },
+                    { assert workflow.errorReport.contains("channel count") }
+                )
+            }
         }
 
     ]
