@@ -1,4 +1,5 @@
 lint:
+  container_configs: false
   files_exist:
     - conf/igenomes.config
     - conf/igenomes_ignored.config
@@ -8,10 +9,10 @@ lint:
     - params.input
   template_strings:
     - assets/mcmicro_metro.pdf
-nf_core_version: 4.0.2
+nf_core_version: 4.0.3
 repository_type: pipeline
 template:
-  author: TBD
+  author: "Alex Barber\xE1 Mourelle, Robert Young and Jeremy Muhlich"
   description: Whole-slide multiplexed microscopy image analysis
   force: false
   is_nfcore: true
