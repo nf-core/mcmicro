@@ -2,8 +2,11 @@ lint:
   files_exist:
     - conf/igenomes.config
     - conf/igenomes_ignored.config
+    - .github/workflows/linting_comment.yml
   files_unchanged:
     - .gitignore
+    - .github/workflows/branch.yml
+    - .github/workflows/linting.yml
   nextflow_config:
     - params.input
   template_strings:
