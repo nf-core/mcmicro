@@ -3,13 +3,16 @@ lint:
   files_exist:
     - conf/igenomes.config
     - conf/igenomes_ignored.config
+    - .github/workflows/linting_comment.yml
   files_unchanged:
     - .gitignore
+    - .github/workflows/branch.yml
+    - .github/workflows/linting.yml
   nextflow_config:
     - params.input
   template_strings:
     - assets/mcmicro_metro.pdf
-nf_core_version: 4.0.3
+nf_core_version: 4.1.0
 repository_type: pipeline
 template:
   author: "Alex Barber\xE1 Mourelle, Robert Young and Jeremy Muhlich"
