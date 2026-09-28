@@ -1,0 +1,46 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/nf-core/modules/master/modules/meta-schema.json
+name: "mccellpose"
+description: segments cells in images (mcmicro wrapper)
+keywords:
+  - segmentation
+  - image
+tools:
+  - "mccellpose":
+      description: "Alternative interface to the Cellpose cell segmentation algorithm that uses constant memory"
+      homepage: "https://github.com/labsyspharm/mccellpose"
+      documentation: "https://github.com/labsyspharm/mccellpose?tab=readme-ov-file#readme"
+      tool_dev_url: "https://github.com/labsyspharm/mccellpose"
+      doi: 10.1038/s41592-022-01663-4
+      licence: ["BSD 3-Clause"]
+
+input:
+  - meta:
+      type: map
+      description: |
+        Groovy Map containing sample information
+        e.g. [ id:'test' ]
+  - image:
+      type: file
+      description: TIFF image of cells to segment
+      pattern: "*.{tif,tiff}"
+
+output:
+  - meta:
+      type: map
+      description: |
+        Groovy Map containing sample information
+        e.g. [ id:'test' ]
+  - mask:
+      type: file
+      description: TIFF label mask with segmented cells
+      pattern: "*.{tif, tiff}"
+  - versions:
+      type: file
+      description: File containing software versions
+      pattern: "versions.yml"
+
+authors:
+  - "@jmuhlich"
+maintainers:
+  - "@jmuhlich"

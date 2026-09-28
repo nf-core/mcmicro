@@ -18,18 +18,6 @@
 include { MCMICRO  } from './workflows/mcmicro'
 include { PIPELINE_INITIALISATION } from './subworkflows/local/utils_nfcore_mcmicro_pipeline'
 include { PIPELINE_COMPLETION     } from './subworkflows/local/utils_nfcore_mcmicro_pipeline'
-include { getGenomeAttribute      } from './subworkflows/local/utils_nfcore_mcmicro_pipeline'
-
-/*
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    GENOME PARAMETER VALUES
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-*/
-
-// TODO nf-core: Remove this line if you don't need a FASTA file
-//   This is an example of how to use getGenomeAttribute() to fetch parameters
-//   from igenomes.config using `--genome`
-params.fasta = getGenomeAttribute('fasta')
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -43,7 +31,8 @@ params.fasta = getGenomeAttribute('fasta')
 workflow NFCORE_MCMICRO {
 
     take:
-    samplesheet // channel: samplesheet read in from --input
+    samplesheet // channel: samplesheet read in from --input_cycle or --input_sample
+    markersheet // channel: markersheet read in from --marker_sheet
 
     main:
 
@@ -52,10 +41,11 @@ workflow NFCORE_MCMICRO {
     //
     MCMICRO (
         samplesheet,
+        markersheet,
         params.multiqc_config,
         params.multiqc_logo,
         params.multiqc_methods_description,
-        params.outdir,
+        params.outdir
     )
     emit:
     multiqc_report = MCMICRO.out.multiqc_report // channel: /path/to/multiqc_report.html
@@ -78,7 +68,9 @@ workflow {
         params.monochrome_logs,
         args,
         params.outdir,
-        params.input,
+        params.input_cycle,
+        params.input_sample,
+        params.marker_sheet,
         params.help,
         params.help_full,
         params.show_hidden
@@ -88,7 +80,8 @@ workflow {
     // WORKFLOW: Run main workflow
     //
     NFCORE_MCMICRO (
-        PIPELINE_INITIALISATION.out.samplesheet
+        PIPELINE_INITIALISATION.out.samplesheet,
+        PIPELINE_INITIALISATION.out.markersheet
     )
     //
     // SUBWORKFLOW: Run completion tasks

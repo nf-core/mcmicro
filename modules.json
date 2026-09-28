@@ -5,14 +5,65 @@
         "https://github.com/nf-core/modules.git": {
             "modules": {
                 "nf-core": {
-                    "fastqc": {
+                    "ashlar": {
                         "branch": "master",
-                        "git_sha": "6d46786420b4d7bc88eba026eb389c0c5535d120",
+                        "git_sha": "c7c25b6367249f37c2f99bbab52e7f8c9df6e9c3",
+                        "installed_by": ["modules"]
+                    },
+                    "backsub": {
+                        "branch": "master",
+                        "git_sha": "41dfa3f7c0ffabb96a6a813fe321c6d1cc5b6e46",
+                        "installed_by": ["modules"]
+                    },
+                    "basicpy": {
+                        "branch": "master",
+                        "git_sha": "a46512fa589fa87fdb602523dee55309c9e84f4d",
+                        "installed_by": ["modules"]
+                    },
+                    "bftools/showinf": {
+                        "branch": "master",
+                        "git_sha": "ad5a4dc77c6e2e7263c726f10ae44a518857f756",
+                        "installed_by": ["modules"]
+                    },
+                    "cellpose": {
+                        "branch": "master",
+                        "git_sha": "05954dab2ff481bcb999f24455da29a5828af08d",
+                        "installed_by": ["modules"],
+                        "patch": "modules/nf-core/cellpose/cellpose.diff"
+                    },
+                    "coreograph": {
+                        "branch": "master",
+                        "git_sha": "41dfa3f7c0ffabb96a6a813fe321c6d1cc5b6e46",
+                        "installed_by": ["modules"]
+                    },
+                    "deepcell/mesmer": {
+                        "branch": "master",
+                        "git_sha": "41dfa3f7c0ffabb96a6a813fe321c6d1cc5b6e46",
+                        "installed_by": ["modules"]
+                    },
+                    "ilastik/multicut": {
+                        "branch": "master",
+                        "git_sha": "41dfa3f7c0ffabb96a6a813fe321c6d1cc5b6e46",
+                        "installed_by": ["modules"]
+                    },
+                    "ilastik/pixelclassification": {
+                        "branch": "master",
+                        "git_sha": "41dfa3f7c0ffabb96a6a813fe321c6d1cc5b6e46",
+                        "installed_by": ["modules"]
+                    },
+                    "mcquant": {
+                        "branch": "master",
+                        "git_sha": "21e4662ae927fdbc5fc04eec9bde38b0689d4954",
                         "installed_by": ["modules"]
                     },
                     "multiqc": {
                         "branch": "master",
                         "git_sha": "008f9d3e61209bf995edac3ba531f54e269e1215",
+                        "installed_by": ["modules"]
+                    },
+                    "scimap/mcmicro": {
+                        "branch": "master",
+                        "git_sha": "41dfa3f7c0ffabb96a6a813fe321c6d1cc5b6e46",
                         "installed_by": ["modules"]
                     }
                 }

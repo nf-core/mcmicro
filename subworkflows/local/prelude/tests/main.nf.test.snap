@@ -1,0 +1,59 @@
+{
+    "normal run": {
+        "content": [
+            {
+                "0": [
+                    "TEST1_1_xml_mqc.tsv:md5,7334c62c2154f7c32b948f23a3f87250"
+                ],
+                "1": [
+                    "TEST1_1_samplesheet_mqc.tsv:md5,d0338b7517fa1adea50ac5bc347e7464"
+                ],
+                "2": [
+                    "markers_markersheet_mqc.tsv:md5,73149a15af5f08a74c77559096e00a79"
+                ],
+                "3": [
+                    "multi_summary_mqc.tsv:md5,0ac0426392008767227414f70a20fe90"
+                ],
+                "4": [
+                    [
+                        [
+                            
+                        ],
+                        "multi_summary_errors.tsv:md5,102f64442d0563bf71c7141990aaeab8"
+                    ]
+                ],
+                "5": [
+                    "matrix_summary_matrix_summary_mqc.tsv:md5,2b9766fbcacbd7f8bc6bbd02bf9e13a7"
+                ],
+                "output_file_error_merged": [
+                    [
+                        [
+                            
+                        ],
+                        "multi_summary_errors.tsv:md5,102f64442d0563bf71c7141990aaeab8"
+                    ]
+                ],
+                "output_file_markersheet": [
+                    "markers_markersheet_mqc.tsv:md5,73149a15af5f08a74c77559096e00a79"
+                ],
+                "output_file_merged_xml": [
+                    "multi_summary_mqc.tsv:md5,0ac0426392008767227414f70a20fe90"
+                ],
+                "output_file_mixed_matrix_summary": [
+                    "matrix_summary_matrix_summary_mqc.tsv:md5,2b9766fbcacbd7f8bc6bbd02bf9e13a7"
+                ],
+                "output_file_samplesheet": [
+                    "TEST1_1_samplesheet_mqc.tsv:md5,d0338b7517fa1adea50ac5bc347e7464"
+                ],
+                "output_file_xml": [
+                    "TEST1_1_xml_mqc.tsv:md5,7334c62c2154f7c32b948f23a3f87250"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.2",
+            "nextflow": "25.04.7"
+        },
+        "timestamp": "2026-05-18T16:08:43.543181282"
+    }
+}
