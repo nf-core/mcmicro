@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<OME xmlns="http://www.openmicroscopy.org/Schemas/OME/2016-06" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.openmicroscopy.org/Schemas/OME/2016-06 http://www.openmicroscopy.org/Schemas/OME/2016-06/ome.xsd">
+   <Image ID="Image:0" Name="test_xml_min_1">
+      <InstrumentRef ID="Instrument:0"/>
+      <ObjectiveSettings ID="Objective:0"/>
+      <Pixels BigEndian="false" DimensionOrder="XYZCT" ID="Pixels:0" Interleaved="false" PhysicalSizeX="0.335" PhysicalSizeXUnit="m" PhysicalSizeY="0.15" PhysicalSizeYUnit="m" PhysicalSizeZ="1.0" PhysicalSizeZUnit="µm" SignificantBits="16" SizeC="4" SizeT="1" SizeX="28384" SizeY="9564" SizeZ="1" Type="uint32">
+         <Channel ID="Channel:0:0" Name="DNA 1" SamplesPerPixel="1">
+            <LightPath/>
+         </Channel>
+         <Channel ID="Channel:0:1" Name="Na/K ATPase" SamplesPerPixel="1">
+            <LightPath/>
+         </Channel>
+         <Channel ID="Channel:0:2" Name="CD3" SamplesPerPixel="1">
+            <LightPath/>
+         </Channel>
+         <Channel ID="Channel:0:3" Name="CD45RO" SamplesPerPixel="1">
+            <LightPath/>
+         </Channel>
+         <TiffData FirstC="0" FirstT="0" FirstZ="0" IFD="0" PlaneCount="4"/>
+         <Plane TheC="0" TheT="0" TheZ="0" ExposureTime="1" ExposureTimeUnit="s"/>
+         <Plane TheC="1" TheT="0" TheZ="0" ExposureTime="1" ExposureTimeUnit="min"/>
+         <Plane TheC="2" TheT="0" TheZ="0" ExposureTime="3" ExposureTimeUnit="s"/>
+         <Plane TheC="3" TheT="0" TheZ="0" ExposureTime="4" ExposureTimeUnit="s"/>
+      </Pixels>
+      <AnnotationRef ID="Annotation:Stitcher:0"/>
+   </Image>
+   <Image ID="Image:1" Name="test_xml_min_2">
+      <InstrumentRef ID="Instrument:0"/>
+      <ObjectiveSettings ID="Objective:0"/>
+      <Pixels BigEndian="false" DimensionOrder="XYZCT" ID="Pixels:1" Interleaved="false" PhysicalSizeX="0.325" PhysicalSizeXUnit="µm" PhysicalSizeY="0.325" PhysicalSizeYUnit="µm" PhysicalSizeZ="1.0" PhysicalSizeZUnit="µm" SignificantBits="16" SizeC="4" SizeT="1" SizeX="28384" SizeY="9564" SizeZ="1" Type="uint16">
+         <Channel ID="Channel:1:0" Name="DNA 11" SamplesPerPixel="1">
+            <LightPath/>
+         </Channel>
+         <Channel ID="Channel:1:1" Name="Na/K ATPase1" SamplesPerPixel="1">
+            <LightPath/>
+         </Channel>
+         <Channel ID="Channel:1:2" Name="CD31" SamplesPerPixel="1">
+            <LightPath/>
+         </Channel>
+         <Channel ID="Channel:1:3" Name="CD45RO1" SamplesPerPixel="1">
+            <LightPath/>
+         </Channel>
+         <TiffData FirstC="0" FirstT="0" FirstZ="0" IFD="0" PlaneCount="4"/>
+         <Plane TheC="0" TheT="0" TheZ="0" ExposureTime="1" ExposureTimeUnit="s"/>
+         <Plane TheC="1" TheT="0" TheZ="0" ExposureTime="2" ExposureTimeUnit="s"/>
+         <Plane TheC="2" TheT="0" TheZ="0" ExposureTime="3" ExposureTimeUnit="s"/>
+         <Plane TheC="3" TheT="0" TheZ="0" ExposureTime="4" ExposureTimeUnit="s"/>
+      </Pixels>
+      <AnnotationRef ID="Annotation:Stitcher:0"/>
+   </Image>
+</OME>

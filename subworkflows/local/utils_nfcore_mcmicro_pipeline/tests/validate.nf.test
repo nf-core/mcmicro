@@ -1,0 +1,194 @@
+nextflow_function {
+
+    name "Validation behavior for pipeline inputs"
+    script "../main.nf"
+
+    test("Error on backsub if background column is empty") {
+        function "validateInputMarkersheet"
+        when {
+            params {
+                backsub = true
+            }
+            function {
+                """
+                input[0] = [
+                    [marker_name:"M1", cycle_number:1, channel_number:1, exposure: 100],
+                    [marker_name:"M2", cycle_number:1, channel_number:2, remove: true],
+                ]
+                """
+            }
+        }
+        then {
+            assert function.failed
+            assert function.stdout*.contains("set params.backsub=false").any()
+        }
+    }
+
+    test("Warn if backsub false but columns are provided") {
+        function "validateInputMarkersheet"
+        when {
+            params {
+                backsub = false
+            }
+            function {
+                """
+                input[0] = [
+                    [marker_name:"M1", cycle_number:1, channel_number:1, exposure: 100],
+                    [marker_name:"M2", cycle_number:1, channel_number:2, remove: true],
+                ]
+                """
+            }
+        }
+        then {
+            assert function.success
+            // log.warn output can't be tested yet - https://github.com/askimed/nf-test/issues/271
+            //assert function.stdout*.contains("Subtraction will NOT be performed").any()
+        }
+    }
+
+    test("Error on backsub if background value not in marker_name") {
+        function "validateInputMarkersheet"
+        when {
+            params {
+                backsub = true
+            }
+            function {
+                """
+                input[0] = [
+                    [marker_name:"M1", cycle_number:1, channel_number:1, exposure:1, background: "M3"],
+                ]
+                """
+            }
+        }
+        then {
+            assert function.failed
+            assert function.stdout*.contains("Unknown background").any()
+        }
+    }
+
+    test("Error on backsub if exposure time missing for foreground channel") {
+        function "validateInputMarkersheet"
+        when {
+            params {
+                backsub = true
+            }
+            function {
+                """
+                input[0] = [
+                    [marker_name:"M1", cycle_number:1, channel_number:1, background:"M2"],
+                    [marker_name:"M2", cycle_number:1, channel_number:2, exposure:1],
+                ]
+                """
+            }
+        }
+        then {
+            assert function.failed
+            assert function.stdout*.contains("Missing exposure value for marker:").any()
+        }
+    }
+
+    test("Error on backsub if exposure time missing for background channel") {
+        function "validateInputMarkersheet"
+        when {
+            params {
+                backsub = true
+            }
+            function {
+                """
+                input[0] = [
+                    [marker_name:"M1", cycle_number:1, channel_number:1, exposure:1, background:"M2"],
+                    [marker_name:"M2", cycle_number:1, channel_number:2],
+                ]
+                """
+            }
+        }
+        then {
+            assert function.failed
+            assert function.stdout*.find("Missing exposure.*background:").any()
+        }
+    }
+
+    test("Error if channel numbering does not start at 1") {
+        function "validateInputMarkersheet"
+        when {
+            function {
+                """
+                input[0] = [
+                    [marker_name:"M1", cycle_number:1, channel_number:2],
+                ]
+                """
+            }
+        }
+        then {
+            assert function.failed
+            assert function.stdout*.find("channel numbering must start with 1").any()
+        }
+    }
+
+    test("Error if samplesheet and markersheet have different total cycle counts") {
+        function "validateInputSamplesheetMarkersheet"
+        when {
+            function {
+                """
+                input[0] = [
+                    [[id:"S1", cycle_number:1], [], [], []],
+                    [[id:"S1", cycle_number:2], [], [], []],
+                ]
+                input[1] = [
+                    [marker_name:"M1", cycle_number:1, channel_number:1],
+                ]
+                """
+            }
+        }
+        then {
+            assert function.failed
+            assert function.stdout*.find("cycle_number values must match").any()
+        }
+    }
+
+    test("Error if cycle numbering is not sequential in samplesheet") {
+        function "validateInputSamplesheetMarkersheet"
+        when {
+            function {
+                """
+                input[0] = [
+                    [[id:"S1", cycle_number:2], [], [], []],
+                    [[id:"S1", cycle_number:1], [], [], []],
+                ]
+                input[1] = [
+                    [marker_name:"M1", cycle_number:1, channel_number:1],
+                    [marker_name:"M2", cycle_number:2, channel_number:1],
+                ]
+                """
+            }
+        }
+        then {
+            assert function.failed
+            assert function.stdout*.find("cycle_number values must be increasing").any()
+        }
+    }
+
+    test("Error if samples are missing cycles in samplesheet") {
+        function "validateInputSamplesheetMarkersheet"
+        when {
+            function {
+                """
+                input[0] = [
+                    [[id:"S1", cycle_number:1], [], [], []],
+                    [[id:"S1", cycle_number:2], [], [], []],
+                    [[id:"S2", cycle_number:1], [], [], []],
+                ]
+                input[1] = [
+                    [marker_name:"M1", cycle_number:1, channel_number:1],
+                    [marker_name:"M2", cycle_number:2, channel_number:1],
+                ]
+                """
+            }
+        }
+        then {
+            assert function.failed
+            assert function.stdout*.find("Missing cycles for sample").any()
+        }
+    }
+
+}
