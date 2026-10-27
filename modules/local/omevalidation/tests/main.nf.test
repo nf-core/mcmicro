@@ -1,0 +1,231 @@
+// nf-core modules test omevalidation
+import nextflow.*
+import groovy.xml.XmlSlurper
+import groovy.xml.XmlUtil
+
+nextflow_process {
+
+    name "Test Process OMEVALIDATION"
+    script "../main.nf"
+    process "OMEVALIDATION"
+
+    tag "modules"
+    tag "modules_"
+    tag "omevalidation"
+
+    test("OME tags extraction and validation pipeline outputs expected") {
+        setup {
+            run("BFTOOLS_SHOWINF") {
+                script "modules/nf-core/bftools/showinf/main.nf"
+                process {
+                    """
+                    input[0] = [["id": 0], file(params.modules_testdata_base_path + "/imaging/ome-tiff/cycif-tonsil-cycle1.ome.tif")]
+                    """
+                }
+            }
+        }
+        when {
+            process {
+                """
+                input[0] = BFTOOLS_SHOWINF.out.xml
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(process.out).match() }
+            )
+        }
+
+    }
+
+    //test("Fail on single image input") {
+    //    when {
+    //    params {
+    //      def xml = new XmlSlurper().parse('assets/min_omexml_meta.xml')
+    //        xml.Image[1].replaceNode {}
+    //        def savedxml = groovy.xml.XmlUtil.serialize(xml)
+    //    }
+    //        process {
+    //            """
+    //            input[0] = Channel.of(params.savedxml).collectFile(name: 'temp.ome.xml').map{ [[id: 'sample1'], it] }
+    //            """
+    //        }
+    //    }
+
+    //    then {
+    //        assertAll(
+    //            { assert process.failed },
+    //            { assert process.errorReport.contains("Caused by:\n  Single image found in OMEXML metadata") }
+    //        )
+    //    }
+    //}
+
+    /*
+    test("Fail on inconsistent tile size") {
+
+        when {
+            params {
+                def x = new groovy.xml.XmlSlurper().parse('assets/min_omexml_meta.xml')
+                x.Image[0].Pixels.@SizeX = "1"
+                savedxml = groovy.xml.XmlUtil.serialize(x)
+            }
+            process {
+                """
+                input[0] = Channel.of(params.savedxml).collectFile(name: 'temp.ome.xml').map{ [[id: 'sample1'], it] }
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.failed },
+                { assert process.errorReport.contains("Caused by:\n  Inconsistent tile sizes in images") }
+            )
+        }
+    }
+
+    test("Fail on missing pixel size") {
+
+        when {
+            params {
+                def xml = new XmlSlurper().parse('assets/min_omexml_meta.xml')
+                xml.Image*.Pixels*.@PhysicalSizeX = ''
+                savedxml = groovy.xml.XmlUtil.serialize(xml)
+            }
+            process {
+                """
+                input[0] = Channel.of(params.savedxml).collectFile(name: 'temp.ome.xml').map{ [[id: 'sample1'], it] }
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.failed },
+                { assert process.errorReport.contains("Caused by:\n  Images are missing pixel physical size metadata") }
+            )
+        }
+    }
+
+    test("Fail on mismatch pixel size") {
+
+        when {
+            params {
+                def xml = new XmlSlurper().parse('assets/min_omexml_meta.xml')
+                xml.Image[0].Pixels.@PhysicalSizeX = "1"
+                savedxml = groovy.xml.XmlUtil.serialize(xml)
+            }
+            process {
+                """
+                input[0] = Channel.of(params.savedxml).collectFile(name: 'temp.ome.xml').map{ [[id: 'sample1'], it] }
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.failed },
+                { assert process.errorReport.contains("Caused by:\n  Found non consistent pixels sizes in images") }
+            )
+        }
+    }
+
+    test("Fail on mismatch pixel size unit") {
+        when {
+            params {
+                def xml = new XmlSlurper().parse('assets/min_omexml_meta.xml')
+                xml.Image[0].Pixels.@PhysicalSizeXUnit = "m"
+                savedxml = groovy.xml.XmlUtil.serialize(xml)
+            }
+            process {
+                """
+                input[0] = Channel.of(params.savedxml).collectFile(name: 'temp.ome.xml').map{ [[id: 'sample1'], it] }
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.failed },
+                { assert process.errorReport.contains("Caused by:\n  Inconsistent pixels size unit in images") }
+            )
+        }
+    }
+
+    test("Fail on mismatch pixel size datatype") {
+        when {
+            params {
+                def xml = new XmlSlurper().parse('assets/min_omexml_meta.xml')
+                xml.Image[0].Pixels.@Type = 'byte'
+                savedxml = groovy.xml.XmlUtil.serialize(xml)
+            }
+            process {
+                """
+                input[0] = Channel.of(params.savedxml).collectFile(name: 'temp.ome.xml').map{ [[id: 'sample1'], it] }
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.failed },
+                { assert process.errorReport.contains("Caused by:\n  Inconsistent pixels datatype in images") }
+            )
+        }
+    }
+
+    test("Fail on mismatch number of channels") {
+        when {
+            params {
+                def xml = new XmlSlurper().parse('assets/min_omexml_meta.xml')
+                xml.Image[0].Pixels.@SizeC = "10000"
+                savedxml = groovy.xml.XmlUtil.serialize(xml)
+            }
+            process {
+                """
+                input[0] = Channel.of(params.savedxml).collectFile(name: 'temp.ome.xml').map{ [[id: 'sample1'], it] }
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.failed },
+                { assert process.errorReport.contains("Caused by:\n  Found inconsistent number of channels in images") }
+            )
+        }
+    }
+
+    test("Fail on incorrect pixel unit on all") {
+        when {
+            params {
+                def xml = new XmlSlurper().parse('assets/min_omexml_meta.xml')
+                xml.'**'.each{
+                    node ->
+                    if (node.name() == "Pixels"){
+                        node.@PhysicalSizeXUnit = "m"
+                        node.@PhysicalSizeYUnit = "m"
+                        node.@PhysicalSizeZUnit = "m"
+                    }
+                }
+                savedxml = groovy.xml.XmlUtil.serialize(xml)
+            }
+            process {
+                """
+                input[0] = Channel.of(params.savedxml).collectFile(name: 'temp.ome.xml').map{ [[id: 'sample1'], it] }
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.failed },
+                { assert process.errorReport.contains("Caused by:\n  Invalid pixel size unit found") }
+            )
+        }
+    }
+    */
+}
